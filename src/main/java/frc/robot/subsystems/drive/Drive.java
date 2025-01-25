@@ -200,8 +200,6 @@ public class Drive extends SubsystemBase {
         lastModulePositions[moduleIndex] = modulePositions[moduleIndex];
       }
 
-
-
       // Update gyro angle
       if (gyroInputs.connected) {
         // Use the real gyro angle
