@@ -13,6 +13,9 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Meters;
+
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.RobotBase;
 
 /**
@@ -33,5 +36,12 @@ public final class Constants {
 
     /** Replaying from a log file. */
     REPLAY
+  }
+
+  public static final class LEDConstants {
+    // TODO change this
+    public static final int LED_PWM_PORT = -1;
+    public static final int LED_LENGTH = -1;
+    public static final Distance LED_SPACING = Meters.of(1 / 1.0);
   }
 }
