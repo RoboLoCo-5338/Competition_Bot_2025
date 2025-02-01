@@ -17,8 +17,8 @@ public class AddressableLEDIO implements LEDIO {
   }
 
   /**
-   * Updates the set of loggable inputs. There are no inputs for the LED
-   * subsystem, so this method does nothing.
+   * Updates the set of loggable inputs. There are no inputs for the LED subsystem, so this method
+   * does nothing.
    */
   @Override
   public void updateInputs(LedIOInputs inputs) {
