@@ -41,6 +41,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
   // Subsystems
   private final Drive drive;
+  public static GroundIntake groundIntake = new GroundIntake();
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
