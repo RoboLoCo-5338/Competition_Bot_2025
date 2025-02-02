@@ -11,7 +11,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 
-package frc.robot.subsystems.Vision;
+package frc.robot.subsystems.vision;
 
 import static frc.robot.Constants.VisionConstants.*;
 
@@ -25,7 +25,9 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.Vision.VisionIO.PoseObservationType;
+import frc.robot.subsystems.vision.VisionIO.PoseObservationType;
+import frc.robot.subsystems.vision.VisionIO.VisionIOInputsAutoLogged;
+
 import java.util.LinkedList;
 import java.util.List;
 import org.littletonrobotics.junction.Logger;
