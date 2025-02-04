@@ -44,4 +44,15 @@ public final class Constants {
     public static final int LED_LENGTH = -1;
     public static final Distance LED_SPACING = Meters.of(1 / 1.0);
   }
+
+  public static final class ElevatorConstants {
+    // TODO change all constants
+    public static final int ELEVATOR_MOTOR_ID1 = -1;
+    public static final int ELEVATOR_MOTOR_ID2 = -1;
+    public static final double ELEVATOR_MOTOR_kP = 0.0;
+    public static final double ELEVATOR_MOTOR_kI = 0.0;
+    public static final double ELEVATOR_MOTOR_kD = 0.0;
+    public static final double ELEVATOR_MOTOR_kG = 0.0;
+    public static final double ELEVATOR_MOTOR_kV = 0.0;
+  }
 }
