@@ -26,6 +26,7 @@ import frc.robot.commands.DriveCommands;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.AddressableLEDIO;
 import frc.robot.subsystems.LED;
+import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -45,6 +46,8 @@ public class RobotContainer {
   private final Drive drive;
 
   public final LED led;
+
+  public static Climb m_Climb = new Climb();
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -154,8 +157,6 @@ public class RobotContainer {
                             new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
                     drive)
                 .ignoringDisable(true));
-
-
   }
 
   /**
