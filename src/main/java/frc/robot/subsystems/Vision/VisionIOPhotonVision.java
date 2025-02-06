@@ -9,7 +9,6 @@ import frc.robot.subsystems.vision.VisionIO.PoseObservation;
 import frc.robot.subsystems.vision.VisionIO.PoseObservationType;
 import frc.robot.subsystems.vision.VisionIO.TargetObservation;
 import frc.robot.subsystems.vision.VisionIO.VisionIOInputs;
-
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
