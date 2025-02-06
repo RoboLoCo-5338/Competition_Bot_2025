@@ -1,5 +1,6 @@
 package frc.robot.subsystems.Elevator;
 
+import au.grapplerobotics.interfaces.LaserCanInterface.Measurement;
 import org.littletonrobotics.junction.AutoLog;
 
 public interface ElevatorIO {
@@ -23,4 +24,8 @@ public interface ElevatorIO {
   public default void setElevatorVelocity(double velocity) {}
 
   public default void setElevatorPosition(double position) {}
+
+  public default Measurement getLaserCanMeasurement() {
+    return null;
+  }
 }

@@ -49,6 +49,7 @@ public final class Constants {
     // TODO change all constants
     public static final int ELEVATOR_MOTOR_ID1 = -1;
     public static final int ELEVATOR_MOTOR_ID2 = -1;
+    public static final int LASERCAN_ID = -1;
     public static final double ELEVATOR_MOTOR_kP = 0.0;
     public static final double ELEVATOR_MOTOR_kI = 0.0;
     public static final double ELEVATOR_MOTOR_kD = 0.0;

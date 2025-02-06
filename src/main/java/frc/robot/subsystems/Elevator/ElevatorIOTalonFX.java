@@ -2,6 +2,9 @@ package frc.robot.subsystems.Elevator;
 
 import static frc.robot.util.PhoenixUtil.tryUntilOk;
 
+import au.grapplerobotics.ConfigurationFailedException;
+import au.grapplerobotics.LaserCan;
+import au.grapplerobotics.interfaces.LaserCanInterface.Measurement;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
@@ -21,7 +24,7 @@ import edu.wpi.first.units.measure.Voltage;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.generated.TunerConstants;
 
-public class ElevatorIOFalcon implements ElevatorIO {
+public class ElevatorIOTalonFX implements ElevatorIO {
 
   private final TalonFX elevatorMotor1;
   private final TalonFX elevatorMotor2;
@@ -43,7 +46,9 @@ public class ElevatorIOFalcon implements ElevatorIO {
   private final Debouncer elevator1ConnectedDebounce = new Debouncer(0.5);
   private final Debouncer elevator2ConnectedDebounce = new Debouncer(0.5);
 
-  public ElevatorIOFalcon() {
+  private final LaserCan lc;
+
+  public ElevatorIOTalonFX() {
     // create and configure motors
     elevatorMotor1 =
         new TalonFX(
@@ -81,6 +86,15 @@ public class ElevatorIOFalcon implements ElevatorIO {
                 elevator2AppliedVolts,
                 elevator2Current));
     ParentDevice.optimizeBusUtilizationForAll(elevatorMotor1, elevatorMotor2);
+
+    lc = new LaserCan(ElevatorConstants.LASERCAN_ID);
+    try {
+      lc.setRangingMode(LaserCan.RangingMode.SHORT);
+      lc.setRegionOfInterest(new LaserCan.RegionOfInterest(8, 8, 16, 16));
+      lc.setTimingBudget(LaserCan.TimingBudget.TIMING_BUDGET_33MS);
+    } catch (ConfigurationFailedException e) {
+      System.out.println("Configuration failed! " + e);
+    }
   }
 
   public TalonFXConfiguration getConfiguration() {
@@ -135,5 +149,10 @@ public class ElevatorIOFalcon implements ElevatorIO {
   public void setElevatorVelocity(double velocity) {
     elevatorMotor1.setControl(elevator1VelocityRequest.withVelocity(velocity));
     elevatorMotor2.setControl(elevator2VelocityRequest.withVelocity(velocity));
+  }
+
+  @Override
+  public Measurement getLaserCanMeasurement() {
+    return lc.getMeasurement();
   }
 }
