@@ -265,4 +265,8 @@ public class ModuleIOTalonFX implements ModuleIO {
               rotation.getRotations());
         });
   }
+
+  public TalonFX[] getTalon() {
+    return new TalonFX[] {driveTalon, turnTalon};
+  }
 }

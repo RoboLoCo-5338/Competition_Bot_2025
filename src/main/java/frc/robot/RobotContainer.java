@@ -26,6 +26,7 @@ import frc.robot.commands.DriveCommands;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.AddressableLEDIO;
 import frc.robot.subsystems.LED;
+import frc.robot.subsystems.MusicPlayer;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -43,6 +44,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
   // Subsystems
   private final Drive drive;
+  public final MusicPlayer musicPlayer;
 
   public final LED led;
 
@@ -112,6 +114,8 @@ public class RobotContainer {
     autoChooser.addOption(
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
+    musicPlayer = new MusicPlayer(drive);
+
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -154,8 +158,6 @@ public class RobotContainer {
                             new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
                     drive)
                 .ignoringDisable(true));
-
-
   }
 
   /**
