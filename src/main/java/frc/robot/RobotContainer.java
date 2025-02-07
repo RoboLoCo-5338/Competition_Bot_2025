@@ -115,6 +115,7 @@ public class RobotContainer {
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
     musicPlayer = new MusicPlayer(drive);
+    musicPlayer.toggleMusic();
 
     // Configure the button bindings
     configureButtonBindings();
