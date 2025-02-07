@@ -25,7 +25,7 @@ public interface ElevatorIO {
 
   public default void setElevatorPosition(double position) {}
 
-  public default Measurement getLaserCanMeasurement() {
-    return null;
+  public default int getLaserCanMeasurement() {
+    return -1;
   }
 }

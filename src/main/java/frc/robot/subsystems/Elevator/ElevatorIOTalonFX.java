@@ -152,7 +152,13 @@ public class ElevatorIOTalonFX implements ElevatorIO {
   }
 
   @Override
-  public Measurement getLaserCanMeasurement() {
-    return lc.getMeasurement();
+  public int getLaserCanMeasurement() {
+    Measurement m = lc.getMeasurement();
+    if(m != null && m.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT){
+      return m.distance_mm;
+    }else{
+      return -1;
+    }
   }
+
 }
