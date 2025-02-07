@@ -1,6 +1,5 @@
 package frc.robot.subsystems.Elevator;
 
-import au.grapplerobotics.interfaces.LaserCanInterface.Measurement;
 import org.littletonrobotics.junction.AutoLog;
 
 public interface ElevatorIO {
