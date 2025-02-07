@@ -71,6 +71,10 @@ public class Elevator extends SubsystemBase {
             );
     }
 
+    public Command setElevatorVelocity(double velocity){
+        return new InstantCommand(()-> io.setElevatorVelocity(velocity));
+    }
+
 
 
 
