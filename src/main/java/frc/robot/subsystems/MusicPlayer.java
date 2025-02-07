@@ -10,7 +10,7 @@ public class MusicPlayer {
   Orchestra m_orchestra;
 
   public MusicPlayer(MusicSubsystem... subsystems) {
-    m_orchestra = new Orchestra(getInstruments(subsystems), "Bus.chrp");
+    m_orchestra = new Orchestra(getInstruments(subsystems), "Coffee.chrp");
   }
 
   public ArrayList<ParentDevice> getInstruments(MusicSubsystem... subsystems) {
