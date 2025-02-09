@@ -13,6 +13,12 @@
 
 package frc.robot.commands;
 
+import static edu.wpi.first.units.Units.Degrees;
+
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.util.FlippingUtil;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -310,9 +316,51 @@ public class DriveCommands {
         });
   }
 
+  public static Command pathToDestination(Drive drive, Supplier<PathDestination> destination) {
+    Pose2d targetPose;
+    PathConstraints constraints =
+        new PathConstraints(
+            drive.getMaxLinearSpeedMetersPerSec(),
+            drive.getMaxAngularSpeedRadPerSec(),
+            ANGLE_MAX_VELOCITY,
+            ANGLE_MAX_ACCELERATION);
+
+    switch (destination.get()) {
+      case CoralSource:
+        targetPose =
+            drive
+                .getPose()
+                .nearest(
+                    List.of(
+                        allianceFlip(new Pose2d(1.56, 7.36, new Rotation2d(Degrees.of(-54)))),
+                        allianceFlip(new Pose2d(1.623, 0.682, new Rotation2d(Degrees.of(54))))));
+        Logger.recordOutput("Test/NearestTarget", targetPose);
+        break;
+      case Processor:
+        targetPose = new Pose2d();
+        break;
+      default:
+        targetPose = new Pose2d();
+        break;
+    }
+
+    return AutoBuilder.pathfindToPose(targetPose, constraints);
+  }
+
+  public static Pose2d allianceFlip(Pose2d pose){
+    return (DriverStation.getAlliance().isPresent()
+    && DriverStation.getAlliance().get().equals(Alliance.Red))? FlippingUtil.flipFieldPose(pose): pose;
+  }
+
   private static class WheelRadiusCharacterizationState {
     double[] positions = new double[4];
     Rotation2d lastAngle = new Rotation2d();
     double gyroDelta = 0.0;
+  }
+
+  public static enum PathDestination {
+    CoralSource,
+    Reef,
+    Processor
   }
 }

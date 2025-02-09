@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.VisionConstants;
@@ -175,11 +176,19 @@ public class RobotContainer {
                 .ignoringDisable(true));
 
     // Turns to tag and locks rotation
+    // controller
+    //     .y()
+    //     .whileTrue(
+    //         DriveCommands.reefStrafe(
+    //             drive, () -> controller.getLeftY(), () -> controller.getLeftX()));
     controller
         .y()
-        .whileTrue(
-            DriveCommands.reefStrafe(
-                drive, () -> controller.getLeftY(), () -> controller.getLeftX()));
+        .onTrue(
+            new InstantCommand( //I hate commands so much
+                () ->
+                    DriveCommands.pathToDestination(
+                            drive, () -> DriveCommands.PathDestination.CoralSource)
+                        .schedule()));
   }
 
   /**
