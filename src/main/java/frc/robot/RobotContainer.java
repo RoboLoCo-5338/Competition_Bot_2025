@@ -178,11 +178,8 @@ public class RobotContainer {
     controller
         .y()
         .whileTrue(
-            DriveCommands.joystickDriveAtAngle(
-                drive,
-                () -> controller.getLeftY(),
-                () -> controller.getLeftX(),
-                () -> drive.getPose().getRotation().minus(vision.getTargetX(0))));
+            DriveCommands.reefStrafe(
+                drive, () -> controller.getLeftY(), () -> controller.getLeftX()));
   }
 
   /**

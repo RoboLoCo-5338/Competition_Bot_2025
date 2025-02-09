@@ -35,10 +35,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
+import org.littletonrobotics.junction.Logger;
 
 public class DriveCommands {
   private static final double DEADBAND = 0.1;
-  private static final double ANGLE_KP = 5.0;
+  private static final double ANGLE_KP = 25.0;
   private static final double ANGLE_KD = 0.4;
   private static final double ANGLE_MAX_VELOCITY = 8.0;
   private static final double ANGLE_MAX_ACCELERATION = 20.0;
@@ -286,6 +287,27 @@ public class DriveCommands {
                               + formatter.format(Units.metersToInches(wheelRadius))
                               + " inches");
                     })));
+  }
+
+  public static Command reefStrafe(
+      Drive drive, DoubleSupplier xSupplier, DoubleSupplier ySupplier) {
+    return joystickDriveAtAngle(
+        drive,
+        xSupplier,
+        ySupplier,
+        () -> {
+          Translation2d robot = drive.getPose().getTranslation();
+          Translation2d reef =
+              (DriverStation.getAlliance().isPresent()
+                      && DriverStation.getAlliance().get().equals(Alliance.Red))
+                  ? new Translation2d(13.06185, 4.03)
+                  : new Translation2d(4.5, 4.03);
+          Logger.recordOutput("Test/ReefPose", reef);
+          Logger.recordOutput(
+              "Test/TurnAngle",
+              new Rotation2d(Math.atan2(reef.getY() - robot.getY(), reef.getX() - robot.getX())));
+          return new Rotation2d(Math.atan2(reef.getY() - robot.getY(), reef.getX() - robot.getX()));
+        });
   }
 
   private static class WheelRadiusCharacterizationState {
