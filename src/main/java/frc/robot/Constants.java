@@ -38,6 +38,14 @@ public final class Constants {
     REPLAY
   }
 
+  public static final class ClimbConstants {
+    public static final int CLIMB_MOTOR_ID = -1;
+    public static final double CLIMB_kP = 0.0;
+    public static final double CLIMB_kI = 0.0;
+    public static final double CLIMB_kD = 0.0;
+    public static final double CLIMB_kS = 0.0;
+  }
+
   public static final class LEDConstants {
     // TODO change this
     public static final int LED_PWM_PORT = 0;
