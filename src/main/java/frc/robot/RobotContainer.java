@@ -187,7 +187,7 @@ public class RobotContainer {
             new InstantCommand( //I hate commands so much
                 () ->
                     DriveCommands.pathToDestination(
-                            drive, () -> DriveCommands.PathDestination.CoralSource)
+                            drive, () -> DriveCommands.PathDestination.Processor)
                         .schedule()));
   }
 

@@ -31,6 +31,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.DriverStation.MatchType;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -337,9 +338,15 @@ public class DriveCommands {
         Logger.recordOutput("Test/NearestTarget", targetPose);
         break;
       case Processor:
-        targetPose = new Pose2d();
+        targetPose = allianceFlip(new Pose2d(5.980, 0.532, new Rotation2d()));
         break;
       default:
+        if(DriverStation.getMatchType().equals(MatchType.Elimination)){ //If we are in the playoffs, we do not want to go for the coral ranking point. Therefore, it is more advantageous to go for the highest branches of the reef first, so we need to code that in.
+
+        }
+        else{
+
+        }
         targetPose = new Pose2d();
         break;
     }
