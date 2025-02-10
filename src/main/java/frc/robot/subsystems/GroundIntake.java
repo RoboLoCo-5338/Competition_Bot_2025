@@ -1,27 +1,25 @@
 package frc.robot.subsystems;
 
-//import com.revrobotics.AbsoluteEncoder;
+// import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class GroundIntake extends SubsystemBase {
   private SparkMax intakeMotor;
   private SparkMax indexerMotor;
-  //public AbsoluteEncoder intakeEncoder;
-  //public AbsoluteEncoder indexerEncoder;
+  // public AbsoluteEncoder intakeEncoder;
+  // public AbsoluteEncoder indexerEncoder;
 
- 
   SparkMaxConfig config = new SparkMaxConfig();
 
   public GroundIntake() {
     intakeMotor = new SparkMax(0, MotorType.kBrushless);
     indexerMotor = new SparkMax(0, MotorType.kBrushless);
     config.idleMode(IdleMode.kBrake);
-   // intakeEncoder = intakeMotor.getEncoder(); //didn't need encoder for intake/outtake
+    // intakeEncoder = intakeMotor.getEncoder(); //didn't need encoder for intake/outtake
   }
 
   public void stopIntake() {
@@ -69,13 +67,5 @@ public class GroundIntake extends SubsystemBase {
   public void outIntakeIndexer() {
     intakeOut();
     indexerOut();
-  }
-
-  public boolean isNote() {
-    if (getLaserCanMeasurement() != null
-        && getLaserCanMeasurement().status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
-      return getLaserCanMeasurement().distance_mm / 1000.0 < Constants.AutoConstants.normalLaserCAN;
-    }
-    return false;
   }
 }
