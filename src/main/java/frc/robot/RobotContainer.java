@@ -184,7 +184,7 @@ public class RobotContainer {
     controller
         .y()
         .onTrue(
-            new InstantCommand( //I hate commands so much
+            new InstantCommand( // I hate commands so much
                 () ->
                     DriveCommands.pathToDestination(
                             drive, () -> DriveCommands.PathDestination.Processor)

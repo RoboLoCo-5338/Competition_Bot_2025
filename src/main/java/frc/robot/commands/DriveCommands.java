@@ -18,7 +18,6 @@ import static edu.wpi.first.units.Units.Degrees;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.FlippingUtil;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -341,10 +340,14 @@ public class DriveCommands {
         targetPose = allianceFlip(new Pose2d(5.980, 0.532, new Rotation2d()));
         break;
       default:
-        if(DriverStation.getMatchType().equals(MatchType.Elimination)){ //If we are in the playoffs, we do not want to go for the coral ranking point. Therefore, it is more advantageous to go for the highest branches of the reef first, so we need to code that in.
+        if (DriverStation.getMatchType()
+            .equals(
+                MatchType.Elimination)) { // If we are in the playoffs, we do not want to go for the
+          // coral ranking point. Therefore, it is more advantageous to
+          // go for the highest branches of the reef first, so we need to
+          // code that in.
 
-        }
-        else{
+        } else {
 
         }
         targetPose = new Pose2d();
@@ -354,9 +357,11 @@ public class DriveCommands {
     return AutoBuilder.pathfindToPose(targetPose, constraints);
   }
 
-  public static Pose2d allianceFlip(Pose2d pose){
+  public static Pose2d allianceFlip(Pose2d pose) {
     return (DriverStation.getAlliance().isPresent()
-    && DriverStation.getAlliance().get().equals(Alliance.Red))? FlippingUtil.flipFieldPose(pose): pose;
+            && DriverStation.getAlliance().get().equals(Alliance.Red))
+        ? FlippingUtil.flipFieldPose(pose)
+        : pose;
   }
 
   private static class WheelRadiusCharacterizationState {
