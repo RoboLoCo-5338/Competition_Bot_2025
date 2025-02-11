@@ -7,14 +7,14 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
-
 import org.littletonrobotics.junction.Logger;
 
 public class Climb extends SubsystemBase {
 
   private final ClimbIO climbIO;
   private final ClimbIOInputsAutoLogged inputs = new ClimbIOInputsAutoLogged();
-  private final Alert climbMotorDisconnectedAlert = new Alert("Climb Motor Disconnected", AlertType.kError);
+  private final Alert climbMotorDisconnectedAlert =
+      new Alert("Climb Motor Disconnected", AlertType.kError);
 
   public Climb(ClimbIO io) {
     this.climbIO = io;
@@ -29,18 +29,17 @@ public class Climb extends SubsystemBase {
     climbIO.updateInputs(inputs);
     Logger.processInputs("Climb", inputs);
 
-    climbMotorDisconnectedAlert.set(!inputs.climbConnected && Constants.currentMode!= Mode.SIM);
+    climbMotorDisconnectedAlert.set(!inputs.climbConnected && Constants.currentMode != Mode.SIM);
   }
 
-/**
- * Creates an InstantCommand that sets the climb motor to the specified position in radians.
- *
- * @param position The target position for the climb motor in radians.
- * @return An InstantCommand that sets the climb motor to the specified position.
- */
-
+  /**
+   * Creates an InstantCommand that sets the climb motor to the specified position in radians.
+   *
+   * @param position The target position for the climb motor in radians.
+   * @return An InstantCommand that sets the climb motor to the specified position.
+   */
   public Command setClimbPosition(double position) {
-    return new InstantCommand( ()-> climbIO.setClimbPosition(position));
+    return new InstantCommand(() -> climbIO.setClimbPosition(position));
   }
 
   /**
@@ -51,6 +50,6 @@ public class Climb extends SubsystemBase {
    * @return An InstantCommand that sets the climb motor to the specified velocity.
    */
   public Command setClimbVelocity(double velocity) {
-    return new InstantCommand( ()-> climbIO.setClimbVelocity(velocity));
+    return new InstantCommand(() -> climbIO.setClimbVelocity(velocity));
   }
 }
