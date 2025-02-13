@@ -36,7 +36,7 @@ public class ClimbIOSim implements ClimbIO {
       m_climbBase.append(new LoggedMechanismLigament2d("arm", 1, 90));
 
   SingleJointedArmSim physicsSim =
-      new SingleJointedArmSim(DCMotor.getFalcon500(1), 0, 0, 0, 0, 0, false, 0);
+      new SingleJointedArmSim(DCMotor.getKrakenX60(1), 0, 0, 0, 0, 0, false, 0);
   TalonFXSimState simMotor = climbMotor.getSimState();
 
   public ClimbIOSim() {
