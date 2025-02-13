@@ -1,4 +1,4 @@
-package frc.robot.subsystems.Climb;
+package frc.robot.subsystems.climb;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;

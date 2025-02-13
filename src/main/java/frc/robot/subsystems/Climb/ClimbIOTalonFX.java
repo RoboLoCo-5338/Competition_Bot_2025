@@ -1,27 +1,19 @@
-package frc.robot.subsystems.Climb;
+package frc.robot.subsystems.climb;
 
 import static frc.robot.util.PhoenixUtil.tryUntilOk;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
-import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
-import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
-import frc.robot.Constants.ClimbConstants;
-import frc.robot.generated.TunerConstants;
 
 public class ClimbIOTalonFX implements ClimbIO {
-
-  private final TalonFX climbMotor;
 
   private final PositionVoltage climbPositionRequest = new PositionVoltage(0.0);
   private final VelocityVoltage climbVelocityRequest = new VelocityVoltage(0.0);
@@ -34,7 +26,6 @@ public class ClimbIOTalonFX implements ClimbIO {
   private final Debouncer climbConnected = new Debouncer(0.5);
 
   public ClimbIOTalonFX() {
-    climbMotor = new TalonFX(ClimbConstants.CLIMB_MOTOR_ID, TunerConstants.kCANBus.getName());
 
     climbMotor.getConfigurator().apply(getConfiguration());
 
@@ -48,29 +39,6 @@ public class ClimbIOTalonFX implements ClimbIO {
         () ->
             BaseStatusSignal.setUpdateFrequencyForAll(
                 50.0, climbPosition, climbVelocity, climbAppliedVolts, climbCurrent));
-  }
-
-  /**
-   * Returns a TalonFXConfiguration that is used to configure the climb motor's control loop and
-   * current limit. The control loop is configured with the P, I, D, and S gains from
-   * ClimbConstants. The current limit is set to 40 amps, but this should be changed later.
-   *
-   * @return a TalonFXConfiguration for the climb motor
-   */
-  private TalonFXConfiguration getConfiguration() {
-    var config = new TalonFXConfiguration();
-    config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-    config.Slot0.kP = ClimbConstants.CLIMB_kP;
-    config.Slot0.kI = ClimbConstants.CLIMB_kI;
-    config.Slot0.kD = ClimbConstants.CLIMB_kD;
-    config.Slot0.kS = ClimbConstants.CLIMB_kS;
-
-    var currentConfig = new CurrentLimitsConfigs();
-    currentConfig.StatorCurrentLimitEnable = true;
-    // TODO change this later
-    currentConfig.StatorCurrentLimit = 40;
-    config.CurrentLimits = currentConfig;
-    return config;
   }
 
   /**
