@@ -44,6 +44,7 @@ public final class Constants {
     public static final double CLIMB_kI = 0.0;
     public static final double CLIMB_kD = 0.0;
     public static final double CLIMB_kS = 0.0;
+    public static final double GEARING = 0.0; //Update this pls
   }
 
   public static final class LEDConstants {

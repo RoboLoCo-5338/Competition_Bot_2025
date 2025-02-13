@@ -41,20 +41,6 @@ public class ClimbIOTalonFX implements ClimbIO {
                 50.0, climbPosition, climbVelocity, climbAppliedVolts, climbCurrent));
   }
 
-  /**
-   * Updates the set of loggable inputs from the TalonFX. This function is called by the periodic
-   * method of the Climb subsystem. The inputs are updated as follows:
-   *
-   * <ul>
-   *   <li>climbConnected is set to true if the TalonFX is OK and false otherwise.
-   *   <li>climbAppliedVolts is set to the current voltage of the motor.
-   *   <li>climbCurrentAmps is set to the current current draw of the motor.
-   *   <li>climbPosition is set to the current position of the motor in radians.
-   *   <li>climbVelocityRadPerSec is set to the current velocity of the motor in radians per second.
-   * </ul>
-   *
-   * @param inputs the inputs to update
-   */
   @Override
   public void updateInputs(ClimbIOInputs inputs) {
     var climbStatus =
@@ -68,24 +54,11 @@ public class ClimbIOTalonFX implements ClimbIO {
     inputs.climbVelocityRadPerSec = Units.rotationsToRadians(climbPosition.getValueAsDouble());
   }
 
-  /**
-   * Sets the velocity of the climb motor in radians per second. This function runs the motor in
-   * voltage control mode and sets the voltage to the value required to achieve the desired
-   * velocity.
-   *
-   * @param velocity the desired velocity in radians per second
-   */
   @Override
   public void setClimbVelocity(double velocity) {
     climbMotor.setControl(climbVelocityRequest.withVelocity(velocity));
   }
 
-  /**
-   * Sets the position of the climb motor in radians. This function runs the motor in position
-   * control mode and sets the target position to the value specified by the input parameter.
-   *
-   * @param position the desired position in radians
-   */
   @Override
   public void setClimbPosition(double position) {
     climbMotor.setControl(climbPositionRequest.withPosition(position));
