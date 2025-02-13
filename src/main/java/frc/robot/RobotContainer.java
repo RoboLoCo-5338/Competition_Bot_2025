@@ -165,8 +165,8 @@ public class RobotContainer {
                     drive)
                 .ignoringDisable(true));
 
-    controller.x().onTrue(ClimbCommands.setForward(climb));
-    controller.y().onTrue(ClimbCommands.setBackward(climb));
+    controller.x().whileTrue(ClimbCommands.setForward(climb));
+    controller.y().whileTrue(ClimbCommands.setBackward(climb));
   }
 
   /**
