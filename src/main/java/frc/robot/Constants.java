@@ -61,4 +61,21 @@ public final class Constants {
     public static final double ARM_MOTOR_KG = 0.0;
     public static final double ARM_MOTOR_KV = 0.0;
   }
+
+  public static final class ElevatorConstants {
+    // TODO change all constants
+    public static final int ELEVATOR_MOTOR_ID1 = -1;
+    public static final int ELEVATOR_MOTOR_ID2 = -1;
+    public static final int LASERCAN_ID = -1;
+    public static final double ELEVATOR_MOTOR_kP = 0.0;
+    public static final double ELEVATOR_MOTOR_kI = 0.0;
+    public static final double ELEVATOR_MOTOR_kD = 0.0;
+    public static final double ELEVATOR_MOTOR_kG = 0.0;
+    public static final double ELEVATOR_MOTOR_kV = 0.0;
+    public static final double LASERCAN_TO_ELEVATOR_POSITION = 1.0;
+    public static final double ELEVATOR_EPSILON = 1e-2;
+    public static final double ELEVATOR_kP_LASERCAN = 0.0;
+    public static final double ELEVATOR_kI_LASERCAN = 0.0;
+    public static final double ELEVATOR_kD_LASERCAN = 0.0;
+  }
 }
