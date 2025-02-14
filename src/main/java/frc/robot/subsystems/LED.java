@@ -5,6 +5,7 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.LEDConstants;
 import org.littletonrobotics.junction.Logger;
@@ -44,8 +45,8 @@ public class LED extends SubsystemBase {
   public Command setRainbowLEDCommand() {
     LEDPattern rainbow = LEDPattern.rainbow(255, 128);
     LEDPattern scrollingRainbow =
-        rainbow.scrollAtAbsoluteSpeed(MetersPerSecond.of(1), LEDConstants.LED_SPACING);
-    return new InstantCommand(() -> io.setLEDPattern(scrollingRainbow));
+        rainbow.scrollAtAbsoluteSpeed(MetersPerSecond.of(2), LEDConstants.LED_SPACING);
+    return new RunCommand(() -> io.setLEDPattern(scrollingRainbow));
   }
 
   /**
