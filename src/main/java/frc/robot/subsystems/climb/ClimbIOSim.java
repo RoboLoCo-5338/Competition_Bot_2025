@@ -32,13 +32,13 @@ public class ClimbIOSim implements ClimbIO {
   //The logged shape and stuff of the mechanism
   LoggedMechanism2d mechanism = new LoggedMechanism2d(5, 5);
   LoggedMechanismRoot2d root = mechanism.getRoot("climb", 2.5, 0);
-  LoggedMechanismLigament2d m_climbBase = root.append(new LoggedMechanismLigament2d("base", 1, 90));
+  LoggedMechanismLigament2d m_climbBase = root.append(new LoggedMechanismLigament2d("base", ClimbConstants.BASE_HEIGHT, 90));
   LoggedMechanismLigament2d m_climbArm =
-      m_climbBase.append(new LoggedMechanismLigament2d("arm", 1, 90));
+      m_climbBase.append(new LoggedMechanismLigament2d("arm", ClimbConstants.ARM_LENGTH, 90));
 
   //Physics simulation of the arm
   SingleJointedArmSim physicsSim =
-      new SingleJointedArmSim(DCMotor.getKrakenX60(1), ClimbConstants.GEARING, 0, 0, 0, 0, false, 0);
+      new SingleJointedArmSim(DCMotor.getKrakenX60(1), ClimbConstants.GEARING, SingleJointedArmSim.estimateMOI(ClimbConstants.ARM_LENGTH, 0), ClimbConstants.ARM_LENGTH, 0, 0, false, 0);
   //Sim state of the TalonFX. 
   TalonFXSimState simMotor = climbMotor.getSimState();
   private final PositionVoltage climbPositionRequest = new PositionVoltage(0.0);
