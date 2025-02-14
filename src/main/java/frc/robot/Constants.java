@@ -93,4 +93,29 @@ public final class Constants {
     public static final int LASERCAN_1ID = -1;
     public static final int LASERCAN_2ID = -1;
   }
+
+  public static final class GroundIntakeConstants {
+    // TODO change this
+    public static final int ARM_CANID = -1;
+    public static final int ARM_CURRENT_LIMIT = 40;
+    public static final int ARM_ENCODER_POSITION_CONVERSION_FACTOR = 1;
+    public static final int ARM_ENCODER_VELOCITY_CONVERSION_FACTOR = 1;
+    public static final double ARM_KP = 0;
+    public static final double ARM_KI = 0;
+    public static final double ARM_KD = 0;
+    public static final double ARM_KFF = 0;
+    public static final double ARM_KS = 0;
+    public static final double ARM_KV = 0;
+
+    public static final int INTAKE_CANID = -1;
+    public static final int INTAKE_CURRENT_LIMIT = 40;
+    public static final int INTAKE_ENCODER_POSITION_CONVERSION_FACTOR = 1;
+    public static final int INTAKE_ENCODER_VELOCITY_CONVERSION_FACTOR = 1;
+    public static final double INTAKE_KP = 0;
+    public static final double INTAKE_KI = 0;
+    public static final double INTAKE_KD = 0;
+    public static final double INTAKE_KFF = 0;
+    public static final double INTAKE_KS = 0;
+    public static final double INTAKE_KV = 0;
+  }
 }

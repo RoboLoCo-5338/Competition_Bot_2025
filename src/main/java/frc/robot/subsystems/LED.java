@@ -43,6 +43,7 @@ public class LED extends SubsystemBase {
    * @return An InstantCommand that applies the scrolling rainbow pattern to the LED.
    */
   public Command setRainbowLEDCommand() {
+  public Command setRainbowLEDCommand() {
     LEDPattern rainbow = LEDPattern.rainbow(255, 128);
     LEDPattern scrollingRainbow =
         rainbow.scrollAtAbsoluteSpeed(MetersPerSecond.of(2), LEDConstants.LED_SPACING);
