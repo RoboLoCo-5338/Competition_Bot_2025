@@ -51,6 +51,28 @@ public class ArmIOTalonFX implements ArmIO {
     ParentDevice.optimizeBusUtilizationForAll(armMotor);
   }
 
+  /**
+   * Gets the configuration used for the Talon FX motor controllers of the arm subsystem.
+   *
+   * <p>This method returns a Talon FX configuration with the following settings:
+   *
+   * <ul>
+   *   <li>Neutral mode: Brake
+   *   <li>Gravity type: Arm cosine
+   *   <li>Feedback device: Integrated sensor
+   *   <li>kP: {@link ArmConstants#ARM_MOTOR_kP}
+   *   <li>kI: {@link ArmConstants#ARM_MOTOR_kI}
+   *   <li>kD: {@link ArmConstants#ARM_MOTOR_kD}
+   *   <li>kG: {@link ArmConstants#ARM_MOTOR_kG}
+   *   <li>kV: {@link ArmConstants#ARM_MOTOR_kV}
+   *   <li>Current limit: 40A (CHANGE THIS VALUE OTHERWISE TORQUE MAY BE LIMITED/TOO HIGH)
+   * </ul>
+   *
+   * <p>These values may need to be changed based on the actual robot hardware and the desired
+   * behavior of the elevator.
+   *
+   * @return the configuration used for the Talon FX motor controllers of the arm subsystem
+   */
   private TalonFXConfiguration getArmConfig() {
     var config = new TalonFXConfiguration();
     config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
@@ -71,6 +93,18 @@ public class ArmIOTalonFX implements ArmIO {
     return config;
   }
 
+  /**
+   * Updates the set of loggable inputs for the arm subsystem. This function updates the
+   * following inputs:
+   *
+   * <ul>
+   *   <li>{@code armConnected}: Whether the arm motor is connected
+   *   <li>{@code armPosition}: The position of the arm motor in radians
+   *   <li>{@code armVelocity}: The velocity of the arm motor in radians per second
+   *   <li>{@code armAppliedVolts}: The voltage applied to the arm motor in volts
+   *   <li>{@code armCurrent}: The current drawn by the arm motor in amps
+   * </ul>
+   */
   @Override
   public void updateInputs(ArmIOInputs inputs) {
 
@@ -84,11 +118,29 @@ public class ArmIOTalonFX implements ArmIO {
     inputs.armCurrent = armCurrent.getValueAsDouble();
   }
 
+    /**
+     * Sets the position of the arm in radians. This method is "fire-and-forget" in the
+     * sense that it will not block or wait for the arm to reach the desired position. If
+     * you want to verify that the arm has reached the desired position, you must poll the
+     * position using {@link #updateInputs(ArmIOInputs)}.
+     *
+     * @param position The position of the arm in radians.
+     */
+
   @Override
   public void setArmPosition(double position) {
     armMotor.setControl(armPositionRequest.withPosition(position));
   }
 
+  /**
+   * Sets the velocity of the arm in radians per second. This method is
+   * "fire-and-forget" in the sense that it will not block or wait for the
+   * arm to reach the desired velocity. If you want to verify that the
+   * arm has reached the desired velocity, you must poll the velocity
+   * input in the periodic method of the Arm subsystem.
+   *
+   * @param velocity the velocity in radians per second
+   */
   @Override
   public void setArmVelocity(double velocity) {
     armMotor.setControl(armVelocityRequest.withVelocity(velocity));

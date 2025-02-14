@@ -27,10 +27,27 @@ public class Arm extends SubsystemBase {
     armDisconnectedAlert.set(!inputs.armConnected && Constants.currentMode != Mode.SIM);
   }
 
+  /**
+   * Sets the arm to the given position in degrees.
+   *
+   * <p>This is a blocking call and will wait until the arm is at the requested position.
+   *
+   * @param position The position to set the arm to in degrees.
+   * @return A command that sets the arm to the given position.
+   */
+
   public Command setArmPosition(double position) {
     return new InstantCommand(() -> io.setArmPosition(position));
   }
 
+  /**
+   * Sets the arm to the given velocity in degrees per second.
+   *
+   * <p>This is a non-blocking call and will not wait until the arm is at the requested velocity.
+   *
+   * @param velocity The velocity to set the arm to in degrees per second.
+   * @return A command that sets the arm to the given velocity.
+   */
   public Command setArmVelocity(double velocity) {
     return new InstantCommand(() -> io.setArmVelocity(velocity));
   }

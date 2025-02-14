@@ -97,46 +97,6 @@ public class ElevatorIOTalonFX implements ElevatorIO {
     }
   }
 
-  /**
-   * Gets the configuration used for the Talon FX motor controllers of the elevator subsystem.
-   *
-   * <p>This method returns a Talon FX configuration with the following settings:
-   *
-   * <ul>
-   *   <li>Neutral mode: Brake
-   *   <li>Gravity type: Elevator static
-   *   <li>Feedback device: Integrated sensor
-   *   <li>kP: {@link ElevatorConstants#ELEVATOR_MOTOR_kP}
-   *   <li>kI: {@link ElevatorConstants#ELEVATOR_MOTOR_kI}
-   *   <li>kD: {@link ElevatorConstants#ELEVATOR_MOTOR_kD}
-   *   <li>kG: {@link ElevatorConstants#ELEVATOR_MOTOR_kG}
-   *   <li>kV: {@link ElevatorConstants#ELEVATOR_MOTOR_kV}
-   *   <li>Current limit: 40A (CHANGE THIS VALUE OTHERWISE TORQUE MAY BE LIMITED/TOO HIGH)
-   * </ul>
-   *
-   * <p>These values may need to be changed based on the actual robot hardware and the desired
-   * behavior of the elevator.
-   *
-   * @return the configuration used for the Talon FX motor controllers of the elevator subsystem
-   */
-  public TalonFXConfiguration getConfiguration() {
-    // TODO change these values
-    var config = new TalonFXConfiguration();
-    config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-    config.Slot0.GravityType = GravityTypeValue.Elevator_Static;
-    config.Slot0.kP = ElevatorConstants.ELEVATOR_MOTOR_kP;
-    config.Slot0.kI = ElevatorConstants.ELEVATOR_MOTOR_kI;
-    config.Slot0.kD = ElevatorConstants.ELEVATOR_MOTOR_kD;
-    config.Slot0.kG = ElevatorConstants.ELEVATOR_MOTOR_kG;
-    config.Slot0.kV = ElevatorConstants.ELEVATOR_MOTOR_kV;
-
-    var currentConfig = new CurrentLimitsConfigs();
-    currentConfig.StatorCurrentLimitEnable = true;
-    // CHANGE THIS VALUE OTHERWISE TORQUE MAY BE LIMITED/TOO HIGH
-    currentConfig.StatorCurrentLimit = 40;
-    config.CurrentLimits = currentConfig;
-    return config;
-  }
 
   /**
    * Updates the set of loggable inputs for the elevator subsystem. This method updates the
