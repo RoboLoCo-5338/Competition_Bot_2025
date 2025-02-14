@@ -1,4 +1,4 @@
-package frc.robot.subsystems.climb;
+package frc.robot.subsystems.Climb;
 
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
