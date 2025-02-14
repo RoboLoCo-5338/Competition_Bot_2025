@@ -25,7 +25,6 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.AddressableLEDIO;
-import frc.robot.subsystems.Climb.Climb2;
 import frc.robot.subsystems.LED;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
@@ -46,8 +45,6 @@ public class RobotContainer {
   private final Drive drive;
 
   public final LED led;
-
-  public static Climb2 m_Climb = new Climb2();
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);

@@ -1,7 +1,5 @@
 package frc.robot.subsystems.EndEffector;
 
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -9,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
+import org.littletonrobotics.junction.Logger;
 
 public class EndEffector extends SubsystemBase {
 
@@ -27,10 +26,11 @@ public class EndEffector extends SubsystemBase {
     io.updateInputs(inputs);
     Logger.processInputs("End Effector", inputs);
 
-    endEffectorDisconnectedAlert.set(!inputs.endEffectorConnected && Constants.currentMode != Mode.SIM);
+    endEffectorDisconnectedAlert.set(
+        !inputs.endEffectorConnected && Constants.currentMode != Mode.SIM);
   }
 
   public Command setEndEffectorVelocity(double velocity) {
-    return new InstantCommand(()->io.setEndEffectorVelocity(velocity));
+    return new InstantCommand(() -> io.setEndEffectorVelocity(velocity));
   }
 }

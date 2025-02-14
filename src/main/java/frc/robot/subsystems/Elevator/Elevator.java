@@ -27,8 +27,8 @@ public class Elevator extends SubsystemBase {
   }
 
   /**
-   * Periodic function for the Elevator subsystem. Updates inputs and logs them.
-   * Checks if the elevator motors are connected and alerts if not.
+   * Periodic function for the Elevator subsystem. Updates inputs and logs them. Checks if the
+   * elevator motors are connected and alerts if not.
    */
   @Override
   public void periodic() {
@@ -39,24 +39,21 @@ public class Elevator extends SubsystemBase {
     elevator2DisconnectedAlert.set(!inputs.elevator1Connected && Constants.currentMode != Mode.SIM);
   }
 
-
- 
-
   /**
    * Creates a command to set the elevator's position to the specified value.
    *
    * @param position The desired position for the elevator.
    * @return A command that sets the elevator's position.
    */
-
   public Command setElevatorPosition(double position) {
     return new InstantCommand(() -> io.setElevatorPosition(position));
   }
 
   /**
-   * PID controller for the elevator. This function uses the laser can to measure the elevator's position and
-   * calculates the error, integral, and derivative of the error. It then applies the gains to the error, integral,
-   * and derivative to calculate the output velocity. The output velocity is then set on the elevator.
+   * PID controller for the elevator. This function uses the laser can to measure the elevator's
+   * position and calculates the error, integral, and derivative of the error. It then applies the
+   * gains to the error, integral, and derivative to calculate the output velocity. The output
+   * velocity is then set on the elevator.
    *
    * @param position The desired position of the elevator.
    */
