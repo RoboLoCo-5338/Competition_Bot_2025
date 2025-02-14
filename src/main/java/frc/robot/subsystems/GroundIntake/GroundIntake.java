@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
-
 import org.littletonrobotics.junction.Logger;
 
 public class GroundIntake extends SubsystemBase {
@@ -31,20 +30,19 @@ public class GroundIntake extends SubsystemBase {
     io.updateInputs(inputs);
     Logger.processInputs("Ground Intake", inputs);
 
-    armDisconnectedAlert.set(!inputs.armMotorConnected &&  Constants.currentMode != Mode.SIM);
+    armDisconnectedAlert.set(!inputs.armMotorConnected && Constants.currentMode != Mode.SIM);
     intakeDisconnectedAlert.set(!inputs.intakeMotorConnected && Constants.currentMode != Mode.SIM);
   }
 
-  public Command setGroundIntakeVelocity(double velocity){
-      return new InstantCommand(() -> io.setIntakeVelocity(velocity));
+  public Command setGroundIntakeVelocity(double velocity) {
+    return new InstantCommand(() -> io.setIntakeVelocity(velocity));
   }
 
-  public Command setGroundArmPosition(double position){
+  public Command setGroundArmPosition(double position) {
     return new InstantCommand(() -> io.setArmPosition(position));
   }
 
-  public Command setGroundArmVelocity(double velocity){
+  public Command setGroundArmVelocity(double velocity) {
     return new InstantCommand(() -> io.setArmVelocity(velocity));
   }
-
 }

@@ -46,6 +46,8 @@ public class EndEffectorIOSpark implements EndEffectorIO {
                 ResetMode.kResetSafeParameters,
                 PersistMode.kPersistParameters));
 
+    
+
     LcEffector1 = new LaserCan(EndEffectorConstants.LASERCAN_1ID);
     LcEffector2 = new LaserCan(EndEffectorConstants.LASERCAN_2ID);
     try {
