@@ -8,6 +8,7 @@ import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.filter.Debouncer;
@@ -48,6 +49,8 @@ public class ClimbIOTalonFX implements ClimbIO {
         () ->
             BaseStatusSignal.setUpdateFrequencyForAll(
                 50.0, climbPosition, climbVelocity, climbAppliedVolts, climbCurrent));
+
+    ParentDevice.optimizeBusUtilizationForAll(climbMotor);
   }
 
   /**
