@@ -44,4 +44,13 @@ public final class Constants {
     public static final int LED_LENGTH = -1;
     public static final Distance LED_SPACING = Meters.of(1 / 1.0);
   }
+
+  public static final class ArmConstants {
+    public static final int ARM_MOTOR_ID = -1;
+    public static final double ARM_MOTOR_KP = 0.0;
+    public static final double ARM_MOTOR_KI = 0.0;
+    public static final double ARM_MOTOR_KD = 0.0;
+    public static final double ARM_MOTOR_KG = 0.0;
+    public static final double ARM_MOTOR_KV = 0.0;
+  }
 }
