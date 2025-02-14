@@ -44,4 +44,19 @@ public final class Constants {
     public static final int LED_LENGTH = -1;
     public static final Distance LED_SPACING = Meters.of(1 / 1.0);
   }
+
+  public static final class EndEffectorConstants {
+    public static final int EFFECTORID = -1;
+    public static final int EFFECTOR_CURRENT_LIMIT = 40;
+    public static final double EFFECTOR_ENCODER_POSITION_CONVERSION_FACTOR = 1.0;
+    public static final double EFFECTOR_ENCODER_VELOCITY_CONVERSION_FACTOR = 1.0;
+    public static final double EFFECTOR_KP = 0.0;
+    public static final double EFFECTOR_KI = 0.0;
+    public static final double EFFECTOR_KD = 0.0;
+    public static final double EFFECTOR_KS = 0.0;
+    public static final double EFFECTOR_KV = 0.0;
+    public static final double EFFECTOR_KFF = 0.0;
+    public static final int LASERCAN_1ID = -1;
+    public static final int LASERCAN_2ID = -1;
+  }
 }
