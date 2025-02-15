@@ -35,7 +35,6 @@ public class Arm extends SubsystemBase {
    * @param position The position to set the arm to in degrees.
    * @return A command that sets the arm to the given position.
    */
-
   public Command setArmPosition(double position) {
     return new InstantCommand(() -> io.setArmPosition(position));
   }

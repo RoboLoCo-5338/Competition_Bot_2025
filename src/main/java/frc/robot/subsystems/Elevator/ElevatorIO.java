@@ -1,26 +1,22 @@
 package frc.robot.subsystems.Elevator;
 
-import org.littletonrobotics.junction.AutoLog;
-
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.generated.TunerConstants;
+import org.littletonrobotics.junction.AutoLog;
 
 public interface ElevatorIO {
 
   TalonFX elevatorMotor1 =
-        new TalonFX(
-            ElevatorConstants.ELEVATOR_MOTOR_ID1, TunerConstants.DrivetrainConstants.CANBusName);
+      new TalonFX(
+          ElevatorConstants.ELEVATOR_MOTOR_ID1, TunerConstants.DrivetrainConstants.CANBusName);
   TalonFX elevatorMotor2 =
-            new TalonFX(
-                ElevatorConstants.ELEVATOR_MOTOR_ID2, TunerConstants.DrivetrainConstants.CANBusName);
-                
-
+      new TalonFX(
+          ElevatorConstants.ELEVATOR_MOTOR_ID2, TunerConstants.DrivetrainConstants.CANBusName);
 
   @AutoLog
   public static class ElevatorIOInputs {
@@ -47,7 +43,7 @@ public interface ElevatorIO {
     return -1;
   }
 
-   /**
+  /**
    * Gets the configuration used for the Talon FX motor controllers of the elevator subsystem.
    *
    * <p>This method returns a Talon FX configuration with the following settings:

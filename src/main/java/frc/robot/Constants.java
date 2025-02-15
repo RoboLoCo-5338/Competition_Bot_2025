@@ -44,7 +44,7 @@ public final class Constants {
     public static final double CLIMB_kI = 0.0;
     public static final double CLIMB_kD = 0.0;
     public static final double CLIMB_kS = 0.0;
-    public static final double GEARING = 0.01; //Update this pls don't worry bro I did
+    public static final double GEARING = 0.01; // Update this pls don't worry bro I did
     public static final double BASE_HEIGHT = 1;
     public static final double ARM_LENGTH = 1;
   }
@@ -63,6 +63,10 @@ public final class Constants {
     public static final double ARM_MOTOR_KD = 0.0;
     public static final double ARM_MOTOR_KG = 0.0;
     public static final double ARM_MOTOR_KV = 0.0;
+    public static final double ARM_MOTOR_KFF = 0.0;
+    public static final int ARM_MOTOR_CURRENT_LIMIT = 40;
+    public static final double ARM_ENCODER_POSITION_CONVERSION_FACTOR = 1.0;
+    public static final double ARM_ENCODER_VELOCITY_CONVERSION_FACTOR = 1.0;
   }
 
   public static final class ElevatorConstants {
@@ -93,6 +97,7 @@ public final class Constants {
     public static final double EFFECTOR_KS = 0.0;
     public static final double EFFECTOR_KV = 0.0;
     public static final double EFFECTOR_KFF = 0.0;
+    public static final double EFFECTOR_KG = 0.0;
     public static final int LASERCAN_1ID = -1;
     public static final int LASERCAN_2ID = -1;
   }

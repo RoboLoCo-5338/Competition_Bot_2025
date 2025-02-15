@@ -8,8 +8,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.LEDConstants;
-import frc.robot.subsystems.LedIOInputsAutoLogged;
-
 import org.littletonrobotics.junction.Logger;
 
 public class LED extends SubsystemBase {

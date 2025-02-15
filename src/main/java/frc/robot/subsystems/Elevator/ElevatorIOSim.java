@@ -1,13 +1,7 @@
 package frc.robot.subsystems.Elevator;
 
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.signals.GravityTypeValue;
-import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.ctre.phoenix6.sim.ChassisReference;
 import com.ctre.phoenix6.sim.TalonFXSimState;
-
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 
 public class ElevatorIOSim implements ElevatorIO {
@@ -22,7 +16,7 @@ public class ElevatorIOSim implements ElevatorIO {
 
     // TODO does this need to be inverted? idk bro does it?
     elevatorMotor2.getConfigurator().apply(getConfiguration());
-    //if it does, uncomment the below line.
+    // if it does, uncomment the below line.
     // motor2Sim.Orientation=ChassisReference.Clockwise_Positive;
   }
 
@@ -47,5 +41,4 @@ public class ElevatorIOSim implements ElevatorIO {
 
   @Override
   public void setElevatorPosition(double position) {}
-
 }

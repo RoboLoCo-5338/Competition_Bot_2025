@@ -22,7 +22,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-
 import frc.robot.commands.DriveCommands;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Led.AddressableLEDIO;
@@ -66,7 +65,7 @@ public class RobotContainer {
                 new ModuleIOTalonFX(TunerConstants.BackLeft),
                 new ModuleIOTalonFX(TunerConstants.BackRight));
         led = new LED(new AddressableLEDIO());
-      
+
         break;
 
       case SIM:
@@ -79,7 +78,7 @@ public class RobotContainer {
                 new ModuleIOSim(TunerConstants.BackLeft),
                 new ModuleIOSim(TunerConstants.BackRight));
         led = new LED(new AddressableLEDIO());
-        
+
         break;
 
       default:
@@ -93,7 +92,7 @@ public class RobotContainer {
                 new ModuleIO() {});
         // TODO change this
         led = new LED(new AddressableLEDIO());
-       
+
         break;
     }
 
@@ -158,8 +157,6 @@ public class RobotContainer {
                             new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
                     drive)
                 .ignoringDisable(true));
-
-
   }
 
   /**
