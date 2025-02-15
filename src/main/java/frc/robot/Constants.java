@@ -40,6 +40,7 @@ public final class Constants {
 
   public static final class ClimbConstants {
     public static final int CLIMB_MOTOR_ID = -1;
+    public static final int CLIMB_MOTOR_CURRENT_LIMIT = 20;
     public static final double CLIMB_kP = 0.0;
     public static final double CLIMB_kI = 0.0;
     public static final double CLIMB_kD = 0.0;
@@ -73,6 +74,7 @@ public final class Constants {
     // TODO change all constants
     public static final int ELEVATOR_MOTOR_ID1 = -1;
     public static final int ELEVATOR_MOTOR_ID2 = -1;
+    public static final int ELEVATOR_MOTOR_CURRENT_LIMIT = 20;
     public static final int LASERCAN_ID = -1;
     public static final double ELEVATOR_MOTOR_kP = 0.0;
     public static final double ELEVATOR_MOTOR_kI = 0.0;
@@ -88,7 +90,7 @@ public final class Constants {
 
   public static final class EndEffectorConstants {
     public static final int EFFECTORID = -1;
-    public static final int EFFECTOR_CURRENT_LIMIT = 40;
+    public static final int EFFECTOR_CURRENT_LIMIT = 20;
     public static final double EFFECTOR_ENCODER_POSITION_CONVERSION_FACTOR = 1.0;
     public static final double EFFECTOR_ENCODER_VELOCITY_CONVERSION_FACTOR = 1.0;
     public static final double EFFECTOR_KP = 0.0;
@@ -105,7 +107,7 @@ public final class Constants {
   public static final class GroundIntakeConstants {
     // TODO change this
     public static final int ARM_CANID = -1;
-    public static final int ARM_CURRENT_LIMIT = 40;
+    public static final int ARM_CURRENT_LIMIT = 20;
     public static final int ARM_ENCODER_POSITION_CONVERSION_FACTOR = 1;
     public static final int ARM_ENCODER_VELOCITY_CONVERSION_FACTOR = 1;
     public static final double ARM_KP = 0;
@@ -116,7 +118,7 @@ public final class Constants {
     public static final double ARM_KV = 0;
 
     public static final int INTAKE_CANID = -1;
-    public static final int INTAKE_CURRENT_LIMIT = 40;
+    public static final int INTAKE_CURRENT_LIMIT = 20;
     public static final int INTAKE_ENCODER_POSITION_CONVERSION_FACTOR = 1;
     public static final int INTAKE_ENCODER_VELOCITY_CONVERSION_FACTOR = 1;
     public static final double INTAKE_KP = 0;

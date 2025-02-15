@@ -79,7 +79,7 @@ public interface ElevatorIO {
     var currentConfig = new CurrentLimitsConfigs();
     currentConfig.StatorCurrentLimitEnable = true;
     // CHANGE THIS VALUE OTHERWISE TORQUE MAY BE LIMITED/TOO HIGH
-    currentConfig.StatorCurrentLimit = 40;
+    currentConfig.StatorCurrentLimit = ElevatorConstants.ELEVATOR_MOTOR_CURRENT_LIMIT;
     config.CurrentLimits = currentConfig;
     return config;
   }
