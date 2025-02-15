@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.DriveCommands.CoralStation;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Vision.Vision;
 import frc.robot.subsystems.Vision.VisionIO;
@@ -186,8 +187,7 @@ public class RobotContainer {
         .onTrue(
             new InstantCommand( // I hate commands so much
                 () ->
-                    DriveCommands.pathToDestination(
-                            drive, () -> DriveCommands.PathDestination.Processor)
+                    DriveCommands.pathToDestination(drive, () -> new CoralStation(drive))
                         .schedule()));
   }
 

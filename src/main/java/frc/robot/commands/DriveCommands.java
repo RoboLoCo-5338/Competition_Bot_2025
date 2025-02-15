@@ -30,10 +30,10 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.DriverStation.MatchType;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.drive.Drive;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -305,7 +305,9 @@ public class DriveCommands {
           Translation2d robot = drive.getPose().getTranslation();
           Translation2d reef =
               (DriverStation.getAlliance().isPresent()
-                      && DriverStation.getAlliance().get().equals(Alliance.Red))
+                      && DriverStation.getAlliance()
+                          .get()
+                          .equals(Alliance.Blue)) // TODO: switch to red
                   ? new Translation2d(13.06185, 4.03)
                   : new Translation2d(4.5, 4.03);
           Logger.recordOutput("Test/ReefPose", reef);
@@ -317,43 +319,12 @@ public class DriveCommands {
   }
 
   public static Command pathToDestination(Drive drive, Supplier<PathDestination> destination) {
-    Pose2d targetPose;
-    PathConstraints constraints =
-        new PathConstraints(
-            drive.getMaxLinearSpeedMetersPerSec(),
-            drive.getMaxAngularSpeedRadPerSec(),
-            ANGLE_MAX_VELOCITY,
-            ANGLE_MAX_ACCELERATION);
-
-    switch (destination.get()) {
-      case CoralSource:
-        targetPose =
-            drive
-                .getPose()
-                .nearest(
-                    List.of(
-                        allianceFlip(new Pose2d(1.56, 7.36, new Rotation2d(Degrees.of(-54)))),
-                        allianceFlip(new Pose2d(1.623, 0.682, new Rotation2d(Degrees.of(54))))));
-        Logger.recordOutput("Test/NearestTarget", targetPose);
-        break;
-      case Processor:
-        targetPose = allianceFlip(new Pose2d(5.980, 0.532, new Rotation2d()));
-        break;
-      default:
-        if (DriverStation.getMatchType()
-            .equals(
-                MatchType.Elimination)) { // If we are in the playoffs, we do not want to go for the
-          // coral ranking point. Therefore, it is more advantageous to
-          // go for the highest branches of the reef first, so we need to
-          // code that in.
-
-        } else {
-
-        }
-        targetPose = new Pose2d();
-        break;
-    }
-
+    Pose2d targetPose = destination.get().getTargetPosition();
+    PathConstraints constraints = new PathConstraints(
+    drive.getMaxLinearSpeedMetersPerSec(),
+    drive.getMaxAngularSpeedRadPerSec(),
+    ANGLE_MAX_VELOCITY,
+    ANGLE_MAX_ACCELERATION);
     return AutoBuilder.pathfindToPose(targetPose, constraints);
   }
 
@@ -370,9 +341,102 @@ public class DriveCommands {
     double gyroDelta = 0.0;
   }
 
-  public static enum PathDestination {
-    CoralSource,
-    Reef,
-    Processor
+  public static abstract class PathDestination {
+    public abstract Pose2d getTargetPosition();
+  }
+
+  public static class Processor extends PathDestination {
+    public Processor() {}
+
+    @Override
+    public Pose2d getTargetPosition() {
+      return allianceFlip(new Pose2d(5.980, 0.532, new Rotation2d()));
+    }
+  }
+
+  public static class CoralStation extends PathDestination {
+    Drive drive;
+    Direction station;
+
+    public CoralStation(Drive drive, Direction station) {
+      this.station = station;
+      this.drive = drive;
+    }
+
+    public CoralStation(Drive drive) {
+      this.drive = drive;
+      this.station = Direction.None;
+    }
+
+    @Override
+    public Pose2d getTargetPosition() {
+      switch (station) {
+        case Left:
+          return allianceFlip(new Pose2d(1.56, 7.36, new Rotation2d(Degrees.of(-54))));
+        case Right:
+          return allianceFlip(new Pose2d(1.623, 0.682, new Rotation2d(Degrees.of(54))));
+        default:
+          return drive
+              .getPose()
+              .nearest(
+                  List.of(
+                      allianceFlip(new Pose2d(1.56, 7.36, new Rotation2d(Degrees.of(-54)))),
+                      allianceFlip(new Pose2d(1.623, 0.682, new Rotation2d(Degrees.of(54))))));
+      }
+    }
+  }
+
+  public static class Reef extends PathDestination {
+    Direction direction;
+    int tagId;
+
+    public Reef(Direction direction, int tagId) {
+      this.direction = direction;
+      this.tagId = tagId;
+    }
+
+    @Override
+    public Pose2d getTargetPosition() {
+      switch (direction) {
+        case Left:
+          return new Pose2d() // Change this to correct pose
+              .rotateAround(
+                  (DriverStation.getAlliance().isPresent()
+                          && DriverStation.getAlliance()
+                              .get()
+                              .equals(Alliance.Blue)) // TODO: switch to red
+                      ? new Translation2d(13.06185, 4.03)
+                      : new Translation2d(4.5, 4.03),
+                  VisionConstants.aprilTagLayout
+                      .getTagPose(tagId)
+                      .get()
+                      .getRotation()
+                      .toRotation2d()
+                      .plus(new Rotation2d(Math.PI)));
+        case Right:
+          return new Pose2d() // TODO: change this to the correct pose
+              .rotateAround(
+                  (DriverStation.getAlliance().isPresent()
+                          && DriverStation.getAlliance()
+                              .get()
+                              .equals(Alliance.Blue)) // TODO: switch to red
+                      ? new Translation2d(13.06185, 4.03)
+                      : new Translation2d(4.5, 4.03),
+                  VisionConstants.aprilTagLayout
+                      .getTagPose(tagId)
+                      .get()
+                      .getRotation()
+                      .toRotation2d()
+                      .plus(new Rotation2d(Math.PI)));
+        default:
+          return new Pose2d();
+      }
+    }
+  }
+
+  public enum Direction {
+    Left,
+    Right,
+    None
   }
 }
