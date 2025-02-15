@@ -25,18 +25,23 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Arm.Arm;
+import frc.robot.subsystems.Arm.ArmIO;
 import frc.robot.subsystems.Arm.ArmIOSim;
 import frc.robot.subsystems.Arm.ArmIOSpark;
 import frc.robot.subsystems.Climb.Climb;
+import frc.robot.subsystems.Climb.ClimbIO;
 import frc.robot.subsystems.Climb.ClimbIOSim;
 import frc.robot.subsystems.Climb.ClimbIOTalonFX;
 import frc.robot.subsystems.Elevator.Elevator;
+import frc.robot.subsystems.Elevator.ElevatorIO;
 import frc.robot.subsystems.Elevator.ElevatorIOSim;
 import frc.robot.subsystems.Elevator.ElevatorIOTalonFX;
 import frc.robot.subsystems.EndEffector.EndEffector;
+import frc.robot.subsystems.EndEffector.EndEffectorIO;
 import frc.robot.subsystems.EndEffector.EndEffectorIOSim;
 import frc.robot.subsystems.EndEffector.EndEffectorIOTalonFX;
 import frc.robot.subsystems.GroundIntake.GroundIntake;
+import frc.robot.subsystems.GroundIntake.GroundIntakeIO;
 import frc.robot.subsystems.GroundIntake.GroundIntakeIOSim;
 import frc.robot.subsystems.GroundIntake.GroundIntakeIOSpark;
 import frc.robot.subsystems.Led.AddressableLEDIO;
@@ -125,14 +130,13 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {},
                 new ModuleIO() {});
-        // TODO change this
-        //guys idk whats going on here someone take a look and figure it out please and ty
-        led = new LED(null);
-        groundIntake = new GroundIntake(null);
-        endEffector = new EndEffector(null);
-        elevator = new Elevator(null);
-        climb = new Climb(null);
-        arm = new Arm(null);
+        
+        led = new LED(new LEDIO(){});
+        groundIntake = new GroundIntake(new GroundIntakeIO() {});
+        endEffector = new EndEffector(new EndEffectorIO() {});
+        elevator = new Elevator(new ElevatorIO() {});
+        climb = new Climb(new ClimbIO() {});
+        arm = new Arm(new ArmIO() {});
 
         break;
     }
