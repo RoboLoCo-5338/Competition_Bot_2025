@@ -78,6 +78,8 @@ public class RobotContainer {
 
   private final Arm arm;
 
+  private double exponentialVariable = 25.0;
+
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
 
@@ -175,7 +177,7 @@ public class RobotContainer {
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
             drive,
-            () -> -controller.getLeftY(),
+            () -> joystickExponentialFunction(-controller.getLeftY()),
             () -> -controller.getLeftX(),
             () -> -controller.getRightX()));
 
@@ -211,5 +213,17 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return autoChooser.get();
+  }
+
+
+  /**
+   * Maps a joystick input to a speed using an exponential function, which gives more precise
+   * control at lower speeds.
+   *
+   * @param x the input from the joystick
+   * @return the output speed
+   */
+  public double joystickExponentialFunction(double x){
+    return (1.0/(exponentialVariable-1)) * (Math.pow(exponentialVariable,x) -1);
   }
 }
