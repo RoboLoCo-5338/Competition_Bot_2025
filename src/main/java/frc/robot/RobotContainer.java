@@ -16,6 +16,8 @@ package frc.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -25,7 +27,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.DriveCommands;
-import frc.robot.commands.DriveCommands.CoralStation;
+import frc.robot.commands.DriveCommands.Reef;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Vision.Vision;
 import frc.robot.subsystems.Vision.VisionIO;
@@ -37,6 +39,8 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
+import java.util.Arrays;
+import java.util.List;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -186,9 +190,22 @@ public class RobotContainer {
         .y()
         .onTrue(
             new InstantCommand( // I hate commands so much
-                () ->
-                    DriveCommands.pathToDestination(drive, () -> new CoralStation(drive))
-                        .schedule()));
+                () -> {
+                  List<Integer> reefTags =
+                      ((DriverStation.getAlliance().isPresent()
+                              && DriverStation.getAlliance().get().equals(Alliance.Red))
+                          ? Arrays.asList(6, 7, 8, 9, 10, 11)
+                          : Arrays.asList(17, 18, 19, 20, 21, 22));
+                  for (int tag : vision.getTagIds(0)) {
+                    if (reefTags.contains(tag)) {
+                      System.out.println(tag);
+                      DriveCommands.pathToDestination(
+                              drive, () -> new Reef(DriveCommands.Direction.Left, tag))
+                          .schedule();
+                      return;
+                    }
+                  }
+                }));
   }
 
   /**

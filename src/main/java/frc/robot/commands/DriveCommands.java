@@ -294,7 +294,14 @@ public class DriveCommands {
                               + " inches");
                     })));
   }
-
+  /**
+   * Locks rotation onto the center of the reef
+   *
+   * @param drive Drivetrain
+   * @param xSupplier Supplier of x velocity
+   * @param ySupplier Supplier of y velocity
+   * @return Command to strafe around the reef center
+   */
   public static Command reefStrafe(
       Drive drive, DoubleSupplier xSupplier, DoubleSupplier ySupplier) {
     return joystickDriveAtAngle(
@@ -318,16 +325,31 @@ public class DriveCommands {
         });
   }
 
+  /**
+   * Paths to one of the destinations on the field
+   *
+   * @param drive Drivetrain
+   * @param destination Destination that the robot paths to
+   * @return Command that makes the robot path to the destination
+   */
   public static Command pathToDestination(Drive drive, Supplier<PathDestination> destination) {
     Pose2d targetPose = destination.get().getTargetPosition();
-    PathConstraints constraints = new PathConstraints(
-    drive.getMaxLinearSpeedMetersPerSec(),
-    drive.getMaxAngularSpeedRadPerSec(),
-    ANGLE_MAX_VELOCITY,
-    ANGLE_MAX_ACCELERATION);
+    Logger.recordOutput("PathTedt", targetPose);
+    PathConstraints constraints =
+        new PathConstraints(
+            drive.getMaxLinearSpeedMetersPerSec(),
+            drive.getMaxAngularSpeedRadPerSec(),
+            ANGLE_MAX_VELOCITY,
+            ANGLE_MAX_ACCELERATION);
     return AutoBuilder.pathfindToPose(targetPose, constraints);
   }
 
+  /**
+   * Util function to flip the pose of the alliance based on the alliance
+   *
+   * @param pose Pose to flip
+   * @return Flipped Pose
+   */
   public static Pose2d allianceFlip(Pose2d pose) {
     return (DriverStation.getAlliance().isPresent()
             && DriverStation.getAlliance().get().equals(Alliance.Red))
@@ -341,10 +363,17 @@ public class DriveCommands {
     double gyroDelta = 0.0;
   }
 
-  public static abstract class PathDestination {
+  /** Abstract class for destinations to path to. */
+  public abstract static class PathDestination {
+    /**
+     * Gets the pose the robot should path to for reaching a certain destination.
+     *
+     * @return The pose the robot needs to path to.
+     */
     public abstract Pose2d getTargetPosition();
   }
 
+  /** Processor destination. */
   public static class Processor extends PathDestination {
     public Processor() {}
 
@@ -354,10 +383,20 @@ public class DriveCommands {
     }
   }
 
+  /**
+   * Coral Station destination. If a direction is specified, the robot goes to the specific coral
+   * station, otherwise it just goes to the closest coral station.
+   */
   public static class CoralStation extends PathDestination {
     Drive drive;
     Direction station;
-
+    /**
+     * Creates a Coral Station destination based on a specific direction.
+     *
+     * @param drive Drivetrain.
+     * @param station Which Coral Station to path to, relative to the drivers' perspective. If None
+     *     is chosen, the closest station is pathed to.
+     */
     public CoralStation(Drive drive, Direction station) {
       this.station = station;
       this.drive = drive;
@@ -385,11 +424,16 @@ public class DriveCommands {
       }
     }
   }
-
+  /** Reef destination. */
   public static class Reef extends PathDestination {
     Direction direction;
     int tagId;
-
+    /**
+     * Creates a reef direction based on the currently visible tag.
+     *
+     * @param direction Whether to path to the left branch or the right branch
+     * @param tagId ID of the tag used for pathing.
+     */
     public Reef(Direction direction, int tagId) {
       this.direction = direction;
       this.tagId = tagId;
@@ -397,29 +441,28 @@ public class DriveCommands {
 
     @Override
     public Pose2d getTargetPosition() {
+      // rotates the left or right pose around the reef based on the tag id
       switch (direction) {
         case Left:
-          return new Pose2d() // Change this to correct pose
+          Rotation2d rot =
+              VisionConstants.aprilTagLayout.getTagPose(tagId).get().getRotation().toRotation2d();
+          if (!(DriverStation.getAlliance().isPresent()
+              && DriverStation.getAlliance().get().equals(Alliance.Red)))
+            rot = rot.plus(new Rotation2d(Math.PI));
+          return allianceFlip(
+                  new Pose2d(2.865, 4.007, new Rotation2d())) // TODO: Change this to correct pose
               .rotateAround(
                   (DriverStation.getAlliance().isPresent()
-                          && DriverStation.getAlliance()
-                              .get()
-                              .equals(Alliance.Blue)) // TODO: switch to red
+                          && DriverStation.getAlliance().get().equals(Alliance.Red))
                       ? new Translation2d(13.06185, 4.03)
                       : new Translation2d(4.5, 4.03),
-                  VisionConstants.aprilTagLayout
-                      .getTagPose(tagId)
-                      .get()
-                      .getRotation()
-                      .toRotation2d()
-                      .plus(new Rotation2d(Math.PI)));
+                  // new Rotation2d(Math.PI));
+                  rot);
         case Right:
           return new Pose2d() // TODO: change this to the correct pose
               .rotateAround(
                   (DriverStation.getAlliance().isPresent()
-                          && DriverStation.getAlliance()
-                              .get()
-                              .equals(Alliance.Blue)) // TODO: switch to red
+                          && DriverStation.getAlliance().get().equals(Alliance.Red))
                       ? new Translation2d(13.06185, 4.03)
                       : new Translation2d(4.5, 4.03),
                   VisionConstants.aprilTagLayout
