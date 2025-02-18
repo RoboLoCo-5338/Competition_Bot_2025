@@ -444,33 +444,29 @@ public class DriveCommands {
       // rotates the left or right pose around the reef based on the tag id
       switch (direction) {
         case Left:
-          Rotation2d rot =
-              VisionConstants.aprilTagLayout.getTagPose(tagId).get().getRotation().toRotation2d();
-          if (!(DriverStation.getAlliance().isPresent()
-              && DriverStation.getAlliance().get().equals(Alliance.Red)))
-            rot = rot.plus(new Rotation2d(Math.PI));
           return allianceFlip(
-                  new Pose2d(2.865, 4.007, new Rotation2d())) // TODO: Change this to correct pose
-              .rotateAround(
-                  (DriverStation.getAlliance().isPresent()
-                          && DriverStation.getAlliance().get().equals(Alliance.Red))
-                      ? new Translation2d(13.06185, 4.03)
-                      : new Translation2d(4.5, 4.03),
-                  // new Rotation2d(Math.PI));
-                  rot);
+              new Pose2d(2.865, 4.007, new Rotation2d()) // TODO: Change this to correct pose
+                  .rotateAround(
+                      new Translation2d(4.5, 4.03),
+                      // new Rotation2d(Math.PI));
+                      VisionConstants.aprilTagLayout
+                          .getTagPose(tagId)
+                          .get()
+                          .getRotation()
+                          .toRotation2d()
+                          .plus(new Rotation2d(Math.PI))));
         case Right:
-          return new Pose2d() // TODO: change this to the correct pose
-              .rotateAround(
-                  (DriverStation.getAlliance().isPresent()
-                          && DriverStation.getAlliance().get().equals(Alliance.Red))
-                      ? new Translation2d(13.06185, 4.03)
-                      : new Translation2d(4.5, 4.03),
-                  VisionConstants.aprilTagLayout
-                      .getTagPose(tagId)
-                      .get()
-                      .getRotation()
-                      .toRotation2d()
-                      .plus(new Rotation2d(Math.PI)));
+          return allianceFlip(
+              new Pose2d(2.865, 4.007, new Rotation2d()) // TODO: Change this to correct pose
+                  .rotateAround(
+                      new Translation2d(4.5, 4.03),
+                      // new Rotation2d(Math.PI));
+                      VisionConstants.aprilTagLayout
+                          .getTagPose(tagId)
+                          .get()
+                          .getRotation()
+                          .toRotation2d()
+                          .plus(new Rotation2d(Math.PI))));
         default:
           return new Pose2d();
       }
