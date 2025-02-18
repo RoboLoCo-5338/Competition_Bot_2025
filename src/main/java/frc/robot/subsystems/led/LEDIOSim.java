@@ -1,6 +1,3 @@
 package frc.robot.subsystems.led;
 
-public class LEDIOSim implements LEDIO {
- 
-    
-}
+public class LEDIOSim implements LEDIO {}

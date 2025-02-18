@@ -124,7 +124,7 @@ public interface ElevatorIO {
     // CHANGE THIS VALUE OTHERWISE TORQUE MAY BE LIMITED/TOO HIGH
     currentConfig.StatorCurrentLimit = 40;
     config.CurrentLimits = currentConfig;
-    if(motorNum==2) config.MotorOutput.Inverted=InvertedValue.Clockwise_Positive; 
+    if (motorNum == 2) config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     return config;
   }
 }

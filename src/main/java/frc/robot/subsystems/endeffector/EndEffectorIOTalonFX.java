@@ -6,13 +6,8 @@ import au.grapplerobotics.LaserCan;
 import au.grapplerobotics.interfaces.LaserCanInterface.Measurement;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
-import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.ParentDevice;
-import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.GravityTypeValue;
-import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
@@ -22,11 +17,8 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
 import frc.robot.Constants.EndEffectorConstants;
-import frc.robot.generated.TunerConstants;
 
 public class EndEffectorIOTalonFX implements EndEffectorIO {
-
-  private final TalonFX endEffectorMotor;
 
   private final VelocityVoltage endEffectorVelocityRequest = new VelocityVoltage(0.0);
 
@@ -40,9 +32,6 @@ public class EndEffectorIOTalonFX implements EndEffectorIO {
   private final LaserCan LcEffector2; // why is it screaming at me here
 
   public EndEffectorIOTalonFX() {
-
-    endEffectorMotor =
-        new TalonFX(EndEffectorConstants.EFFECTORID, TunerConstants.DrivetrainConstants.CANBusName);
 
     endEffectorVelocity = endEffectorMotor.getVelocity();
     endEffectorAppliedVolts = endEffectorMotor.getMotorVoltage();
@@ -73,25 +62,6 @@ public class EndEffectorIOTalonFX implements EndEffectorIO {
     } catch (Exception e) {
       System.out.println("Error: " + e);
     }
-  }
-
-  public TalonFXConfiguration getEndEffectorConfiguration() {
-    // TODO change these values
-    var config = new TalonFXConfiguration();
-    config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-    // TODO requres certain canges - remember
-    // IF NOT CHANGED WILL NOT WORK
-    config.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
-    config.Slot0.kP = EndEffectorConstants.EFFECTOR_KP;
-    config.Slot0.kI = EndEffectorConstants.EFFECTOR_KI;
-    config.Slot0.kD = EndEffectorConstants.EFFECTOR_KD;
-    config.Slot0.kG = EndEffectorConstants.EFFECTOR_KG;
-    config.Slot0.kV = EndEffectorConstants.EFFECTOR_KV;
-
-    var currentConfig = new CurrentLimitsConfigs();
-    currentConfig.StatorCurrentLimit = EndEffectorConstants.EFFECTOR_CURRENT_LIMIT;
-    config.CurrentLimits = currentConfig;
-    return config;
   }
 
   public SparkFlexConfig getEffectorConfig() {

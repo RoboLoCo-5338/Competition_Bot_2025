@@ -8,11 +8,9 @@ import frc.robot.subsystems.endeffector.EndEffector;
 
 public class ArmCommands {
 
-    public static Command moveArm(Arm arm, EndEffector endEffector,double speed){
-        return new ParallelCommandGroup(
-            new InstantCommand(()-> arm.setArmVelocity(speed)),
-            new InstantCommand(() -> endEffector.setEndEffectorVelocity(speed)));
-    }
-
-    
+  public static Command moveArm(Arm arm, EndEffector endEffector, double speed) {
+    return new ParallelCommandGroup(
+        new InstantCommand(() -> arm.setArmVelocity(speed)),
+        new InstantCommand(() -> endEffector.setEndEffectorVelocity(speed)));
+  }
 }

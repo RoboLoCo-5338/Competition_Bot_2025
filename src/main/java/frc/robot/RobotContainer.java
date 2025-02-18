@@ -24,36 +24,36 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.Arm.Arm;
-import frc.robot.subsystems.Arm.ArmIO;
-import frc.robot.subsystems.Arm.ArmIOSim;
-import frc.robot.subsystems.Arm.ArmIOSpark;
-import frc.robot.subsystems.Climb.Climb;
-import frc.robot.subsystems.Climb.ClimbIO;
-import frc.robot.subsystems.Climb.ClimbIOSim;
-import frc.robot.subsystems.Climb.ClimbIOTalonFX;
-import frc.robot.subsystems.Elevator.Elevator;
-import frc.robot.subsystems.Elevator.ElevatorIO;
-import frc.robot.subsystems.Elevator.ElevatorIOSim;
-import frc.robot.subsystems.Elevator.ElevatorIOTalonFX;
-import frc.robot.subsystems.EndEffector.EndEffector;
-import frc.robot.subsystems.EndEffector.EndEffectorIO;
-import frc.robot.subsystems.EndEffector.EndEffectorIOSim;
-import frc.robot.subsystems.EndEffector.EndEffectorIOTalonFX;
-import frc.robot.subsystems.GroundIntake.GroundIntake;
-import frc.robot.subsystems.GroundIntake.GroundIntakeIO;
-import frc.robot.subsystems.GroundIntake.GroundIntakeIOSim;
-import frc.robot.subsystems.GroundIntake.GroundIntakeIOSpark;
-import frc.robot.subsystems.Led.AddressableLEDIO;
-import frc.robot.subsystems.Led.LED;
-import frc.robot.subsystems.Led.LEDIO;
-import frc.robot.subsystems.Led.LEDIOSim;
+import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.ArmIO;
+import frc.robot.subsystems.arm.ArmIOSim;
+import frc.robot.subsystems.arm.ArmIOSpark;
+import frc.robot.subsystems.climb.Climb;
+import frc.robot.subsystems.climb.ClimbIO;
+import frc.robot.subsystems.climb.ClimbIOSim;
+import frc.robot.subsystems.climb.ClimbIOTalonFX;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
+import frc.robot.subsystems.elevator.Elevator;
+import frc.robot.subsystems.elevator.ElevatorIO;
+import frc.robot.subsystems.elevator.ElevatorIOSim;
+import frc.robot.subsystems.elevator.ElevatorIOTalonFX;
+import frc.robot.subsystems.endeffector.EndEffector;
+import frc.robot.subsystems.endeffector.EndEffectorIO;
+import frc.robot.subsystems.endeffector.EndEffectorIOSim;
+import frc.robot.subsystems.endeffector.EndEffectorIOTalonFX;
+import frc.robot.subsystems.groundintake.GroundIntake;
+import frc.robot.subsystems.groundintake.GroundIntakeIO;
+import frc.robot.subsystems.groundintake.GroundIntakeIOSim;
+import frc.robot.subsystems.groundintake.GroundIntakeIOSpark;
+import frc.robot.subsystems.led.AddressableLEDIO;
+import frc.robot.subsystems.led.LED;
+import frc.robot.subsystems.led.LEDIO;
+import frc.robot.subsystems.led.LEDIOSim;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -71,7 +71,7 @@ public class RobotContainer {
   private final Elevator elevator;
 
   private final GroundIntake groundIntake;
-  
+
   private final EndEffector endEffector;
 
   private final Climb climb;
@@ -132,8 +132,8 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {},
                 new ModuleIO() {});
-        
-        led = new LED(new LEDIO(){});
+
+        led = new LED(new LEDIO() {});
         groundIntake = new GroundIntake(new GroundIntakeIO() {});
         endEffector = new EndEffector(new EndEffectorIO() {});
         elevator = new Elevator(new ElevatorIO() {});
@@ -215,7 +215,6 @@ public class RobotContainer {
     return autoChooser.get();
   }
 
-
   /**
    * Maps a joystick input to a speed using an exponential function, which gives more precise
    * control at lower speeds.
@@ -223,7 +222,7 @@ public class RobotContainer {
    * @param x the input from the joystick
    * @return the output speed
    */
-  public double joystickExponentialFunction(double x){
-    return (1.0/(exponentialVariable-1)) * (Math.pow(exponentialVariable,x) -1);
+  public double joystickExponentialFunction(double x) {
+    return (1.0 / (exponentialVariable - 1)) * (Math.pow(exponentialVariable, x) - 1);
   }
 }
