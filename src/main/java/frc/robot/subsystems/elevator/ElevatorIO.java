@@ -4,13 +4,13 @@ import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.generated.TunerConstants;
 import org.littletonrobotics.junction.AutoLog;
 
 public interface ElevatorIO {
-
   TalonFX elevatorMotor1 =
       new TalonFX(
           ElevatorConstants.ELEVATOR_MOTOR_ID1, TunerConstants.DrivetrainConstants.CANBusName);
@@ -33,12 +33,55 @@ public interface ElevatorIO {
     public boolean elevator2Connected = false;
   }
 
+  /**
+   * Updates the set of loggable inputs for the elevator subsystem. This method updates the
+   * following inputs:
+   *
+   * <ul>
+   *   <li>{@code elevator1Connected}: Whether the first elevator motor is connected
+   *   <li>{@code elevator1Position}: The position of the first elevator motor in radians
+   *   <li>{@code elevator1Velocity}: The velocity of the first elevator motor in radians per second
+   *   <li>{@code elevator1AppliedVolts}: The voltage applied to the first elevator motor in volts
+   *   <li>{@code elevator1CurrentAmps}: The current drawn by the first elevator motor in amps
+   *   <li>{@code elevator2Connected}: Whether the second elevator motor is connected
+   *   <li>{@code elevator2Position}: The position of the second elevator motor in radians
+   *   <li>{@code elevator2Velocity}: The velocity of the second elevator motor in radians per
+   *       second
+   *   <li>{@code elevator2AppliedVolts}: The voltage applied to the second elevator motor in volts
+   *   <li>{@code elevator2CurrentAmps}: The current drawn by the second elevator motor in amps
+   * </ul>
+   */
   public default void updateInputs(ElevatorIOInputs inputs) {}
 
+  /**
+   * Sets the target velocity for both elevator motors.
+   *
+   * <p>This method sends a velocity control request to both elevator motors to move them at the
+   * specified velocity.
+   *
+   * @param velocity The target velocity in radians per second for the elevator motors.
+   */
   public default void setElevatorVelocity(double velocity) {}
 
+  /**
+   * Sets the target position for both elevator motors.
+   *
+   * <p>This method sends a position control request to both elevator motors to move them to the
+   * specified position.
+   *
+   * @param position The target position in radians for the elevator motors.
+   */
   public default void setElevatorPosition(double position) {}
 
+  /**
+   * Gets the current measurement from the laser can sensor.
+   *
+   * <p>This method returns the current measurement in millimeters from the laser can sensor, or -1
+   * if the measurement is invalid or not available.
+   *
+   * @return The current measurement in millimeters from the laser can sensor, or -1 if the
+   *     measurement is invalid or not available.
+   */
   public default int getLaserCanMeasurement() {
     return -1;
   }
@@ -65,7 +108,7 @@ public interface ElevatorIO {
    *
    * @return the configuration used for the Talon FX motor controllers of the elevator subsystem
    */
-  public default TalonFXConfiguration getConfiguration() {
+  public default TalonFXConfiguration getConfiguration(int motorNum) {
     // TODO change these values
     var config = new TalonFXConfiguration();
     config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
@@ -79,8 +122,9 @@ public interface ElevatorIO {
     var currentConfig = new CurrentLimitsConfigs();
     currentConfig.StatorCurrentLimitEnable = true;
     // CHANGE THIS VALUE OTHERWISE TORQUE MAY BE LIMITED/TOO HIGH
-    currentConfig.StatorCurrentLimit = ElevatorConstants.ELEVATOR_MOTOR_CURRENT_LIMIT;
+    currentConfig.StatorCurrentLimit = 40;
     config.CurrentLimits = currentConfig;
+    if(motorNum==2) config.MotorOutput.Inverted=InvertedValue.Clockwise_Positive; 
     return config;
   }
 }

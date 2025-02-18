@@ -10,7 +10,6 @@ import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.ParentDevice;
-import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
@@ -18,12 +17,8 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
 import frc.robot.Constants.ElevatorConstants;
-import frc.robot.generated.TunerConstants;
 
 public class ElevatorIOTalonFX implements ElevatorIO {
-
-  private final TalonFX elevatorMotor1;
-  private final TalonFX elevatorMotor2;
 
   private final PositionVoltage elevator1PositionRequest = new PositionVoltage(0.0);
   private final VelocityVoltage elevator1VelocityRequest = new VelocityVoltage(0.0);
@@ -45,17 +40,10 @@ public class ElevatorIOTalonFX implements ElevatorIO {
   private final LaserCan lc;
 
   public ElevatorIOTalonFX() {
-    // create and configure motors
-    elevatorMotor1 =
-        new TalonFX(
-            ElevatorConstants.ELEVATOR_MOTOR_ID1, TunerConstants.DrivetrainConstants.CANBusName);
-    elevatorMotor1.getConfigurator().apply(getConfiguration());
+    elevatorMotor1.getConfigurator().apply(getConfiguration(1));
 
-    // TODO does this need to be inverted?
-    elevatorMotor2 =
-        new TalonFX(
-            ElevatorConstants.ELEVATOR_MOTOR_ID2, TunerConstants.DrivetrainConstants.CANBusName);
-    elevatorMotor2.getConfigurator().apply(getConfiguration());
+    // TODO does this need to be inverted? idk bro does it? It does
+    elevatorMotor2.getConfigurator().apply(getConfiguration(2));
 
     // get status signals
     elevator1Position = elevatorMotor1.getPosition();
@@ -93,24 +81,6 @@ public class ElevatorIOTalonFX implements ElevatorIO {
     }
   }
 
-  /**
-   * Updates the set of loggable inputs for the elevator subsystem. This method updates the
-   * following inputs:
-   *
-   * <ul>
-   *   <li>{@code elevator1Connected}: Whether the first elevator motor is connected
-   *   <li>{@code elevator1Position}: The position of the first elevator motor in radians
-   *   <li>{@code elevator1Velocity}: The velocity of the first elevator motor in radians per second
-   *   <li>{@code elevator1AppliedVolts}: The voltage applied to the first elevator motor in volts
-   *   <li>{@code elevator1CurrentAmps}: The current drawn by the first elevator motor in amps
-   *   <li>{@code elevator2Connected}: Whether the second elevator motor is connected
-   *   <li>{@code elevator2Position}: The position of the second elevator motor in radians
-   *   <li>{@code elevator2Velocity}: The velocity of the second elevator motor in radians per
-   *       second
-   *   <li>{@code elevator2AppliedVolts}: The voltage applied to the second elevator motor in volts
-   *   <li>{@code elevator2CurrentAmps}: The current drawn by the second elevator motor in amps
-   * </ul>
-   */
   @Override
   public void updateInputs(ElevatorIOInputs inputs) {
     var motor1Status =
@@ -134,43 +104,18 @@ public class ElevatorIOTalonFX implements ElevatorIO {
     inputs.elevator2CurrentAmps = elevator2Current.getValueAsDouble();
   }
 
-  /**
-   * Sets the target position for both elevator motors.
-   *
-   * <p>This method sends a position control request to both elevator motors to move them to the
-   * specified position.
-   *
-   * @param position The target position in radians for the elevator motors.
-   */
   @Override
   public void setElevatorPosition(double position) {
     elevatorMotor1.setControl(elevator1PositionRequest.withPosition(position));
-    elevatorMotor2.setControl(elevator2PositionRequest.withPosition(-position));
+    elevatorMotor2.setControl(elevator2PositionRequest.withPosition(position));
   }
 
-  /**
-   * Sets the target velocity for both elevator motors.
-   *
-   * <p>This method sends a velocity control request to both elevator motors to move them at the
-   * specified velocity.
-   *
-   * @param velocity The target velocity in radians per second for the elevator motors.
-   */
   @Override
   public void setElevatorVelocity(double velocity) {
     elevatorMotor1.setControl(elevator1VelocityRequest.withVelocity(velocity));
-    elevatorMotor2.setControl(elevator2VelocityRequest.withVelocity(-velocity));
+    elevatorMotor2.setControl(elevator2VelocityRequest.withVelocity(velocity));
   }
 
-  /**
-   * Gets the current measurement from the laser can sensor.
-   *
-   * <p>This method returns the current measurement in millimeters from the laser can sensor, or -1
-   * if the measurement is invalid or not available.
-   *
-   * @return The current measurement in millimeters from the laser can sensor, or -1 if the
-   *     measurement is invalid or not available.
-   */
   @Override
   public int getLaserCanMeasurement() {
     Measurement m = lc.getMeasurement();

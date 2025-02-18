@@ -59,6 +59,10 @@ public class Elevator extends SubsystemBase {
    */
   private void elevatorPID(double position) {
     double curPosition = io.getLaserCanMeasurement();
+    if (curPosition == -1) {
+      io.setElevatorVelocity(0);
+      return;
+    }
     error = position - curPosition;
     integral += error;
     double derivative = error - prevError;

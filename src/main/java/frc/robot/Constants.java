@@ -86,6 +86,13 @@ public final class Constants {
     public static final double ELEVATOR_kP_LASERCAN = 0.0;
     public static final double ELEVATOR_kI_LASERCAN = 0.0;
     public static final double ELEVATOR_kD_LASERCAN = 0.0;
+    // Sim constants
+    public static final double GEARING = 0.25;
+    public static final double CARRIAGE_MASS = 0;
+    public static final double DRUM_RADIUS = 0;
+    public static final double MIN_HEIGHT = 0;
+    public static final double MAX_HEIGHT = 0;
+    public static final double STARTING_HEIGHT = 0;
   }
 
   public static final class EndEffectorConstants {
