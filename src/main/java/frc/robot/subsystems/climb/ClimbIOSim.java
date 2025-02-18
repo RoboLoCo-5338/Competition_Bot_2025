@@ -1,4 +1,4 @@
-package frc.robot.subsystems.Climb;
+package frc.robot.subsystems.climb;
 
 import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RadiansPerSecond;

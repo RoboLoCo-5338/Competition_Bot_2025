@@ -1,4 +1,4 @@
-package frc.robot.subsystems.GroundIntake;
+package frc.robot.subsystems.groundintake;
 
 // import com.revrobotics.AbsoluteEncoder;
 

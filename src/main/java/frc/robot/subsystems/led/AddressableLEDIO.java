@@ -1,10 +1,10 @@
-package frc.robot.subsystems.Led;
+package frc.robot.subsystems.led;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.LEDPattern;
 import frc.robot.Constants.LEDConstants;
-import frc.robot.subsystems.Led.LEDIO.LedIOInputs;
+import frc.robot.subsystems.led.LEDIO.LedIOInputs;
 
 public class AddressableLEDIO implements LEDIO {
   private final AddressableLED m_led = new AddressableLED(LEDConstants.LED_PWM_PORT);

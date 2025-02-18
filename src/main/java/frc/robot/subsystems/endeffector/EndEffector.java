@@ -1,4 +1,4 @@
-package frc.robot.subsystems.EndEffector;
+package frc.robot.subsystems.endeffector;
 
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;

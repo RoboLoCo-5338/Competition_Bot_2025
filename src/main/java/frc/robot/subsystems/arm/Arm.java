@@ -1,4 +1,4 @@
-package frc.robot.subsystems.Arm;
+package frc.robot.subsystems.arm;
 
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
