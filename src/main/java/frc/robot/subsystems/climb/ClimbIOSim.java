@@ -9,12 +9,14 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import frc.robot.Constants.ClimbConstants;
+import frc.robot.subsystems.SimMechanism;
+
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.mechanism.LoggedMechanism2d;
 import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d;
 import org.littletonrobotics.junction.mechanism.LoggedMechanismRoot2d;
 
-public class ClimbIOSim implements ClimbIO {
+public class ClimbIOSim extends SimMechanism implements ClimbIO {
   @AutoLogOutput(key = "Climb/Mechanism")
 
   // The logged shape and stuff of the mechanism
@@ -75,5 +77,10 @@ public class ClimbIOSim implements ClimbIO {
   @Override
   public void setClimbPosition(double position) {
     climbMotor.setControl(climbPositionRequest.withPosition(position));
+  }
+
+  @Override
+  public double getCurrent() {
+    return physicsSim.getCurrentDrawAmps();
   }
 }

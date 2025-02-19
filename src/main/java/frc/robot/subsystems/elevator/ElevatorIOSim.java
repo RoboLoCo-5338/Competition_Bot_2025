@@ -6,12 +6,14 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import frc.robot.Constants.ElevatorConstants;
+import frc.robot.subsystems.SimMechanism;
+
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.mechanism.LoggedMechanism2d;
 import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d;
 import org.littletonrobotics.junction.mechanism.LoggedMechanismRoot2d;
 
-public class ElevatorIOSim implements ElevatorIO {
+public class ElevatorIOSim extends SimMechanism implements ElevatorIO {
   TalonFXSimState motor1Sim = elevatorMotor1.getSimState();
   TalonFXSimState motor2Sim = elevatorMotor2.getSimState();
   ElevatorSim physicsSim =
@@ -90,5 +92,10 @@ public class ElevatorIOSim implements ElevatorIO {
   public void setElevatorPosition(double position) {
     elevatorMotor1.setControl(elevator1PositionRequest.withPosition(position));
     elevatorMotor2.setControl(elevator2PositionRequest.withPosition(position));
+  }
+
+  @Override
+  public double getCurrent() {
+    return physicsSim.getCurrentDrawAmps();
   }
 }

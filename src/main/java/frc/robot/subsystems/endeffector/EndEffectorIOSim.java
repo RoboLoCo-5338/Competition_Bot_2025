@@ -6,8 +6,9 @@ import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import frc.robot.Constants.EndEffectorConstants;
+import frc.robot.subsystems.SimMechanism;
 
-public class EndEffectorIOSim implements EndEffectorIO {
+public class EndEffectorIOSim extends SimMechanism implements EndEffectorIO {
   TalonFXSimState simMotor = endEffectorMotor.getSimState();
   FlywheelSim physicsSim =
       new FlywheelSim(
@@ -39,4 +40,9 @@ public class EndEffectorIOSim implements EndEffectorIO {
   public void setEndEffectorVelocity(double velocity) {
     endEffectorMotor.setControl(endEffectorVelocityRequest.withVelocity(velocity));
   }
+
+@Override
+public double getCurrent() {
+    return physicsSim.getCurrentDrawAmps();
+}
 }
