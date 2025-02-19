@@ -2,6 +2,8 @@ package frc.robot.subsystems.elevator;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -17,6 +19,11 @@ public interface ElevatorIO {
   TalonFX elevatorMotor2 =
       new TalonFX(
           ElevatorConstants.ELEVATOR_MOTOR_ID2, TunerConstants.DrivetrainConstants.CANBusName);
+
+  final PositionVoltage elevator1PositionRequest = new PositionVoltage(0.0);
+  final VelocityVoltage elevator1VelocityRequest = new VelocityVoltage(0.0);
+  final PositionVoltage elevator2PositionRequest = new PositionVoltage(0.0);
+  final VelocityVoltage elevator2VelocityRequest = new VelocityVoltage(0.0);
 
   @AutoLog
   public static class ElevatorIOInputs {

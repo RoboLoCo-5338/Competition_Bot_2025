@@ -3,8 +3,6 @@ package frc.robot.subsystems.climb;
 import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 
-import com.ctre.phoenix6.controls.PositionVoltage;
-import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -41,8 +39,6 @@ public class ClimbIOSim implements ClimbIO {
           0);
   // Sim state of the TalonFX.
   TalonFXSimState simMotor = climbMotor.getSimState();
-  private final PositionVoltage climbPositionRequest = new PositionVoltage(0.0);
-  private final VelocityVoltage climbVelocityRequest = new VelocityVoltage(0.0);
 
   public ClimbIOSim() {
     // configures base motor
@@ -56,19 +52,19 @@ public class ClimbIOSim implements ClimbIO {
     // Sets voltage from sim motor
     physicsSim.setInputVoltage(simMotor.getMotorVoltage());
 
-    // Sends data to smartdashboard
+    // Sends data to advantagescope
     inputs.climbConnected = true;
     inputs.climbAppliedVolts = simMotor.getMotorVoltage();
     inputs.climbCurrentAmps = physicsSim.getCurrentDrawAmps();
     inputs.climbPosition = physicsSim.getAngleRads();
     inputs.climbVelocityRadPerSec = physicsSim.getVelocityRadPerSec();
+    m_climbArm.setAngle(new Rotation2d(inputs.climbPosition));
 
     physicsSim.update(0.02);
 
-    simMotor.setRawRotorPosition(Radians.of(inputs.climbPosition / ClimbConstants.GEARING));
+    simMotor.setRawRotorPosition(Radians.of(physicsSim.getAngleRads() / ClimbConstants.GEARING));
     simMotor.setRotorVelocity(
-        RadiansPerSecond.of(inputs.climbVelocityRadPerSec / ClimbConstants.GEARING));
-    m_climbArm.setAngle(new Rotation2d(inputs.climbPosition));
+        RadiansPerSecond.of(physicsSim.getVelocityRadPerSec() / ClimbConstants.GEARING));
   }
 
   @Override

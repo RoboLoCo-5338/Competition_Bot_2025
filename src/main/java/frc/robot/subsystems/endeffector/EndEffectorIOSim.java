@@ -1,17 +1,42 @@
 package frc.robot.subsystems.endeffector;
 
+import com.ctre.phoenix6.sim.TalonFXSimState;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.simulation.FlywheelSim;
+import frc.robot.Constants.EndEffectorConstants;
+
 public class EndEffectorIOSim implements EndEffectorIO {
+  TalonFXSimState simMotor = endEffectorMotor.getSimState();
+  FlywheelSim physicsSim =
+      new FlywheelSim(
+          LinearSystemId.createFlywheelSystem(
+              DCMotor.getKrakenX60(1), EndEffectorConstants.MOI, EndEffectorConstants.GEARING),
+          DCMotor.getKrakenX60(1));
 
-    public EndEffectorIOSim(){
+  public EndEffectorIOSim() {
+    endEffectorMotor.getConfigurator().apply(getEndEffectorConfiguration());
+  }
 
-    }
-    @Override
-    public void updateInputs(EndEffectorIOInputs inputs) {
+  @Override
+  public void updateInputs(EndEffectorIOInputs inputs) {
+    simMotor.setSupplyVoltage(RobotController.getBatteryVoltage());
+    physicsSim.setInputVoltage(simMotor.getMotorVoltage());
 
-    }
+    inputs.endEffectorConnected = true;
+    inputs.endEffectorVelocity = physicsSim.getAngularVelocityRPM();
+    inputs.endEffectorAppliedVolts = physicsSim.getInputVoltage();
+    inputs.endEffectorCurrentAmps = physicsSim.getCurrentDrawAmps();
 
-    @Override
-    public void setEndEffectorVelocity(double velocity) {
-        
-    }
+    physicsSim.update(0.02);
+
+    simMotor.addRotorPosition(physicsSim.getAngularVelocityRadPerSec() * 0.02);
+    simMotor.setRotorVelocity(physicsSim.getAngularVelocityRadPerSec());
+  }
+
+  @Override
+  public void setEndEffectorVelocity(double velocity) {
+    endEffectorMotor.setControl(endEffectorVelocityRequest.withVelocity(velocity));
+  }
 }

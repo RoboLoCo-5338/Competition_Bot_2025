@@ -1,19 +1,19 @@
 package frc.robot.subsystems.endeffector;
 
-import org.littletonrobotics.junction.AutoLog;
-
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
 import frc.robot.Constants.EndEffectorConstants;
 import frc.robot.generated.TunerConstants;
+import org.littletonrobotics.junction.AutoLog;
 
 public interface EndEffectorIO {
   public final TalonFX endEffectorMotor =
       new TalonFX(EndEffectorConstants.EFFECTORID, TunerConstants.DrivetrainConstants.CANBusName);
+  final VelocityVoltage endEffectorVelocityRequest = new VelocityVoltage(0.0);
 
   @AutoLog
   public static class EndEffectorIOInputs {

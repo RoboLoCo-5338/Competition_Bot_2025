@@ -1,7 +1,5 @@
 package frc.robot.subsystems.elevator;
 
-import com.ctre.phoenix6.controls.PositionVoltage;
-import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.sim.ChassisReference;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -16,10 +14,6 @@ import org.littletonrobotics.junction.mechanism.LoggedMechanismRoot2d;
 public class ElevatorIOSim implements ElevatorIO {
   TalonFXSimState motor1Sim = elevatorMotor1.getSimState();
   TalonFXSimState motor2Sim = elevatorMotor2.getSimState();
-  private final PositionVoltage elevator1PositionRequest = new PositionVoltage(0.0);
-  private final VelocityVoltage elevator1VelocityRequest = new VelocityVoltage(0.0);
-  private final PositionVoltage elevator2PositionRequest = new PositionVoltage(0.0);
-  private final VelocityVoltage elevator2VelocityRequest = new VelocityVoltage(0.0);
   ElevatorSim physicsSim =
       new ElevatorSim(
           DCMotor.getFalcon500(2),

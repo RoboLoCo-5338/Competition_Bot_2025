@@ -45,7 +45,7 @@ public final class Constants {
     public static final double CLIMB_kI = 0.0;
     public static final double CLIMB_kD = 0.0;
     public static final double CLIMB_kS = 0.0;
-    public static final double GEARING = 0.01; // Update this pls don't worry bro I did
+    public static final double GEARING = 100; // Update this pls don't worry bro I did
     public static final double BASE_HEIGHT = 1;
     public static final double ARM_LENGTH = 1;
   }
@@ -87,7 +87,7 @@ public final class Constants {
     public static final double ELEVATOR_kI_LASERCAN = 0.0;
     public static final double ELEVATOR_kD_LASERCAN = 0.0;
     // Sim constants
-    public static final double GEARING = 0.25;
+    public static final double GEARING = 4;
     public static final double CARRIAGE_MASS = 0;
     public static final double DRUM_RADIUS = 0;
     public static final double MIN_HEIGHT = 0;
@@ -109,6 +109,9 @@ public final class Constants {
     public static final double EFFECTOR_KG = 0.0;
     public static final int LASERCAN_1ID = -1;
     public static final int LASERCAN_2ID = -1;
+    // Sim Constants
+    public static final double MOI = 0.0;
+    public static final double GEARING = 9;
   }
 
   public static final class GroundIntakeConstants {

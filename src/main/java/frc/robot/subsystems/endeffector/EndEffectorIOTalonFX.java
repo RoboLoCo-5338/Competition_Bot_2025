@@ -6,11 +6,7 @@ import au.grapplerobotics.LaserCan;
 import au.grapplerobotics.interfaces.LaserCanInterface.Measurement;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
-import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.ParentDevice;
-import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -20,8 +16,6 @@ import frc.robot.Constants.EndEffectorConstants;
 
 public class EndEffectorIOTalonFX implements EndEffectorIO {
 
-  private final VelocityVoltage endEffectorVelocityRequest = new VelocityVoltage(0.0);
-
   private final StatusSignal<AngularVelocity> endEffectorVelocity;
   private final StatusSignal<Voltage> endEffectorAppliedVolts;
   private final StatusSignal<Current> endEffectorCurrent;
@@ -30,6 +24,7 @@ public class EndEffectorIOTalonFX implements EndEffectorIO {
 
   private final LaserCan LcEffector1;
   private final LaserCan LcEffector2; // why is it screaming at me here
+  // aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 
   public EndEffectorIOTalonFX() {
 
@@ -62,38 +57,6 @@ public class EndEffectorIOTalonFX implements EndEffectorIO {
     } catch (Exception e) {
       System.out.println("Error: " + e);
     }
-  }
-
-  public SparkFlexConfig getEffectorConfig() {
-    SparkFlexConfig effectorConfig = new SparkFlexConfig();
-
-    effectorConfig
-        .idleMode(IdleMode.kCoast)
-        .smartCurrentLimit(EndEffectorConstants.EFFECTOR_CURRENT_LIMIT)
-        .voltageCompensation(12.0);
-    effectorConfig
-        .encoder
-        .positionConversionFactor(EndEffectorConstants.EFFECTOR_ENCODER_POSITION_CONVERSION_FACTOR)
-        .velocityConversionFactor(EndEffectorConstants.EFFECTOR_ENCODER_VELOCITY_CONVERSION_FACTOR)
-        .uvwAverageDepth(2)
-        .uvwMeasurementPeriod(10);
-    effectorConfig
-        .closedLoop
-        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-        .pidf(
-            EndEffectorConstants.EFFECTOR_KP, EndEffectorConstants.EFFECTOR_KI,
-            EndEffectorConstants.EFFECTOR_KD, EndEffectorConstants.EFFECTOR_KFF);
-    effectorConfig
-        .signals
-        .primaryEncoderPositionAlwaysOn(true)
-        .primaryEncoderPositionPeriodMs(10)
-        .primaryEncoderVelocityAlwaysOn(true)
-        .primaryEncoderVelocityPeriodMs(10)
-        .appliedOutputPeriodMs(10)
-        .busVoltagePeriodMs(10)
-        .outputCurrentPeriodMs(10);
-
-    return effectorConfig;
   }
 
   @Override

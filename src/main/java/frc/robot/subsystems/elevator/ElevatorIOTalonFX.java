@@ -7,8 +7,6 @@ import au.grapplerobotics.LaserCan;
 import au.grapplerobotics.interfaces.LaserCanInterface.Measurement;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
-import com.ctre.phoenix6.controls.PositionVoltage;
-import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.ParentDevice;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.util.Units;
@@ -19,11 +17,6 @@ import edu.wpi.first.units.measure.Voltage;
 import frc.robot.Constants.ElevatorConstants;
 
 public class ElevatorIOTalonFX implements ElevatorIO {
-
-  private final PositionVoltage elevator1PositionRequest = new PositionVoltage(0.0);
-  private final VelocityVoltage elevator1VelocityRequest = new VelocityVoltage(0.0);
-  private final PositionVoltage elevator2PositionRequest = new PositionVoltage(0.0);
-  private final VelocityVoltage elevator2VelocityRequest = new VelocityVoltage(0.0);
 
   private final StatusSignal<Angle> elevator1Position;
   private final StatusSignal<AngularVelocity> elevator1Velocity;

@@ -4,8 +4,6 @@ import static frc.robot.util.PhoenixUtil.tryUntilOk;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
-import com.ctre.phoenix6.controls.PositionVoltage;
-import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.filter.Debouncer;
@@ -20,9 +18,6 @@ import frc.robot.generated.TunerConstants;
 public class ClimbIOTalonFX implements ClimbIO {
 
   private final TalonFX climbMotor;
-
-  private final PositionVoltage climbPositionRequest = new PositionVoltage(0.0);
-  private final VelocityVoltage climbVelocityRequest = new VelocityVoltage(0.0);
 
   private final StatusSignal<Angle> climbPosition;
   private final StatusSignal<AngularVelocity> climbVelocity;
