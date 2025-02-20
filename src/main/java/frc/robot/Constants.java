@@ -50,6 +50,12 @@ public final class Constants {
     public static final int ARM_MOTOR_CURRENT_LIMIT = 40;
     public static final double ARM_ENCODER_POSITION_CONVERSION_FACTOR = 1.0;
     public static final double ARM_ENCODER_VELOCITY_CONVERSION_FACTOR = 1.0;
+    public static final double GEARING = 100.0;
+    public static final double MOI = 0.0;
+    public static final double length = 0.0;
+    public static final double MIN_ANGLE = 0.0;
+    public static final double MAX_ANGLE = 0.0;
+    public static final double STARTING_ANGLE = 0.0;
   }
 
   public static final class ClimbConstants {
