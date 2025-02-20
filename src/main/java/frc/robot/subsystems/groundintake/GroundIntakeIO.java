@@ -2,6 +2,7 @@ package frc.robot.subsystems.groundintake;
 
 import org.littletonrobotics.junction.AutoLog;
 
+import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
@@ -12,7 +13,10 @@ import frc.robot.Constants.GroundIntakeConstants;
 
 public interface GroundIntakeIO {
   SparkFlex armMotor = new SparkFlex(GroundIntakeConstants.ArmConstants.ARM_CANID, MotorType.kBrushless);
-  SparkFlex intakeMotor = new SparkFlex(GroundIntakeConstants.INTAKE_CANID, MotorType.kBrushless);
+  SparkFlex intakeMotor = new SparkFlex(GroundIntakeConstants.IntakeConstants.INTAKE_CANID, MotorType.kBrushless);
+  SparkClosedLoopController intakeController = intakeMotor.getClosedLoopController();
+  SparkClosedLoopController armController = armMotor.getClosedLoopController();
+  
   @AutoLog
   public static class GroundIntakeIOInputs {
     public boolean armMotorConnected = false;
@@ -40,20 +44,20 @@ public interface GroundIntakeIO {
 
     intakeConfig
         .idleMode(IdleMode.kCoast)
-        .smartCurrentLimit(GroundIntakeConstants.INTAKE_CURRENT_LIMIT)
+        .smartCurrentLimit(GroundIntakeConstants.IntakeConstants.INTAKE_CURRENT_LIMIT)
         .voltageCompensation(12.0);
     intakeConfig
         .encoder
-        .positionConversionFactor(GroundIntakeConstants.INTAKE_ENCODER_POSITION_CONVERSION_FACTOR)
-        .velocityConversionFactor(GroundIntakeConstants.INTAKE_ENCODER_VELOCITY_CONVERSION_FACTOR)
+        .positionConversionFactor(GroundIntakeConstants.IntakeConstants.INTAKE_ENCODER_POSITION_CONVERSION_FACTOR)
+        .velocityConversionFactor(GroundIntakeConstants.IntakeConstants.INTAKE_ENCODER_VELOCITY_CONVERSION_FACTOR)
         .uvwAverageDepth(2)
         .uvwMeasurementPeriod(10);
     intakeConfig
         .closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
         .pidf(
-            GroundIntakeConstants.INTAKE_KP, GroundIntakeConstants.INTAKE_KI,
-            GroundIntakeConstants.INTAKE_KD, GroundIntakeConstants.INTAKE_KFF);
+            GroundIntakeConstants.IntakeConstants.INTAKE_KP, GroundIntakeConstants.IntakeConstants.INTAKE_KI,
+            GroundIntakeConstants.IntakeConstants.INTAKE_KD, GroundIntakeConstants.IntakeConstants.INTAKE_KFF);
     intakeConfig
         .signals
         .primaryEncoderPositionAlwaysOn(true)

@@ -20,11 +20,7 @@ public class GroundIntakeIOSpark implements GroundIntakeIO {
 
   private final AbsoluteEncoder armEncoder;
 
-  private final SparkClosedLoopController armController;
-
   private final RelativeEncoder intakEncoder;
-
-  private final SparkClosedLoopController intakeController;
 
   private final Debouncer armConnectedDebounce = new Debouncer(0.5);
 
@@ -32,10 +28,8 @@ public class GroundIntakeIOSpark implements GroundIntakeIO {
 
   public GroundIntakeIOSpark() {
     armEncoder = armMotor.getAbsoluteEncoder();
-    armController = armMotor.getClosedLoopController();
     
     intakEncoder = intakeMotor.getEncoder();
-    intakeController = intakeMotor.getClosedLoopController();
 
     tryUntilOk(
         armMotor,
@@ -98,8 +92,8 @@ public class GroundIntakeIOSpark implements GroundIntakeIO {
   @Override
   public void setIntakeVelocity(double velocityRadPerSec) {
     double ffvolts =
-        GroundIntakeConstants.INTAKE_KS * Math.signum(velocityRadPerSec)
-            + GroundIntakeConstants.INTAKE_KV * velocityRadPerSec;
+        GroundIntakeConstants.IntakeConstants.INTAKE_KS * Math.signum(velocityRadPerSec)
+            + GroundIntakeConstants.IntakeConstants.INTAKE_KV * velocityRadPerSec;
     intakeController.setReference(
         velocityRadPerSec,
         ControlType.kVelocity,

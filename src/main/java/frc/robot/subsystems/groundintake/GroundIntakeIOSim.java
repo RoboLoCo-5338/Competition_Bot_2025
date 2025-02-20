@@ -1,5 +1,9 @@
 package frc.robot.subsystems.groundintake;
 
+import static frc.robot.util.SparkUtil.*;
+
+import java.util.function.DoubleSupplier;
+
 import com.revrobotics.sim.SparkAbsoluteEncoderSim;
 import com.revrobotics.sim.SparkFlexSim;
 import com.revrobotics.spark.SparkBase.PersistMode;
@@ -23,7 +27,7 @@ public class GroundIntakeIOSim extends SimMechanism implements GroundIntakeIO {
     DCMotor intakeGearBox = DCMotor.getNeoVortex(1);
     SparkFlexSim intakeSim;
     SparkAbsoluteEncoderSim intakeEncoderSim;
-    FlywheelSim intakePhysicsSim = new FlywheelSim(LinearSystemId.createFlywheelSystem(intakeGearBox, 0, 0), armGearBox, getCurrents());
+    FlywheelSim intakePhysicsSim = new FlywheelSim(LinearSystemId.createFlywheelSystem(intakeGearBox, GroundIntakeConstants.IntakeConstants.MOI, GroundIntakeConstants.IntakeConstants.GEARING), armGearBox);
     public GroundIntakeIOSim(){
         super();
         armMotor.configure(getArmConfig(), ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -35,7 +39,22 @@ public class GroundIntakeIOSim extends SimMechanism implements GroundIntakeIO {
         intakeEncoderSim = new SparkAbsoluteEncoderSim(armMotor);
     }
     @Override
-    public void updateInputs(GroundIntakeIOInputs inputs) {}
+    public void updateInputs(GroundIntakeIOInputs inputs) {
+        ifOk(armMotor, armEncoderSim::getPosition, (value) -> inputs.armPositionRad = value);
+        ifOk(armMotor, armEncoderSim::getVelocity, (value) -> inputs.armVelocityRadPerSec = value);
+        ifOk(
+            armMotor,
+            new DoubleSupplier[] {armMotor::getAppliedOutput, armMotor::getBusVoltage},
+            (values) -> inputs.armAppliedVolts = values[0] * values[1]);
+        ifOk(armMotor, armMotor::getOutputCurrent, (value) -> inputs.armCurrentAmps = value);
+
+        ifOk(intakeMotor, intakeEncoderSim::getVelocity, (value) -> inputs.intakeVelocityRadPerSec = value);
+        ifOk(
+            intakeMotor,
+            new DoubleSupplier[] {intakeMotor::getAppliedOutput, intakeMotor::getBusVoltage},
+            (values) -> inputs.intakeAppliedVolts = values[0] * values[1]);
+        ifOk(intakeMotor, intakeMotor::getOutputCurrent, (value) -> inputs.intakeCurrentAmps = value);
+    }
 
     @Override
     public void setArmVelocity(double velocityRadPerSec) {}

@@ -143,15 +143,21 @@ public final class Constants {
       public static final double STARTING_ANGLE = 0.0;
     }
 
-    public static final int INTAKE_CANID = -1;
-    public static final int INTAKE_CURRENT_LIMIT = 20;
-    public static final int INTAKE_ENCODER_POSITION_CONVERSION_FACTOR = 1;
-    public static final int INTAKE_ENCODER_VELOCITY_CONVERSION_FACTOR = 1;
-    public static final double INTAKE_KP = 0;
-    public static final double INTAKE_KI = 0;
-    public static final double INTAKE_KD = 0;
-    public static final double INTAKE_KFF = 0;
-    public static final double INTAKE_KS = 0;
-    public static final double INTAKE_KV = 0;
+    public static final class IntakeConstants{
+      public static final int INTAKE_CANID = -1;
+      public static final int INTAKE_CURRENT_LIMIT = 20;
+      public static final int INTAKE_ENCODER_POSITION_CONVERSION_FACTOR = 1;
+      public static final int INTAKE_ENCODER_VELOCITY_CONVERSION_FACTOR = 1;
+      public static final double INTAKE_KP = 0;
+      public static final double INTAKE_KI = 0;
+      public static final double INTAKE_KD = 0;
+      public static final double INTAKE_KFF = 0;
+      public static final double INTAKE_KS = 0;
+      public static final double INTAKE_KV = 0;
+      //Sim stuff
+      public static final double MOI = 0;
+      public static final double GEARING = 1; 
+
+    }
   }
 }
