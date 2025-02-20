@@ -21,8 +21,6 @@ import java.util.function.DoubleSupplier;
 
 public class ArmIOSpark implements ArmIO {
 
-  private final SparkFlex armMotor;
-
   private final AbsoluteEncoder armEncoder;
 
   private final SparkClosedLoopController armClosedLoopController;
@@ -30,8 +28,6 @@ public class ArmIOSpark implements ArmIO {
   private final Debouncer armConnectedDebouncer = new Debouncer(0.5);
 
   public ArmIOSpark() {
-    armMotor = new SparkFlex(ArmConstants.ARM_MOTOR_ID, MotorType.kBrushless);
-
     armEncoder = armMotor.getAbsoluteEncoder();
 
     armClosedLoopController = armMotor.getClosedLoopController();
@@ -66,38 +62,6 @@ public class ArmIOSpark implements ArmIO {
    *
    * @return the configuration used for the Talon FX motor controllers of the arm subsystem
    */
-  private SparkFlexConfig getArmConfig() {
-    SparkFlexConfig armConfig = new SparkFlexConfig();
-
-    armConfig
-        .idleMode(IdleMode.kBrake)
-        .smartCurrentLimit(ArmConstants.ARM_MOTOR_CURRENT_LIMIT)
-        .voltageCompensation(12.0);
-    armConfig
-        .absoluteEncoder
-        // TODO CHECK THIS
-        .inverted(false)
-        .positionConversionFactor(ArmConstants.ARM_ENCODER_POSITION_CONVERSION_FACTOR)
-        .velocityConversionFactor(ArmConstants.ARM_ENCODER_VELOCITY_CONVERSION_FACTOR);
-    armConfig
-        .closedLoop
-        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-        .positionWrappingEnabled(true)
-        .pidf(
-            ArmConstants.ARM_MOTOR_KP, ArmConstants.ARM_MOTOR_KI,
-            ArmConstants.ARM_MOTOR_KD, ArmConstants.ARM_MOTOR_KFF);
-    armConfig
-        .signals
-        .absoluteEncoderPositionAlwaysOn(true)
-        .absoluteEncoderPositionPeriodMs((int) 10.0)
-        .absoluteEncoderVelocityAlwaysOn(true)
-        .absoluteEncoderVelocityPeriodMs(20)
-        .appliedOutputPeriodMs(20)
-        .busVoltagePeriodMs(20)
-        .outputCurrentPeriodMs(20);
-
-    return armConfig;
-  }
 
   /**
    * Updates the set of loggable inputs for the arm subsystem. This function updates the following
