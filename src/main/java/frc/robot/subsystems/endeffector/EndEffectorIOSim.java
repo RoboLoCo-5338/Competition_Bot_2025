@@ -41,8 +41,8 @@ public class EndEffectorIOSim extends SimMechanism implements EndEffectorIO {
     endEffectorMotor.setControl(endEffectorVelocityRequest.withVelocity(velocity));
   }
 
-@Override
-public double getCurrent() {
+  @Override
+  public double getCurrent() {
     return physicsSim.getCurrentDrawAmps();
-}
+  }
 }

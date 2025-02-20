@@ -20,7 +20,6 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.generated.TunerConstants;
@@ -54,6 +53,7 @@ import frc.robot.subsystems.led.AddressableLEDIO;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.led.LEDIO;
 import frc.robot.subsystems.led.LEDIOSim;
+import java.util.HashMap;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -74,14 +74,16 @@ public class RobotContainer {
 
   private final EndEffector endEffector;
 
+  
+  private final ButtonBindings ButtonBindingsController;
+
   private final Climb climb;
 
   private final Arm arm;
 
-  private double exponentialVariable = 25.0;
+ 
 
   // Controller
-  private final CommandXboxController controller = new CommandXboxController(0);
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -104,6 +106,8 @@ public class RobotContainer {
         elevator = new Elevator(new ElevatorIOTalonFX());
         climb = new Climb(new ClimbIOTalonFX());
         arm = new Arm(new ArmIOSpark());
+        ButtonBindings ButtonBindingsController =
+            new ButtonBindings(drive, led, elevator, groundIntake, endEffector);
         break;
 
       case SIM:
@@ -174,22 +178,8 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Default command, normal field-relative drive
-    drive.setDefaultCommand(
-        DriveCommands.joystickDrive(
-            drive,
-            () -> joystickExponentialFunction(-controller.getLeftY()),
-            () -> -controller.getLeftX(),
-            () -> -controller.getRightX()));
 
     // Lock to 0° when A button is held
-    controller
-        .a()
-        .whileTrue(
-            DriveCommands.joystickDriveAtAngle(
-                drive,
-                () -> -controller.getLeftY(),
-                () -> -controller.getLeftX(),
-                () -> new Rotation2d()));
 
     // Switch to X pattern when X button is pressed
     controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
@@ -222,7 +212,5 @@ public class RobotContainer {
    * @param x the input from the joystick
    * @return the output speed
    */
-  public double joystickExponentialFunction(double x) {
-    return (1.0 / (exponentialVariable - 1)) * (Math.pow(exponentialVariable, x) - 1);
-  }
+  
 }
