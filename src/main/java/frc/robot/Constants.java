@@ -38,25 +38,6 @@ public final class Constants {
     REPLAY
   }
 
-  public static final class ClimbConstants {
-    public static final int CLIMB_MOTOR_ID = -1;
-    public static final int CLIMB_MOTOR_CURRENT_LIMIT = 20;
-    public static final double CLIMB_kP = 0.0;
-    public static final double CLIMB_kI = 0.0;
-    public static final double CLIMB_kD = 0.0;
-    public static final double CLIMB_kS = 0.0;
-    public static final double GEARING = 100; // Update this pls don't worry bro I did
-    public static final double BASE_HEIGHT = 1;
-    public static final double ARM_LENGTH = 1;
-  }
-
-  public static final class LEDConstants {
-    // TODO change this
-    public static final int LED_PWM_PORT = 0;
-    public static final int LED_LENGTH = 300;
-    public static final Distance LED_SPACING = Meters.of(1.0 / 50.0);
-  }
-
   public static final class ArmConstants {
     public static final int ARM_MOTOR_ID = -1;
     public static final double ARM_MOTOR_KP = 0.0;
@@ -69,6 +50,18 @@ public final class Constants {
     public static final int ARM_MOTOR_CURRENT_LIMIT = 40;
     public static final double ARM_ENCODER_POSITION_CONVERSION_FACTOR = 1.0;
     public static final double ARM_ENCODER_VELOCITY_CONVERSION_FACTOR = 1.0;
+  }
+
+  public static final class ClimbConstants {
+    public static final int CLIMB_MOTOR_ID = -1;
+    public static final int CLIMB_MOTOR_CURRENT_LIMIT = 20;
+    public static final double CLIMB_kP = 0.0;
+    public static final double CLIMB_kI = 0.0;
+    public static final double CLIMB_kD = 0.0;
+    public static final double CLIMB_kS = 0.0;
+    public static final double GEARING = 100; // Update this pls don't worry bro I did
+    public static final double BASE_HEIGHT = 1;
+    public static final double ARM_LENGTH = 1;
   }
 
   public static final class ElevatorConstants {
@@ -115,43 +108,27 @@ public final class Constants {
     public static final double GEARING = 9;
   }
 
-  public static final class GroundIntakeConstants {
-    public static final class ArmConstants{
+  public static final class IntakeConstants{
+    public static final int INTAKE_CANID = -1;
+    public static final int INTAKE_CURRENT_LIMIT = 20;
+    public static final int INTAKE_ENCODER_POSITION_CONVERSION_FACTOR = 1;
+    public static final int INTAKE_ENCODER_VELOCITY_CONVERSION_FACTOR = 1;
+    public static final double INTAKE_KP = 0;
+    public static final double INTAKE_KI = 0;
+    public static final double INTAKE_KD = 0;
+    public static final double INTAKE_KFF = 0;
+    public static final double INTAKE_KS = 0;
+    public static final double INTAKE_KV = 0;
+    //Sim stuff
+    public static final double MOI = 0;
+    public static final double GEARING = 1; 
+
+  }
+
+  public static final class LEDConstants {
     // TODO change this
-      public static final int ARM_CANID = -1;
-      public static final int ARM_CURRENT_LIMIT = 20;
-      public static final int ARM_ENCODER_POSITION_CONVERSION_FACTOR = 1;
-      public static final int ARM_ENCODER_VELOCITY_CONVERSION_FACTOR = 1;
-      public static final double ARM_KP = 0;
-      public static final double ARM_KI = 0;
-      public static final double ARM_KD = 0;
-      public static final double ARM_KFF = 0;
-      public static final double ARM_KS = 0;
-      public static final double ARM_KV = 0;
-      //Sim stuff
-      public static final double GEARING = 100;
-      public static final double MOI = 0.0;
-      public static final double LENGTH = 0.0;
-      public static final double MIN_ANGLE = 0.0;
-      public static final double MAX_ANGLE = 0.0;
-      public static final double STARTING_ANGLE = 0.0;
-    }
-
-    public static final class IntakeConstants{
-      public static final int INTAKE_CANID = -1;
-      public static final int INTAKE_CURRENT_LIMIT = 20;
-      public static final int INTAKE_ENCODER_POSITION_CONVERSION_FACTOR = 1;
-      public static final int INTAKE_ENCODER_VELOCITY_CONVERSION_FACTOR = 1;
-      public static final double INTAKE_KP = 0;
-      public static final double INTAKE_KI = 0;
-      public static final double INTAKE_KD = 0;
-      public static final double INTAKE_KFF = 0;
-      public static final double INTAKE_KS = 0;
-      public static final double INTAKE_KV = 0;
-      //Sim stuff
-      public static final double MOI = 0;
-      public static final double GEARING = 1; 
-
-    }
+    public static final int LED_PWM_PORT = 0;
+    public static final int LED_LENGTH = 300;
+    public static final Distance LED_SPACING = Meters.of(1.0 / 50.0);
   }
 }
