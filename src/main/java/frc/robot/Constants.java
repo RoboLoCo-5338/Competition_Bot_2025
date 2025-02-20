@@ -65,6 +65,7 @@ public final class Constants {
     public static final double ARM_MOTOR_KG = 0.0;
     public static final double ARM_MOTOR_KV = 0.0;
     public static final double ARM_MOTOR_KFF = 0.0;
+    public static final double ARM_MOTOR_KS = 0.0;
     public static final int ARM_MOTOR_CURRENT_LIMIT = 40;
     public static final double ARM_ENCODER_POSITION_CONVERSION_FACTOR = 1.0;
     public static final double ARM_ENCODER_VELOCITY_CONVERSION_FACTOR = 1.0;
@@ -115,17 +116,26 @@ public final class Constants {
   }
 
   public static final class GroundIntakeConstants {
+    public static final class ArmConstants{
     // TODO change this
-    public static final int ARM_CANID = -1;
-    public static final int ARM_CURRENT_LIMIT = 20;
-    public static final int ARM_ENCODER_POSITION_CONVERSION_FACTOR = 1;
-    public static final int ARM_ENCODER_VELOCITY_CONVERSION_FACTOR = 1;
-    public static final double ARM_KP = 0;
-    public static final double ARM_KI = 0;
-    public static final double ARM_KD = 0;
-    public static final double ARM_KFF = 0;
-    public static final double ARM_KS = 0;
-    public static final double ARM_KV = 0;
+      public static final int ARM_CANID = -1;
+      public static final int ARM_CURRENT_LIMIT = 20;
+      public static final int ARM_ENCODER_POSITION_CONVERSION_FACTOR = 1;
+      public static final int ARM_ENCODER_VELOCITY_CONVERSION_FACTOR = 1;
+      public static final double ARM_KP = 0;
+      public static final double ARM_KI = 0;
+      public static final double ARM_KD = 0;
+      public static final double ARM_KFF = 0;
+      public static final double ARM_KS = 0;
+      public static final double ARM_KV = 0;
+      //Sim stuff
+      public static final double GEARING = 100;
+      public static final double MOI = 0.0;
+      public static final double LENGTH = 0.0;
+      public static final double MIN_ANGLE = 0.0;
+      public static final double MAX_ANGLE = 0.0;
+      public static final double STARTING_ANGLE = 0.0;
+    }
 
     public static final int INTAKE_CANID = -1;
     public static final int INTAKE_CURRENT_LIMIT = 20;

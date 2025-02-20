@@ -43,6 +43,7 @@ public class ClimbIOSim extends SimMechanism implements ClimbIO {
   TalonFXSimState simMotor = climbMotor.getSimState();
 
   public ClimbIOSim() {
+    super();
     // configures base motor
     climbMotor.getConfigurator().apply(getConfiguration());
   }
@@ -80,7 +81,7 @@ public class ClimbIOSim extends SimMechanism implements ClimbIO {
   }
 
   @Override
-  public double getCurrent() {
-    return physicsSim.getCurrentDrawAmps();
+  public double[] getCurrents() {
+    return new double[]{physicsSim.getCurrentDrawAmps()};
   }
 }

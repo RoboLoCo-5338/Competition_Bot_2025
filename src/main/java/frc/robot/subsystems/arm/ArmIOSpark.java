@@ -151,8 +151,8 @@ public class ArmIOSpark implements ArmIO {
   @Override
   public void setArmVelocity(double velocityRadPerSec) {
     double ffvolts =
-        GroundIntakeConstants.ARM_KS * Math.signum(velocityRadPerSec)
-            + GroundIntakeConstants.ARM_KV * velocityRadPerSec;
+        ArmConstants.ARM_MOTOR_KS * Math.signum(velocityRadPerSec)
+            + ArmConstants.ARM_MOTOR_KV * velocityRadPerSec;
     armClosedLoopController.setReference(
         velocityRadPerSec,
         ControlType.kVelocity,
