@@ -51,6 +51,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.Mode;
 import frc.robot.generated.TunerConstants;
 import frc.robot.util.LocalADStarAK;
+import frc.robot.util.NetworkTablePublisher;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import org.littletonrobotics.junction.AutoLogOutput;
@@ -169,7 +170,8 @@ public class Drive extends SubsystemBase {
       module.periodic();
     }
     odometryLock.unlock();
-
+    NetworkTablePublisher.publishToNetworkTable(
+        "Position", poseEstimator.getEstimatedPosition(), Pose2d.struct);
     // Stop moving when disabled
     if (DriverStation.isDisabled()) {
       for (var module : modules) {
