@@ -106,7 +106,7 @@ public class RobotContainer {
         elevator = new Elevator(new ElevatorIOTalonFX());
         climb = new Climb(new ClimbIOTalonFX());
         arm = new Arm(new ArmIOSpark());
-        ButtonBindings ButtonBindingsController =
+        ButtonBindingsController =
             new ButtonBindings(drive, led, elevator, groundIntake, endEffector);
         break;
 
@@ -125,6 +125,8 @@ public class RobotContainer {
         elevator = new Elevator(new ElevatorIOSim());
         climb = new Climb(new ClimbIOSim());
         arm = new Arm(new ArmIOSim());
+        ButtonBindingsController =
+            new ButtonBindings(drive, led, elevator, groundIntake, endEffector);
         break;
 
       default:
@@ -143,7 +145,8 @@ public class RobotContainer {
         elevator = new Elevator(new ElevatorIO() {});
         climb = new Climb(new ClimbIO() {});
         arm = new Arm(new ArmIO() {});
-
+        ButtonBindingsController =
+            new ButtonBindings(drive, led, elevator, groundIntake, endEffector);
         break;
     }
 
@@ -178,22 +181,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Default command, normal field-relative drive
-
-    // Lock to 0° when A button is held
-
-    // Switch to X pattern when X button is pressed
-    controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
-
-    // Reset gyro to 0° when B button is pressed
-    controller
-        .b()
-        .onTrue(
-            Commands.runOnce(
-                    () ->
-                        drive.setPose(
-                            new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
-                    drive)
-                .ignoringDisable(true));
+    
   }
 
   /**
