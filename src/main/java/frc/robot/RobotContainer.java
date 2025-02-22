@@ -206,6 +206,10 @@ public class RobotContainer {
                 .ignoringDisable(true));
   }
 
+  public void periodic() {
+    ButtonBindingsController.periodic();
+  }
+
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
