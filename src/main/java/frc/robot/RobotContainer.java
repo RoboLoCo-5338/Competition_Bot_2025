@@ -14,12 +14,9 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.generated.TunerConstants;
@@ -53,7 +50,6 @@ import frc.robot.subsystems.led.AddressableLEDIO;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.led.LEDIO;
 import frc.robot.subsystems.led.LEDIOSim;
-import java.util.HashMap;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -74,14 +70,11 @@ public class RobotContainer {
 
   private final EndEffector endEffector;
 
-  
   private final ButtonBindings ButtonBindingsController;
 
   private final Climb climb;
 
   private final Arm arm;
-
- 
 
   // Controller
 
@@ -181,7 +174,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Default command, normal field-relative drive
-    
+
   }
 
   /**
@@ -200,5 +193,4 @@ public class RobotContainer {
    * @param x the input from the joystick
    * @return the output speed
    */
-  
 }

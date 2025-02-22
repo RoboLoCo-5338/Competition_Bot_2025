@@ -26,8 +26,8 @@ public class EndEffectorIOTalonFX implements EndEffectorIO {
   private final LaserCan LcEffector2; // why is it screaming at me here
   // aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
   // bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
- // have you tried simply being more skilled 
- // - david
+  // have you tried simply being more skilled
+  // - david
   public EndEffectorIOTalonFX() {
 
     endEffectorVelocity = endEffectorMotor.getVelocity();

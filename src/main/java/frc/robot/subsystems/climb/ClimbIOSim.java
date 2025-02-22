@@ -32,7 +32,8 @@ public class ClimbIOSim extends SimMechanism implements ClimbIO {
       new SingleJointedArmSim(
           DCMotor.getKrakenX60(1),
           ClimbConstants.GEARING,
-          SingleJointedArmSim.estimateMOI(ClimbConstants.ARM_LENGTH, 0),
+          SingleJointedArmSim.estimateMOI(
+              ClimbConstants.ARM_LENGTH, 4), // TODO changed for testing, fix massKG
           ClimbConstants.ARM_LENGTH,
           0,
           0,

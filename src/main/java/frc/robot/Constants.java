@@ -88,8 +88,8 @@ public final class Constants {
     public static final double ELEVATOR_kD_LASERCAN = 0.0;
     // Sim constants
     public static final double GEARING = 4;
-    public static final double CARRIAGE_MASS = 0;
-    public static final double DRUM_RADIUS = 0;
+    public static final double CARRIAGE_MASS = 4.0; // CHANGED FOR TESTING
+    public static final double DRUM_RADIUS = 4.0; // ALSO CHANGED FOR TESTING
     public static final double MIN_HEIGHT = 0;
     public static final double MAX_HEIGHT = 0;
     public static final double STARTING_HEIGHT = 0;
@@ -110,7 +110,7 @@ public final class Constants {
     public static final int LASERCAN_1ID = -1;
     public static final int LASERCAN_2ID = -1;
     // Sim Constants
-    public static final double MOI = 0.0;
+    public static final double MOI = 5.0; // CHANGED FOR TESTING
     public static final double GEARING = 9;
   }
 
