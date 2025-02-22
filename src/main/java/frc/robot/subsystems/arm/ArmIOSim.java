@@ -49,7 +49,7 @@ public class ArmIOSim extends SimMechanism implements ArmIO {
 
   @Override
   public double[] getCurrents() {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'getCurrents'");
+
+    return new double[] {armPhysicsSim.getCurrentDrawAmps()};
   }
 }
