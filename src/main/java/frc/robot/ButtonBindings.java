@@ -2,8 +2,11 @@ package frc.robot;
 
 import java.util.HashMap;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.PS4Controller.Button;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.DriveCommands;
@@ -132,7 +135,7 @@ public class ButtonBindings {
 
     private void connectButtonToFunction() {
       for (String button : buttonToFunction.keySet()) {
-        buttonMappings.get(button).whileTrue(functionBindings.get(buttonToFunction.get(button)));
+        buttonMappings.get(button).whileTrue(functionBindings.get(buttonToFunction.get(button)).andThen(ButtonBindings.debugCommand()));
       }
       for (String button : negatedButtonToFunction.keySet()) {
         buttonMappings.get(button).whileFalse(functionBindings.get(negatedButtonToFunction.get(button)));
@@ -154,6 +157,9 @@ public class ButtonBindings {
   public double joystickExponentialFunction(double x) {
       return (1.0 / (exponentialVariable - 1)) * (Math.pow(exponentialVariable, x) - 1);
     }
+    public static Command debugCommand() {
+        return Commands.runOnce(() -> System.out.println("Button Pressed"));
+    }
   public Command lockToZero() {
       return DriveCommands.joystickDriveAtAngle(
               drive,
@@ -165,7 +171,12 @@ public class ButtonBindings {
       return null; //TODO Implement Climb Preset
   }
   public Command gyroReset() {
-      return DriveCommands.gyroReset(drive); // TODO Implement Gyro Reset
+        return Commands.runOnce(
+                    () ->
+                        drive.setPose(
+                            new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
+                    drive)
+                .ignoringDisable(true);
   }
   public Command manualClimbDown() {
       return null; // TODO Implement Manual Climb Down
