@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
+import org.littletonrobotics.junction.Logger;
 
 public class Arm extends SubsystemBase {
 
@@ -23,6 +24,7 @@ public class Arm extends SubsystemBase {
   @Override
   public void periodic() {
     io.updateInputs(inputs);
+    Logger.processInputs("Arm", inputs);
 
     armDisconnectedAlert.set(!inputs.armConnected && Constants.currentMode != Mode.SIM);
   }

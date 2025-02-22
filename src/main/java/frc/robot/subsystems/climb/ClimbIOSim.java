@@ -35,14 +35,15 @@ public class ClimbIOSim extends SimMechanism implements ClimbIO {
           SingleJointedArmSim.estimateMOI(
               ClimbConstants.ARM_LENGTH, 4), // TODO changed for testing, fix massKG
           ClimbConstants.ARM_LENGTH,
-          0,
-          0,
+          ClimbConstants.MIN_ANGLE,
+          ClimbConstants.MAX_ANGLE,
           false,
-          0);
+          ClimbConstants.STARTING_ANGLE);
   // Sim state of the TalonFX.
   TalonFXSimState simMotor = climbMotor.getSimState();
 
   public ClimbIOSim() {
+    super();
     // configures base motor
     climbMotor.getConfigurator().apply(getConfiguration());
   }
@@ -80,7 +81,7 @@ public class ClimbIOSim extends SimMechanism implements ClimbIO {
   }
 
   @Override
-  public double getCurrent() {
-    return physicsSim.getCurrentDrawAmps();
+  public double[] getCurrents() {
+    return new double[] {physicsSim.getCurrentDrawAmps()};
   }
 }

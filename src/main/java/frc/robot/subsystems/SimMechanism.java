@@ -12,12 +12,16 @@ public abstract class SimMechanism {
   }
 
   public static void updateBatteryVoltages() {
-    double[] currents = new double[MECHANISMS.size()];
-    for (int i = 0; i < currents.length; i++) {
-      currents[i] = MECHANISMS.get(i).getCurrent();
+    ArrayList<Double> currents = new ArrayList<Double>();
+    for (SimMechanism m : MECHANISMS) {
+      for (double current : m.getCurrents()) {
+        currents.add(current);
+      }
     }
-    RoboRioSim.setVInVoltage(BatterySim.calculateDefaultBatteryLoadedVoltage(currents));
+    RoboRioSim.setVInVoltage(
+        BatterySim.calculateDefaultBatteryLoadedVoltage(
+            currents.stream().mapToDouble(Double::doubleValue).toArray()));
   }
 
-  public abstract double getCurrent();
+  public abstract double[] getCurrents();
 }

@@ -36,6 +36,7 @@ public class ElevatorIOSim extends SimMechanism implements ElevatorIO {
   // this is empty, i will work on it later
   // not if I work on it first
   public ElevatorIOSim() {
+    super();
     elevatorMotor1.getConfigurator().apply(getConfiguration(1));
 
     // TODO does this need to be inverted? idk bro does it?
@@ -94,7 +95,7 @@ public class ElevatorIOSim extends SimMechanism implements ElevatorIO {
   }
 
   @Override
-  public double getCurrent() {
-    return physicsSim.getCurrentDrawAmps();
+  public double[] getCurrents() {
+    return new double[] {physicsSim.getCurrentDrawAmps()};
   }
 }

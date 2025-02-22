@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.DriveCommands;
+import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.climb.Climb;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.endeffector.EndEffector;
@@ -22,6 +24,9 @@ public class ButtonBindings {
   private Elevator elevator;
   private GroundIntake groundIntake;
   private EndEffector endEffector;
+  private Arm arm;
+  private Climb climb;
+
   private final CommandXboxController driveController = new CommandXboxController(0);
   private final CommandXboxController operatorController = new CommandXboxController(1);
   private double exponentialVariable = 25.0;
@@ -37,12 +42,21 @@ public class ButtonBindings {
   public HashMap<String, String> negatedButtonToFunction = new HashMap<>();
 
   public ButtonBindings(
-      Drive drive, LED led, Elevator elevator, GroundIntake groundIntake, EndEffector endEffector) {
+      Drive drive,
+      LED led,
+      Elevator elevator,
+      GroundIntake groundIntake,
+      EndEffector endEffector,
+      Climb climb,
+      Arm arm) {
     this.drive = drive;
     this.led = led;
     this.elevator = elevator;
     this.groundIntake = groundIntake;
     this.endEffector = endEffector;
+    this.climb = climb;
+    this.arm = arm;
+
     setUpFunctionBindings();
     setUpButtonMappings();
     setUpButtonBindings();
@@ -76,6 +90,7 @@ public class ButtonBindings {
     buttonMappings.put("D - x", driveController.x());
     buttonMappings.put("D - a", driveController.a());
     buttonMappings.put("D - y", driveController.y());
+    buttonMappings.put("D - b", driveController.b());
     buttonMappings.put("D - Right Joystick Button", driveController.rightStick());
     buttonMappings.put("D - Left Joystick Button", driveController.leftStick());
     buttonMappings.put("D - Left Bumper", driveController.leftBumper());
@@ -119,7 +134,7 @@ public class ButtonBindings {
     // Operator Controller Bindings
     buttonToFunction.put("O - a", "Manual Arm Down");
     buttonToFunction.put("O - y", "Manual Arm Up");
-    buttonToFunction.put("O - B", "Net Preset");
+    buttonToFunction.put("O - b", "Net Preset");
     buttonToFunction.put("O - Right Bumper", "Ground Intake In");
     buttonToFunction.put("O - Left Bumper", "Ground Intake Out");
     buttonToFunction.put("O - Right Trigger", "End Effector In");
@@ -132,7 +147,7 @@ public class ButtonBindings {
     negatedButtonToFunction.put("O - D-Pad Up", "Ground Intake Fast");
   }
 
-  public void periodic() {}
+  public static void periodic() {}
 
   private void connectButtonToFunction() {
     for (String button : buttonToFunction.keySet()) {

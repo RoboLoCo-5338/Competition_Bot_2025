@@ -17,6 +17,7 @@ public class EndEffectorIOSim extends SimMechanism implements EndEffectorIO {
           DCMotor.getKrakenX60(1));
 
   public EndEffectorIOSim() {
+    super();
     endEffectorMotor.getConfigurator().apply(getEndEffectorConfiguration());
   }
 
@@ -42,7 +43,7 @@ public class EndEffectorIOSim extends SimMechanism implements EndEffectorIO {
   }
 
   @Override
-  public double getCurrent() {
-    return physicsSim.getCurrentDrawAmps();
+  public double[] getCurrents() {
+    return new double[] {physicsSim.getCurrentDrawAmps()};
   }
 }
