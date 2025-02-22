@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.subsystems.SimMechanism;
-
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.mechanism.LoggedMechanism2d;
 import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d;
@@ -97,6 +96,6 @@ public class ElevatorIOSim extends SimMechanism implements ElevatorIO {
 
   @Override
   public double[] getCurrents() {
-    return new double[]{physicsSim.getCurrentDrawAmps()};
+    return new double[] {physicsSim.getCurrentDrawAmps()};
   }
 }

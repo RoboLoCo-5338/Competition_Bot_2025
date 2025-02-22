@@ -44,6 +44,6 @@ public class EndEffectorIOSim extends SimMechanism implements EndEffectorIO {
 
   @Override
   public double[] getCurrents() {
-      return new double[]{physicsSim.getCurrentDrawAmps()};
+    return new double[] {physicsSim.getCurrentDrawAmps()};
   }
 }

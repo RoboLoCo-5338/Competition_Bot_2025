@@ -126,7 +126,7 @@ public final class Constants {
   public static final class GroundIntakeConstants {
     public static final class ArmConstants {
       // TODO change this
-      public static final int ARM_CANID = -1;
+      public static final int ARM_CANID = -2; // CHANGED FOR TESTING
       public static final int ARM_CURRENT_LIMIT = 20;
       public static final int ARM_ENCODER_POSITION_CONVERSION_FACTOR = 1;
       public static final int ARM_ENCODER_VELOCITY_CONVERSION_FACTOR = 1;
@@ -148,7 +148,7 @@ public final class Constants {
     }
 
     public static final class IntakeConstants {
-      public static final int INTAKE_CANID = -1;
+      public static final int INTAKE_CANID = -3; // CHANGED FOR TESTING
       public static final int INTAKE_CURRENT_LIMIT = 20;
       public static final int INTAKE_ENCODER_POSITION_CONVERSION_FACTOR = 1;
       public static final int INTAKE_ENCODER_VELOCITY_CONVERSION_FACTOR = 1;

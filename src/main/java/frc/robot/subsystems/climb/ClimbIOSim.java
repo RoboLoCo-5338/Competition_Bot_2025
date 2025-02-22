@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import frc.robot.Constants.ClimbConstants;
 import frc.robot.subsystems.SimMechanism;
-
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.mechanism.LoggedMechanism2d;
 import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d;
@@ -83,6 +82,6 @@ public class ClimbIOSim extends SimMechanism implements ClimbIO {
 
   @Override
   public double[] getCurrents() {
-    return new double[]{physicsSim.getCurrentDrawAmps()};
+    return new double[] {physicsSim.getCurrentDrawAmps()};
   }
 }

@@ -1,22 +1,22 @@
 package frc.robot.subsystems.groundintake;
 
-import org.littletonrobotics.junction.AutoLog;
-
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
-
 import frc.robot.Constants.GroundIntakeConstants;
+import org.littletonrobotics.junction.AutoLog;
 
 public interface GroundIntakeIO {
-  SparkFlex armMotor = new SparkFlex(GroundIntakeConstants.ArmConstants.ARM_CANID, MotorType.kBrushless);
-  SparkFlex intakeMotor = new SparkFlex(GroundIntakeConstants.IntakeConstants.INTAKE_CANID, MotorType.kBrushless);
+  SparkFlex armMotor =
+      new SparkFlex(GroundIntakeConstants.ArmConstants.ARM_CANID, MotorType.kBrushless);
+  SparkFlex intakeMotor =
+      new SparkFlex(GroundIntakeConstants.IntakeConstants.INTAKE_CANID, MotorType.kBrushless);
   SparkClosedLoopController intakeController = intakeMotor.getClosedLoopController();
   SparkClosedLoopController armController = armMotor.getClosedLoopController();
-  
+
   @AutoLog
   public static class GroundIntakeIOInputs {
     public boolean armMotorConnected = false;
@@ -48,16 +48,20 @@ public interface GroundIntakeIO {
         .voltageCompensation(12.0);
     intakeConfig
         .encoder
-        .positionConversionFactor(GroundIntakeConstants.IntakeConstants.INTAKE_ENCODER_POSITION_CONVERSION_FACTOR)
-        .velocityConversionFactor(GroundIntakeConstants.IntakeConstants.INTAKE_ENCODER_VELOCITY_CONVERSION_FACTOR)
+        .positionConversionFactor(
+            GroundIntakeConstants.IntakeConstants.INTAKE_ENCODER_POSITION_CONVERSION_FACTOR)
+        .velocityConversionFactor(
+            GroundIntakeConstants.IntakeConstants.INTAKE_ENCODER_VELOCITY_CONVERSION_FACTOR)
         .uvwAverageDepth(2)
         .uvwMeasurementPeriod(10);
     intakeConfig
         .closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
         .pidf(
-            GroundIntakeConstants.IntakeConstants.INTAKE_KP, GroundIntakeConstants.IntakeConstants.INTAKE_KI,
-            GroundIntakeConstants.IntakeConstants.INTAKE_KD, GroundIntakeConstants.IntakeConstants.INTAKE_KFF);
+            GroundIntakeConstants.IntakeConstants.INTAKE_KP,
+                GroundIntakeConstants.IntakeConstants.INTAKE_KI,
+            GroundIntakeConstants.IntakeConstants.INTAKE_KD,
+                GroundIntakeConstants.IntakeConstants.INTAKE_KFF);
     intakeConfig
         .signals
         .primaryEncoderPositionAlwaysOn(true)
@@ -81,8 +85,10 @@ public interface GroundIntakeIO {
         .absoluteEncoder
         // TODO CHECK THIS
         .inverted(false)
-        .positionConversionFactor(GroundIntakeConstants.ArmConstants.ARM_ENCODER_POSITION_CONVERSION_FACTOR)
-        .velocityConversionFactor(GroundIntakeConstants.ArmConstants.ARM_ENCODER_VELOCITY_CONVERSION_FACTOR);
+        .positionConversionFactor(
+            GroundIntakeConstants.ArmConstants.ARM_ENCODER_POSITION_CONVERSION_FACTOR)
+        .velocityConversionFactor(
+            GroundIntakeConstants.ArmConstants.ARM_ENCODER_VELOCITY_CONVERSION_FACTOR);
 
     armConfig
         .closedLoop
@@ -106,5 +112,4 @@ public interface GroundIntakeIO {
 
     return armConfig;
   }
-
 }

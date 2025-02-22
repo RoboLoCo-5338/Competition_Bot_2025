@@ -57,7 +57,7 @@ public class ModuleIOSim extends SimMechanism implements ModuleIO {
   public ModuleIOSim(
       SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration>
           constants) {
-            super();
+    super();
     // Create drive and turn sim models
     driveSim =
         new DCMotorSim(
@@ -144,6 +144,8 @@ public class ModuleIOSim extends SimMechanism implements ModuleIO {
 
   @Override
   public double[] getCurrents() {
-    return new double[]{Math.abs(driveSim.getCurrentDrawAmps()),Math.abs(turnSim.getCurrentDrawAmps())};
+    return new double[] {
+      Math.abs(driveSim.getCurrentDrawAmps()), Math.abs(turnSim.getCurrentDrawAmps())
+    };
   }
 }

@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.DriveCommands;
+import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.climb.Climb;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.endeffector.EndEffector;
@@ -22,6 +24,9 @@ public class ButtonBindings {
   private Elevator elevator;
   private GroundIntake groundIntake;
   private EndEffector endEffector;
+  private Arm arm;
+  private Climb climb;
+
   private final CommandXboxController driveController = new CommandXboxController(0);
   private final CommandXboxController operatorController = new CommandXboxController(1);
   private double exponentialVariable = 25.0;
@@ -37,12 +42,21 @@ public class ButtonBindings {
   public HashMap<String, String> negatedButtonToFunction = new HashMap<>();
 
   public ButtonBindings(
-      Drive drive, LED led, Elevator elevator, GroundIntake groundIntake, EndEffector endEffector) {
+      Drive drive,
+      LED led,
+      Elevator elevator,
+      GroundIntake groundIntake,
+      EndEffector endEffector,
+      Climb climb,
+      Arm arm) {
     this.drive = drive;
     this.led = led;
     this.elevator = elevator;
     this.groundIntake = groundIntake;
     this.endEffector = endEffector;
+    this.climb = climb;
+    this.arm = arm;
+
     setUpFunctionBindings();
     setUpButtonMappings();
     setUpButtonBindings();
@@ -133,7 +147,7 @@ public class ButtonBindings {
     negatedButtonToFunction.put("O - D-Pad Up", "Ground Intake Fast");
   }
 
-  public void periodic() {}
+  public static void periodic() {}
 
   private void connectButtonToFunction() {
     for (String button : buttonToFunction.keySet()) {
@@ -142,19 +156,27 @@ public class ButtonBindings {
         continue;
       }
       if (functionBindings.get(buttonToFunction.get(button)) == null) {
+        System.out.println(buttonToFunction.get(button));
+        System.out.println(functionBindings.get(buttonToFunction.get(button)));
+        System.out.println(functionBindings.keySet());
         System.out.println("Function " + buttonToFunction.get(button) + " not found");
         continue;
       }
 
-      buttonMappings.get(button).whileTrue(ButtonBindings.debugCommand(button));
+      buttonMappings
+          .get(button)
+          .onTrue(ButtonBindings.debugCommand(button, buttonToFunction.get(button)))
+          .whileTrue(functionBindings.get(buttonToFunction.get(button)));
     }
     for (String button : negatedButtonToFunction.keySet()) {
+
       if (buttonMappings.get(button) == null) {
-        System.out.println("Button " + button + " not found");
+        System.out.println("Negated Button " + button + " not found");
         continue;
       }
       if (functionBindings.get(negatedButtonToFunction.get(button)) == null) {
-        System.out.println("Function " + negatedButtonToFunction.get(button) + " not found");
+        System.out.println(
+            "Negated Function " + negatedButtonToFunction.get(button) + " not found");
         continue;
       }
 

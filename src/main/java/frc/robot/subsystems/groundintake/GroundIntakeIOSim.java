@@ -22,7 +22,7 @@ public class GroundIntakeIOSim extends SimMechanism implements GroundIntakeIO {
       new SingleJointedArmSim(
           armGearBox,
           GroundIntakeConstants.ArmConstants.GEARING,
-          GroundIntakeConstants.ArmConstants.MOI,
+          GroundIntakeConstants.ArmConstants.MOI + 1,
           GroundIntakeConstants.ArmConstants.LENGTH,
           GroundIntakeConstants.ArmConstants.MIN_ANGLE,
           GroundIntakeConstants.ArmConstants.MAX_ANGLE,
