@@ -2,8 +2,10 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.DriveCommands;
@@ -79,14 +81,21 @@ public class ButtonBindings {
     buttonMappings.put("D - Left Bumper", driveController.leftBumper());
     buttonMappings.put("D - Left Trigger", driveController.leftTrigger());
     buttonMappings.put("D - Right Bumper", driveController.rightBumper());
-    buttonMappings.put("D - Right Trigger", driveController.rightTrigger());
+    buttonMappings.put(
+        "D - Right Trigger",
+        new Trigger(
+            () ->
+                driveController.getRawAxis(5)
+                    > -0.5)); // the .rightTrigger() trigger does not work for me - maybe its a
+    // linux thing - or WPILib is slightly broken
 
     buttonMappings.put("O - a", operatorController.a());
     buttonMappings.put("O - y", operatorController.y());
     buttonMappings.put("O - B", operatorController.b());
     buttonMappings.put("O - Right Bumper", operatorController.rightBumper());
     buttonMappings.put("O - Left Bumper", operatorController.leftBumper());
-    buttonMappings.put("O - Right Trigger", operatorController.rightTrigger());
+    buttonMappings.put(
+        "O - Right Trigger", new Trigger(() -> operatorController.getRawAxis(5) > -0.5));
     buttonMappings.put("O - Left Trigger", operatorController.leftTrigger());
     buttonMappings.put("O - D-Pad Down", operatorController.povDown());
     buttonMappings.put("O - D-Pad Up", operatorController.povUp());
@@ -123,6 +132,8 @@ public class ButtonBindings {
     negatedButtonToFunction.put("O - D-Pad Up", "Ground Intake Fast");
   }
 
+  public void periodic() {}
+
   private void connectButtonToFunction() {
     for (String button : buttonToFunction.keySet()) {
       if (buttonMappings.get(button) == null) {
@@ -130,29 +141,33 @@ public class ButtonBindings {
         continue;
       }
       if (functionBindings.get(buttonToFunction.get(button)) == null) {
+        System.out.println(buttonToFunction.get(button));
+        System.out.println(functionBindings.get(buttonToFunction.get(button)));
+        System.out.println(functionBindings.keySet());
         System.out.println("Function " + buttonToFunction.get(button) + " not found");
         continue;
       }
 
       buttonMappings
           .get(button)
-          .whileTrue(
-              functionBindings
-                  .get(buttonToFunction.get(button))
-                  .andThen(ButtonBindings.debugCommand()));
+          .onTrue(ButtonBindings.debugCommand(button, buttonToFunction.get(button)))
+          .whileTrue(functionBindings.get(buttonToFunction.get(button)));
     }
     for (String button : negatedButtonToFunction.keySet()) {
 
       if (buttonMappings.get(button) == null) {
-        System.out.println("Button " + button + " not found");
+        System.out.println("Negated Button " + button + " not found");
         continue;
       }
       if (functionBindings.get(negatedButtonToFunction.get(button)) == null) {
-        System.out.println("Function " + negatedButtonToFunction.get(button) + " not found");
+        System.out.println(
+            "Negated Function " + negatedButtonToFunction.get(button) + " not found");
         continue;
       }
 
-      buttonMappings.get(button).whileFalse(ButtonBindings.debugCommand());
+      buttonMappings
+          .get(button)
+          .whileFalse(functionBindings.get(negatedButtonToFunction.get(button)));
     }
   }
 
@@ -165,23 +180,31 @@ public class ButtonBindings {
             () ->
                 -driveController
                     .getRightX())); // handles translation and rotation driving (i think!?)
-
-    operatorController.a().onTrue(ButtonBindings.debugCommand());
   }
 
   public double joystickExponentialFunction(double x) {
     return (1.0 / (exponentialVariable - 1)) * (Math.pow(exponentialVariable, x) - 1);
   }
 
-  public static Command debugCommand() {
+  public static Command debugCommand(String button, String action) {
 
-    return Commands.runOnce(
+    return new InstantCommand(
         () -> {
-          try {
-            Process testing = Runtime.getRuntime().exec("kate");
-          } catch (Exception e) {
-            System.out.println("Error: " + e);
-          }
+          NetworkTableInstance.getDefault()
+              .getStringTopic("Last Button Pressed")
+              .publish()
+              .set(button);
+          NetworkTableInstance.getDefault()
+              .getStringTopic("Last Action Done")
+              .publish()
+              .set(action);
+        });
+  }
+
+  public static Command blankCommand(String name) {
+    return new InstantCommand(
+        () -> {
+          System.out.println(name + " is not implemented!");
         });
   }
 
@@ -194,7 +217,7 @@ public class ButtonBindings {
   }
 
   public Command climbPreset() {
-    return null; // TODO Implement Climb Preset
+    return ButtonBindings.blankCommand("climbPreset");
   }
 
   public Command gyroReset() {
@@ -205,66 +228,66 @@ public class ButtonBindings {
   }
 
   public Command manualClimbDown() {
-    return null; // TODO Implement Manual Climb Down
+    return ButtonBindings.blankCommand("manualClimbDown");
   }
 
   public Command manualClimbUp() {
-    return null; // TODO Implement Manual Climb Up
+    return ButtonBindings.blankCommand("manualClimbUp");
   }
 
   public Command l3Preset() {
-    return null; // TODO Implement L3 Preset
+    return ButtonBindings.blankCommand("l3Preset");
   }
 
   public Command elevatorSlow() {
-    return null; // TODO Implement Elevator Slow
+    return ButtonBindings.blankCommand("elevatorSlow");
   }
 
   public Command l2Preset() {
-    return null; // TODO Implement L2 Preset
+    return ButtonBindings.blankCommand("l2Preset");
   }
 
   public Command l4Preset() {
-    return null; // TODO Implement L4 Preset
+    return ButtonBindings.blankCommand("l4Preset");
   }
 
   public Command elevatorFast() {
-    return null; // TODO Implement Elevator Fast
+    return ButtonBindings.blankCommand("elevatorFast");
   }
 
   public Command manualArmDown() {
-    return null; // TODO Implement Manual Arm Down
+    return ButtonBindings.blankCommand("manualArmDown");
   }
 
   public Command manualArmUp() {
-    return null; // TODO Implement Manual Arm Up
+    return ButtonBindings.blankCommand("manualArmUp");
   }
 
   public Command netPreset() {
-    return null; // TODO Implement Net Preset
+    return ButtonBindings.blankCommand("netPreset");
   }
 
   public Command groundIntakeIn() {
-    return null; // TODO Implement Ground Intake In
+    return ButtonBindings.blankCommand("groundIntakeIn");
   }
 
   public Command groundIntakeOut() {
-    return null; // TODO Implement Ground Intake Out
+    return ButtonBindings.blankCommand("groundIntakeOut");
   }
 
   public Command endEffectorIn() {
-    return null; // TODO Implement End Effector In
+    return ButtonBindings.blankCommand("endEffectorIn");
   }
 
   public Command endEffectorOut() {
-    return null; // TODO Implement End Effector Out
+    return ButtonBindings.blankCommand("endEffectorOut");
   }
 
   public Command groundIntakeSlow() {
-    return null; // TODO Implement Ground Intake Slow
+    return ButtonBindings.blankCommand("groundIntakeSlow");
   }
 
   public Command groundIntakeFast() {
-    return null; // TODO Implement Ground Intake Fast
+    return ButtonBindings.blankCommand("groundIntakeFast");
   }
 }
