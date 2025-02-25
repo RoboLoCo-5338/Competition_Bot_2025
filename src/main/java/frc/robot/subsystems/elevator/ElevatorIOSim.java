@@ -1,16 +1,19 @@
 package frc.robot.subsystems.elevator;
 
-import com.ctre.phoenix6.sim.ChassisReference;
-import com.ctre.phoenix6.sim.TalonFXSimState;
-import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.simulation.ElevatorSim;
-import frc.robot.Constants.ElevatorConstants;
-import frc.robot.subsystems.SimMechanism;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.mechanism.LoggedMechanism2d;
 import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d;
 import org.littletonrobotics.junction.mechanism.LoggedMechanismRoot2d;
+
+import com.ctre.phoenix6.sim.ChassisReference;
+import com.ctre.phoenix6.sim.TalonFXSimState;
+
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.simulation.ElevatorSim;
+import frc.robot.Constants;
+import frc.robot.Constants.ElevatorConstants;
+import frc.robot.subsystems.SimMechanism;
 
 public class ElevatorIOSim extends SimMechanism implements ElevatorIO {
   TalonFXSimState motor1Sim = elevatorMotor1.getSimState();
@@ -23,13 +26,13 @@ public class ElevatorIOSim extends SimMechanism implements ElevatorIO {
           ElevatorConstants.DRUM_RADIUS,
           ElevatorConstants.MIN_HEIGHT,
           ElevatorConstants.MAX_HEIGHT,
-          true,
+          false,
           ElevatorConstants.STARTING_HEIGHT);
 
   @AutoLogOutput(key = "Elevator/Mechanism")
-  LoggedMechanism2d elevatorDrawn = new LoggedMechanism2d(5, 5);
+  LoggedMechanism2d elevatorDrawn = new LoggedMechanism2d(Constants.ROBOT_LENGTH, ElevatorConstants.MAX_HEIGHT);
 
-  LoggedMechanismRoot2d root = elevatorDrawn.getRoot("elevator", 2.5, 0);
+  LoggedMechanismRoot2d root = elevatorDrawn.getRoot("elevator", 0, 0);
   LoggedMechanismLigament2d elevator =
       root.append(new LoggedMechanismLigament2d("stage", ElevatorConstants.STARTING_HEIGHT, 90));
 
@@ -64,8 +67,6 @@ public class ElevatorIOSim extends SimMechanism implements ElevatorIO {
     inputs.elevator2AppliedVolts = motor2Sim.getMotorVoltage();
     inputs.elevator2CurrentAmps = motor2Sim.getSupplyCurrent();
 
-    elevator.setLength(physicsSim.getPositionMeters());
-
     physicsSim.update(0.02);
 
     motor1Sim.setRawRotorPosition(
@@ -80,6 +81,8 @@ public class ElevatorIOSim extends SimMechanism implements ElevatorIO {
     motor2Sim.setRotorVelocity(
         physicsSim.getVelocityMetersPerSecond()
             / (ElevatorConstants.GEARING * ElevatorConstants.DRUM_RADIUS * Math.PI));
+    
+    elevator.setLength(physicsSim.getPositionMeters());
   }
 
   @Override

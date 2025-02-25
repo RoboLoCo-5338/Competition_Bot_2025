@@ -46,7 +46,7 @@ public class Elevator extends SubsystemBase {
    * @return A command that sets the elevator's position.
    */
   public Command setElevatorPosition(double position) {
-    return new InstantCommand(() -> io.setElevatorPosition(position));
+    return new InstantCommand(() -> io.setElevatorPosition(position), this);
   }
 
   /**
@@ -84,15 +84,10 @@ public class Elevator extends SubsystemBase {
         },
         () -> elevatorPID(position),
         (interrupted) -> io.setElevatorVelocity(0.0),
-        () -> Math.abs(error) < ElevatorConstants.ELEVATOR_EPSILON);
+        () -> Math.abs(error) < ElevatorConstants.ELEVATOR_EPSILON, this);
   }
 
   public Command setElevatorVelocity(double velocity) {
-   
-    return new InstantCommand(() -> {
-      System.out.println("Setting elevator velocity to " + velocity);
-    
-      io.setElevatorVelocity(velocity);
-    });
+    return new InstantCommand(() -> io.setElevatorVelocity(velocity), this);
   }
 }

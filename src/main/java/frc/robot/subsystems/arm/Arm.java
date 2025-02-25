@@ -38,7 +38,7 @@ public class Arm extends SubsystemBase {
    * @return A command that sets the arm to the given position.
    */
   public Command setArmPosition(double position) {
-    return new InstantCommand(() -> io.setArmPosition(position));
+    return new InstantCommand(() -> io.setArmPosition(position), this);
   }
 
   /**
@@ -50,6 +50,6 @@ public class Arm extends SubsystemBase {
    * @return A command that sets the arm to the given velocity.
    */
   public Command setArmVelocity(double velocity) {
-    return new InstantCommand(() -> io.setArmVelocity(velocity));
+    return new InstantCommand(() -> io.setArmVelocity(velocity), this);
   }
 }

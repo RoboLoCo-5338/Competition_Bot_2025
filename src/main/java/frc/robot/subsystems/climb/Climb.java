@@ -39,7 +39,7 @@ public class Climb extends SubsystemBase {
    * @return An InstantCommand that sets the climb motor to the specified position.
    */
   public Command setClimbPosition(double position) {
-    return new InstantCommand(() -> climbIO.setClimbPosition(position));
+    return new InstantCommand(() -> climbIO.setClimbPosition(position), this);
   }
 
   /**
@@ -50,6 +50,6 @@ public class Climb extends SubsystemBase {
    * @return An InstantCommand that sets the climb motor to the specified velocity.
    */
   public Command setClimbVelocity(double velocity) {
-    return new InstantCommand(() -> climbIO.setClimbVelocity(velocity));
+    return new InstantCommand(() -> climbIO.setClimbVelocity(velocity), this);
   }
 }
