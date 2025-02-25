@@ -22,10 +22,7 @@ public class ClimbIOSim extends SimMechanism implements ClimbIO {
   LoggedMechanism2d mechanism = new LoggedMechanism2d(5, 5);
 
   LoggedMechanismRoot2d root = mechanism.getRoot("climb", 2.5, 0);
-  LoggedMechanismLigament2d m_climbBase =
-      root.append(new LoggedMechanismLigament2d("base", ClimbConstants.BASE_HEIGHT, 90));
-  LoggedMechanismLigament2d m_climbArm =
-      m_climbBase.append(new LoggedMechanismLigament2d("arm", ClimbConstants.ARM_LENGTH, 90));
+  LoggedMechanismLigament2d m_climbArm;
 
   // Physics simulation of the arm
   SingleJointedArmSim physicsSim =
@@ -46,6 +43,10 @@ public class ClimbIOSim extends SimMechanism implements ClimbIO {
     super();
     // configures base motor
     climbMotor.getConfigurator().apply(getConfiguration());
+    m_climbArm =
+        root.append(new LoggedMechanismLigament2d("base", ClimbConstants.BASE_HEIGHT, 90))
+            .append(new LoggedMechanismLigament2d("rotator", 0, -90))
+            .append(new LoggedMechanismLigament2d("arm", ClimbConstants.ARM_LENGTH, 90));
   }
 
   @Override

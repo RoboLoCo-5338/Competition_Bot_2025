@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 public final class Constants {
   public static final Mode simMode = Mode.SIM;
   public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
+  public static final double ROBOT_LENGTH = Units.inchesToMeters(33.250000);
 
   public static enum Mode {
     /** Running on a real robot. */
@@ -85,7 +86,7 @@ public final class Constants {
     public static final int ELEVATOR_MOTOR_ID2 = 2;
     public static final int ELEVATOR_MOTOR_CURRENT_LIMIT = 20;
     public static final int LASERCAN_ID = -1;
-    public static final double ELEVATOR_MOTOR_kP = 0.0;
+    public static final double ELEVATOR_MOTOR_kP = 100.0;
     public static final double ELEVATOR_MOTOR_kI = 0.0;
     public static final double ELEVATOR_MOTOR_kD = 0.0;
     public static final double ELEVATOR_MOTOR_kG = 0.0;
@@ -145,6 +146,7 @@ public final class Constants {
       public static final double MIN_ANGLE = 0.0;
       public static final double MAX_ANGLE = Units.degreesToRadians(106);
       public static final double STARTING_ANGLE = 0.0;
+      public static final double ARM_BASE_HEIGHT = 0.0;
     }
 
     public static final class IntakeConstants {

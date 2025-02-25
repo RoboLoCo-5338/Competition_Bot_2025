@@ -35,14 +35,14 @@ public class GroundIntake extends SubsystemBase {
   }
 
   public Command setGroundIntakeVelocity(double velocity) {
-    return new InstantCommand(() -> io.setIntakeVelocity(velocity));
+    return new InstantCommand(() -> io.setIntakeVelocity(velocity), this);
   }
 
   public Command setGroundArmPosition(double position) {
-    return new InstantCommand(() -> io.setArmPosition(position));
+    return new InstantCommand(() -> io.setArmPosition(position), this);
   }
 
   public Command setGroundArmVelocity(double velocity) {
-    return new InstantCommand(() -> io.setArmVelocity(velocity));
+    return new InstantCommand(() -> io.setArmVelocity(velocity), this);
   }
 }
