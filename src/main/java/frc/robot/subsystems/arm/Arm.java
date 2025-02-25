@@ -11,7 +11,7 @@ import org.littletonrobotics.junction.Logger;
 
 public class Arm extends SubsystemBase {
 
-  private final ArmIO io;
+  public final ArmIO io;
   private final ArmIOInputsAutoLogged inputs = new ArmIOInputsAutoLogged();
 
   private final Alert armDisconnectedAlert =

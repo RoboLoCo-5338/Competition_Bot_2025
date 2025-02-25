@@ -13,7 +13,7 @@ import org.littletonrobotics.junction.Logger;
 
 public class GroundIntake extends SubsystemBase {
 
-  private final GroundIntakeIO io;
+  public final GroundIntakeIO io;
   private final GroundIntakeIOInputsAutoLogged inputs = new GroundIntakeIOInputsAutoLogged();
 
   private final Alert armDisconnectedAlert =

@@ -8,7 +8,12 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.ArmCommands;
+import frc.robot.commands.ClimbCommands;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.ElevatorCommands;
+import frc.robot.commands.EndEffectorCommands;
+import frc.robot.commands.GroundIntakeCommands;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.climb.Climb;
 import frc.robot.subsystems.drive.Drive;
@@ -84,6 +89,8 @@ public class ButtonBindings {
     functionBindings.put("End Effector Out", this.endEffectorOut());
     functionBindings.put("Ground Intake Slow", this.groundIntakeSlow());
     functionBindings.put("Ground Intake Fast", this.groundIntakeFast());
+    functionBindings.put("Elevator Up", this.manualElevatorUp());
+    functionBindings.put("Elevator Down", this.manualElevatorDown());
   }
 
   private void setUpButtonMappings() {
@@ -96,6 +103,10 @@ public class ButtonBindings {
     buttonMappings.put("D - Left Bumper", driveController.leftBumper());
     buttonMappings.put("D - Left Trigger", driveController.leftTrigger());
     buttonMappings.put("D - Right Bumper", driveController.rightBumper());
+    buttonMappings.put("D - D-Pad Up", driveController.povUp());
+    buttonMappings.put("D - D-Pad Down", driveController.povDown());
+    buttonMappings.put("D - D-Pad Left", driveController.povLeft());
+
     buttonMappings.put(
         "D - Right Trigger",
         new Trigger(
@@ -128,6 +139,8 @@ public class ButtonBindings {
     buttonToFunction.put("D - Left Trigger", "Elevator Slow");
     buttonToFunction.put("D - Right Bumper", "L2 Preset");
     buttonToFunction.put("D - Right Trigger", "L4 Preset");
+    buttonToFunction.put("D - D-Pad Up", "Elevator Up");
+    buttonToFunction.put("D - D-Pad Down", "Elevator Down");
     // Negated Driver Controller Bindings
     negatedButtonToFunction.put("D - Left Trigger", "Elevator Fast");
 
@@ -243,11 +256,19 @@ public class ButtonBindings {
   }
 
   public Command manualClimbDown() {
-    return ButtonBindings.blankCommand("manualClimbDown");
+    return ClimbCommands.moveClimbArm(climb, -0.4);
   }
 
   public Command manualClimbUp() {
-    return ButtonBindings.blankCommand("manualClimbUp");
+    return ClimbCommands.moveClimbArm(climb, 0.4);
+  }
+
+  public Command manualElevatorUp() {
+    return ElevatorCommands.moveElevator(elevator, 0.4);
+  }
+
+  public Command manualElevatorDown() {
+    return ElevatorCommands.moveElevator(elevator, -0.4);
   }
 
   public Command l3Preset() {
@@ -271,11 +292,11 @@ public class ButtonBindings {
   }
 
   public Command manualArmDown() {
-    return ButtonBindings.blankCommand("manualArmDown");
+    return ArmCommands.moveArm(arm, -0.4);
   }
 
   public Command manualArmUp() {
-    return ButtonBindings.blankCommand("manualArmUp");
+    return ArmCommands.moveArm(arm, 0.4);
   }
 
   public Command netPreset() {
@@ -283,19 +304,19 @@ public class ButtonBindings {
   }
 
   public Command groundIntakeIn() {
-    return ButtonBindings.blankCommand("groundIntakeIn");
+    return GroundIntakeCommands.moveGroundIntakeArm(groundIntake, -0.4, 0.4);
   }
 
   public Command groundIntakeOut() {
-    return ButtonBindings.blankCommand("groundIntakeOut");
+    return GroundIntakeCommands.moveGroundIntakeArm(groundIntake, 0.4, -0.4);
   }
 
   public Command endEffectorIn() {
-    return ButtonBindings.blankCommand("endEffectorIn");
+    return EndEffectorCommands.moveEndEffector(endEffector, 0.4);
   }
 
   public Command endEffectorOut() {
-    return ButtonBindings.blankCommand("endEffectorOut");
+    return EndEffectorCommands.moveEndEffector(endEffector, -0.4);
   }
 
   public Command groundIntakeSlow() {

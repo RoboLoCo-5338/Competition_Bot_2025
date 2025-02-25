@@ -76,8 +76,6 @@ public class RobotContainer {
 
   private final Arm arm;
 
-  private final ButtonBindings buttonBindings;
-
   private double exponentialVariable = 25.0;
 
   // Controller
@@ -103,7 +101,7 @@ public class RobotContainer {
         elevator = new Elevator(new ElevatorIOTalonFX());
         climb = new Climb(new ClimbIOTalonFX());
         arm = new Arm(new ArmIOSpark());
-        buttonBindings =
+        ButtonBindingsController =
             new ButtonBindings(drive, led, elevator, groundIntake, endEffector, climb, arm);
 
         break;
@@ -123,7 +121,7 @@ public class RobotContainer {
         elevator = new Elevator(new ElevatorIOSim());
         climb = new Climb(new ClimbIOSim());
         arm = new Arm(new ArmIOSim());
-        buttonBindings =
+        ButtonBindingsController =
             new ButtonBindings(drive, led, elevator, groundIntake, endEffector, climb, arm);
         break;
 
@@ -143,7 +141,7 @@ public class RobotContainer {
         elevator = new Elevator(new ElevatorIO() {});
         climb = new Climb(new ClimbIO() {});
         arm = new Arm(new ArmIO() {});
-        buttonBindings =
+        ButtonBindingsController =
             new ButtonBindings(drive, led, elevator, groundIntake, endEffector, climb, arm);
         break;
     }
@@ -184,10 +182,6 @@ public class RobotContainer {
 
   public void periodic() {
     ButtonBindingsController.periodic();
-  }
-
-  public void periodic() {
-    ButtonBindings.periodic();
   }
 
   /**

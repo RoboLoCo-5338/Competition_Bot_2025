@@ -13,4 +13,17 @@ public class ArmCommands {
         new InstantCommand(() -> arm.setArmVelocity(speed)),
         new InstantCommand(() -> endEffector.setEndEffectorVelocity(speed)));
   }
+
+  public static Command moveArm(Arm arm, double speed) {
+    return new InstantCommand(() -> arm.setArmVelocity(speed));
+    // new InstantCommand(() -> endEffector.setEndEffectorVelocity(speed)));
+  }
+
+  public static Command setArm(Arm arm, double position) {
+    return arm.setArmPosition(position);
+  }
+
+  public static double getArmPosition(Arm arm) {
+    return arm.io.armMotor.getAbsoluteEncoder().getPosition();
+  }
 }
