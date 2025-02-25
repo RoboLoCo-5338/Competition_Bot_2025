@@ -1,19 +1,20 @@
 package frc.robot.subsystems.climb;
 
-import static edu.wpi.first.units.Units.Radians;
-import static edu.wpi.first.units.Units.RadiansPerSecond;
-
-import com.ctre.phoenix6.sim.TalonFXSimState;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
-import frc.robot.Constants.ClimbConstants;
-import frc.robot.subsystems.SimMechanism;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.mechanism.LoggedMechanism2d;
 import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d;
 import org.littletonrobotics.junction.mechanism.LoggedMechanismRoot2d;
+
+import com.ctre.phoenix6.sim.TalonFXSimState;
+
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.system.plant.DCMotor;
+import static edu.wpi.first.units.Units.Radians;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
+import frc.robot.Constants.ClimbConstants;
+import frc.robot.subsystems.SimMechanism;
 
 public class ClimbIOSim extends SimMechanism implements ClimbIO {
   @AutoLogOutput(key = "Climb/Mechanism")
@@ -56,15 +57,15 @@ public class ClimbIOSim extends SimMechanism implements ClimbIO {
     // Sets voltage from sim motor
     physicsSim.setInputVoltage(simMotor.getMotorVoltage());
 
+    physicsSim.update(0.02);
     // Sends data to advantagescope
     inputs.climbConnected = true;
     inputs.climbAppliedVolts = simMotor.getMotorVoltage();
     inputs.climbCurrentAmps = physicsSim.getCurrentDrawAmps();
     inputs.climbPosition = physicsSim.getAngleRads();
     inputs.climbVelocityRadPerSec = physicsSim.getVelocityRadPerSec();
+    
     m_climbArm.setAngle(new Rotation2d(inputs.climbPosition));
-
-    physicsSim.update(0.02);
 
     simMotor.setRawRotorPosition(Radians.of(physicsSim.getAngleRads() / ClimbConstants.GEARING));
     simMotor.setRotorVelocity(

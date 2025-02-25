@@ -125,7 +125,7 @@ public class RobotContainer {
         endEffector = new EndEffector(new EndEffectorIOSim());
         elevator = new Elevator(new ElevatorIOSim());
         climb = new Climb(new ClimbIOSim());
-        arm = new Arm(new ArmIOSim());
+        arm = new Arm(new ArmIOSim(((ElevatorIOSim) elevator.getIO()).getLigamentEnd()));
         buttonBindings =
             new ButtonBindings(drive, led, elevator, groundIntake, endEffector, climb, arm);
         break;

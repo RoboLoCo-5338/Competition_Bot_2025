@@ -101,4 +101,8 @@ public class ElevatorIOSim extends SimMechanism implements ElevatorIO {
   public double[] getCurrents() {
     return new double[] {physicsSim.getCurrentDrawAmps()};
   }
+
+  public LoggedMechanismLigament2d getLigamentEnd(){
+    return elevator;
+  }
 }

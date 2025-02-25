@@ -1,21 +1,23 @@
 package frc.robot.subsystems.arm;
 
-import static frc.robot.util.SparkUtil.*;
+import java.util.function.DoubleSupplier;
+
+import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d;
 
 import com.revrobotics.sim.SparkAbsoluteEncoderSim;
 import com.revrobotics.sim.SparkFlexSim;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
+
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.subsystems.SimMechanism;
-import java.util.function.DoubleSupplier;
+import static frc.robot.util.SparkUtil.ifOk;
 
 public class ArmIOSim extends SimMechanism implements ArmIO {
 
   DCMotor armGearBox = DCMotor.getNeoVortex(1);
-  SparkAbsoluteEncoderSim armEncoderSim;
   SingleJointedArmSim armPhysicsSim =
       new SingleJointedArmSim(
           armGearBox,
@@ -27,13 +29,16 @@ public class ArmIOSim extends SimMechanism implements ArmIO {
           false,
           ArmConstants.STARTING_ANGLE);
   SparkFlexSim armSim;
+  SparkAbsoluteEncoderSim armEncoderSim;
+  LoggedMechanismLigament2d endEffectorArm;
 
-  public ArmIOSim() {
+  public ArmIOSim(LoggedMechanismLigament2d endEffector) {
     super();
     armMotor.configure(
         getArmConfig(), ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     armSim = new SparkFlexSim(armMotor, armGearBox);
     armEncoderSim = new SparkAbsoluteEncoderSim(armMotor);
+    endEffectorArm = endEffector.append(new LoggedMechanismLigament2d("rotator", 0, -90)).append(new LoggedMechanismLigament2d("endEffectorArm", ArmConstants.LENGTH, ArmConstants.STARTING_ANGLE));
   }
 
   @Override
@@ -49,7 +54,6 @@ public class ArmIOSim extends SimMechanism implements ArmIO {
 
   @Override
   public double[] getCurrents() {
-
     return new double[] {armPhysicsSim.getCurrentDrawAmps()};
   }
 }
