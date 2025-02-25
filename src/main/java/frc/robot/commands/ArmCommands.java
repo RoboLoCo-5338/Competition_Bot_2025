@@ -8,10 +8,10 @@ import frc.robot.subsystems.endeffector.EndEffector;
 
 public class ArmCommands {
 
-  public static Command moveArm(Arm arm, EndEffector endEffector, double armSpeed, double endEffectorSpeed) {
+  public static Command moveArm(
+      Arm arm, EndEffector endEffector, double armSpeed, double endEffectorSpeed) {
     return new ParallelCommandGroup(
-        arm.setArmVelocity(armSpeed),
-        endEffector.setEndEffectorVelocity(endEffectorSpeed));
+        arm.setArmVelocity(armSpeed), endEffector.setEndEffectorVelocity(endEffectorSpeed));
   }
 
   public static Command moveArm(Arm arm, double speed) {

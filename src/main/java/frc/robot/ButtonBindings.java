@@ -91,6 +91,8 @@ public class ButtonBindings {
     functionBindings.put("Ground Intake Fast", this.groundIntakeFast());
     functionBindings.put("Elevator Up", this.manualElevatorUp());
     functionBindings.put("Elevator Down", this.manualElevatorDown());
+    functionBindings.put("Arm Up", this.manualArmUp());
+    functionBindings.put("Arm Down", this.manualArmDown());
   }
 
   private void setUpButtonMappings() {
@@ -106,6 +108,7 @@ public class ButtonBindings {
     buttonMappings.put("D - D-Pad Up", driveController.povUp());
     buttonMappings.put("D - D-Pad Down", driveController.povDown());
     buttonMappings.put("D - D-Pad Left", driveController.povLeft());
+    buttonMappings.put("D - D-Pad Right", driveController.povRight());
 
     buttonMappings.put(
         "D - Right Trigger",
@@ -141,6 +144,8 @@ public class ButtonBindings {
     buttonToFunction.put("D - Right Trigger", "L4 Preset");
     buttonToFunction.put("D - D-Pad Up", "Elevator Up");
     buttonToFunction.put("D - D-Pad Down", "Elevator Down");
+    buttonToFunction.put("D - D-Pad Left", "Arm Up");
+    buttonToFunction.put("D - D-Pad Right", "Arm Down");
     // Negated Driver Controller Bindings
     negatedButtonToFunction.put("D - Left Trigger", "Elevator Fast");
 

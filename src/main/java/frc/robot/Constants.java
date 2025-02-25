@@ -66,7 +66,7 @@ public final class Constants {
   public static final class ClimbConstants {
     public static final int CLIMB_MOTOR_ID = -1;
     public static final int CLIMB_MOTOR_CURRENT_LIMIT = 20;
-    public static final double CLIMB_kP = 0.0;
+    public static final double CLIMB_kP = 100.0; // updated for sim not real
     public static final double CLIMB_kI = 0.0;
     public static final double CLIMB_kD = 0.0;
     public static final double CLIMB_kS = 0.0;

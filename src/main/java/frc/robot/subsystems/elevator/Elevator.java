@@ -84,7 +84,8 @@ public class Elevator extends SubsystemBase {
         },
         () -> elevatorPID(position),
         (interrupted) -> io.setElevatorVelocity(0.0),
-        () -> Math.abs(error) < ElevatorConstants.ELEVATOR_EPSILON, this);
+        () -> Math.abs(error) < ElevatorConstants.ELEVATOR_EPSILON,
+        this);
   }
 
   public Command setElevatorVelocity(double velocity) {
