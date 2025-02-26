@@ -1,16 +1,20 @@
 package frc.robot.subsystems.arm;
 
+import org.littletonrobotics.junction.AutoLog;
+
+import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
+
 import frc.robot.Constants.ArmConstants;
-import org.littletonrobotics.junction.AutoLog;
 
 public interface ArmIO {
 
   SparkFlex armMotor = new SparkFlex(ArmConstants.ARM_MOTOR_ID, MotorType.kBrushless);
+  SparkClosedLoopController armClosedLoopController = armMotor.getClosedLoopController();
 
   @AutoLog
   public static class ArmIOInputs {

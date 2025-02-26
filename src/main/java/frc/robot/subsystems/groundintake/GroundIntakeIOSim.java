@@ -1,6 +1,8 @@
 package frc.robot.subsystems.groundintake;
 
-import static frc.robot.util.SparkUtil.ifOk;
+import java.util.function.DoubleSupplier;
+
+import org.littletonrobotics.junction.AutoLogOutput;
 
 import com.revrobotics.sim.SparkAbsoluteEncoderSim;
 import com.revrobotics.sim.SparkFlexSim;
@@ -9,6 +11,7 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController.ArbFFUnits;
+
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.math.util.Units;
@@ -20,8 +23,7 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import frc.robot.Constants.GroundIntakeConstants;
 import frc.robot.subsystems.SimMechanism;
-import java.util.function.DoubleSupplier;
-import org.littletonrobotics.junction.AutoLogOutput;
+import static frc.robot.util.SparkUtil.ifOk;
 
 public class GroundIntakeIOSim extends SimMechanism implements GroundIntakeIO {
   DCMotor armGearBox = DCMotor.getNeoVortex(1);
@@ -82,8 +84,7 @@ public class GroundIntakeIOSim extends SimMechanism implements GroundIntakeIO {
 
   @Override
   public void updateInputs(GroundIntakeIOInputs inputs) {
-    inputs.armMotorConnected = true;
-    armPhysicsSim.setInput(armSim.getAppliedOutput() * RobotController.getBatteryVoltage());
+    armPhysicsSim.setInputVoltage(armSim.getAppliedOutput() * RobotController.getBatteryVoltage());
     intakePhysicsSim.setInput(intakeSim.getAppliedOutput() * RobotController.getBatteryVoltage());
 
     armPhysicsSim.update(0.02);
@@ -97,6 +98,7 @@ public class GroundIntakeIOSim extends SimMechanism implements GroundIntakeIO {
     intakeSim.iterate(
         intakePhysicsSim.getAngularVelocityRPM(), RobotController.getBatteryVoltage(), 0.02);
 
+    inputs.armMotorConnected = true;
     inputs.armPositionRad = armPhysicsSim.getAngleRads();
     inputs.armVelocityRadPerSec = armPhysicsSim.getVelocityRadPerSec();
     ifOk(
@@ -105,7 +107,7 @@ public class GroundIntakeIOSim extends SimMechanism implements GroundIntakeIO {
         (values) -> inputs.armAppliedVolts = values[0] * values[1]);
     inputs.armCurrentAmps = armPhysicsSim.getCurrentDrawAmps();
 
-    movingArm.setAngle(armPhysicsSim.getAngleRads());
+    movingArm.setAngle(Units.radiansToDegrees(armPhysicsSim.getAngleRads()));
 
     inputs.intakeMotorConnected = true;
     inputs.intakeVelocityRadPerSec = intakePhysicsSim.getAngularVelocityRadPerSec();

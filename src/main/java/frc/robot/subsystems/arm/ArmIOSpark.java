@@ -1,30 +1,28 @@
 package frc.robot.subsystems.arm;
 
-import static frc.robot.util.SparkUtil.*;
+import java.util.function.DoubleSupplier;
 
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkClosedLoopController.ArbFFUnits;
+
 import edu.wpi.first.math.filter.Debouncer;
 import frc.robot.Constants.ArmConstants;
-import java.util.function.DoubleSupplier;
+import static frc.robot.util.SparkUtil.ifOk;
+import static frc.robot.util.SparkUtil.sparkStickyFault;
+import static frc.robot.util.SparkUtil.tryUntilOk;
 
 public class ArmIOSpark implements ArmIO {
 
   private final AbsoluteEncoder armEncoder;
 
-  private final SparkClosedLoopController armClosedLoopController;
-
   private final Debouncer armConnectedDebouncer = new Debouncer(0.5);
 
   public ArmIOSpark() {
     armEncoder = armMotor.getAbsoluteEncoder();
-
-    armClosedLoopController = armMotor.getClosedLoopController();
 
     tryUntilOk(
         armMotor,
