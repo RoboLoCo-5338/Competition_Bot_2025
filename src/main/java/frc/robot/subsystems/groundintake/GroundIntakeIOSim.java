@@ -92,11 +92,11 @@ public class GroundIntakeIOSim extends SimMechanism implements GroundIntakeIO {
 
     armSim.iterate(
         Units.radiansPerSecondToRotationsPerMinute( // motor velocity, in RPM
-            armPhysicsSim.getVelocityRadPerSec()),
+            armPhysicsSim.getVelocityRadPerSec()*GroundIntakeConstants.ArmConstants.GEARING),
         RobotController.getBatteryVoltage(),
         0.02);
     intakeSim.iterate(
-        intakePhysicsSim.getAngularVelocityRPM(), RobotController.getBatteryVoltage(), 0.02);
+        intakePhysicsSim.getAngularVelocityRPM() * GroundIntakeConstants.IntakeConstants.GEARING, RobotController.getBatteryVoltage(), 0.02);
 
     inputs.armMotorConnected = true;
     inputs.armPositionRad = armPhysicsSim.getAngleRads();
@@ -124,7 +124,7 @@ public class GroundIntakeIOSim extends SimMechanism implements GroundIntakeIO {
         GroundIntakeConstants.ArmConstants.ARM_KS * Math.signum(velocityRadPerSec)
             + GroundIntakeConstants.ArmConstants.ARM_KV * velocityRadPerSec;
     armController.setReference(
-        velocityRadPerSec,
+        velocityRadPerSec*GroundIntakeConstants.ArmConstants.GEARING,
         ControlType.kVelocity,
         ClosedLoopSlot.kSlot0,
         ffvolts,
@@ -133,7 +133,7 @@ public class GroundIntakeIOSim extends SimMechanism implements GroundIntakeIO {
 
   @Override
   public void setArmPosition(double position) {
-    armController.setReference(position, ControlType.kPosition);
+    armController.setReference(position*GroundIntakeConstants.ArmConstants.GEARING, ControlType.kPosition);
   }
 
   @Override
@@ -142,7 +142,7 @@ public class GroundIntakeIOSim extends SimMechanism implements GroundIntakeIO {
         GroundIntakeConstants.IntakeConstants.INTAKE_KS * Math.signum(velocityRadPerSec)
             + GroundIntakeConstants.IntakeConstants.INTAKE_KV * velocityRadPerSec;
     intakeController.setReference(
-        velocityRadPerSec,
+        velocityRadPerSec*GroundIntakeConstants.IntakeConstants.GEARING,
         ControlType.kVelocity,
         ClosedLoopSlot.kSlot0,
         ffvolts,

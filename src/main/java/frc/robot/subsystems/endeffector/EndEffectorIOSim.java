@@ -1,6 +1,7 @@
 package frc.robot.subsystems.endeffector;
 
 import com.ctre.phoenix6.sim.TalonFXSimState;
+
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.RobotController;
@@ -33,13 +34,13 @@ public class EndEffectorIOSim extends SimMechanism implements EndEffectorIO {
 
     physicsSim.update(0.02);
 
-    simMotor.addRotorPosition(physicsSim.getAngularVelocityRadPerSec() * 0.02);
-    simMotor.setRotorVelocity(physicsSim.getAngularVelocityRadPerSec());
+    simMotor.addRotorPosition(physicsSim.getAngularVelocityRadPerSec() * 0.02 * EndEffectorConstants.GEARING);
+    simMotor.setRotorVelocity(physicsSim.getAngularVelocityRadPerSec() * EndEffectorConstants.GEARING);
   }
 
   @Override
   public void setEndEffectorVelocity(double velocity) {
-    endEffectorMotor.setControl(endEffectorVelocityRequest.withVelocity(velocity));
+    endEffectorMotor.setControl(endEffectorVelocityRequest.withVelocity(velocity*EndEffectorConstants.GEARING));
   }
 
   @Override

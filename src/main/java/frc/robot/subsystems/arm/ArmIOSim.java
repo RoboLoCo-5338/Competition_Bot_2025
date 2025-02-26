@@ -57,7 +57,7 @@ public class ArmIOSim extends SimMechanism implements ArmIO {
     armPhysicsSim.update(0.02);
     armSim.iterate(
         Units.radiansPerSecondToRotationsPerMinute( // motor velocity, in RPM
-            armPhysicsSim.getVelocityRadPerSec()),
+            armPhysicsSim.getVelocityRadPerSec()*ArmConstants.GEARING),
         RobotController.getBatteryVoltage(),
         0.02);
     inputs.armConnected = true;
@@ -79,7 +79,7 @@ public class ArmIOSim extends SimMechanism implements ArmIO {
 
   @Override
   public void setArmPosition(double position) {
-    armClosedLoopController.setReference(position, ControlType.kPosition);
+    armClosedLoopController.setReference(Units.radiansToRotations(position*ArmConstants.GEARING), ControlType.kPosition);
   }
 
   @Override
@@ -88,7 +88,7 @@ public class ArmIOSim extends SimMechanism implements ArmIO {
         ArmConstants.ARM_MOTOR_KS * Math.signum(velocityRadPerSec)
             + ArmConstants.ARM_MOTOR_KV * velocityRadPerSec;
     armClosedLoopController.setReference(
-        velocityRadPerSec,
+        Units.radiansToRotations(velocityRadPerSec*ArmConstants.GEARING),
         ControlType.kVelocity,
         ClosedLoopSlot.kSlot0,
         ffvolts,

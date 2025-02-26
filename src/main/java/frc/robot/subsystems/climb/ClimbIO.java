@@ -1,14 +1,16 @@
 package frc.robot.subsystems.climb;
 
+import org.littletonrobotics.junction.AutoLog;
+
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+
 import frc.robot.Constants.ClimbConstants;
 import frc.robot.generated.TunerConstants;
-import org.littletonrobotics.junction.AutoLog;
 
 public interface ClimbIO {
   final TalonFX climbMotor =
@@ -34,8 +36,8 @@ public interface ClimbIO {
    *   <li>climbConnected is set to true if the TalonFX is OK and false otherwise.
    *   <li>climbAppliedVolts is set to the current voltage of the motor.
    *   <li>climbCurrentAmps is set to the current current draw of the motor.
-   *   <li>climbPosition is set to the current position of the motor in radians.
-   *   <li>climbVelocityRadPerSec is set to the current velocity of the motor in radians per second.
+   *   <li>climbPosition is set to the current position of the climb in radians.
+   *   <li>climbVelocityRadPerSec is set to the current velocity of the climb in radians per second.
    * </ul>
    *
    * @param inputs the inputs to update
@@ -43,7 +45,7 @@ public interface ClimbIO {
   public default void updateInputs(ClimbIOInputs inputs) {}
 
   /**
-   * Sets the velocity of the climb motor in radians per second. This function runs the motor in
+   * Sets the velocity of the climb in radians per second. This function runs the motor in
    * voltage control mode and sets the voltage to the value required to achieve the desired
    * velocity.
    *
@@ -52,7 +54,7 @@ public interface ClimbIO {
   public default void setClimbVelocity(double velocity) {}
 
   /**
-   * Sets the position of the climb motor in radians. This function runs the motor in position
+   * Sets the position of the climb in radians. This function runs the motor in position
    * control mode and sets the target position to the value specified by the input parameter.
    *
    * @param position the desired position in radians

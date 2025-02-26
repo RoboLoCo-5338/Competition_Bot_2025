@@ -13,9 +13,8 @@
 
 package frc.robot;
 
-import static edu.wpi.first.units.Units.Meters;
-
 import edu.wpi.first.math.util.Units;
+import static edu.wpi.first.units.Units.Meters;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
@@ -103,6 +102,7 @@ public final class Constants {
     public static final double MIN_HEIGHT = Units.inchesToMeters(1);
     public static final double MAX_HEIGHT = Units.inchesToMeters(53);
     public static final double STARTING_HEIGHT = Units.inchesToMeters(1);
+    public static final double METERS_PER_ROTATION = 2 * ElevatorConstants.DRUM_RADIUS * Math.PI / ElevatorConstants.GEARING;
   }
 
   public static final class EndEffectorConstants {

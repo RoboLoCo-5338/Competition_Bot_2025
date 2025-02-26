@@ -1,13 +1,12 @@
 package frc.robot.subsystems.elevator;
 
-import static frc.robot.util.PhoenixUtil.tryUntilOk;
+import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.hardware.ParentDevice;
 
 import au.grapplerobotics.ConfigurationFailedException;
 import au.grapplerobotics.LaserCan;
 import au.grapplerobotics.interfaces.LaserCanInterface.Measurement;
-import com.ctre.phoenix6.BaseStatusSignal;
-import com.ctre.phoenix6.StatusSignal;
-import com.ctre.phoenix6.hardware.ParentDevice;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
@@ -15,6 +14,7 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
 import frc.robot.Constants.ElevatorConstants;
+import static frc.robot.util.PhoenixUtil.tryUntilOk;
 
 public class ElevatorIOTalonFX implements ElevatorIO {
 
@@ -99,14 +99,14 @@ public class ElevatorIOTalonFX implements ElevatorIO {
 
   @Override
   public void setElevatorPosition(double position) {
-    elevatorMotor1.setControl(elevator1PositionRequest.withPosition(position));
-    elevatorMotor2.setControl(elevator2PositionRequest.withPosition(position));
+    elevatorMotor1.setControl(elevator1PositionRequest.withPosition(position/ElevatorConstants.METERS_PER_ROTATION));
+    elevatorMotor2.setControl(elevator2PositionRequest.withPosition(position/ElevatorConstants.METERS_PER_ROTATION));
   }
 
   @Override
   public void setElevatorVelocity(double velocity) {
-    elevatorMotor1.setControl(elevator1VelocityRequest.withVelocity(velocity));
-    elevatorMotor2.setControl(elevator2VelocityRequest.withVelocity(velocity));
+    elevatorMotor1.setControl(elevator1VelocityRequest.withVelocity(velocity/ElevatorConstants.METERS_PER_ROTATION));
+    elevatorMotor2.setControl(elevator2VelocityRequest.withVelocity(velocity/ElevatorConstants.METERS_PER_ROTATION));
   }
 
   @Override

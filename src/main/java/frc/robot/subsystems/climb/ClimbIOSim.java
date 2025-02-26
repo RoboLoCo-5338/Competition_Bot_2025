@@ -1,19 +1,21 @@
 package frc.robot.subsystems.climb;
 
-import static edu.wpi.first.units.Units.Radians;
-import static edu.wpi.first.units.Units.RadiansPerSecond;
-
-import com.ctre.phoenix6.sim.TalonFXSimState;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
-import frc.robot.Constants.ClimbConstants;
-import frc.robot.subsystems.SimMechanism;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.mechanism.LoggedMechanism2d;
 import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d;
 import org.littletonrobotics.junction.mechanism.LoggedMechanismRoot2d;
+
+import com.ctre.phoenix6.sim.TalonFXSimState;
+
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.util.Units;
+import static edu.wpi.first.units.Units.Radians;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
+import frc.robot.Constants.ClimbConstants;
+import frc.robot.subsystems.SimMechanism;
 
 public class ClimbIOSim extends SimMechanism implements ClimbIO {
   @AutoLogOutput(key = "Climb/Mechanism")
@@ -66,19 +68,19 @@ public class ClimbIOSim extends SimMechanism implements ClimbIO {
 
     m_climbArm.setAngle(new Rotation2d(inputs.climbPosition));
 
-    simMotor.setRawRotorPosition(Radians.of(physicsSim.getAngleRads() / ClimbConstants.GEARING));
+    simMotor.setRawRotorPosition(Radians.of(physicsSim.getAngleRads() * ClimbConstants.GEARING));
     simMotor.setRotorVelocity(
-        RadiansPerSecond.of(physicsSim.getVelocityRadPerSec() / ClimbConstants.GEARING));
+        RadiansPerSecond.of(physicsSim.getVelocityRadPerSec() * ClimbConstants.GEARING));
   }
 
   @Override
   public void setClimbVelocity(double velocity) {
-    climbMotor.setControl(climbVelocityRequest.withVelocity(velocity));
+    climbMotor.setControl(climbVelocityRequest.withVelocity(Units.radiansToRotations(velocity*ClimbConstants.GEARING)));
   }
 
   @Override
   public void setClimbPosition(double position) {
-    climbMotor.setControl(climbPositionRequest.withPosition(position));
+    climbMotor.setControl(climbPositionRequest.withPosition(Units.radiansToRotations(position*ClimbConstants.GEARING)));
   }
 
   @Override
