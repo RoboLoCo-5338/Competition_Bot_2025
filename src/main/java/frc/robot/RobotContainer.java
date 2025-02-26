@@ -13,7 +13,10 @@
 
 package frc.robot;
 
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+
 import com.pathplanner.lib.auto.AutoBuilder;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -24,16 +27,37 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.AddressableLEDIO;
-import frc.robot.subsystems.LED;
 import frc.robot.subsystems.MusicPlayer;
+import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.ArmIO;
+import frc.robot.subsystems.arm.ArmIOSim;
+import frc.robot.subsystems.arm.ArmIOSpark;
+import frc.robot.subsystems.climb.Climb;
+import frc.robot.subsystems.climb.ClimbIO;
+import frc.robot.subsystems.climb.ClimbIOSim;
+import frc.robot.subsystems.climb.ClimbIOTalonFX;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+import frc.robot.subsystems.elevator.Elevator;
+import frc.robot.subsystems.elevator.ElevatorIO;
+import frc.robot.subsystems.elevator.ElevatorIOSim;
+import frc.robot.subsystems.elevator.ElevatorIOTalonFX;
+import frc.robot.subsystems.endeffector.EndEffector;
+import frc.robot.subsystems.endeffector.EndEffectorIO;
+import frc.robot.subsystems.endeffector.EndEffectorIOSim;
+import frc.robot.subsystems.endeffector.EndEffectorIOTalonFX;
+import frc.robot.subsystems.groundintake.GroundIntake;
+import frc.robot.subsystems.groundintake.GroundIntakeIO;
+import frc.robot.subsystems.groundintake.GroundIntakeIOSim;
+import frc.robot.subsystems.groundintake.GroundIntakeIOSpark;
+import frc.robot.subsystems.led.AddressableLEDIO;
+import frc.robot.subsystems.led.LED;
+import frc.robot.subsystems.led.LEDIO;
+import frc.robot.subsystems.led.LEDIOSim;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -44,9 +68,24 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
   // Subsystems
   private final Drive drive;
+
   public final MusicPlayer musicPlayer;
 
-  public final LED led;
+  private final LED led;
+
+  private final Elevator elevator;
+
+  private final GroundIntake groundIntake;
+
+  private final EndEffector endEffector;
+
+  private final Climb climb;
+
+  private final Arm arm;
+
+  private final ButtonBindings buttonBindings;
+
+  private double exponentialVariable = 25.0;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -67,6 +106,14 @@ public class RobotContainer {
                 new ModuleIOTalonFX(TunerConstants.BackLeft),
                 new ModuleIOTalonFX(TunerConstants.BackRight));
         led = new LED(new AddressableLEDIO());
+        groundIntake = new GroundIntake(new GroundIntakeIOSpark());
+        endEffector = new EndEffector(new EndEffectorIOTalonFX());
+        elevator = new Elevator(new ElevatorIOTalonFX());
+        climb = new Climb(new ClimbIOTalonFX());
+        arm = new Arm(new ArmIOSpark());
+        buttonBindings =
+            new ButtonBindings(drive, led, elevator, groundIntake, endEffector, climb, arm);
+
         break;
 
       case SIM:
@@ -78,7 +125,14 @@ public class RobotContainer {
                 new ModuleIOSim(TunerConstants.FrontRight),
                 new ModuleIOSim(TunerConstants.BackLeft),
                 new ModuleIOSim(TunerConstants.BackRight));
-        led = new LED(new AddressableLEDIO());
+        led = new LED(new LEDIOSim());
+        groundIntake = new GroundIntake(new GroundIntakeIOSim());
+        endEffector = new EndEffector(new EndEffectorIOSim());
+        elevator = new Elevator(new ElevatorIOSim());
+        climb = new Climb(new ClimbIOSim());
+        arm = new Arm(new ArmIOSim(((ElevatorIOSim) elevator.getIO()).getLigamentEnd()));
+        buttonBindings =
+            new ButtonBindings(drive, led, elevator, groundIntake, endEffector, climb, arm);
         break;
 
       default:
@@ -90,8 +144,15 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {},
                 new ModuleIO() {});
-        // TODO change this
-        led = new LED(new AddressableLEDIO());
+
+        led = new LED(new LEDIO() {});
+        groundIntake = new GroundIntake(new GroundIntakeIO() {});
+        endEffector = new EndEffector(new EndEffectorIO() {});
+        elevator = new Elevator(new ElevatorIO() {});
+        climb = new Climb(new ClimbIO() {});
+        arm = new Arm(new ArmIO() {});
+        buttonBindings =
+            new ButtonBindings(drive, led, elevator, groundIntake, endEffector, climb, arm);
         break;
     }
 
@@ -132,7 +193,7 @@ public class RobotContainer {
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
             drive,
-            () -> -controller.getLeftY(),
+            () -> joystickExponentialFunction(-controller.getLeftY()),
             () -> -controller.getLeftX(),
             () -> -controller.getRightX()));
 
@@ -161,6 +222,10 @@ public class RobotContainer {
                 .ignoringDisable(true));
   }
 
+  public void periodic() {
+    ButtonBindings.periodic();
+  }
+
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
@@ -168,5 +233,16 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return autoChooser.get();
+  }
+
+  /**
+   * Maps a joystick input to a speed using an exponential function, which gives more precise
+   * control at lower speeds.
+   *
+   * @param x the input from the joystick
+   * @return the output speed
+   */
+  public double joystickExponentialFunction(double x) {
+    return (1.0 / (exponentialVariable - 1)) * (Math.pow(exponentialVariable, x) - 1);
   }
 }
