@@ -1,16 +1,14 @@
 package frc.robot.subsystems.climb;
 
-import org.littletonrobotics.junction.AutoLog;
-
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
 import frc.robot.Constants.ClimbConstants;
 import frc.robot.generated.TunerConstants;
+import org.littletonrobotics.junction.AutoLog;
 
 public interface ClimbIO {
   final TalonFX climbMotor =
@@ -45,17 +43,16 @@ public interface ClimbIO {
   public default void updateInputs(ClimbIOInputs inputs) {}
 
   /**
-   * Sets the velocity of the climb in radians per second. This function runs the motor in
-   * voltage control mode and sets the voltage to the value required to achieve the desired
-   * velocity.
+   * Sets the velocity of the climb in radians per second. This function runs the motor in voltage
+   * control mode and sets the voltage to the value required to achieve the desired velocity.
    *
    * @param velocity the desired velocity in radians per second
    */
   public default void setClimbVelocity(double velocity) {}
 
   /**
-   * Sets the position of the climb in radians. This function runs the motor in position
-   * control mode and sets the target position to the value specified by the input parameter.
+   * Sets the position of the climb in radians. This function runs the motor in position control
+   * mode and sets the target position to the value specified by the input parameter.
    *
    * @param position the desired position in radians
    */

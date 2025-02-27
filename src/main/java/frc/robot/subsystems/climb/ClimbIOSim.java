@@ -1,21 +1,20 @@
 package frc.robot.subsystems.climb;
 
-import org.littletonrobotics.junction.AutoLogOutput;
-import org.littletonrobotics.junction.mechanism.LoggedMechanism2d;
-import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d;
-import org.littletonrobotics.junction.mechanism.LoggedMechanismRoot2d;
+import static edu.wpi.first.units.Units.Radians;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
 
 import com.ctre.phoenix6.sim.TalonFXSimState;
-
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
-import static edu.wpi.first.units.Units.Radians;
-import static edu.wpi.first.units.Units.RadiansPerSecond;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import frc.robot.Constants.ClimbConstants;
 import frc.robot.subsystems.SimMechanism;
+import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.mechanism.LoggedMechanism2d;
+import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d;
+import org.littletonrobotics.junction.mechanism.LoggedMechanismRoot2d;
 
 public class ClimbIOSim extends SimMechanism implements ClimbIO {
   @AutoLogOutput(key = "Climb/Mechanism")
@@ -75,12 +74,16 @@ public class ClimbIOSim extends SimMechanism implements ClimbIO {
 
   @Override
   public void setClimbVelocity(double velocity) {
-    climbMotor.setControl(climbVelocityRequest.withVelocity(Units.radiansToRotations(velocity*ClimbConstants.GEARING)));
+    climbMotor.setControl(
+        climbVelocityRequest.withVelocity(
+            Units.radiansToRotations(velocity * ClimbConstants.GEARING)));
   }
 
   @Override
   public void setClimbPosition(double position) {
-    climbMotor.setControl(climbPositionRequest.withPosition(Units.radiansToRotations(position*ClimbConstants.GEARING)));
+    climbMotor.setControl(
+        climbPositionRequest.withPosition(
+            Units.radiansToRotations(position * ClimbConstants.GEARING)));
   }
 
   @Override

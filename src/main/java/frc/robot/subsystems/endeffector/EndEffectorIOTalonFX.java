@@ -1,18 +1,18 @@
 package frc.robot.subsystems.endeffector;
 
-import com.ctre.phoenix6.BaseStatusSignal;
-import com.ctre.phoenix6.StatusSignal;
-import com.ctre.phoenix6.hardware.ParentDevice;
+import static frc.robot.util.PhoenixUtil.tryUntilOk;
 
 import au.grapplerobotics.LaserCan;
 import au.grapplerobotics.interfaces.LaserCanInterface.Measurement;
+import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.hardware.ParentDevice;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
 import frc.robot.Constants.EndEffectorConstants;
-import static frc.robot.util.PhoenixUtil.tryUntilOk;
 
 public class EndEffectorIOTalonFX implements EndEffectorIO {
 
@@ -87,6 +87,7 @@ public class EndEffectorIOTalonFX implements EndEffectorIO {
 
   @Override
   public void setEndEffectorVelocity(double velocity) {
-    endEffectorMotor.setControl(endEffectorVelocityRequest.withVelocity(velocity*EndEffectorConstants.GEARING));
+    endEffectorMotor.setControl(
+        endEffectorVelocityRequest.withVelocity(velocity * EndEffectorConstants.GEARING));
   }
 }

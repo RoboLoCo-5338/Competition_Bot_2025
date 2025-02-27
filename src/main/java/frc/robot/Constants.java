@@ -13,8 +13,9 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.util.Units;
 import static edu.wpi.first.units.Units.Meters;
+
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
@@ -41,7 +42,7 @@ public final class Constants {
   }
 
   public static final class ArmConstants {
-    public static final int ARM_MOTOR_ID = -1;
+    public static final int ARM_MOTOR_ID = 44;
     public static final double ARM_MOTOR_KP = 0.0;
     public static final double ARM_MOTOR_KI = 0.0;
     public static final double ARM_MOTOR_KD = 0.0;
@@ -63,7 +64,7 @@ public final class Constants {
   }
 
   public static final class ClimbConstants {
-    public static final int CLIMB_MOTOR_ID = -1;
+    public static final int CLIMB_MOTOR_ID = 46;
     public static final int CLIMB_MOTOR_CURRENT_LIMIT = 20;
     public static final double CLIMB_kP = 0.0;
     public static final double CLIMB_kI = 0.0;
@@ -81,8 +82,8 @@ public final class Constants {
 
   public static final class ElevatorConstants {
     // TODO change non sim constants
-    public static final int ELEVATOR_MOTOR_ID1 = 1;
-    public static final int ELEVATOR_MOTOR_ID2 = 2;
+    public static final int ELEVATOR_MOTOR_ID1 = 42;
+    public static final int ELEVATOR_MOTOR_ID2 = 45;
     public static final int ELEVATOR_MOTOR_CURRENT_LIMIT = 20;
     public static final int LASERCAN_ID = -1;
     public static final double ELEVATOR_MOTOR_kP = 100.0;
@@ -102,11 +103,12 @@ public final class Constants {
     public static final double MIN_HEIGHT = Units.inchesToMeters(1);
     public static final double MAX_HEIGHT = Units.inchesToMeters(53);
     public static final double STARTING_HEIGHT = Units.inchesToMeters(1);
-    public static final double METERS_PER_ROTATION = 2 * ElevatorConstants.DRUM_RADIUS * Math.PI / ElevatorConstants.GEARING;
+    public static final double METERS_PER_ROTATION =
+        2 * ElevatorConstants.DRUM_RADIUS * Math.PI / ElevatorConstants.GEARING;
   }
 
   public static final class EndEffectorConstants {
-    public static final int EFFECTORID = -1;
+    public static final int EFFECTORID = 43;
     public static final int EFFECTOR_CURRENT_LIMIT = 20;
     public static final double EFFECTOR_ENCODER_POSITION_CONVERSION_FACTOR = 1.0;
     public static final double EFFECTOR_ENCODER_VELOCITY_CONVERSION_FACTOR = 1.0;
@@ -127,7 +129,7 @@ public final class Constants {
   public static final class GroundIntakeConstants {
     public static final class ArmConstants {
       // TODO change this
-      public static final int ARM_CANID = -2; // CHANGED FOR TESTING
+      public static final int ARM_CANID = 40; // CHANGED FOR TESTING
       public static final int ARM_CURRENT_LIMIT = 20;
       public static final int ARM_ENCODER_POSITION_CONVERSION_FACTOR = 1;
       public static final int ARM_ENCODER_VELOCITY_CONVERSION_FACTOR = 1;
@@ -150,7 +152,7 @@ public final class Constants {
     }
 
     public static final class IntakeConstants {
-      public static final int INTAKE_CANID = -3; // CHANGED FOR TESTING
+      public static final int INTAKE_CANID = 41; // CHANGED FOR TESTING
       public static final int INTAKE_CURRENT_LIMIT = 20;
       public static final int INTAKE_ENCODER_POSITION_CONVERSION_FACTOR = 1;
       public static final int INTAKE_ENCODER_VELOCITY_CONVERSION_FACTOR = 1;

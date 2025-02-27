@@ -1,15 +1,13 @@
 package frc.robot.subsystems.arm;
 
-import org.littletonrobotics.junction.AutoLog;
-
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
-
 import frc.robot.Constants.ArmConstants;
+import org.littletonrobotics.junction.AutoLog;
 
 public interface ArmIO {
 
@@ -24,7 +22,7 @@ public interface ArmIO {
     public double armCurrent = 0.0;
     public boolean armConnected = false;
   }
-  
+
   /**
    * Updates the set of loggable inputs for the arm subsystem. This function updates the following
    * inputs:
@@ -59,7 +57,7 @@ public interface ArmIO {
    * @param velocityRadPerSec The velocity of the arm in radians per second.
    */
   public default void setArmVelocity(double velocity) {}
-  
+
   /**
    * Gets the configuration used for the Talon FX motor controllers of the arm subsystem.
    *
