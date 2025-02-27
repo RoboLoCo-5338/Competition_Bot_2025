@@ -14,13 +14,9 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.generated.TunerConstants;
@@ -74,16 +70,15 @@ public class RobotContainer {
 
   private final EndEffector endEffector;
 
+  private final ButtonBindings ButtonBindingsController;
+
   private final Climb climb;
 
   private final Arm arm;
 
-  private final ButtonBindings buttonBindings;
-
   private double exponentialVariable = 25.0;
 
   // Controller
-  private final CommandXboxController controller = new CommandXboxController(0);
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -106,7 +101,7 @@ public class RobotContainer {
         elevator = new Elevator(new ElevatorIOTalonFX());
         climb = new Climb(new ClimbIOTalonFX());
         arm = new Arm(new ArmIOSpark());
-        buttonBindings =
+        ButtonBindingsController =
             new ButtonBindings(drive, led, elevator, groundIntake, endEffector, climb, arm);
       }
 
@@ -125,7 +120,7 @@ public class RobotContainer {
         elevator = new Elevator(new ElevatorIOSim());
         climb = new Climb(new ClimbIOSim());
         arm = new Arm(new ArmIOSim(((ElevatorIOSim) elevator.getIO()).getLigamentEnd()));
-        buttonBindings =
+        ButtonBindingsController =
             new ButtonBindings(drive, led, elevator, groundIntake, endEffector, climb, arm);
       }
 
@@ -145,7 +140,7 @@ public class RobotContainer {
         elevator = new Elevator(new ElevatorIO() {});
         climb = new Climb(new ClimbIO() {});
         arm = new Arm(new ArmIO() {});
-        buttonBindings =
+        ButtonBindingsController =
             new ButtonBindings(drive, led, elevator, groundIntake, endEffector, climb, arm);
       }
     }
@@ -181,40 +176,11 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Default command, normal field-relative drive
-    drive.setDefaultCommand(
-        DriveCommands.joystickDrive(
-            drive,
-            () -> joystickExponentialFunction(-controller.getLeftY()),
-            () -> -controller.getLeftX(),
-            () -> -controller.getRightX()));
 
-    // Lock to 0° when A button is held
-    controller
-        .a()
-        .whileTrue(
-            DriveCommands.joystickDriveAtAngle(
-                drive,
-                () -> -controller.getLeftY(),
-                () -> -controller.getLeftX(),
-                () -> new Rotation2d()));
-
-    // Switch to X pattern when X button is pressed
-    controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
-
-    // Reset gyro to 0° when B button is pressed
-    controller
-        .b()
-        .onTrue(
-            Commands.runOnce(
-                    () ->
-                        drive.setPose(
-                            new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
-                    drive)
-                .ignoringDisable(true));
   }
 
   public void periodic() {
-    ButtonBindings.periodic();
+    ButtonBindingsController.periodic();
   }
 
   /**
@@ -233,7 +199,4 @@ public class RobotContainer {
    * @param x the input from the joystick
    * @return the output speed
    */
-  public double joystickExponentialFunction(double x) {
-    return (1.0 / (exponentialVariable - 1)) * (Math.pow(exponentialVariable, x) - 1);
-  }
 }

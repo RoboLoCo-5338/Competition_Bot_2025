@@ -11,7 +11,7 @@ import org.littletonrobotics.junction.Logger;
 
 public class EndEffector extends SubsystemBase {
 
-  private final EndEffectorIO io;
+  public final EndEffectorIO io;
   private final EndEffectorIOInputsAutoLogged inputs = new EndEffectorIOInputsAutoLogged();
 
   private final Alert endEffectorDisconnectedAlert =
