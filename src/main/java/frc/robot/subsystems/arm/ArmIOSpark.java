@@ -1,15 +1,17 @@
 package frc.robot.subsystems.arm;
 
-import static frc.robot.util.SparkUtil.*;
+import static frc.robot.util.SparkUtil.ifOk;
+import static frc.robot.util.SparkUtil.sparkStickyFault;
+import static frc.robot.util.SparkUtil.tryUntilOk;
 
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkClosedLoopController.ArbFFUnits;
 import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.util.Units;
 import frc.robot.Constants.ArmConstants;
 import java.util.function.DoubleSupplier;
 
@@ -17,14 +19,10 @@ public class ArmIOSpark implements ArmIO {
 
   private final AbsoluteEncoder armEncoder;
 
-  private final SparkClosedLoopController armClosedLoopController;
-
   private final Debouncer armConnectedDebouncer = new Debouncer(0.5);
 
   public ArmIOSpark() {
     armEncoder = armMotor.getAbsoluteEncoder();
-
-    armClosedLoopController = armMotor.getClosedLoopController();
 
     tryUntilOk(
         armMotor,
@@ -34,41 +32,6 @@ public class ArmIOSpark implements ArmIO {
                 getArmConfig(), ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
   }
 
-  /**
-   * Gets the configuration used for the Talon FX motor controllers of the arm subsystem.
-   *
-   * <p>This method returns a Talon FX configuration with the following settings:
-   *
-   * <ul>
-   *   <li>Neutral mode: Brake
-   *   <li>Gravity type: Arm cosine
-   *   <li>Feedback device: Integrated sensor
-   *   <li>kP: {@link ArmConstants#ARM_MOTOR_kP}
-   *   <li>kI: {@link ArmConstants#ARM_MOTOR_kI}
-   *   <li>kD: {@link ArmConstants#ARM_MOTOR_kD}
-   *   <li>kG: {@link ArmConstants#ARM_MOTOR_kG}
-   *   <li>kV: {@link ArmConstants#ARM_MOTOR_kV}
-   *   <li>Current limit: 40A (CHANGE THIS VALUE OTHERWISE TORQUE MAY BE LIMITED/TOO HIGH)
-   * </ul>
-   *
-   * <p>These values may need to be changed based on the actual robot hardware and the desired
-   * behavior of the elevator.
-   *
-   * @return the configuration used for the Talon FX motor controllers of the arm subsystem
-   */
-
-  /**
-   * Updates the set of loggable inputs for the arm subsystem. This function updates the following
-   * inputs:
-   *
-   * <ul>
-   *   <li>{@code armConnected}: Whether the arm motor is connected
-   *   <li>{@code armPosition}: The position of the arm motor in radians
-   *   <li>{@code armVelocity}: The velocity of the arm motor in radians per second
-   *   <li>{@code armAppliedVolts}: The voltage applied to the arm motor in volts
-   *   <li>{@code armCurrent}: The current drawn by the arm motor in amps
-   * </ul>
-   */
   @Override
   public void updateInputs(ArmIOInputs inputs) {
 
@@ -84,35 +47,19 @@ public class ArmIOSpark implements ArmIO {
     inputs.armConnected = armConnectedDebouncer.calculate(!sparkStickyFault);
   }
 
-  /**
-   * Sets the position of the arm in radians. This method is "fire-and-forget" in the sense that it
-   * will not block or wait for the arm to reach the desired position. If you want to verify that
-   * the arm has reached the desired position, you must poll the {@link ArmIOInputs#armPosition}
-   * loggable input. This method is intended to be used with position control, not velocity control.
-   * If you want to set the velocity of the arm, use {@link #setArmVelocity(double)} instead.
-   *
-   * @param position the desired position in radians
-   */
   @Override
   public void setArmPosition(double position) {
-    armClosedLoopController.setReference(position, ControlType.kPosition);
+    armClosedLoopController.setReference(
+        Units.radiansToRotations(position * ArmConstants.GEARING), ControlType.kPosition);
   }
 
-  /**
-   * Sets the velocity of the arm in radians per second. This method is "fire-and-forget" in the
-   * sense that it will not block or wait for the arm to reach the desired velocity. If you want to
-   * verify that the arm has reached the desired velocity, you must poll the velocity using {@link
-   * #updateInputs(ArmIOInputs)}.
-   *
-   * @param velocityRadPerSec The velocity of the arm in radians per second.
-   */
   @Override
   public void setArmVelocity(double velocityRadPerSec) {
     double ffvolts =
         ArmConstants.ARM_MOTOR_KS * Math.signum(velocityRadPerSec)
             + ArmConstants.ARM_MOTOR_KV * velocityRadPerSec;
     armClosedLoopController.setReference(
-        velocityRadPerSec,
+        Units.radiansToRotations(velocityRadPerSec * ArmConstants.GEARING),
         ControlType.kVelocity,
         ClosedLoopSlot.kSlot0,
         ffvolts,

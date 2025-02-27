@@ -66,7 +66,7 @@ public interface ElevatorIO {
    * <p>This method sends a velocity control request to both elevator motors to move them at the
    * specified velocity.
    *
-   * @param velocity The target velocity in radians per second for the elevator motors.
+   * @param velocity The target velocity in meters per second for the elevator motors.
    */
   public default void setElevatorVelocity(double velocity) {}
 
@@ -76,7 +76,7 @@ public interface ElevatorIO {
    * <p>This method sends a position control request to both elevator motors to move them to the
    * specified position.
    *
-   * @param position The target position in radians for the elevator motors.
+   * @param position The target position in meters for the elevator motors.
    */
   public default void setElevatorPosition(double position) {}
 

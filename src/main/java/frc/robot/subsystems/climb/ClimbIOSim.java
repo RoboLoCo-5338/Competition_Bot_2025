@@ -6,6 +6,7 @@ import static edu.wpi.first.units.Units.RadiansPerSecond;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import frc.robot.Constants.ClimbConstants;
@@ -66,19 +67,23 @@ public class ClimbIOSim extends SimMechanism implements ClimbIO {
 
     m_climbArm.setAngle(new Rotation2d(inputs.climbPosition));
 
-    simMotor.setRawRotorPosition(Radians.of(physicsSim.getAngleRads() / ClimbConstants.GEARING));
+    simMotor.setRawRotorPosition(Radians.of(physicsSim.getAngleRads() * ClimbConstants.GEARING));
     simMotor.setRotorVelocity(
-        RadiansPerSecond.of(physicsSim.getVelocityRadPerSec() / ClimbConstants.GEARING));
+        RadiansPerSecond.of(physicsSim.getVelocityRadPerSec() * ClimbConstants.GEARING));
   }
 
   @Override
   public void setClimbVelocity(double velocity) {
-    climbMotor.setControl(climbVelocityRequest.withVelocity(velocity));
+    climbMotor.setControl(
+        climbVelocityRequest.withVelocity(
+            Units.radiansToRotations(velocity * ClimbConstants.GEARING)));
   }
 
   @Override
   public void setClimbPosition(double position) {
-    climbMotor.setControl(climbPositionRequest.withPosition(position));
+    climbMotor.setControl(
+        climbPositionRequest.withPosition(
+            Units.radiansToRotations(position * ClimbConstants.GEARING)));
   }
 
   @Override
