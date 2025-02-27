@@ -95,4 +95,8 @@ public class Elevator extends SubsystemBase {
   public ElevatorIO getIO() {
     return io;
   }
+
+  public void updatePID() {
+    io.updatePID();
+  }
 }

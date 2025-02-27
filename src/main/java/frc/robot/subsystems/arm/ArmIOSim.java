@@ -1,8 +1,6 @@
 package frc.robot.subsystems.arm;
 
-import java.util.function.DoubleSupplier;
-
-import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d;
+import static frc.robot.util.SparkUtil.ifOk;
 
 import com.revrobotics.sim.SparkAbsoluteEncoderSim;
 import com.revrobotics.sim.SparkFlexSim;
@@ -11,14 +9,14 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController.ArbFFUnits;
-
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.subsystems.SimMechanism;
-import static frc.robot.util.SparkUtil.ifOk;
+import java.util.function.DoubleSupplier;
+import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d;
 
 public class ArmIOSim extends SimMechanism implements ArmIO {
 
@@ -57,7 +55,7 @@ public class ArmIOSim extends SimMechanism implements ArmIO {
     armPhysicsSim.update(0.02);
     armSim.iterate(
         Units.radiansPerSecondToRotationsPerMinute( // motor velocity, in RPM
-            armPhysicsSim.getVelocityRadPerSec()*ArmConstants.GEARING),
+            armPhysicsSim.getVelocityRadPerSec() * ArmConstants.GEARING),
         RobotController.getBatteryVoltage(),
         0.02);
     inputs.armConnected = true;
@@ -79,7 +77,8 @@ public class ArmIOSim extends SimMechanism implements ArmIO {
 
   @Override
   public void setArmPosition(double position) {
-    armClosedLoopController.setReference(Units.radiansToRotations(position*ArmConstants.GEARING), ControlType.kPosition);
+    armClosedLoopController.setReference(
+        Units.radiansToRotations(position * ArmConstants.GEARING), ControlType.kPosition);
   }
 
   @Override
@@ -88,7 +87,7 @@ public class ArmIOSim extends SimMechanism implements ArmIO {
         ArmConstants.ARM_MOTOR_KS * Math.signum(velocityRadPerSec)
             + ArmConstants.ARM_MOTOR_KV * velocityRadPerSec;
     armClosedLoopController.setReference(
-        Units.radiansToRotations(velocityRadPerSec*ArmConstants.GEARING),
+        Units.radiansToRotations(velocityRadPerSec * ArmConstants.GEARING),
         ControlType.kVelocity,
         ClosedLoopSlot.kSlot0,
         ffvolts,

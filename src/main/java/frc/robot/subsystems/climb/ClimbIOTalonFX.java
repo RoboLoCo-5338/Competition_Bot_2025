@@ -1,10 +1,11 @@
 package frc.robot.subsystems.climb;
 
+import static frc.robot.util.PhoenixUtil.tryUntilOk;
+
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.hardware.TalonFX;
-
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
@@ -13,7 +14,6 @@ import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
 import frc.robot.Constants.ClimbConstants;
 import frc.robot.generated.TunerConstants;
-import static frc.robot.util.PhoenixUtil.tryUntilOk;
 
 public class ClimbIOTalonFX implements ClimbIO {
 
@@ -60,11 +60,15 @@ public class ClimbIOTalonFX implements ClimbIO {
 
   @Override
   public void setClimbVelocity(double velocity) {
-    climbMotor.setControl(climbVelocityRequest.withVelocity(Units.radiansToRotations(velocity*ClimbConstants.GEARING)));
+    climbMotor.setControl(
+        climbVelocityRequest.withVelocity(
+            Units.radiansToRotations(velocity * ClimbConstants.GEARING)));
   }
 
   @Override
   public void setClimbPosition(double position) {
-    climbMotor.setControl(climbPositionRequest.withPosition(Units.radiansToRotations(position*ClimbConstants.GEARING)));
+    climbMotor.setControl(
+        climbPositionRequest.withPosition(
+            Units.radiansToRotations(position * ClimbConstants.GEARING)));
   }
 }

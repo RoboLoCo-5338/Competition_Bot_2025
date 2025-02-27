@@ -52,4 +52,8 @@ public class Climb extends SubsystemBase {
   public Command setClimbVelocity(double velocity) {
     return new InstantCommand(() -> climbIO.setClimbVelocity(velocity), this);
   }
+
+  public void updatePID() {
+    climbIO.updatePID();
+  }
 }

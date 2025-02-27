@@ -45,4 +45,8 @@ public class GroundIntake extends SubsystemBase {
   public Command setGroundArmVelocity(double velocity) {
     return new InstantCommand(() -> io.setArmVelocity(velocity), this);
   }
+
+  public void updatePID() {
+    io.updatePID();
+  }
 }

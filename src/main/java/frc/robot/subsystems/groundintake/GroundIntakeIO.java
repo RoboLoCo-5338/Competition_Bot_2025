@@ -112,4 +112,17 @@ public interface GroundIntakeIO {
 
     return armConfig;
   }
+
+  public default void updatePID() {
+    SparkFlexConfig config = new SparkFlexConfig();
+    config.closedLoop.pidf(
+        GroundIntakeConstants.ArmConstants.ARM_KP,
+        GroundIntakeConstants.ArmConstants.ARM_KI,
+        GroundIntakeConstants.ArmConstants.ARM_KD,
+        GroundIntakeConstants.ArmConstants.ARM_KFF);
+    armMotor.configure(
+        config,
+        SparkFlex.ResetMode.kNoResetSafeParameters,
+        SparkFlex.PersistMode.kNoPersistParameters);
+  }
 }

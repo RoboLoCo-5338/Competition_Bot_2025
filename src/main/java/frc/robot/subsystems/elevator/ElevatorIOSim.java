@@ -1,19 +1,17 @@
 package frc.robot.subsystems.elevator;
 
-import org.littletonrobotics.junction.AutoLogOutput;
-import org.littletonrobotics.junction.mechanism.LoggedMechanism2d;
-import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d;
-import org.littletonrobotics.junction.mechanism.LoggedMechanismRoot2d;
-
 import com.ctre.phoenix6.sim.ChassisReference;
 import com.ctre.phoenix6.sim.TalonFXSimState;
-
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import frc.robot.Constants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.subsystems.SimMechanism;
+import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.mechanism.LoggedMechanism2d;
+import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d;
+import org.littletonrobotics.junction.mechanism.LoggedMechanismRoot2d;
 
 public class ElevatorIOSim extends SimMechanism implements ElevatorIO {
   TalonFXSimState motor1Sim = elevatorMotor1.getSimState();
@@ -71,31 +69,31 @@ public class ElevatorIOSim extends SimMechanism implements ElevatorIO {
     physicsSim.update(0.02);
 
     motor1Sim.setRawRotorPosition(
-        physicsSim.getPositionMeters()
-            / ElevatorConstants.METERS_PER_ROTATION);
+        physicsSim.getPositionMeters() / ElevatorConstants.METERS_PER_ROTATION);
     motor2Sim.setRawRotorPosition(
-        physicsSim.getPositionMeters()
-            / ElevatorConstants.METERS_PER_ROTATION);
+        physicsSim.getPositionMeters() / ElevatorConstants.METERS_PER_ROTATION);
     motor1Sim.setRotorVelocity(
-        physicsSim.getVelocityMetersPerSecond()
-            / ElevatorConstants.METERS_PER_ROTATION);
+        physicsSim.getVelocityMetersPerSecond() / ElevatorConstants.METERS_PER_ROTATION);
     motor2Sim.setRotorVelocity(
-        physicsSim.getVelocityMetersPerSecond()
-            / ElevatorConstants.METERS_PER_ROTATION);
+        physicsSim.getVelocityMetersPerSecond() / ElevatorConstants.METERS_PER_ROTATION);
 
     elevator.setLength(physicsSim.getPositionMeters());
   }
 
   @Override
   public void setElevatorVelocity(double velocity) {
-    elevatorMotor1.setControl(elevator1VelocityRequest.withVelocity(velocity/ElevatorConstants.METERS_PER_ROTATION));
-    elevatorMotor2.setControl(elevator2VelocityRequest.withVelocity(velocity/ElevatorConstants.METERS_PER_ROTATION));
+    elevatorMotor1.setControl(
+        elevator1VelocityRequest.withVelocity(velocity / ElevatorConstants.METERS_PER_ROTATION));
+    elevatorMotor2.setControl(
+        elevator2VelocityRequest.withVelocity(velocity / ElevatorConstants.METERS_PER_ROTATION));
   }
 
   @Override
   public void setElevatorPosition(double position) {
-    elevatorMotor1.setControl(elevator1PositionRequest.withPosition(position/ElevatorConstants.METERS_PER_ROTATION));
-    elevatorMotor2.setControl(elevator2PositionRequest.withPosition(position/ElevatorConstants.METERS_PER_ROTATION));
+    elevatorMotor1.setControl(
+        elevator1PositionRequest.withPosition(position / ElevatorConstants.METERS_PER_ROTATION));
+    elevatorMotor2.setControl(
+        elevator2PositionRequest.withPosition(position / ElevatorConstants.METERS_PER_ROTATION));
   }
 
   @Override

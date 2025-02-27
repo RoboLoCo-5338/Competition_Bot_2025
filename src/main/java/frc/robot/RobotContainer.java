@@ -91,7 +91,7 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     switch (Constants.currentMode) {
-      case REAL:
+      case REAL -> {
         // Real robot, instantiate hardware IO implementations
         drive =
             new Drive(
@@ -108,10 +108,9 @@ public class RobotContainer {
         arm = new Arm(new ArmIOSpark());
         buttonBindings =
             new ButtonBindings(drive, led, elevator, groundIntake, endEffector, climb, arm);
+      }
 
-        break;
-
-      case SIM:
+      case SIM -> {
         // Sim robot, instantiate physics sim IO implementations
         drive =
             new Drive(
@@ -128,9 +127,9 @@ public class RobotContainer {
         arm = new Arm(new ArmIOSim(((ElevatorIOSim) elevator.getIO()).getLigamentEnd()));
         buttonBindings =
             new ButtonBindings(drive, led, elevator, groundIntake, endEffector, climb, arm);
-        break;
+      }
 
-      default:
+      default -> {
         // Replayed robot, disable IO implementations
         drive =
             new Drive(
@@ -148,7 +147,7 @@ public class RobotContainer {
         arm = new Arm(new ArmIO() {});
         buttonBindings =
             new ButtonBindings(drive, led, elevator, groundIntake, endEffector, climb, arm);
-        break;
+      }
     }
 
     // Set up auto routines

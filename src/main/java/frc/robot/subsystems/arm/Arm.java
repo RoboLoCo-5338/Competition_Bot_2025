@@ -52,4 +52,8 @@ public class Arm extends SubsystemBase {
   public Command setArmVelocity(double velocity) {
     return new InstantCommand(() -> io.setArmVelocity(velocity), this);
   }
+
+  public void updatePID() {
+    io.updatePID();
+  }
 }

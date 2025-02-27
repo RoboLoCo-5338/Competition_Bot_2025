@@ -1,5 +1,7 @@
 package frc.robot;
 
+import java.util.HashMap;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -16,7 +18,6 @@ import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.endeffector.EndEffector;
 import frc.robot.subsystems.groundintake.GroundIntake;
 import frc.robot.subsystems.led.LED;
-import java.util.HashMap;
 
 public class ButtonBindings {
   private Drive drive;
@@ -106,7 +107,7 @@ public class ButtonBindings {
 
     buttonMappings.put("O - a", operatorController.a());
     buttonMappings.put("O - y", operatorController.y());
-    buttonMappings.put("O - B", operatorController.b());
+    buttonMappings.put("O - b", operatorController.b());
     buttonMappings.put("O - Right Bumper", operatorController.rightBumper());
     buttonMappings.put("O - Left Bumper", operatorController.leftBumper());
     buttonMappings.put(
@@ -232,7 +233,15 @@ public class ButtonBindings {
   }
 
   public Command climbPreset() {
-    return ButtonBindings.blankCommand("climbPreset");
+    return new InstantCommand(
+        () -> {
+          Constants.reloadPreferences();
+          arm.updatePID();
+          climb.updatePID();
+          elevator.updatePID();
+          endEffector.updatePID();
+          groundIntake.updatePID();
+        });
   }
 
   public Command gyroReset() {
