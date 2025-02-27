@@ -11,7 +11,7 @@ import org.littletonrobotics.junction.Logger;
 
 public class Climb extends SubsystemBase {
 
-  private final ClimbIO climbIO;
+  public final ClimbIO climbIO;
   private final ClimbIOInputsAutoLogged inputs = new ClimbIOInputsAutoLogged();
   private final Alert climbMotorDisconnectedAlert =
       new Alert("Climb Motor Disconnected", AlertType.kError);
