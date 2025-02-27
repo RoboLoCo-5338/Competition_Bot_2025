@@ -1,19 +1,17 @@
 package frc.robot.subsystems.arm;
 
-import java.util.function.DoubleSupplier;
-
-import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d;
+import static frc.robot.util.SparkUtil.ifOk;
 
 import com.revrobotics.sim.SparkAbsoluteEncoderSim;
 import com.revrobotics.sim.SparkFlexSim;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
-
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.subsystems.SimMechanism;
-import static frc.robot.util.SparkUtil.ifOk;
+import java.util.function.DoubleSupplier;
+import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d;
 
 public class ArmIOSim extends SimMechanism implements ArmIO {
 
@@ -38,7 +36,12 @@ public class ArmIOSim extends SimMechanism implements ArmIO {
         getArmConfig(), ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     armSim = new SparkFlexSim(armMotor, armGearBox);
     armEncoderSim = new SparkAbsoluteEncoderSim(armMotor);
-    endEffectorArm = endEffector.append(new LoggedMechanismLigament2d("rotator", 0, -90)).append(new LoggedMechanismLigament2d("endEffectorArm", ArmConstants.LENGTH, ArmConstants.STARTING_ANGLE));
+    endEffectorArm =
+        endEffector
+            .append(new LoggedMechanismLigament2d("rotator", 0, -90))
+            .append(
+                new LoggedMechanismLigament2d(
+                    "endEffectorArm", ArmConstants.LENGTH, ArmConstants.STARTING_ANGLE));
   }
 
   @Override

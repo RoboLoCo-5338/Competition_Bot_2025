@@ -1,19 +1,17 @@
 package frc.robot.subsystems.elevator;
 
-import org.littletonrobotics.junction.AutoLogOutput;
-import org.littletonrobotics.junction.mechanism.LoggedMechanism2d;
-import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d;
-import org.littletonrobotics.junction.mechanism.LoggedMechanismRoot2d;
-
 import com.ctre.phoenix6.sim.ChassisReference;
 import com.ctre.phoenix6.sim.TalonFXSimState;
-
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import frc.robot.Constants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.subsystems.SimMechanism;
+import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.mechanism.LoggedMechanism2d;
+import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d;
+import org.littletonrobotics.junction.mechanism.LoggedMechanismRoot2d;
 
 public class ElevatorIOSim extends SimMechanism implements ElevatorIO {
   TalonFXSimState motor1Sim = elevatorMotor1.getSimState();
@@ -30,7 +28,8 @@ public class ElevatorIOSim extends SimMechanism implements ElevatorIO {
           ElevatorConstants.STARTING_HEIGHT);
 
   @AutoLogOutput(key = "Elevator/Mechanism")
-  LoggedMechanism2d elevatorDrawn = new LoggedMechanism2d(Constants.ROBOT_LENGTH, ElevatorConstants.MAX_HEIGHT);
+  LoggedMechanism2d elevatorDrawn =
+      new LoggedMechanism2d(Constants.ROBOT_LENGTH, ElevatorConstants.MAX_HEIGHT);
 
   LoggedMechanismRoot2d root = elevatorDrawn.getRoot("elevator", 0, 0);
   LoggedMechanismLigament2d elevator =
@@ -81,7 +80,7 @@ public class ElevatorIOSim extends SimMechanism implements ElevatorIO {
     motor2Sim.setRotorVelocity(
         physicsSim.getVelocityMetersPerSecond()
             / (ElevatorConstants.GEARING * ElevatorConstants.DRUM_RADIUS * Math.PI));
-    
+
     elevator.setLength(physicsSim.getPositionMeters());
   }
 
@@ -102,7 +101,7 @@ public class ElevatorIOSim extends SimMechanism implements ElevatorIO {
     return new double[] {physicsSim.getCurrentDrawAmps()};
   }
 
-  public LoggedMechanismLigament2d getLigamentEnd(){
+  public LoggedMechanismLigament2d getLigamentEnd() {
     return elevator;
   }
 }

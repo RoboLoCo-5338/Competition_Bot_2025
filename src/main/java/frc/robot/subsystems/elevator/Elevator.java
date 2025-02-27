@@ -1,7 +1,5 @@
 package frc.robot.subsystems.elevator;
 
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -11,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.Mode;
+import org.littletonrobotics.junction.Logger;
 
 public class Elevator extends SubsystemBase {
   private final ElevatorIO io;
@@ -85,14 +84,15 @@ public class Elevator extends SubsystemBase {
         },
         () -> elevatorPID(position),
         (interrupted) -> io.setElevatorVelocity(0.0),
-        () -> Math.abs(error) < ElevatorConstants.ELEVATOR_EPSILON, this);
+        () -> Math.abs(error) < ElevatorConstants.ELEVATOR_EPSILON,
+        this);
   }
 
   public Command setElevatorVelocity(double velocity) {
     return new InstantCommand(() -> io.setElevatorVelocity(velocity), this);
   }
 
-  public ElevatorIO getIO(){
+  public ElevatorIO getIO() {
     return io;
   }
 }
