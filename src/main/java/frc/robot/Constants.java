@@ -42,7 +42,7 @@ public final class Constants {
   }
 
   public static final class ArmConstants {
-    public static final int ARM_MOTOR_ID = 1;
+    public static final int ARM_MOTOR_ID = 44;
     public static final String PREFERENCES_ID = "arm";
     public static double ARM_MOTOR_KP = Preferences.getDouble(PREFERENCES_ID + "kP", 0.0);
     public static double ARM_MOTOR_KI = Preferences.getDouble(PREFERENCES_ID + "kI", 0.0);
@@ -75,7 +75,7 @@ public final class Constants {
   }
 
   public static final class ClimbConstants {
-    public static final int CLIMB_MOTOR_ID = 2;
+    public static final int CLIMB_MOTOR_ID = 46;
     public static final String PREFERENCES_ID = "climb";
     public static final int CLIMB_MOTOR_CURRENT_LIMIT = 20;
     public static double CLIMB_kP = Preferences.getDouble(PREFERENCES_ID + "kP", 0.0);
@@ -102,8 +102,8 @@ public final class Constants {
 
   public static final class ElevatorConstants {
     // TODO change non sim constants
-    public static final int ELEVATOR_MOTOR_ID1 = 3;
-    public static final int ELEVATOR_MOTOR_ID2 = 4;
+    public static final int ELEVATOR_MOTOR_ID1 = 42;
+    public static final int ELEVATOR_MOTOR_ID2 = 45;
     public static final int ELEVATOR_MOTOR_CURRENT_LIMIT = 20;
     public static final String PREFERENCES_ID = "elevator";
     public static final int LASERCAN_ID = -1;
@@ -143,7 +143,7 @@ public final class Constants {
   }
 
   public static final class EndEffectorConstants {
-    public static final int EFFECTORID = 5;
+    public static final int EFFECTORID = 43;
     public static final int EFFECTOR_CURRENT_LIMIT = 20;
     public static final String PREFERENCES_ID = "endEffector";
     public static final double EFFECTOR_ENCODER_POSITION_CONVERSION_FACTOR = 1.0;
@@ -175,7 +175,7 @@ public final class Constants {
   public static final class GroundIntakeConstants {
     public static final class ArmConstants {
       // TODO change this
-      public static final int ARM_CANID = 6; // CHANGED FOR TESTING
+      public static final int ARM_CANID = 40; // CHANGED FOR TESTING
       public static final int ARM_CURRENT_LIMIT = 20;
       public static final String PREFERENCES_ID = "groundIntakeArm";
       public static final int ARM_ENCODER_POSITION_CONVERSION_FACTOR = 1;
@@ -208,7 +208,7 @@ public final class Constants {
     }
 
     public static final class IntakeConstants {
-      public static final int INTAKE_CANID = 7; // CHANGED FOR TESTING
+      public static final int INTAKE_CANID = 41; // CHANGED FOR TESTING
       public static final int INTAKE_CURRENT_LIMIT = 20;
       public static final int INTAKE_ENCODER_POSITION_CONVERSION_FACTOR = 1;
       public static final int INTAKE_ENCODER_VELOCITY_CONVERSION_FACTOR = 1;
