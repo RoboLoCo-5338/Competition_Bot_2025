@@ -216,7 +216,7 @@ public class ButtonBindings {
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
             drive,
-            () -> joystickExponentialFunction(-driveController.getLeftY()),
+            () -> -driveController.getLeftY(),
             () -> -driveController.getLeftX(),
             () ->
                 -driveController

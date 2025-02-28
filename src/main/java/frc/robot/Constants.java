@@ -20,6 +20,7 @@ import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
+import frc.robot.Constants.GroundIntakeConstants;
 
 /**
  * This class defines the runtime mode used by AdvantageKit. The mode is always "real" when running
@@ -30,6 +31,7 @@ public final class Constants {
   public static final Mode simMode = Mode.SIM;
   public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
   public static final double ROBOT_LENGTH = Units.inchesToMeters(33.250000);
+  public static final double FLOOR_TO_MECHANISM = Units.inchesToMeters(8);
 
   public static enum Mode {
     /** Running on a real robot. */
@@ -53,16 +55,14 @@ public final class Constants {
     public static double ARM_MOTOR_KFF = Preferences.getDouble(PREFERENCES_ID + "kFF", 0.0);
     public static double ARM_MOTOR_KS = Preferences.getDouble(PREFERENCES_ID + "kS", 0.0);
     public static final int ARM_MOTOR_CURRENT_LIMIT = 40;
-    public static final double ARM_ENCODER_POSITION_CONVERSION_FACTOR = 1.0;
-    public static final double ARM_ENCODER_VELOCITY_CONVERSION_FACTOR = 1.0;
     // Sim constants
     public static final double GEARING = 100.0;
     public static final double LENGTH = Units.inchesToMeters(22.9);
     public static final double MOI =
         SingleJointedArmSim.estimateMOI(ArmConstants.LENGTH, Units.lbsToKilograms(5.3754589));
-    public static final double MIN_ANGLE = 0.0;
-    public static final double MAX_ANGLE = Units.degreesToRadians(193);
-    public static final double STARTING_ANGLE = 0.0;
+    public static final double MIN_ANGLE = Units.degreesToRadians(-90);
+    public static final double MAX_ANGLE = Units.degreesToRadians(103);
+    public static final double STARTING_ANGLE = Units.degreesToRadians(-90);
 
     public static void reloadConstants() {
       ARM_MOTOR_KP = Preferences.getDouble(PREFERENCES_ID + "kP", 0.0);
@@ -85,14 +85,13 @@ public final class Constants {
     public static double CLIMB_kS = Preferences.getDouble(PREFERENCES_ID + "kS", 0.0);
     // Sim Constants
     public static final double GEARING = 100; // Update this pls don't worry bro I did
-    public static final double BASE_HEIGHT = 1;
-    public static final double ARM_LENGTH = 1;
-    public static final double MIN_ANGLE = 0;
-    public static final double MAX_ANGLE = 0;
-    public static final double STARTING_ANGLE = 0;
+    public static final double BASE_HEIGHT = Units.inchesToMeters(6.25);
+    public static final double ARM_LENGTH = Units.inchesToMeters(12.1);
     public static final double MOI =
-        SingleJointedArmSim.estimateMOI(ClimbConstants.ARM_LENGTH, Units.lbsToKilograms(4));
-
+        SingleJointedArmSim.estimateMOI(ARM_LENGTH, Units.lbsToKilograms(2.2));
+    public static final double MIN_ANGLE = Units.degreesToRadians(-148.47);
+    public static final double MAX_ANGLE = Units.degreesToRadians(-90);
+    public static final double STARTING_ANGLE = Units.degreesToRadians(-148.47);
     public static void reloadConstants() {
       CLIMB_kP = Preferences.getDouble(PREFERENCES_ID + "kP", 0.0);
       CLIMB_kI = Preferences.getDouble(PREFERENCES_ID + "kI", 0.0);
@@ -147,8 +146,6 @@ public final class Constants {
     public static final int EFFECTORID = 43;
     public static final int EFFECTOR_CURRENT_LIMIT = 20;
     public static final String PREFERENCES_ID = "endEffector";
-    public static final double EFFECTOR_ENCODER_POSITION_CONVERSION_FACTOR = 1.0;
-    public static final double EFFECTOR_ENCODER_VELOCITY_CONVERSION_FACTOR = 1.0;
     public static double EFFECTOR_KP = Preferences.getDouble(PREFERENCES_ID + "kP", 0.0);
     public static double EFFECTOR_KI = Preferences.getDouble(PREFERENCES_ID + "kI", 0.0);
     public static double EFFECTOR_KD = Preferences.getDouble(PREFERENCES_ID + "kD", 0.0);
@@ -179,8 +176,6 @@ public final class Constants {
       public static final int ARM_CANID = 40; // CHANGED FOR TESTING
       public static final int ARM_CURRENT_LIMIT = 20;
       public static final String PREFERENCES_ID = "groundIntakeArm";
-      public static final int ARM_ENCODER_POSITION_CONVERSION_FACTOR = 1;
-      public static final int ARM_ENCODER_VELOCITY_CONVERSION_FACTOR = 1;
       public static double ARM_KP = Preferences.getDouble(PREFERENCES_ID + "kP", 0.0);
       public static double ARM_KI = Preferences.getDouble(PREFERENCES_ID + "kI", 0.0);
       public static double ARM_KD = Preferences.getDouble(PREFERENCES_ID + "kD", 0.0);
@@ -190,10 +185,10 @@ public final class Constants {
       // Sim stuff
       public static final double GEARING = 100;
       public static final double LENGTH = Units.inchesToMeters(18.5);
-      public static final double MIN_ANGLE = 0.0;
-      public static final double MAX_ANGLE = Units.degreesToRadians(106);
-      public static final double STARTING_ANGLE = 0.0;
-      public static final double ARM_BASE_HEIGHT = 0.0;
+      public static final double MIN_ANGLE = Units.degreesToRadians(-106);
+      public static final double MAX_ANGLE = Units.degreesToRadians(0);
+      public static final double STARTING_ANGLE = Units.degreesToRadians(-106);
+      public static final double ARM_BASE_HEIGHT = Units.inchesToMeters(6.25);
       public static final double MOI =
           SingleJointedArmSim.estimateMOI(
               GroundIntakeConstants.ArmConstants.LENGTH, Units.lbsToKilograms(4.9));
@@ -211,8 +206,6 @@ public final class Constants {
     public static final class IntakeConstants {
       public static final int INTAKE_CANID = 41; // CHANGED FOR TESTING
       public static final int INTAKE_CURRENT_LIMIT = 20;
-      public static final int INTAKE_ENCODER_POSITION_CONVERSION_FACTOR = 1;
-      public static final int INTAKE_ENCODER_VELOCITY_CONVERSION_FACTOR = 1;
       public static final String PREFERENCES_ID = "groundIntake";
       public static double INTAKE_KP = Preferences.getDouble(PREFERENCES_ID + "kP", 0.0);
       public static double INTAKE_KI = Preferences.getDouble(PREFERENCES_ID + "kI", 0.0);

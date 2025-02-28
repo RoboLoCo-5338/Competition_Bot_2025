@@ -93,8 +93,8 @@ public interface ArmIO {
         .absoluteEncoder
         // TODO CHECK THIS
         .inverted(false)
-        .positionConversionFactor(1/ArmConstants.GEARING)
-        .velocityConversionFactor(1/ArmConstants.GEARING);
+        .positionConversionFactor(1 / ArmConstants.GEARING)
+        .velocityConversionFactor(1 / ArmConstants.GEARING);
     armConfig
         .closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
