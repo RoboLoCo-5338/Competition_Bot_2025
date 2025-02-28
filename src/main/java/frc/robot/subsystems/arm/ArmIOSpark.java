@@ -1,8 +1,6 @@
 package frc.robot.subsystems.arm;
 
-import static frc.robot.util.SparkUtil.ifOk;
-import static frc.robot.util.SparkUtil.sparkStickyFault;
-import static frc.robot.util.SparkUtil.tryUntilOk;
+import java.util.function.DoubleSupplier;
 
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.spark.ClosedLoopSlot;
@@ -10,10 +8,13 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController.ArbFFUnits;
+
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.util.Units;
 import frc.robot.Constants.ArmConstants;
-import java.util.function.DoubleSupplier;
+import static frc.robot.util.SparkUtil.ifOk;
+import static frc.robot.util.SparkUtil.sparkStickyFault;
+import static frc.robot.util.SparkUtil.tryUntilOk;
 
 public class ArmIOSpark implements ArmIO {
 
@@ -50,7 +51,7 @@ public class ArmIOSpark implements ArmIO {
   @Override
   public void setArmPosition(double position) {
     armClosedLoopController.setReference(
-        Units.radiansToRotations(position * ArmConstants.GEARING), ControlType.kPosition);
+        Units.radiansToRotations(position), ControlType.kPosition);
   }
 
   @Override
@@ -59,7 +60,7 @@ public class ArmIOSpark implements ArmIO {
         ArmConstants.ARM_MOTOR_KS * Math.signum(velocityRadPerSec)
             + ArmConstants.ARM_MOTOR_KV * velocityRadPerSec;
     armClosedLoopController.setReference(
-        Units.radiansToRotations(velocityRadPerSec * ArmConstants.GEARING),
+        Units.radiansToRotations(velocityRadPerSec),
         ControlType.kVelocity,
         ClosedLoopSlot.kSlot0,
         ffvolts,
