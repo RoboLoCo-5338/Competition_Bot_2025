@@ -13,8 +13,9 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.util.Units;
 import static edu.wpi.first.units.Units.Meters;
+
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.RobotBase;

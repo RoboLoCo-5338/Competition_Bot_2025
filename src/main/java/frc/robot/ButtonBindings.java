@@ -1,6 +1,5 @@
 package frc.robot;
 
-import java.util.Map;
 import static java.util.Map.entry;
 
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -16,6 +15,7 @@ import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.endeffector.EndEffector;
 import frc.robot.subsystems.groundintake.GroundIntake;
 import frc.robot.subsystems.led.LED;
+import java.util.Map;
 
 public class ButtonBindings {
   private Drive drive;
@@ -73,6 +73,17 @@ public class ButtonBindings {
             entry("Lock to Zero", ActionBindings.lockToZero()),
             entry("Climb Preset", ActionBindings.climbPreset()),
             entry("Gyro Reset", ActionBindings.gyroReset()),
+            entry(
+                "ReloadPID",
+                new InstantCommand(
+                    () -> {
+                      Constants.reloadPreferences();
+                      arm.updatePID();
+                      climb.updatePID();
+                      elevator.updatePID();
+                      groundIntake.updatePID();
+                      endEffector.updatePID();
+                    })),
             entry("Manual Climb Down", ActionBindings.manualClimbDown()),
             entry("Manual Climb Up", ActionBindings.manualClimbUp()),
             entry("L3 Preset", ActionBindings.l3Preset()),
@@ -133,6 +144,7 @@ public class ButtonBindings {
             entry("D - x", "Lock to Zero"),
             entry("D - a", "Climb Preset"),
             entry("D - y", "Gyro Reset"),
+            entry("D - b", "Reload PID"),
             entry("D - Right Joystick Button", "Manual Climb Down"),
             entry("D - Left Joystick Button", "Manual Climb Up"),
             entry("D - Left Bumper", "L3 Preset"),
