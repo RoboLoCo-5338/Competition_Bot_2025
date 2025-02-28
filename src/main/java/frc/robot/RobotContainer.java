@@ -17,6 +17,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.generated.TunerConstants;
@@ -77,6 +78,8 @@ public class RobotContainer {
   private final Arm arm;
 
   private double exponentialVariable = 25.0;
+
+  public CommandXboxController xboxController = new CommandXboxController(0);
 
   // Controller
 
@@ -177,11 +180,20 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Default command, normal field-relative drive
-
+    xboxController
+        .a()
+        .whileTrue(groundIntake.setGroundIntakeVelocity(1))
+        .onFalse(groundIntake.setGroundIntakeVelocity(0));
   }
 
   public void periodic() {
     ButtonBindingsController.periodic();
+  }
+
+  public void teleopPeriodic() {
+
+    // groundIntake.setGroundIntakeVelocity(2).schedule();
+    // ;
   }
 
   /**

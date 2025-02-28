@@ -159,6 +159,7 @@ public class Robot extends LoggedRobot {
   @Override
   public void teleopPeriodic() {
     // CommandScheduler.getInstance().schedule(robotContainer.led.setRainbowLED());
+    robotContainer.teleopPeriodic();
   }
 
   /** This function is called once when test mode is enabled. */

@@ -91,6 +91,7 @@ public class GroundIntakeIOSpark implements GroundIntakeIO {
     double ffvolts =
         GroundIntakeConstants.IntakeConstants.INTAKE_KS * Math.signum(velocityRadPerSec)
             + GroundIntakeConstants.IntakeConstants.INTAKE_KV * velocityRadPerSec;
+
     intakeController.setReference(
         velocityRadPerSec,
         ControlType.kVelocity,

@@ -150,7 +150,7 @@ public final class Constants {
     public static final class IntakeConstants {
       public static final int INTAKE_CANID = 41; // CHANGED FOR TESTING
       public static final int INTAKE_CURRENT_LIMIT = 20;
-      public static final double INTAKE_KP = 0;
+      public static final double INTAKE_KP = 0.01;
       public static final double INTAKE_KI = 0;
       public static final double INTAKE_KD = 0;
       public static final double INTAKE_KFF = 0;

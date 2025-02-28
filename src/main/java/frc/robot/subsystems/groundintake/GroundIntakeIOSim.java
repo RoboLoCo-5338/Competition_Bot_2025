@@ -42,7 +42,10 @@ public class GroundIntakeIOSim extends SimMechanism implements GroundIntakeIO {
   @AutoLogOutput(key = "GroundIntakeArm/Mechanism")
   LoggedMechanism2d armDrawn =
       new LoggedMechanism2d(
-          Units.inchesToMeters(16.5 * 2), GroundIntakeConstants.ArmConstants.ARM_BASE_HEIGHT+GroundIntakeConstants.ArmConstants.LENGTH+Constants.FLOOR_TO_MECHANISM); // Someone please improve this naming scheme
+          Units.inchesToMeters(16.5 * 2),
+          GroundIntakeConstants.ArmConstants.ARM_BASE_HEIGHT
+              + GroundIntakeConstants.ArmConstants.LENGTH
+              + Constants.FLOOR_TO_MECHANISM); // Someone please improve this naming scheme
 
   LoggedMechanismRoot2d root = armDrawn.getRoot("root", 0, Constants.FLOOR_TO_MECHANISM);
   LoggedMechanismLigament2d movingArm;
