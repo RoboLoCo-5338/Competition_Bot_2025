@@ -92,7 +92,15 @@ public class ButtonBindings {
             entry("Elevator Up", ActionBindings.manualElevatorUp()),
             entry("Elevator Down", ActionBindings.manualElevatorDown()),
             entry("Arm Up", ActionBindings.manualArmUp()),
-            entry("Arm Down", ActionBindings.manualArmDown()));
+            entry("Arm Down", ActionBindings.manualArmDown()),
+            entry("Elevator Stop", ActionBindings.manualElevatorStop()),
+            entry("Stop Climb", ActionBindings.stopClimb()),
+            entry("End Effector Stop", ActionBindings.endEffectorStop()),
+            entry("Ground Intake Stop", ActionBindings.groundIntakeStop()),
+            entry("Arm Stop", ActionBindings.manualArmStop()));
+
+    // stopping all the things
+
   }
 
   @SuppressWarnings("unchecked")
@@ -158,7 +166,17 @@ public class ButtonBindings {
     negatedButtonToFunction =
         Map.ofEntries(
             entry("O - D-Pad Up", "Ground Intake Fast"),
-            entry("D - Left Trigger", "Elevator Fast"));
+            entry("D - Left Trigger", "Elevator Fast"),
+            entry("D - D-Pad Right", "Arm Stop"),
+            entry("D - D-Pad Left", "Arm Stop"),
+            entry("D - D-Pad Down", "Elevator Stop"),
+            entry("D - D-Pad Up", "Elevator Stop"),
+            entry("O - D-Pad Down", "Ground Intake Stop"),
+            entry("O - D-Pad Left", "Ground Intake Stop"),
+            entry("O - Right Trigger", "End Effector Stop"),
+            entry("O - Left Trigger", "End Effector Stop"),
+            entry("D - Right Joystick Button", "Stop Climb"),
+            entry("D - Left Joystick Button", "Stop Climb"));
   }
 
   public static void periodic() {}
@@ -183,7 +201,8 @@ public class ButtonBindings {
           .whileTrue(functionBindings.get(buttonToFunction.get(button)));
     }
     for (String button : negatedButtonToFunction.keySet()) {
-
+      System.out.println(
+          "Negated Button " + button + " connecting to " + negatedButtonToFunction.get(button));
       if (buttonMappings.get(button) == null) {
         System.out.println("Negated Button " + button + " not found");
         continue;
@@ -193,9 +212,11 @@ public class ButtonBindings {
             "Negated Function " + negatedButtonToFunction.get(button) + " not found");
         continue;
       }
-
+      System.out.println(
+          "Negated Button " + button + " connected to " + negatedButtonToFunction.get(button));
       buttonMappings
           .get(button)
+          .onFalse(ButtonBindings.debugCommand(button, negatedButtonToFunction.get(button)))
           .whileFalse(functionBindings.get(negatedButtonToFunction.get(button)));
     }
   }
