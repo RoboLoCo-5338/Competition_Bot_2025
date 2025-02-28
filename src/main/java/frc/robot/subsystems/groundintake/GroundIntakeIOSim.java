@@ -1,11 +1,6 @@
 package frc.robot.subsystems.groundintake;
 
-import java.util.function.DoubleSupplier;
-
-import org.littletonrobotics.junction.AutoLogOutput;
-import org.littletonrobotics.junction.mechanism.LoggedMechanism2d;
-import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d;
-import org.littletonrobotics.junction.mechanism.LoggedMechanismRoot2d;
+import static frc.robot.util.SparkUtil.ifOk;
 
 import com.revrobotics.sim.SparkAbsoluteEncoderSim;
 import com.revrobotics.sim.SparkFlexSim;
@@ -14,16 +9,20 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController.ArbFFUnits;
-
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
+import frc.robot.Constants;
 import frc.robot.Constants.GroundIntakeConstants;
 import frc.robot.subsystems.SimMechanism;
-import static frc.robot.util.SparkUtil.ifOk;
+import java.util.function.DoubleSupplier;
+import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.mechanism.LoggedMechanism2d;
+import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d;
+import org.littletonrobotics.junction.mechanism.LoggedMechanismRoot2d;
 
 public class GroundIntakeIOSim extends SimMechanism implements GroundIntakeIO {
   DCMotor armGearBox = DCMotor.getNeoVortex(1);
@@ -40,12 +39,12 @@ public class GroundIntakeIOSim extends SimMechanism implements GroundIntakeIO {
           false,
           GroundIntakeConstants.ArmConstants.STARTING_ANGLE);
 
-  @AutoLogOutput(key = "Arm/Mechanism")
+  @AutoLogOutput(key = "GroundIntakeArm/Mechanism")
   LoggedMechanism2d armDrawn =
       new LoggedMechanism2d(
-          Units.inchesToMeters(16.5 * 2), 0); // Someone please improve this naming scheme
+          Units.inchesToMeters(16.5 * 2), GroundIntakeConstants.ArmConstants.ARM_BASE_HEIGHT+GroundIntakeConstants.ArmConstants.LENGTH+Constants.FLOOR_TO_MECHANISM); // Someone please improve this naming scheme
 
-  LoggedMechanismRoot2d root = armDrawn.getRoot("root", 0, 0);
+  LoggedMechanismRoot2d root = armDrawn.getRoot("root", 0, Constants.FLOOR_TO_MECHANISM);
   LoggedMechanismLigament2d movingArm;
 
   DCMotor intakeGearBox = DCMotor.getNeoVortex(1);
@@ -79,7 +78,7 @@ public class GroundIntakeIOSim extends SimMechanism implements GroundIntakeIO {
                 new LoggedMechanismLigament2d(
                     "arm",
                     GroundIntakeConstants.ArmConstants.LENGTH,
-                    GroundIntakeConstants.ArmConstants.STARTING_ANGLE));
+                    Units.radiansToDegrees(GroundIntakeConstants.ArmConstants.STARTING_ANGLE)));
   }
 
   @Override
@@ -96,9 +95,7 @@ public class GroundIntakeIOSim extends SimMechanism implements GroundIntakeIO {
         RobotController.getBatteryVoltage(),
         0.02);
     intakeSim.iterate(
-        intakePhysicsSim.getAngularVelocityRPM(),
-        RobotController.getBatteryVoltage(),
-        0.02);
+        intakePhysicsSim.getAngularVelocityRPM(), RobotController.getBatteryVoltage(), 0.02);
 
     inputs.armMotorConnected = true;
     inputs.armPositionRad = armPhysicsSim.getAngleRads();
@@ -135,8 +132,7 @@ public class GroundIntakeIOSim extends SimMechanism implements GroundIntakeIO {
 
   @Override
   public void setArmPosition(double position) {
-    armController.setReference(
-        position, ControlType.kPosition);
+    armController.setReference(position, ControlType.kPosition);
   }
 
   @Override

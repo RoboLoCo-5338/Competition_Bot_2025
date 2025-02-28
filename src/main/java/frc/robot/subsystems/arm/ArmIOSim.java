@@ -1,8 +1,6 @@
 package frc.robot.subsystems.arm;
 
-import java.util.function.DoubleSupplier;
-
-import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d;
+import static frc.robot.util.SparkUtil.ifOk;
 
 import com.revrobotics.sim.SparkAbsoluteEncoderSim;
 import com.revrobotics.sim.SparkFlexSim;
@@ -11,14 +9,14 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController.ArbFFUnits;
-
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.subsystems.SimMechanism;
-import static frc.robot.util.SparkUtil.ifOk;
+import java.util.function.DoubleSupplier;
+import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d;
 
 public class ArmIOSim extends SimMechanism implements ArmIO {
 
@@ -48,7 +46,9 @@ public class ArmIOSim extends SimMechanism implements ArmIO {
             .append(new LoggedMechanismLigament2d("rotator", 0, -90))
             .append(
                 new LoggedMechanismLigament2d(
-                    "endEffectorArm", ArmConstants.LENGTH, ArmConstants.STARTING_ANGLE));
+                    "endEffectorArm",
+                    ArmConstants.LENGTH,
+                    Units.radiansToDegrees(ArmConstants.STARTING_ANGLE)));
   }
 
   @Override
@@ -79,8 +79,7 @@ public class ArmIOSim extends SimMechanism implements ArmIO {
 
   @Override
   public void setArmPosition(double position) {
-    armClosedLoopController.setReference(
-        Units.radiansToRotations(position), ControlType.kPosition);
+    armClosedLoopController.setReference(Units.radiansToRotations(position), ControlType.kPosition);
   }
 
   @Override

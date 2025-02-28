@@ -31,7 +31,7 @@ public class ElevatorIOSim extends SimMechanism implements ElevatorIO {
   LoggedMechanism2d elevatorDrawn =
       new LoggedMechanism2d(Constants.ROBOT_LENGTH, ElevatorConstants.MAX_HEIGHT);
 
-  LoggedMechanismRoot2d root = elevatorDrawn.getRoot("elevator", 0, 0);
+  LoggedMechanismRoot2d root = elevatorDrawn.getRoot("elevator", 0, Constants.FLOOR_TO_MECHANISM);
   LoggedMechanismLigament2d elevator =
       root.append(new LoggedMechanismLigament2d("stage", ElevatorConstants.STARTING_HEIGHT, 90));
 

@@ -9,6 +9,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
+import frc.robot.Constants;
 import frc.robot.Constants.ClimbConstants;
 import frc.robot.subsystems.SimMechanism;
 import org.littletonrobotics.junction.AutoLogOutput;
@@ -22,7 +23,7 @@ public class ClimbIOSim extends SimMechanism implements ClimbIO {
   // The logged shape and stuff of the mechanism
   LoggedMechanism2d mechanism = new LoggedMechanism2d(5, 5);
 
-  LoggedMechanismRoot2d root = mechanism.getRoot("climb", 2.5, 0);
+  LoggedMechanismRoot2d root = mechanism.getRoot("climb", 2.5, Constants.FLOOR_TO_MECHANISM);
   LoggedMechanismLigament2d m_climbArm;
 
   // Physics simulation of the arm
@@ -30,8 +31,7 @@ public class ClimbIOSim extends SimMechanism implements ClimbIO {
       new SingleJointedArmSim(
           DCMotor.getKrakenX60(1),
           ClimbConstants.GEARING,
-          SingleJointedArmSim.estimateMOI(
-              ClimbConstants.ARM_LENGTH, 4), // TODO changed for testing, fix massKG
+          ClimbConstants.MOI,
           ClimbConstants.ARM_LENGTH,
           ClimbConstants.MIN_ANGLE,
           ClimbConstants.MAX_ANGLE,
@@ -47,7 +47,11 @@ public class ClimbIOSim extends SimMechanism implements ClimbIO {
     m_climbArm =
         root.append(new LoggedMechanismLigament2d("base", ClimbConstants.BASE_HEIGHT, 90))
             .append(new LoggedMechanismLigament2d("rotator", 0, -90))
-            .append(new LoggedMechanismLigament2d("arm", ClimbConstants.ARM_LENGTH, 90));
+            .append(
+                new LoggedMechanismLigament2d(
+                    "arm",
+                    ClimbConstants.ARM_LENGTH,
+                    Units.radiansToDegrees(ClimbConstants.STARTING_ANGLE)));
   }
 
   @Override

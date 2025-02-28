@@ -29,6 +29,7 @@ public final class Constants {
   public static final Mode simMode = Mode.SIM;
   public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
   public static final double ROBOT_LENGTH = Units.inchesToMeters(33.250000);
+  public static final double FLOOR_TO_MECHANISM = Units.inchesToMeters(8);
 
   public static enum Mode {
     /** Running on a real robot. */
@@ -51,16 +52,14 @@ public final class Constants {
     public static final double ARM_MOTOR_KFF = 0.0;
     public static final double ARM_MOTOR_KS = 0.0;
     public static final int ARM_MOTOR_CURRENT_LIMIT = 40;
-    public static final double ARM_ENCODER_POSITION_CONVERSION_FACTOR = 1.0;
-    public static final double ARM_ENCODER_VELOCITY_CONVERSION_FACTOR = 1.0;
     // Sim constants
     public static final double GEARING = 100.0;
+    public static final double LENGTH = Units.inchesToMeters(22.9);
     public static final double MOI =
         SingleJointedArmSim.estimateMOI(ArmConstants.LENGTH, Units.lbsToKilograms(5.3754589));
-    public static final double LENGTH = Units.inchesToMeters(22.9);
-    public static final double MIN_ANGLE = 0.0;
-    public static final double MAX_ANGLE = Units.degreesToRadians(193);
-    public static final double STARTING_ANGLE = 0.0;
+    public static final double MIN_ANGLE = Units.degreesToRadians(-90);
+    public static final double MAX_ANGLE = Units.degreesToRadians(103);
+    public static final double STARTING_ANGLE = Units.degreesToRadians(-90);
   }
 
   public static final class ClimbConstants {
@@ -72,12 +71,13 @@ public final class Constants {
     public static final double CLIMB_kS = 0.0;
     // Sim Constants
     public static final double GEARING = 100; // Update this pls don't worry bro I did
-    public static final double MOI = 0.0;
-    public static final double BASE_HEIGHT = 1;
-    public static final double ARM_LENGTH = 1;
-    public static final double MIN_ANGLE = 0;
-    public static final double MAX_ANGLE = 0;
-    public static final double STARTING_ANGLE = 0;
+    public static final double BASE_HEIGHT = Units.inchesToMeters(6.25);
+    public static final double ARM_LENGTH = Units.inchesToMeters(12.1);
+    public static final double MOI =
+        SingleJointedArmSim.estimateMOI(ARM_LENGTH, Units.lbsToKilograms(2.2));
+    public static final double MIN_ANGLE = Units.degreesToRadians(-148.47);
+    public static final double MAX_ANGLE = Units.degreesToRadians(-90);
+    public static final double STARTING_ANGLE = Units.degreesToRadians(-148.47);
   }
 
   public static final class ElevatorConstants {
@@ -110,8 +110,6 @@ public final class Constants {
   public static final class EndEffectorConstants {
     public static final int EFFECTORID = 43;
     public static final int EFFECTOR_CURRENT_LIMIT = 20;
-    public static final double EFFECTOR_ENCODER_POSITION_CONVERSION_FACTOR = 1.0;
-    public static final double EFFECTOR_ENCODER_VELOCITY_CONVERSION_FACTOR = 1.0;
     public static final double EFFECTOR_KP = 0.0;
     public static final double EFFECTOR_KI = 0.0;
     public static final double EFFECTOR_KD = 0.0;
@@ -131,8 +129,6 @@ public final class Constants {
       // TODO change this
       public static final int ARM_CANID = 40; // CHANGED FOR TESTING
       public static final int ARM_CURRENT_LIMIT = 20;
-      public static final int ARM_ENCODER_POSITION_CONVERSION_FACTOR = 1;
-      public static final int ARM_ENCODER_VELOCITY_CONVERSION_FACTOR = 1;
       public static final double ARM_KP = 0;
       public static final double ARM_KI = 0;
       public static final double ARM_KD = 0;
@@ -141,21 +137,19 @@ public final class Constants {
       public static final double ARM_KV = 0;
       // Sim stuff
       public static final double GEARING = 100;
+      public static final double LENGTH = Units.inchesToMeters(18.5);
       public static final double MOI =
           SingleJointedArmSim.estimateMOI(
               GroundIntakeConstants.ArmConstants.LENGTH, Units.lbsToKilograms(4.9));
-      public static final double LENGTH = Units.inchesToMeters(18.5);
-      public static final double MIN_ANGLE = 0.0;
-      public static final double MAX_ANGLE = Units.degreesToRadians(106);
-      public static final double STARTING_ANGLE = 0.0;
-      public static final double ARM_BASE_HEIGHT = 0.0;
+      public static final double MIN_ANGLE = Units.degreesToRadians(-106);
+      public static final double MAX_ANGLE = Units.degreesToRadians(0);
+      public static final double STARTING_ANGLE = Units.degreesToRadians(-106);
+      public static final double ARM_BASE_HEIGHT = Units.inchesToMeters(6.25);
     }
 
     public static final class IntakeConstants {
       public static final int INTAKE_CANID = 41; // CHANGED FOR TESTING
       public static final int INTAKE_CURRENT_LIMIT = 20;
-      public static final int INTAKE_ENCODER_POSITION_CONVERSION_FACTOR = 1;
-      public static final int INTAKE_ENCODER_VELOCITY_CONVERSION_FACTOR = 1;
       public static final double INTAKE_KP = 0;
       public static final double INTAKE_KI = 0;
       public static final double INTAKE_KD = 0;
