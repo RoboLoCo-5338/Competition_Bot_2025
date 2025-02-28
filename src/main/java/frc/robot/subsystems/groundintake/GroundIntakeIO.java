@@ -1,13 +1,15 @@
 package frc.robot.subsystems.groundintake;
 
+import org.littletonrobotics.junction.AutoLog;
+
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
+
 import frc.robot.Constants.GroundIntakeConstants;
-import org.littletonrobotics.junction.AutoLog;
 
 public interface GroundIntakeIO {
   SparkFlex armMotor =
@@ -48,10 +50,10 @@ public interface GroundIntakeIO {
         .voltageCompensation(12.0);
     intakeConfig
         .encoder
-        .positionConversionFactor(
-            GroundIntakeConstants.IntakeConstants.INTAKE_ENCODER_POSITION_CONVERSION_FACTOR)
-        .velocityConversionFactor(
-            GroundIntakeConstants.IntakeConstants.INTAKE_ENCODER_VELOCITY_CONVERSION_FACTOR)
+        .positionConversionFactor(1/
+            GroundIntakeConstants.IntakeConstants.GEARING)
+        .velocityConversionFactor(1/
+            GroundIntakeConstants.IntakeConstants.GEARING)
         .uvwAverageDepth(2)
         .uvwMeasurementPeriod(10);
     intakeConfig
@@ -85,10 +87,10 @@ public interface GroundIntakeIO {
         .absoluteEncoder
         // TODO CHECK THIS
         .inverted(false)
-        .positionConversionFactor(
-            GroundIntakeConstants.ArmConstants.ARM_ENCODER_POSITION_CONVERSION_FACTOR)
-        .velocityConversionFactor(
-            GroundIntakeConstants.ArmConstants.ARM_ENCODER_VELOCITY_CONVERSION_FACTOR);
+        .positionConversionFactor(1/
+            GroundIntakeConstants.ArmConstants.GEARING)
+        .velocityConversionFactor(1/
+            GroundIntakeConstants.ArmConstants.GEARING);
 
     armConfig
         .closedLoop

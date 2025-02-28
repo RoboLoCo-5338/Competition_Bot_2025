@@ -1,6 +1,11 @@
 package frc.robot.subsystems.groundintake;
 
-import static frc.robot.util.SparkUtil.ifOk;
+import java.util.function.DoubleSupplier;
+
+import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.mechanism.LoggedMechanism2d;
+import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d;
+import org.littletonrobotics.junction.mechanism.LoggedMechanismRoot2d;
 
 import com.revrobotics.sim.SparkAbsoluteEncoderSim;
 import com.revrobotics.sim.SparkFlexSim;
@@ -9,6 +14,7 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController.ArbFFUnits;
+
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.math.util.Units;
@@ -17,11 +23,7 @@ import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import frc.robot.Constants.GroundIntakeConstants;
 import frc.robot.subsystems.SimMechanism;
-import java.util.function.DoubleSupplier;
-import org.littletonrobotics.junction.AutoLogOutput;
-import org.littletonrobotics.junction.mechanism.LoggedMechanism2d;
-import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d;
-import org.littletonrobotics.junction.mechanism.LoggedMechanismRoot2d;
+import static frc.robot.util.SparkUtil.ifOk;
 
 public class GroundIntakeIOSim extends SimMechanism implements GroundIntakeIO {
   DCMotor armGearBox = DCMotor.getNeoVortex(1);
@@ -90,11 +92,11 @@ public class GroundIntakeIOSim extends SimMechanism implements GroundIntakeIO {
 
     armSim.iterate(
         Units.radiansPerSecondToRotationsPerMinute( // motor velocity, in RPM
-            armPhysicsSim.getVelocityRadPerSec() * GroundIntakeConstants.ArmConstants.GEARING),
+            armPhysicsSim.getVelocityRadPerSec()),
         RobotController.getBatteryVoltage(),
         0.02);
     intakeSim.iterate(
-        intakePhysicsSim.getAngularVelocityRPM() * GroundIntakeConstants.IntakeConstants.GEARING,
+        intakePhysicsSim.getAngularVelocityRPM(),
         RobotController.getBatteryVoltage(),
         0.02);
 
@@ -124,7 +126,7 @@ public class GroundIntakeIOSim extends SimMechanism implements GroundIntakeIO {
         GroundIntakeConstants.ArmConstants.ARM_KS * Math.signum(velocityRadPerSec)
             + GroundIntakeConstants.ArmConstants.ARM_KV * velocityRadPerSec;
     armController.setReference(
-        velocityRadPerSec * GroundIntakeConstants.ArmConstants.GEARING,
+        velocityRadPerSec,
         ControlType.kVelocity,
         ClosedLoopSlot.kSlot0,
         ffvolts,
@@ -134,7 +136,7 @@ public class GroundIntakeIOSim extends SimMechanism implements GroundIntakeIO {
   @Override
   public void setArmPosition(double position) {
     armController.setReference(
-        position * GroundIntakeConstants.ArmConstants.GEARING, ControlType.kPosition);
+        position, ControlType.kPosition);
   }
 
   @Override
@@ -143,7 +145,7 @@ public class GroundIntakeIOSim extends SimMechanism implements GroundIntakeIO {
         GroundIntakeConstants.IntakeConstants.INTAKE_KS * Math.signum(velocityRadPerSec)
             + GroundIntakeConstants.IntakeConstants.INTAKE_KV * velocityRadPerSec;
     intakeController.setReference(
-        velocityRadPerSec * GroundIntakeConstants.IntakeConstants.GEARING,
+        velocityRadPerSec,
         ControlType.kVelocity,
         ClosedLoopSlot.kSlot0,
         ffvolts,
