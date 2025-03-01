@@ -57,8 +57,9 @@ public class ArmIOSpark implements ArmIO {
     double ffvolts =
         ArmConstants.ARM_MOTOR_KS * Math.signum(velocityRadPerSec)
             + ArmConstants.ARM_MOTOR_KV * velocityRadPerSec;
+    // armMotor.set(velocityRadPerSec);
     armClosedLoopController.setReference(
-        Units.radiansToRotations(velocityRadPerSec),
+        velocityRadPerSec,
         ControlType.kVelocity,
         ClosedLoopSlot.kSlot0,
         ffvolts,

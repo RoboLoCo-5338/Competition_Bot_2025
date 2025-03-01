@@ -95,8 +95,8 @@ public interface ArmIO {
         .velocityConversionFactor(1 / ArmConstants.GEARING);
     armConfig
         .closedLoop
-        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-        .positionWrappingEnabled(true)
+        .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
+        .positionWrappingEnabled(false)
         .pidf(
             ArmConstants.ARM_MOTOR_KP, ArmConstants.ARM_MOTOR_KI,
             ArmConstants.ARM_MOTOR_KD, ArmConstants.ARM_MOTOR_KFF);

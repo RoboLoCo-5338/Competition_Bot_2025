@@ -79,7 +79,7 @@ public class RobotContainer {
 
   private double exponentialVariable = 25.0;
 
-  public CommandXboxController xboxController = new CommandXboxController(0);
+  public CommandXboxController operatorController = new CommandXboxController(1);
 
   // Controller
 
@@ -180,10 +180,19 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Default command, normal field-relative drive
-    xboxController
-        .a()
-        .whileTrue(groundIntake.setGroundIntakeVelocity(1))
-        .onFalse(groundIntake.setGroundIntakeVelocity(0));
+    operatorController
+        .leftTrigger()
+        .whileTrue(endEffector.setEndEffectorVelocity(60))
+        .onFalse(endEffector.setEndEffectorVelocity(0));
+
+    operatorController
+        .rightTrigger()
+        .whileTrue(endEffector.setEndEffectorVelocity(-60))
+        .onFalse(endEffector.setEndEffectorVelocity(0));
+
+    operatorController.y().whileTrue(arm.setArmVelocity(0.9)).onFalse(arm.setArmVelocity(0));
+
+    operatorController.a().whileTrue(arm.setArmVelocity(-0.9)).onFalse(arm.setArmVelocity(0));
   }
 
   public void periodic() {

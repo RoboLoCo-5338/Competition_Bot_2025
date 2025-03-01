@@ -210,9 +210,11 @@ public class ButtonBindings {
             drive,
             () -> -driveController.getLeftY(),
             () -> -driveController.getLeftX(),
-            () ->
-                -driveController
-                    .getRightX())); // handles translation and rotation driving (i think!?)
+            () -> -driveController.getRightX()));
+    // elevator.setDefaultCommand(
+    //   elevator.setElevatorVelocity(operatorController.getLeftY()/10)
+    // );
+    // handles translation and rotation driving (i think!?)
   }
 
   // public double joystickExponentialFunction(double x) {
