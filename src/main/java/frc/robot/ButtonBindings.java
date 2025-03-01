@@ -70,30 +70,37 @@ public class ButtonBindings {
 
     functionBindings =
         Map.ofEntries(
-            // entry("Lock to Zero", ActionBindings.lockToZero()),
-            // entry("Climb Preset", ActionBindings.climbPreset()),
-            // entry("Gyro Reset", ActionBindings.gyroReset()),
-            // entry("Manual Climb Down", ActionBindings.manualClimbDown()),
-            // entry("Manual Climb Up", ActionBindings.manualClimbUp()),
-            // entry("L3 Preset", ActionBindings.l3Preset()),
-            // entry("Elevator Slow", ActionBindings.elevatorSlow()),
-            // entry("L2 Preset", ActionBindings.l2Preset()),
-            // entry("L4 Preset", ActionBindings.l4Preset()),
-            // entry("Elevator Fast", ActionBindings.elevatorFast()),
-            // entry("Manual Arm Down", ActionBindings.manualArmDown()),
-            // entry("Manual Arm Up", ActionBindings.manualArmUp()),
-            // // entry("Net Preset", ActionBindings.netPreset()),
-            // entry("Ground Intake In", ActionBindings.groundIntakeIn()),
-            // entry("Ground Intake Out", ActionBindings.groundIntakeOut())
-            // entry("End Effector In", ActionBindings.endEffectorIn()),
-            // entry("End Effector Out", ActionBindings.endEffectorOut()),
-            // entry("Ground Intake Slow", ActionBindings.groundIntakeSlow()),
-            // entry("Ground Intake Fast", ActionBindings.groundIntakeFast()),
-            // entry("Elevator Up", ActionBindings.manualElevatorUp()),
-            // entry("Elevator Down", ActionBindings.manualElevatorDown()),
-            // entry("Arm Up", ActionBindings.manualArmUp()),
-            // entry("Arm Down", ActionBindings.manualArmDown()));
-            );
+            entry("Lock to Zero", ActionBindings.lockToZero()),
+            entry("Climb Preset", ActionBindings.climbPreset()),
+            entry("Gyro Reset", ActionBindings.gyroReset()),
+            entry("Manual Climb Down", ActionBindings.manualClimbDown()),
+            entry("Manual Climb Up", ActionBindings.manualClimbUp()),
+            entry("L3 Preset", ActionBindings.l3Preset()),
+            entry("Elevator Slow", ActionBindings.elevatorSlow()),
+            entry("L2 Preset", ActionBindings.l2Preset()),
+            entry("L4 Preset", ActionBindings.l4Preset()),
+            entry("Elevator Fast", ActionBindings.elevatorFast()),
+            entry("Manual Arm Down", ActionBindings.manualArmDown()),
+            entry("Manual Arm Up", ActionBindings.manualArmUp()),
+            entry("Net Preset", ActionBindings.netPreset()),
+            entry("Ground Intake In", ActionBindings.groundIntakeIn()),
+            entry("Ground Intake Out", ActionBindings.groundIntakeOut()),
+            entry("End Effector In", ActionBindings.endEffectorIn()),
+            entry("End Effector Out", ActionBindings.endEffectorOut()),
+            entry("Ground Intake Slow", ActionBindings.groundIntakeSlow()),
+            entry("Ground Intake Fast", ActionBindings.groundIntakeFast()),
+            entry("Elevator Up", ActionBindings.manualElevatorUp()),
+            entry("Elevator Down", ActionBindings.manualElevatorDown()),
+            entry("Arm Up", ActionBindings.manualArmUp()),
+            entry("Arm Down", ActionBindings.manualArmDown()),
+            entry("Elevator Stop", ActionBindings.manualElevatorStop()),
+            entry("Stop Climb", ActionBindings.stopClimb()),
+            entry("End Effector Stop", ActionBindings.endEffectorStop()),
+            entry("Ground Intake Stop", ActionBindings.groundIntakeStop()),
+            entry("Arm Stop", ActionBindings.manualArmStop()));
+
+    // stopping all the things
+
   }
 
   @SuppressWarnings("unchecked")
@@ -162,7 +169,17 @@ public class ButtonBindings {
     negatedButtonToFunction =
         Map.ofEntries(
             entry("O - D-Pad Up", "Ground Intake Fast"),
-            entry("D - Left Trigger", "Elevator Fast"));
+            entry("D - Left Trigger", "Elevator Fast"),
+            entry("D - D-Pad Right", "Arm Stop"),
+            entry("D - D-Pad Left", "Arm Stop"),
+            entry("D - D-Pad Down", "Elevator Stop"),
+            entry("D - D-Pad Up", "Elevator Stop"),
+            entry("O - D-Pad Down", "Ground Intake Stop"),
+            entry("O - D-Pad Left", "Ground Intake Stop"),
+            entry("O - Right Trigger", "End Effector Stop"),
+            entry("O - Left Trigger", "End Effector Stop"),
+            entry("D - Right Joystick Button", "Stop Climb"),
+            entry("D - Left Joystick Button", "Stop Climb"));
   }
 
   public static void periodic() {}
@@ -187,7 +204,8 @@ public class ButtonBindings {
           .whileTrue(functionBindings.get(buttonToFunction.get(button)));
     }
     for (String button : negatedButtonToFunction.keySet()) {
-
+      System.out.println(
+          "Negated Button " + button + " connecting to " + negatedButtonToFunction.get(button));
       if (buttonMappings.get(button) == null) {
         System.out.println("Negated Button " + button + " not found");
         continue;
@@ -197,9 +215,11 @@ public class ButtonBindings {
             "Negated Function " + negatedButtonToFunction.get(button) + " not found");
         continue;
       }
-
+      System.out.println(
+          "Negated Button " + button + " connected to " + negatedButtonToFunction.get(button));
       buttonMappings
           .get(button)
+          .onFalse(ButtonBindings.debugCommand(button, negatedButtonToFunction.get(button)))
           .whileFalse(functionBindings.get(negatedButtonToFunction.get(button)));
     }
   }

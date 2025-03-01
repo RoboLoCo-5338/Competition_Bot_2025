@@ -54,8 +54,16 @@ public class ActionBindings {
     return ClimbCommands.moveClimbArm(climb, -0.4);
   }
 
+  public static Command stopClimb() {
+    return ClimbCommands.moveClimbArm(climb, 0);
+  }
+
   public static Command manualClimbUp() {
     return ClimbCommands.moveClimbArm(climb, 0.4);
+  }
+
+  public static Command manualElevatorStop() {
+    return ElevatorCommands.moveElevator(elevator, 0);
   }
 
   public static Command manualElevatorUp() {
@@ -94,6 +102,10 @@ public class ActionBindings {
     return ArmCommands.moveArm(arm, 0.4);
   }
 
+  public static Command manualArmStop() {
+    return ArmCommands.moveArm(arm, 0);
+  }
+
   public static Command netPreset() {
     return ButtonBindings.blankCommand("netPreset");
   }
@@ -106,12 +118,20 @@ public class ActionBindings {
     return GroundIntakeCommands.moveGroundIntakeArm(groundIntake, 0.4, -0.4);
   }
 
+  public static Command groundIntakeStop() {
+    return GroundIntakeCommands.moveGroundIntakeArm(groundIntake, 0, 0);
+  }
+
   public static Command endEffectorIn() {
     return EndEffectorCommands.moveEndEffector(endEffector, 0.4);
   }
 
   public static Command endEffectorOut() {
     return EndEffectorCommands.moveEndEffector(endEffector, -0.4);
+  }
+
+  public static Command endEffectorStop() {
+    return EndEffectorCommands.moveEndEffector(endEffector, 0);
   }
 
   public static Command groundIntakeSlow() {
