@@ -89,6 +89,7 @@ public class EndEffectorIOTalonFX implements EndEffectorIO {
 
   @Override
   public void setEndEffectorVelocity(double velocity) {
-    endEffectorMotor.setControl(endEffectorVelocityRequest.withVelocity(velocity));
+    endEffectorMotor.setControl(
+        endEffectorVelocityRequest.withVelocity(velocity * EndEffectorConstants.GEARING));
   }
 }

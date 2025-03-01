@@ -17,6 +17,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.generated.TunerConstants;
@@ -77,6 +78,8 @@ public class RobotContainer {
   private final Arm arm;
 
 
+  public CommandXboxController operatorController = new CommandXboxController(1);
+
   // Controller
 
   // Dashboard inputs
@@ -119,7 +122,7 @@ public class RobotContainer {
         endEffector = new EndEffector(new EndEffectorIOSim());
         elevator = new Elevator(new ElevatorIOSim());
         climb = new Climb(new ClimbIOSim());
-        arm = new Arm(new ArmIOSim());
+        arm = new Arm(new ArmIOSim(((ElevatorIOSim) elevator.getIO()).getLigamentEnd()));
         ButtonBindingsController =
             new ButtonBindings(drive, led, elevator, groundIntake, endEffector, climb, arm);
         break;
@@ -176,11 +179,29 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Default command, normal field-relative drive
+    operatorController
+        .leftTrigger()
+        .whileTrue(endEffector.setEndEffectorVelocity(60))
+        .onFalse(endEffector.setEndEffectorVelocity(0));
 
+    operatorController
+        .rightTrigger()
+        .whileTrue(endEffector.setEndEffectorVelocity(-60))
+        .onFalse(endEffector.setEndEffectorVelocity(0));
+
+    operatorController.y().whileTrue(arm.setArmVelocity(0.9)).onFalse(arm.setArmVelocity(0));
+
+    operatorController.a().whileTrue(arm.setArmVelocity(-0.9)).onFalse(arm.setArmVelocity(0));
   }
 
   public void periodic() {
     ButtonBindingsController.periodic();
+  }
+
+  public void teleopPeriodic() {
+
+    // groundIntake.setGroundIntakeVelocity(2).schedule();
+    // ;
   }
 
   /**

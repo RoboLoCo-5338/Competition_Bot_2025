@@ -31,7 +31,7 @@ public class ElevatorIOSim extends SimMechanism implements ElevatorIO {
   LoggedMechanism2d elevatorDrawn =
       new LoggedMechanism2d(Constants.ROBOT_LENGTH, ElevatorConstants.MAX_HEIGHT);
 
-  LoggedMechanismRoot2d root = elevatorDrawn.getRoot("elevator", 0, 0);
+  LoggedMechanismRoot2d root = elevatorDrawn.getRoot("elevator", 0, Constants.FLOOR_TO_MECHANISM);
   LoggedMechanismLigament2d elevator =
       root.append(new LoggedMechanismLigament2d("stage", ElevatorConstants.STARTING_HEIGHT, 90));
 
@@ -69,35 +69,39 @@ public class ElevatorIOSim extends SimMechanism implements ElevatorIO {
     physicsSim.update(0.02);
 
     motor1Sim.setRawRotorPosition(
-        physicsSim.getPositionMeters()
-            / (ElevatorConstants.GEARING * ElevatorConstants.DRUM_RADIUS * Math.PI));
+        physicsSim.getPositionMeters() / ElevatorConstants.METERS_PER_ROTATION);
     motor2Sim.setRawRotorPosition(
-        physicsSim.getPositionMeters()
-            / (ElevatorConstants.GEARING * ElevatorConstants.DRUM_RADIUS * Math.PI));
+        physicsSim.getPositionMeters() / ElevatorConstants.METERS_PER_ROTATION);
     motor1Sim.setRotorVelocity(
-        physicsSim.getVelocityMetersPerSecond()
-            / (ElevatorConstants.GEARING * ElevatorConstants.DRUM_RADIUS * Math.PI));
+        physicsSim.getVelocityMetersPerSecond() / ElevatorConstants.METERS_PER_ROTATION);
     motor2Sim.setRotorVelocity(
-        physicsSim.getVelocityMetersPerSecond()
-            / (ElevatorConstants.GEARING * ElevatorConstants.DRUM_RADIUS * Math.PI));
+        physicsSim.getVelocityMetersPerSecond() / ElevatorConstants.METERS_PER_ROTATION);
 
     elevator.setLength(physicsSim.getPositionMeters());
   }
 
   @Override
   public void setElevatorVelocity(double velocity) {
-    elevatorMotor1.setControl(elevator1VelocityRequest.withVelocity(velocity));
-    elevatorMotor2.setControl(elevator2VelocityRequest.withVelocity(velocity));
+    elevatorMotor1.setControl(
+        elevator1VelocityRequest.withVelocity(velocity / ElevatorConstants.METERS_PER_ROTATION));
+    elevatorMotor2.setControl(
+        elevator2VelocityRequest.withVelocity(velocity / ElevatorConstants.METERS_PER_ROTATION));
   }
 
   @Override
   public void setElevatorPosition(double position) {
-    elevatorMotor1.setControl(elevator1PositionRequest.withPosition(position));
-    elevatorMotor2.setControl(elevator2PositionRequest.withPosition(position));
+    elevatorMotor1.setControl(
+        elevator1PositionRequest.withPosition(position / ElevatorConstants.METERS_PER_ROTATION));
+    elevatorMotor2.setControl(
+        elevator2PositionRequest.withPosition(position / ElevatorConstants.METERS_PER_ROTATION));
   }
 
   @Override
   public double[] getCurrents() {
     return new double[] {physicsSim.getCurrentDrawAmps()};
+  }
+
+  public LoggedMechanismLigament2d getLigamentEnd() {
+    return elevator;
   }
 }

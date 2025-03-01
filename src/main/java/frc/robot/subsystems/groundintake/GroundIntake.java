@@ -35,6 +35,7 @@ public class GroundIntake extends SubsystemBase {
   }
 
   public Command setGroundIntakeVelocity(double velocity) {
+    System.out.println("hello");
     return new InstantCommand(() -> io.setIntakeVelocity(velocity), this);
   }
 

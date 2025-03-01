@@ -34,8 +34,8 @@ public interface ClimbIO {
    *   <li>climbConnected is set to true if the TalonFX is OK and false otherwise.
    *   <li>climbAppliedVolts is set to the current voltage of the motor.
    *   <li>climbCurrentAmps is set to the current current draw of the motor.
-   *   <li>climbPosition is set to the current position of the motor in radians.
-   *   <li>climbVelocityRadPerSec is set to the current velocity of the motor in radians per second.
+   *   <li>climbPosition is set to the current position of the climb in radians.
+   *   <li>climbVelocityRadPerSec is set to the current velocity of the climb in radians per second.
    * </ul>
    *
    * @param inputs the inputs to update
@@ -43,17 +43,16 @@ public interface ClimbIO {
   public default void updateInputs(ClimbIOInputs inputs) {}
 
   /**
-   * Sets the velocity of the climb motor in radians per second. This function runs the motor in
-   * voltage control mode and sets the voltage to the value required to achieve the desired
-   * velocity.
+   * Sets the velocity of the climb in radians per second. This function runs the motor in voltage
+   * control mode and sets the voltage to the value required to achieve the desired velocity.
    *
    * @param velocity the desired velocity in radians per second
    */
   public default void setClimbVelocity(double velocity) {}
 
   /**
-   * Sets the position of the climb motor in radians. This function runs the motor in position
-   * control mode and sets the target position to the value specified by the input parameter.
+   * Sets the position of the climb in radians. This function runs the motor in position control
+   * mode and sets the target position to the value specified by the input parameter.
    *
    * @param position the desired position in radians
    */

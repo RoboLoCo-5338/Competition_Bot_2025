@@ -105,30 +105,32 @@ public class ButtonBindings {
   private void setUpButtonMappings() {
     buttonMappings =
         Map.ofEntries(
-            entry("D - x", driveController.x()),
-            entry("D - a", driveController.a()),
-            entry("D - y", driveController.y()),
-            entry("D - b", driveController.b()),
-            entry("D - Right Joystick Button", driveController.rightStick()),
-            entry("D - Left Joystick Button", driveController.leftStick()),
-            entry("D - Left Bumper", driveController.leftBumper()),
-            entry("D - Left Trigger", driveController.leftTrigger()),
-            entry("D - Right Bumper", driveController.rightBumper()),
-            entry("D - D-Pad Up", driveController.povUp()),
-            entry("D - D-Pad Down", driveController.povDown()),
-            entry("D - D-Pad Left", driveController.povLeft()),
-            entry("D - D-Pad Right", driveController.povRight()),
-            entry("D - Right Trigger", new Trigger(() -> driveController.getRawAxis(5) > -0.5)),
-            entry("O - a", operatorController.a()),
-            entry("O - y", operatorController.y()),
-            entry("O - B", operatorController.b()),
-            entry("O - Right Bumper", operatorController.rightBumper()),
-            entry("O - Left Bumper", operatorController.leftBumper()),
-            entry("O - Right Trigger", new Trigger(() -> operatorController.getRawAxis(5) > -0.5)),
-            entry("O - Left Trigger", operatorController.leftTrigger()),
-            entry("O - D-Pad Down", operatorController.povDown()),
-            entry("O - D-Pad Up", operatorController.povUp()),
-            entry("O - D-Pad Left", operatorController.povLeft()));
+            // entry("D - x", driveController.x()),
+            // entry("D - a", driveController.a()),
+            // entry("D - y", driveController.y()),
+            // entry("D - b", driveController.b()),
+            // entry("D - Right Joystick Button", driveController.rightStick()),
+            // entry("D - Left Joystick Button", driveController.leftStick()),
+            // entry("D - Left Bumper", driveController.leftBumper()),
+            // entry("D - Left Trigger", driveController.leftTrigger()),
+            // entry("D - Right Bumper", driveController.rightBumper()),
+            // entry("D - D-Pad Up", driveController.povUp()),
+            // entry("D - D-Pad Down", driveController.povDown()),
+            // entry("D - D-Pad Left", driveController.povLeft()),
+            // entry("D - D-Pad Right", driveController.povRight()),
+            // entry("D - Right Trigger", new Trigger(() -> driveController.getRawAxis(5) > -0.5)),
+            // entry("O - a", operatorController.a()),
+            // entry("O - y", operatorController.y()),
+            // entry("O - B", operatorController.b()),
+            // entry("O - Right Bumper", operatorController.rightBumper()),
+            // entry("O - Left Bumper", operatorController.leftBumper()),
+            // entry("O - Right Trigger", new Trigger(() -> operatorController.getRawAxis(5) >
+            // -0.5)),
+            // entry("O - Left Trigger", operatorController.leftTrigger()),
+            // entry("O - D-Pad Down", operatorController.povDown()),
+            // entry("O - D-Pad Up", operatorController.povUp()),
+            // entry("O - D-Pad Left", operatorController.povLeft()));
+            );
   }
 
   @SuppressWarnings({"rawtypes", "unchecked"})
@@ -136,29 +138,30 @@ public class ButtonBindings {
     // Driver Controller Bindings
     buttonToFunction =
         Map.ofEntries(
-            entry("D - x", "Lock to Zero"),
-            entry("D - a", "Climb Preset"),
-            entry("D - y", "Gyro Reset"),
-            entry("D - Right Joystick Button", "Manual Climb Down"),
-            entry("D - Left Joystick Button", "Manual Climb Up"),
-            entry("D - Left Bumper", "L3 Preset"),
-            entry("D - Left Trigger", "Elevator Slow"),
-            entry("D - Right Bumper", "L2 Preset"),
-            entry("D - Right Trigger", "L4 Preset"),
-            entry("D - D-Pad Up", "Elevator Up"),
-            entry("D - D-Pad Down", "Elevator Down"),
-            entry("D - D-Pad Left", "Arm Up"),
-            entry("D - D-Pad Right", "Arm Down"),
-            entry("O - a", "Manual Arm Down"),
-            entry("O - y", "Manual Arm Up"),
-            entry("O - b", "Net Preset"),
-            entry("O - Right Bumper", "Ground Intake In"),
-            entry("O - Left Bumper", "Ground Intake Out"),
-            entry("O - Right Trigger", "End Effector In"),
-            entry("O - Left Trigger", "End Effector Out"),
-            entry("O - D-Pad Down", "Ground Intake In"),
-            entry("O - D-Pad Up", "Ground Intake Slow"),
-            entry("O - D-Pad Left", "Ground Intake Out"));
+            // entry("D - x", "Lock to Zero"),
+            // entry("D - a", "Climb Preset"),
+            // entry("D - y", "Gyro Reset"),
+            // entry("D - Right Joystick Button", "Manual Climb Down"),
+            // entry("D - Left Joystick Button", "Manual Climb Up"),
+            // entry("D - Left Bumper", "L3 Preset"),
+            // entry("D - Left Trigger", "Elevator Slow"),
+            // entry("D - Right Bumper", "L2 Preset"),
+            // entry("D - Right Trigger", "L4 Preset"),
+            // entry("D - D-Pad Up", "Elevator Up"),
+            // entry("D - D-Pad Down", "Elevator Down"),
+            // entry("D - D-Pad Left", "Arm Up"),
+            // entry("D - D-Pad Right", "Arm Down"),
+            // entry("O - a", "Manual Arm Down"),
+            // entry("O - y", "Manual Arm Up"),
+            // entry("O - b", "Net Preset"),
+            //  entry("O - Right Bumper", "Ground Intake In"),
+            //  entry("O - Left Bumper", "Ground Intake Out"),
+            // entry("O - Right Trigger", "End Effector In"),
+            // entry("O - Left Trigger", "End Effector Out"),
+            // entry("O - D-Pad Down", "Ground Intake In"),
+            // entry("O - D-Pad Up", "Ground Intake Slow"),
+            // entry("O - D-Pad Left", "Ground Intake Out"));
+            );
 
     // Negated Operator Controller Bindings
     negatedButtonToFunction =
@@ -223,16 +226,18 @@ public class ButtonBindings {
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
             drive,
-            () -> joystickExponentialFunction(-driveController.getLeftY()),
+            () -> -driveController.getLeftY(),
             () -> -driveController.getLeftX(),
-            () ->
-                -driveController
-                    .getRightX())); // handles translation and rotation driving (i think!?)
+            () -> -driveController.getRightX()));
+    // elevator.setDefaultCommand(
+    //   elevator.setElevatorVelocity(operatorController.getLeftY()/10)
+    // );
+    // handles translation and rotation driving (i think!?)
   }
 
-  public double joystickExponentialFunction(double x) {
-    return (1.0 / (exponentialVariable - 1)) * (Math.pow(exponentialVariable, x) - 1);
-  }
+  // public double joystickExponentialFunction(double x) {
+  //   return (1.0 / (exponentialVariable - 1)) * (Math.pow(exponentialVariable, x) - 1);
+  // }
 
   public static Command debugCommand(String button, String action) {
 

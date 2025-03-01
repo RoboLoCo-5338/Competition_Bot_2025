@@ -15,13 +15,14 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
-import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
-import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
-import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
+import frc.robot.Constants;
 import frc.robot.Constants.GroundIntakeConstants;
 import frc.robot.subsystems.SimMechanism;
 import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.mechanism.LoggedMechanism2d;
+import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d;
+import org.littletonrobotics.junction.mechanism.LoggedMechanismRoot2d;
 
 public class GroundIntakeIOSim extends SimMechanism implements GroundIntakeIO {
   DCMotor armGearBox = DCMotor.getNeoVortex(1);
@@ -38,13 +39,16 @@ public class GroundIntakeIOSim extends SimMechanism implements GroundIntakeIO {
           false,
           GroundIntakeConstants.ArmConstants.STARTING_ANGLE);
 
-  @AutoLogOutput(key = "Arm/Mechanism")
-  Mechanism2d armDrawn =
-      new Mechanism2d(
-          Units.inchesToMeters(16.5 * 2), 0); // Someone please improve this naming scheme
+  @AutoLogOutput(key = "GroundIntakeArm/Mechanism")
+  LoggedMechanism2d armDrawn =
+      new LoggedMechanism2d(
+          Units.inchesToMeters(16.5 * 2),
+          GroundIntakeConstants.ArmConstants.ARM_BASE_HEIGHT
+              + GroundIntakeConstants.ArmConstants.LENGTH
+              + Constants.FLOOR_TO_MECHANISM); // Someone please improve this naming scheme
 
-  MechanismRoot2d root = armDrawn.getRoot("root", 0, 0);
-  MechanismLigament2d movingArm;
+  LoggedMechanismRoot2d root = armDrawn.getRoot("root", 0, Constants.FLOOR_TO_MECHANISM);
+  LoggedMechanismLigament2d movingArm;
 
   DCMotor intakeGearBox = DCMotor.getNeoVortex(1);
   SparkFlexSim intakeSim;
@@ -70,20 +74,19 @@ public class GroundIntakeIOSim extends SimMechanism implements GroundIntakeIO {
     intakeEncoderSim = new SparkAbsoluteEncoderSim(armMotor);
     movingArm =
         root.append(
-                new MechanismLigament2d(
+                new LoggedMechanismLigament2d(
                     "base", GroundIntakeConstants.ArmConstants.ARM_BASE_HEIGHT, 90))
-            .append(new MechanismLigament2d("rotator", 0, -90))
+            .append(new LoggedMechanismLigament2d("rotator", 0, -90))
             .append(
-                new MechanismLigament2d(
+                new LoggedMechanismLigament2d(
                     "arm",
                     GroundIntakeConstants.ArmConstants.LENGTH,
-                    GroundIntakeConstants.ArmConstants.STARTING_ANGLE));
+                    Units.radiansToDegrees(GroundIntakeConstants.ArmConstants.STARTING_ANGLE)));
   }
 
   @Override
   public void updateInputs(GroundIntakeIOInputs inputs) {
-    inputs.armMotorConnected = true;
-    armPhysicsSim.setInput(armSim.getAppliedOutput() * RobotController.getBatteryVoltage());
+    armPhysicsSim.setInputVoltage(armSim.getAppliedOutput() * RobotController.getBatteryVoltage());
     intakePhysicsSim.setInput(intakeSim.getAppliedOutput() * RobotController.getBatteryVoltage());
 
     armPhysicsSim.update(0.02);
@@ -97,6 +100,7 @@ public class GroundIntakeIOSim extends SimMechanism implements GroundIntakeIO {
     intakeSim.iterate(
         intakePhysicsSim.getAngularVelocityRPM(), RobotController.getBatteryVoltage(), 0.02);
 
+    inputs.armMotorConnected = true;
     inputs.armPositionRad = armPhysicsSim.getAngleRads();
     inputs.armVelocityRadPerSec = armPhysicsSim.getVelocityRadPerSec();
     ifOk(
@@ -105,7 +109,7 @@ public class GroundIntakeIOSim extends SimMechanism implements GroundIntakeIO {
         (values) -> inputs.armAppliedVolts = values[0] * values[1]);
     inputs.armCurrentAmps = armPhysicsSim.getCurrentDrawAmps();
 
-    movingArm.setAngle(armPhysicsSim.getAngleRads());
+    movingArm.setAngle(Units.radiansToDegrees(armPhysicsSim.getAngleRads()));
 
     inputs.intakeMotorConnected = true;
     inputs.intakeVelocityRadPerSec = intakePhysicsSim.getAngularVelocityRadPerSec();
