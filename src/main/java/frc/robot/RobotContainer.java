@@ -76,7 +76,6 @@ public class RobotContainer {
 
   private final Arm arm;
 
-  private double exponentialVariable = 25.0;
 
   // Controller
 
