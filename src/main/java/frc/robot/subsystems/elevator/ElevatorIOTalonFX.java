@@ -72,6 +72,7 @@ public class ElevatorIOTalonFX implements ElevatorIO {
       lc.setRegionOfInterest(new LaserCan.RegionOfInterest(8, 8, 16, 16));
       lc.setTimingBudget(LaserCan.TimingBudget.TIMING_BUDGET_33MS);
     } catch (ConfigurationFailedException e) {
+      // throw new Error("Guys laser can doesn't work" + e.getMessage());
       System.out.println("Configuration failed! " + e);
     }
   }
@@ -119,6 +120,7 @@ public class ElevatorIOTalonFX implements ElevatorIO {
   @Override
   public int getLaserCanMeasurement() {
     Measurement m = lc.getMeasurement();
+    // System.out.println(m.status);
     if (m != null && m.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
       return m.distance_mm;
     } else {

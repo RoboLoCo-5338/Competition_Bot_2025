@@ -14,10 +14,13 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
@@ -77,6 +80,8 @@ public class RobotContainer {
   private final Climb climb;
 
   private final Arm arm;
+
+  public CommandXboxController driverController = new CommandXboxController(0);
 
   public CommandXboxController operatorController = new CommandXboxController(1);
 
@@ -193,17 +198,27 @@ public class RobotContainer {
         .whileTrue(endEffector.setEndEffectorVelocity(-60))
         .onFalse(endEffector.setEndEffectorVelocity(0));
 
-    operatorController.y().whileTrue(arm.setArmPosition(0.4)).onFalse(arm.setArmVelocity(0));
+    operatorController.y().whileTrue(arm.setArmVelocity(0.2)).onFalse(arm.setArmVelocity(0));
 
-    operatorController.a().whileTrue(arm.setArmPosition(0.1)).onFalse(arm.setArmVelocity(0));
+    operatorController.a().whileTrue(arm.setArmVelocity(-0.2)).onFalse(arm.setArmVelocity(0));
+
+    driverController
+        .b()
+        .onTrue(
+            Commands.runOnce(
+                    () ->
+                        drive.setPose(
+                            new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
+                    drive)
+                .ignoringDisable(true));
   }
 
   public void periodic() {
     ButtonBindingsController.periodic();
-    SmartDashboard.putNumber("Laser Can", elevator.io.getLaserCanMeasurement());
   }
 
   public void teleopPeriodic() {
+    SmartDashboard.putNumber("Laser Can", elevator.io.getLaserCanMeasurement());
 
     // groundIntake.setGroundIntakeVelocity(2).schedule();
     // ;

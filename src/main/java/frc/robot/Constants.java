@@ -86,11 +86,11 @@ public final class Constants {
     public static final int ELEVATOR_MOTOR_ID2 = 45;
     public static final int ELEVATOR_MOTOR_CURRENT_LIMIT = 40;
     public static final int LASERCAN_ID = 50;
-    public static final double ELEVATOR_FEEDFORWARD = 0.1;
+    public static final double ELEVATOR_FEEDFORWARD = 0.0;
     public static final double ELEVATOR_MOTOR_kP = 0.3;
     public static final double ELEVATOR_MOTOR_kI = 0.0;
     public static final double ELEVATOR_MOTOR_kD = 0.00;
-    public static final double ELEVATOR_MOTOR_kG = 0.00;
+    public static final double ELEVATOR_MOTOR_kG = 0.5;
     public static final double ELEVATOR_MOTOR_kV = 0.0;
     public static final double LASERCAN_TO_ELEVATOR_POSITION = 1.0;
     public static final double ELEVATOR_EPSILON = 1e-2;
