@@ -182,7 +182,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     // Default command, normal field-relative drive
 
-    // elevator.setDefaultCommand(elevator.setElevatorVelocity(operatorController.getLeftY()));
+    elevator.setDefaultCommand(elevator.setElevatorVelocity(operatorController.getLeftY()));
 
     operatorController
         .leftTrigger()
