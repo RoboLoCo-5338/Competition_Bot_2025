@@ -19,15 +19,10 @@ import java.util.Map;
 
 public class ButtonBindings {
   private Drive drive;
-  private LED led;
-  private Elevator elevator;
-  private GroundIntake groundIntake;
-  private EndEffector endEffector;
-  private Arm arm;
-  private Climb climb;
 
   private final CommandXboxController driveController = new CommandXboxController(0);
   private final CommandXboxController operatorController = new CommandXboxController(1);
+  private final ActionBindings actionBindings;
   private double exponentialVariable = 25.0;
 
   // maps button names and function names to their respective objects
@@ -49,14 +44,17 @@ public class ButtonBindings {
       Climb climb,
       Arm arm) {
     this.drive = drive;
-    ActionBindings.drive = drive;
-    ActionBindings.arm = arm;
-    ActionBindings.led = led;
-    ActionBindings.elevator = elevator;
-    ActionBindings.groundIntake = groundIntake;
-    ActionBindings.endEffector = endEffector;
-    ActionBindings.climb = climb;
-    ActionBindings.arm = arm;
+    this.actionBindings =
+        new ActionBindings(
+            drive,
+            driveController,
+            operatorController,
+            climb,
+            elevator,
+            groundIntake,
+            endEffector,
+            led,
+            arm);
 
     setUpFunctionBindings();
     setUpButtonMappings();
@@ -70,34 +68,34 @@ public class ButtonBindings {
 
     functionBindings =
         Map.ofEntries(
-            entry("Lock to Zero", ActionBindings.lockToZero()),
-            entry("Climb Preset", ActionBindings.climbPreset()),
-            entry("Gyro Reset", ActionBindings.gyroReset()),
-            entry("Manual Climb Down", ActionBindings.manualClimbDown()),
-            entry("Manual Climb Up", ActionBindings.manualClimbUp()),
-            entry("L3 Preset", ActionBindings.l3Preset()),
-            entry("Elevator Slow", ActionBindings.elevatorSlow()),
-            entry("L2 Preset", ActionBindings.l2Preset()),
-            entry("L4 Preset", ActionBindings.l4Preset()),
-            entry("Elevator Fast", ActionBindings.elevatorFast()),
-            entry("Manual Arm Down", ActionBindings.manualArmDown()),
-            entry("Manual Arm Up", ActionBindings.manualArmUp()),
-            entry("Net Preset", ActionBindings.netPreset()),
-            entry("Ground Intake In", ActionBindings.groundIntakeIn()),
-            entry("Ground Intake Out", ActionBindings.groundIntakeOut()),
-            entry("End Effector In", ActionBindings.endEffectorIn()),
-            entry("End Effector Out", ActionBindings.endEffectorOut()),
-            entry("Ground Intake Slow", ActionBindings.groundIntakeSlow()),
-            entry("Ground Intake Fast", ActionBindings.groundIntakeFast()),
-            entry("Elevator Up", ActionBindings.manualElevatorUp()),
-            entry("Elevator Down", ActionBindings.manualElevatorDown()),
-            entry("Arm Up", ActionBindings.manualArmUp()),
-            entry("Arm Down", ActionBindings.manualArmDown()),
-            entry("Elevator Stop", ActionBindings.manualElevatorStop()),
-            entry("Stop Climb", ActionBindings.stopClimb()),
-            entry("End Effector Stop", ActionBindings.endEffectorStop()),
-            entry("Ground Intake Stop", ActionBindings.groundIntakeStop()),
-            entry("Arm Stop", ActionBindings.manualArmStop()));
+            entry("Lock to Zero", this.actionBindings.lockToZero()),
+            entry("Climb Preset", this.actionBindings.climbPreset()),
+            entry("Gyro Reset", this.actionBindings.gyroReset()),
+            entry("Manual Climb Down", this.actionBindings.manualClimbDown()),
+            entry("Manual Climb Up", this.actionBindings.manualClimbUp()),
+            entry("L3 Preset", this.actionBindings.l3Preset()),
+            entry("Elevator Slow", this.actionBindings.elevatorSlow()),
+            entry("L2 Preset", this.actionBindings.l2Preset()),
+            entry("L4 Preset", this.actionBindings.l4Preset()),
+            entry("Elevator Fast", this.actionBindings.elevatorFast()),
+            entry("Manual Arm Down", this.actionBindings.manualArmDown()),
+            entry("Manual Arm Up", this.actionBindings.manualArmUp()),
+            entry("Net Preset", this.actionBindings.netPreset()),
+            entry("Ground Intake In", this.actionBindings.groundIntakeIn()),
+            entry("Ground Intake Out", this.actionBindings.groundIntakeOut()),
+            entry("End Effector In", this.actionBindings.endEffectorIn()),
+            entry("End Effector Out", this.actionBindings.endEffectorOut()),
+            entry("Ground Intake Slow", this.actionBindings.groundIntakeSlow()),
+            entry("Ground Intake Fast", this.actionBindings.groundIntakeFast()),
+            entry("Elevator Up", this.actionBindings.manualElevatorUp()),
+            entry("Elevator Down", this.actionBindings.manualElevatorDown()),
+            entry("Arm Up", this.actionBindings.manualArmUp()),
+            entry("Arm Down", this.actionBindings.manualArmDown()),
+            entry("Elevator Stop", this.actionBindings.manualElevatorStop()),
+            entry("Stop Climb", this.actionBindings.stopClimb()),
+            entry("End Effector Stop", this.actionBindings.endEffectorStop()),
+            entry("Ground Intake Stop", this.actionBindings.groundIntakeStop()),
+            entry("Arm Stop", this.actionBindings.manualArmStop()));
 
     // stopping all the things
 
@@ -107,32 +105,32 @@ public class ButtonBindings {
   private void setUpButtonMappings() {
     buttonMappings =
         Map.ofEntries(
-            // entry("D - x", driveController.x()),
-            // entry("D - a", driveController.a()),
-            // entry("D - y", driveController.y()),
-            // entry("D - b", driveController.b()),
-            // entry("D - Right Joystick Button", driveController.rightStick()),
-            // entry("D - Left Joystick Button", driveController.leftStick()),
-            // entry("D - Left Bumper", driveController.leftBumper()),
-            // entry("D - Left Trigger", driveController.leftTrigger()),
-            // entry("D - Right Bumper", driveController.rightBumper()),
-            // entry("D - D-Pad Up", driveController.povUp()),
-            // entry("D - D-Pad Down", driveController.povDown()),
-            // entry("D - D-Pad Left", driveController.povLeft()),
-            // entry("D - D-Pad Right", driveController.povRight()),
-            // entry("D - Right Trigger", new Trigger(() -> driveController.getRawAxis(5) > -0.5)),
-            // entry("O - a", operatorController.a()),
-            // entry("O - y", operatorController.y()),
-            // entry("O - B", operatorController.b()),
-            // entry("O - Right Bumper", operatorController.rightBumper()),
-            // entry("O - Left Bumper", operatorController.leftBumper()),
-            // entry("O - Right Trigger", new Trigger(() -> operatorController.getRawAxis(5) >
-            // -0.5)),
-            // entry("O - Left Trigger", operatorController.leftTrigger()),
-            // entry("O - D-Pad Down", operatorController.povDown()),
-            // entry("O - D-Pad Up", operatorController.povUp()),
-            // entry("O - D-Pad Left", operatorController.povLeft()));
-            );
+            entry("D - x", driveController.x()),
+            entry("D - a", driveController.a()),
+            entry("D - y", driveController.y()),
+            entry("D - b", driveController.b()),
+            entry("D - Right Joystick Button", driveController.rightStick()),
+            entry("D - Left Joystick Button", driveController.leftStick()),
+            entry("D - Left Bumper", driveController.leftBumper()),
+            entry("D - Left Trigger", driveController.leftTrigger()),
+            entry("D - Right Bumper", driveController.rightBumper()),
+            entry("D - D-Pad Up", driveController.povUp()),
+            entry("D - D-Pad Down", driveController.povDown()),
+            entry("D - D-Pad Left", driveController.povLeft()),
+            entry("D - D-Pad Right", driveController.povRight()),
+            entry("D - Right Trigger", new Trigger(() -> driveController.getRawAxis(5) > -0.5)),
+            entry("O - a", operatorController.a()),
+            entry("O - y", operatorController.y()),
+            entry("O - B", operatorController.b()),
+            entry("O - Right Bumper", operatorController.rightBumper()),
+            entry("O - Left Bumper", operatorController.leftBumper()),
+            entry("O - Right Trigger", new Trigger(() -> operatorController.getRawAxis(5) > -0.5)),
+            entry("O - Left Trigger", operatorController.leftTrigger()),
+            entry("O - D-Pad Down", operatorController.povDown()),
+            entry("O - D-Pad Up", operatorController.povUp()),
+            entry("O - D-Pad Left", operatorController.povLeft()),
+            entry("O - Left Joystick Down", new Trigger(() -> operatorController.getLeftY() > 0.5)),
+            entry("O - Left Joystick Up", new Trigger(() -> operatorController.getLeftY() < -0.5)));
   }
 
   @SuppressWarnings({"rawtypes", "unchecked"})
@@ -140,30 +138,29 @@ public class ButtonBindings {
     // Driver Controller Bindings
     buttonToFunction =
         Map.ofEntries(
-            // entry("D - x", "Lock to Zero"),
-            // entry("D - a", "Climb Preset"),
-            // entry("D - y", "Gyro Reset"),
-            // entry("D - Right Joystick Button", "Manual Climb Down"),
-            // entry("D - Left Joystick Button", "Manual Climb Up"),
-            // entry("D - Left Bumper", "L3 Preset"),
-            // entry("D - Left Trigger", "Elevator Slow"),
-            // entry("D - Right Bumper", "L2 Preset"),
-            // entry("D - Right Trigger", "L4 Preset"),
-            // entry("D - D-Pad Up", "Elevator Up"),
-            // entry("D - D-Pad Down", "Elevator Down"),
-            // entry("D - D-Pad Left", "Arm Up"),
-            // entry("D - D-Pad Right", "Arm Down"),
-            // entry("O - a", "Manual Arm Down"),
-            // entry("O - y", "Manual Arm Up"),
-            // entry("O - b", "Net Preset"),
-            //  entry("O - Right Bumper", "Ground Intake In"),
-            //  entry("O - Left Bumper", "Ground Intake Out"),
-            // entry("O - Right Trigger", "End Effector In"),
-            // entry("O - Left Trigger", "End Effector Out"),
-            // entry("O - D-Pad Down", "Ground Intake In"),
-            // entry("O - D-Pad Up", "Ground Intake Slow"),
-            // entry("O - D-Pad Left", "Ground Intake Out"));
-            );
+            entry("D - x", "Lock to Zero"),
+            entry("D - a", "Climb Preset"),
+            entry("D - y", "Gyro Reset"),
+            entry("D - Right Joystick Button", "Manual Climb Down"),
+            entry("D - Left Joystick Button", "Manual Climb Up"),
+            entry("D - Left Bumper", "L3 Preset"),
+            entry("D - Left Trigger", "Elevator Slow"),
+            entry("D - Right Bumper", "L2 Preset"),
+            entry("D - Right Trigger", "L4 Preset"),
+            entry("O - Left Joystick Up", "Elevator Up"),
+            entry("O - Left Joystick Down", "Elevator Down"),
+            entry("D - D-Pad Left", "Arm Up"),
+            entry("D - D-Pad Right", "Arm Down"),
+            entry("O - a", "Manual Arm Down"),
+            entry("O - y", "Manual Arm Up"),
+            entry("O - b", "Net Preset"),
+            entry("O - Right Bumper", "Ground Intake In"),
+            entry("O - Left Bumper", "Ground Intake Out"),
+            entry("O - Right Trigger", "End Effector In"),
+            entry("O - Left Trigger", "End Effector Out"),
+            entry("O - D-Pad Down", "Ground Intake In"),
+            entry("O - D-Pad Up", "Ground Intake Slow"),
+            entry("O - D-Pad Left", "Ground Intake Out"));
 
     // Negated Operator Controller Bindings
     negatedButtonToFunction =
@@ -172,8 +169,8 @@ public class ButtonBindings {
             entry("D - Left Trigger", "Elevator Fast"),
             entry("D - D-Pad Right", "Arm Stop"),
             entry("D - D-Pad Left", "Arm Stop"),
-            entry("D - D-Pad Down", "Elevator Stop"),
-            entry("D - D-Pad Up", "Elevator Stop"),
+            entry("O - Left Joystick Down", "Elevator Stop"),
+            entry("O - Left Joystick Up", "Elevator Stop"),
             entry("O - D-Pad Down", "Ground Intake Stop"),
             entry("O - D-Pad Left", "Ground Intake Stop"),
             entry("O - Right Trigger", "End Effector Stop"),

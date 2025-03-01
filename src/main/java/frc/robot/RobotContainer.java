@@ -78,8 +78,6 @@ public class RobotContainer {
 
   private final Arm arm;
 
-  private double exponentialVariable = 25.0;
-
   public CommandXboxController operatorController = new CommandXboxController(1);
 
   // Controller
