@@ -77,7 +77,6 @@ public class RobotContainer {
 
   private final Arm arm;
 
-
   public CommandXboxController operatorController = new CommandXboxController(1);
 
   // Controller
