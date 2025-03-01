@@ -12,7 +12,7 @@ public class ElevatorCommands {
 
   public static Command moveElevator(Elevator elevator, double speed) {
 
-    return elevator.setElevatorVelocity(speed);
+    return elevator.setElevatorVelocity(null);
   }
 
   public static double getElevatorPosition(Elevator elevator) {

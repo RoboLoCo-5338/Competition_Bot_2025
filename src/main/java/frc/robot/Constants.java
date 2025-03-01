@@ -65,7 +65,7 @@ public final class Constants {
   public static final class ClimbConstants {
     public static final int CLIMB_MOTOR_ID = 46;
     public static final int CLIMB_MOTOR_CURRENT_LIMIT = 20;
-    public static final double CLIMB_kP = 100.0; // updated for sim not real
+    public static final double CLIMB_kP = 0; // updated for sim not real
     public static final double CLIMB_kI = 0.0;
     public static final double CLIMB_kD = 0.0;
     public static final double CLIMB_kS = 0.0;
@@ -84,12 +84,12 @@ public final class Constants {
     // TODO change non sim constants
     public static final int ELEVATOR_MOTOR_ID1 = 42;
     public static final int ELEVATOR_MOTOR_ID2 = 45;
-    public static final int ELEVATOR_MOTOR_CURRENT_LIMIT = 20;
+    public static final int ELEVATOR_MOTOR_CURRENT_LIMIT = 40;
     public static final int LASERCAN_ID = 50;
-    public static final double ELEVATOR_MOTOR_kP = 1;
-    public static final double ELEVATOR_MOTOR_kI = 0.0;
-    public static final double ELEVATOR_MOTOR_kD = 0.0;
-    public static final double ELEVATOR_MOTOR_kG = 0.0;
+    public static final double ELEVATOR_MOTOR_kP = 0.2;
+    public static final double ELEVATOR_MOTOR_kI = 0.00;
+    public static final double ELEVATOR_MOTOR_kD = 0.00;
+    public static final double ELEVATOR_MOTOR_kG = 0.00;
     public static final double ELEVATOR_MOTOR_kV = 0.0;
     public static final double LASERCAN_TO_ELEVATOR_POSITION = 1.0;
     public static final double ELEVATOR_EPSILON = 1e-2;
