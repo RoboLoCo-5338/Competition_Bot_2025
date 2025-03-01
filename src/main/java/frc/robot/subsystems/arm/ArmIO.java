@@ -85,12 +85,13 @@ public interface ArmIO {
 
     armConfig
         .idleMode(IdleMode.kBrake)
+        .inverted(true)
         .smartCurrentLimit(ArmConstants.ARM_MOTOR_CURRENT_LIMIT)
         .voltageCompensation(12.0);
     armConfig
         .absoluteEncoder
         // TODO CHECK THIS
-        .inverted(false)
+        .inverted(true)
         .positionConversionFactor(1 / ArmConstants.GEARING)
         .velocityConversionFactor(1 / ArmConstants.GEARING);
     armConfig

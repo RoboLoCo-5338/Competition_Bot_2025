@@ -16,6 +16,7 @@ package frc.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -180,6 +181,9 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Default command, normal field-relative drive
+
+    // elevator.setDefaultCommand(elevator.setElevatorVelocity(operatorController.getLeftY()));
+
     operatorController
         .leftTrigger()
         .whileTrue(endEffector.setEndEffectorVelocity(60))
@@ -190,13 +194,14 @@ public class RobotContainer {
         .whileTrue(endEffector.setEndEffectorVelocity(-60))
         .onFalse(endEffector.setEndEffectorVelocity(0));
 
-    operatorController.y().whileTrue(arm.setArmVelocity(0.9)).onFalse(arm.setArmVelocity(0));
+    operatorController.y().whileTrue(arm.setArmPosition(0.4)).onFalse(arm.setArmVelocity(0));
 
-    operatorController.a().whileTrue(arm.setArmVelocity(-0.9)).onFalse(arm.setArmVelocity(0));
+    operatorController.a().whileTrue(arm.setArmPosition(0.1)).onFalse(arm.setArmVelocity(0));
   }
 
   public void periodic() {
     ButtonBindingsController.periodic();
+    SmartDashboard.putNumber("Laser Can", elevator.io.getLaserCanMeasurement());
   }
 
   public void teleopPeriodic() {

@@ -37,6 +37,8 @@ public class ElevatorIOTalonFX implements ElevatorIO {
 
     // TODO does this need to be inverted? idk bro does it? It does
     elevatorMotor2.getConfigurator().apply(getConfiguration(2));
+    elevatorMotor1.setPosition(0);
+    elevatorMotor2.setPosition(0);
 
     // get status signals
     elevator1Position = elevatorMotor1.getPosition();
@@ -107,10 +109,9 @@ public class ElevatorIOTalonFX implements ElevatorIO {
 
   @Override
   public void setElevatorVelocity(double velocity) {
-    elevatorMotor1.setControl(
-        elevator1VelocityRequest.withVelocity(velocity / ElevatorConstants.METERS_PER_ROTATION));
-    elevatorMotor2.setControl(
-        elevator2VelocityRequest.withVelocity(velocity / ElevatorConstants.METERS_PER_ROTATION));
+    System.out.println(velocity);
+    elevatorMotor1.setControl(elevator1VelocityRequest.withVelocity(velocity));
+    elevatorMotor2.setControl(elevator2VelocityRequest.withVelocity(velocity));
   }
 
   @Override

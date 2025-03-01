@@ -44,16 +44,16 @@ public final class Constants {
 
   public static final class ArmConstants {
     public static final int ARM_MOTOR_ID = 44;
-    public static final double ARM_MOTOR_KP = 0.07;
+    public static final double ARM_MOTOR_KP = 3.5;
     public static final double ARM_MOTOR_KI = 0.0;
     public static final double ARM_MOTOR_KD = 0.0;
     public static final double ARM_MOTOR_KG = 0.0;
-    public static final double ARM_MOTOR_KV = 0.01;
+    public static final double ARM_MOTOR_KV = 0.00;
     public static final double ARM_MOTOR_KFF = 0.0;
-    public static final double ARM_MOTOR_KS = 0.05;
+    public static final double ARM_MOTOR_KS = 0.1;
     public static final int ARM_MOTOR_CURRENT_LIMIT = 40;
     // Sim constants
-    public static final double GEARING = 1;
+    public static final double GEARING = 1.0 / 1.125;
     public static final double LENGTH = Units.inchesToMeters(22.9);
     public static final double MOI =
         SingleJointedArmSim.estimateMOI(ArmConstants.LENGTH, Units.lbsToKilograms(5.3754589));
@@ -85,8 +85,8 @@ public final class Constants {
     public static final int ELEVATOR_MOTOR_ID1 = 42;
     public static final int ELEVATOR_MOTOR_ID2 = 45;
     public static final int ELEVATOR_MOTOR_CURRENT_LIMIT = 20;
-    public static final int LASERCAN_ID = -1;
-    public static final double ELEVATOR_MOTOR_kP = 100.0;
+    public static final int LASERCAN_ID = 50;
+    public static final double ELEVATOR_MOTOR_kP = 1;
     public static final double ELEVATOR_MOTOR_kI = 0.0;
     public static final double ELEVATOR_MOTOR_kD = 0.0;
     public static final double ELEVATOR_MOTOR_kG = 0.0;

@@ -4,7 +4,6 @@ import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import frc.robot.Constants.EndEffectorConstants;
 import frc.robot.generated.TunerConstants;
@@ -36,7 +35,6 @@ public interface EndEffectorIO {
     // TODO requres certain canges - remember
     // IF NOT CHANGED WILL NOT WORK
     // mfw i need to do canges 🤯
-    config.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
     config.Slot0.kP = EndEffectorConstants.EFFECTOR_KP;
     config.Slot0.kI = EndEffectorConstants.EFFECTOR_KI;
     config.Slot0.kD = EndEffectorConstants.EFFECTOR_KD;
