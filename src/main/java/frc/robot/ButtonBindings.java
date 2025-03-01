@@ -56,10 +56,10 @@ public class ButtonBindings {
             led,
             arm);
 
-    setUpFunctionBindings();
-    setUpButtonMappings();
-    setUpButtonBindings();
-    connectButtonToFunction();
+    // setUpFunctionBindings();
+    // setUpButtonMappings();
+    // setUpButtonBindings();
+    // connectButtonToFunction();
     defaultButtonBindings(); // handles any input coming from joysticks
   }
 

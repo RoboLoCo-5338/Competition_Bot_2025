@@ -21,9 +21,9 @@ public interface ElevatorIO {
           ElevatorConstants.ELEVATOR_MOTOR_ID2, TunerConstants.DrivetrainConstants.CANBusName);
 
   final PositionVoltage elevator1PositionRequest = new PositionVoltage(0.0);
-  final VelocityVoltage elevator1VelocityRequest = new VelocityVoltage(0.0);
+  final VelocityVoltage elevator1VelocityRequest = new VelocityVoltage(0);
   final PositionVoltage elevator2PositionRequest = new PositionVoltage(0.0);
-  final VelocityVoltage elevator2VelocityRequest = new VelocityVoltage(0.0);
+  final VelocityVoltage elevator2VelocityRequest = new VelocityVoltage(0);
 
   @AutoLog
   public static class ElevatorIOInputs {
@@ -118,6 +118,7 @@ public interface ElevatorIO {
   public default TalonFXConfiguration getConfiguration(int motorNum) {
     // TODO change these values
     var config = new TalonFXConfiguration();
+    config.Voltage.PeakForwardVoltage = 16;
     config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     config.Slot0.GravityType = GravityTypeValue.Elevator_Static;
     config.Slot0.kP = ElevatorConstants.ELEVATOR_MOTOR_kP;
@@ -126,10 +127,13 @@ public interface ElevatorIO {
     config.Slot0.kG = ElevatorConstants.ELEVATOR_MOTOR_kG;
     config.Slot0.kV = ElevatorConstants.ELEVATOR_MOTOR_kV;
 
+    config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
+    config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 120;
+
     var currentConfig = new CurrentLimitsConfigs();
     currentConfig.StatorCurrentLimitEnable = true;
     // CHANGE THIS VALUE OTHERWISE TORQUE MAY BE LIMITED/TOO HIGH
-    currentConfig.StatorCurrentLimit = 40;
+    currentConfig.StatorCurrentLimit = 120;
     config.CurrentLimits = currentConfig;
     if (motorNum == 2) config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     return config;
