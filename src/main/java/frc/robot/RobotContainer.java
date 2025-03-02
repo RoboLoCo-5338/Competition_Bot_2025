@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.VisionConstants;
@@ -189,7 +190,7 @@ public class RobotContainer {
     //         DriveCommands.reefStrafe(
     //             drive, () -> controller.getLeftY(), () -> controller.getLeftX()));
     controller
-        .y()
+        .povLeft()
         .onTrue(
             new InstantCommand( // I hate commands so much
                 () -> {
@@ -201,13 +202,35 @@ public class RobotContainer {
                   for (int tag : vision.getTagIds(0)) {
                     if (reefTags.contains(tag)) {
                       System.out.println(tag);
-                      DriveCommands.pathToDestination(
-                              drive, () -> new Reef(DriveCommands.Direction.Left, tag))
-                          .schedule();
+                      new SequentialCommandGroup(
+                        DriveCommands.pathToDestination(drive, () -> new Reef(DriveCommands.Direction.Left, tag))
+
+                      ).schedule();
                       return;
                     }
                   }
                 }));
+    controller
+    .povRight()
+    .onTrue(
+        new InstantCommand( // I hate commands so much
+            () -> {
+                List<Integer> reefTags =
+                    ((DriverStation.getAlliance().isPresent()
+                            && DriverStation.getAlliance().get().equals(Alliance.Red))
+                        ? Arrays.asList(6, 7, 8, 9, 10, 11)
+                        : Arrays.asList(17, 18, 19, 20, 21, 22));
+                for (int tag : vision.getTagIds(0)) {
+                if (reefTags.contains(tag)) {
+                    System.out.println(tag);
+                    new SequentialCommandGroup(
+                    DriveCommands.pathToDestination(drive, () -> new Reef(DriveCommands.Direction.Right, tag))
+
+                    ).schedule();
+                    return;
+                }
+                }
+            }));
   }
 
   /**
