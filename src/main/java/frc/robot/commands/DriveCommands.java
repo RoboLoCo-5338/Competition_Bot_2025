@@ -445,9 +445,9 @@ public class DriveCommands {
       switch (direction) {
         case Left:
           return allianceFlip(
-              new Pose2d(2.865, 4.007, new Rotation2d()) // TODO: Change this to correct pose
+              new Pose2d(2.865, 4.157, new Rotation2d()) // TODO: Change this to correcter pose
                   .rotateAround(
-                      new Translation2d(4.5, 4.03),
+                      new Translation2d(4.5, 4.03), // this is the center of the reef
                       // new Rotation2d(Math.PI));
                       VisionConstants.aprilTagLayout
                           .getTagPose(tagId)
@@ -457,7 +457,7 @@ public class DriveCommands {
                           .plus(new Rotation2d(Math.PI))));
         case Right:
           return allianceFlip(
-              new Pose2d(2.865, 4.007, new Rotation2d()) // TODO: Change this to correct pose
+              new Pose2d(2.865, 3.855, new Rotation2d()) // TODO: Change this to correcter pose
                   .rotateAround(
                       new Translation2d(4.5, 4.03),
                       // new Rotation2d(Math.PI));

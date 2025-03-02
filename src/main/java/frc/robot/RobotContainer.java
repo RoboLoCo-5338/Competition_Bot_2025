@@ -33,8 +33,6 @@ import frc.robot.subsystems.Vision.Vision;
 import frc.robot.subsystems.Vision.VisionIO;
 import frc.robot.subsystems.Vision.VisionIOPhotonVision;
 import frc.robot.subsystems.Vision.VisionIOPhotonVisionSim;
-import frc.robot.subsystems.AddressableLEDIO;
-import frc.robot.subsystems.LED;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -56,7 +54,7 @@ public class RobotContainer {
   public final Drive drive;
   private final Vision vision;
 
-  public final LED led;
+  //   public final LED led;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);

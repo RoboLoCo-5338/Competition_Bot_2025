@@ -49,14 +49,13 @@ public class LED extends SubsystemBase {
     return new RunCommand(() -> io.setLEDPattern(scrollingRainbow));
   }
 
-/**
- * Creates an InstantCommand to set an LED pattern that represents progress.
- *
- * @param progress A double value representing the progress to be displayed, 
- *                 where 0.0 means no progress and 1.0 means full progress.
- * @return An InstantCommand that applies the progress mask pattern to the LED.
- */
-
+  /**
+   * Creates an InstantCommand to set an LED pattern that represents progress.
+   *
+   * @param progress A double value representing the progress to be displayed, where 0.0 means no
+   *     progress and 1.0 means full progress.
+   * @return An InstantCommand that applies the progress mask pattern to the LED.
+   */
   public Command setProgressMaskCommand(double progress) {
     LEDPattern pattern = LEDPattern.progressMaskLayer(() -> progress);
     return new InstantCommand(() -> io.setLEDPattern(pattern));
