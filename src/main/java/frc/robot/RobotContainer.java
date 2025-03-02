@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.generated.TunerConstants;
@@ -176,6 +177,14 @@ public class RobotContainer {
     configureButtonBindings();
   }
 
+  //please bro my ears cant take the screeching no more
+  private double jankDeadband(double controllerAxis) {
+    if (Math.abs(controllerAxis) < 0.2) {
+      return 0;
+    } else {
+      return controllerAxis;
+    }
+  }
   /**
    * Use this method to define your button->command mappings. Buttons can be created by
    * instantiating a {@link GenericHID} or one of its subclasses ({@link
@@ -186,7 +195,7 @@ public class RobotContainer {
     // Default command, normal field-relative drive
 
     elevator.setDefaultCommand(
-        elevator.setElevatorVelocity(() -> -operatorController.getLeftY() * 25));
+        elevator.setElevatorVelocity(() -> jankDeadband(-operatorController.getLeftY()) * 25));
 
     operatorController
         .leftTrigger()
@@ -201,6 +210,15 @@ public class RobotContainer {
     operatorController.y().whileTrue(arm.setArmVelocity(0.2)).onFalse(arm.setArmVelocity(0));
 
     operatorController.a().whileTrue(arm.setArmVelocity(-0.2)).onFalse(arm.setArmVelocity(0));
+
+    new Trigger(() -> operatorController.getRightY() > 0.5).onTrue(groundIntake.setGroundArmVelocity(0.2)).onFalse(groundIntake.setGroundArmVelocity(0));
+    new Trigger(() -> operatorController.getRightY() < -0.5).onTrue(groundIntake.setGroundArmVelocity(-0.2)).onFalse(groundIntake.setGroundArmVelocity(0));  //might need to reverse
+
+    operatorController.rightBumper().onTrue(groundIntake.setGroundIntakeVelocity(0.4)).onFalse(groundIntake.setGroundIntakeVelocity(0));
+    operatorController.leftBumper().onTrue(groundIntake.setGroundIntakeVelocity(-0.4)).onFalse(groundIntake.setGroundIntakeVelocity(0));
+    
+    driverController.povUp().onTrue(climb.setClimbVelocity(0.4)).onFalse(climb.setClimbVelocity(0));
+    driverController.povDown().onTrue(climb.setClimbVelocity(-0.4)).onFalse(climb.setClimbVelocity(0));
 
     driverController
         .b()
