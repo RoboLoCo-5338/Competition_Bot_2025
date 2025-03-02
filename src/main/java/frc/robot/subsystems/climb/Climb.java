@@ -52,4 +52,8 @@ public class Climb extends SubsystemBase {
   public Command setClimbVelocity(double velocity) {
     return new InstantCommand(() -> climbIO.setClimbVelocity(velocity), this);
   }
+
+  public Command stopMotor() {
+    return new InstantCommand(() -> climbIO.disableMotor(), this);
+  }
 }

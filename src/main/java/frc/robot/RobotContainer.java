@@ -177,7 +177,7 @@ public class RobotContainer {
     configureButtonBindings();
   }
 
-  //please bro my ears cant take the screeching no more
+  // please bro my ears cant take the screeching no more
   private double jankDeadband(double controllerAxis) {
     if (Math.abs(controllerAxis) < 0.2) {
       return 0;
@@ -211,14 +211,28 @@ public class RobotContainer {
 
     operatorController.a().whileTrue(arm.setArmVelocity(-0.2)).onFalse(arm.setArmVelocity(0));
 
-    new Trigger(() -> operatorController.getRightY() > 0.5).onTrue(groundIntake.setGroundArmVelocity(0.2)).onFalse(groundIntake.setGroundArmVelocity(0));
-    new Trigger(() -> operatorController.getRightY() < -0.5).onTrue(groundIntake.setGroundArmVelocity(-0.2)).onFalse(groundIntake.setGroundArmVelocity(0));  //might need to reverse
+    new Trigger(() -> operatorController.getRightY() > 0.5)
+        .onTrue(groundIntake.setGroundArmVelocity(0.2))
+        .onFalse(groundIntake.setGroundArmVelocity(0));
+    new Trigger(() -> operatorController.getRightY() < -0.5)
+        .onTrue(groundIntake.setGroundArmVelocity(-0.2))
+        .onFalse(groundIntake.setGroundArmVelocity(0)); // might need to reverse
 
-    operatorController.rightBumper().onTrue(groundIntake.setGroundIntakeVelocity(0.4)).onFalse(groundIntake.setGroundIntakeVelocity(0));
-    operatorController.leftBumper().onTrue(groundIntake.setGroundIntakeVelocity(-0.4)).onFalse(groundIntake.setGroundIntakeVelocity(0));
-    
-    driverController.povUp().and(driverController.x()).onTrue(climb.setClimbVelocity(0.4)).onFalse(climb.setClimbVelocity(0));
-    driverController.povDown().onTrue(climb.setClimbVelocity(-0.4)).onFalse(climb.setClimbVelocity(0));
+    operatorController
+        .rightBumper()
+        .onTrue(groundIntake.setGroundIntakeVelocity(0.4))
+        .onFalse(groundIntake.setGroundIntakeVelocity(0));
+    operatorController
+        .leftBumper()
+        .onTrue(groundIntake.setGroundIntakeVelocity(-0.4))
+        .onFalse(groundIntake.setGroundIntakeVelocity(0));
+
+    // driverController
+    //     .povUp()
+    //     .and(driverController.x())
+    //     .onTrue(climb.setClimbVelocity(0.4))
+    //     .onFalse(climb.setClimbVelocity(0));
+    driverController.povDown().onTrue(climb.setClimbVelocity(-2.9)).onFalse(climb.stopMotor());
 
     driverController
         .b()

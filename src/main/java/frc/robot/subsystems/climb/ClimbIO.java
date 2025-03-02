@@ -72,6 +72,7 @@ public interface ClimbIO {
     config.Slot0.kI = ClimbConstants.CLIMB_kI;
     config.Slot0.kD = ClimbConstants.CLIMB_kD;
     config.Slot0.kS = ClimbConstants.CLIMB_kS;
+    config.Slot0.kV = 0.0;
 
     var currentConfig = new CurrentLimitsConfigs();
     currentConfig.StatorCurrentLimitEnable = true;
@@ -79,5 +80,9 @@ public interface ClimbIO {
     currentConfig.StatorCurrentLimit = ClimbConstants.CLIMB_MOTOR_CURRENT_LIMIT;
     config.CurrentLimits = currentConfig;
     return config;
+  }
+
+  public default void disableMotor() {
+    climbMotor.stopMotor();
   }
 }
