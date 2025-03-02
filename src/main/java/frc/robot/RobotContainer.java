@@ -217,7 +217,7 @@ public class RobotContainer {
     operatorController.rightBumper().onTrue(groundIntake.setGroundIntakeVelocity(0.4)).onFalse(groundIntake.setGroundIntakeVelocity(0));
     operatorController.leftBumper().onTrue(groundIntake.setGroundIntakeVelocity(-0.4)).onFalse(groundIntake.setGroundIntakeVelocity(0));
     
-    driverController.povUp().onTrue(climb.setClimbVelocity(0.4)).onFalse(climb.setClimbVelocity(0));
+    driverController.povUp().and(driverController.x()).onTrue(climb.setClimbVelocity(0.4)).onFalse(climb.setClimbVelocity(0));
     driverController.povDown().onTrue(climb.setClimbVelocity(-0.4)).onFalse(climb.setClimbVelocity(0));
 
     driverController
