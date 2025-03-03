@@ -190,7 +190,27 @@ public class RobotContainer {
     //         DriveCommands.reefStrafe(
     //             drive, () -> controller.getLeftY(), () -> controller.getLeftX()));
     controller
-        .povLeft()
+        .y()
+        .onTrue(
+            new InstantCommand( // I hate commands so much
+                () -> {
+                  List<Integer> reefTags =
+                      ((DriverStation.getAlliance().isPresent()
+                              && DriverStation.getAlliance().get().equals(Alliance.Red))
+                          ? Arrays.asList(6, 7, 8, 9, 10, 11)
+                          : Arrays.asList(17, 18, 19, 20, 21, 22));
+                  for (int tag : vision.getTagIds(0)) {
+                    if (reefTags.contains(tag)) {
+                      new SequentialCommandGroup(
+                              DriveCommands.pathToDestination(
+                                  drive, () -> new Reef(DriveCommands.Direction.Left, tag)))
+                          .schedule();
+                      return;
+                    }
+                  }
+                }));
+    controller
+        .povRight()
         .onTrue(
             new InstantCommand( // I hate commands so much
                 () -> {
@@ -203,34 +223,13 @@ public class RobotContainer {
                     if (reefTags.contains(tag)) {
                       System.out.println(tag);
                       new SequentialCommandGroup(
-                        DriveCommands.pathToDestination(drive, () -> new Reef(DriveCommands.Direction.Left, tag))
-
-                      ).schedule();
+                              DriveCommands.pathToDestination(
+                                  drive, () -> new Reef(DriveCommands.Direction.Right, tag)))
+                          .schedule();
                       return;
                     }
                   }
                 }));
-    controller
-    .povRight()
-    .onTrue(
-        new InstantCommand( // I hate commands so much
-            () -> {
-                List<Integer> reefTags =
-                    ((DriverStation.getAlliance().isPresent()
-                            && DriverStation.getAlliance().get().equals(Alliance.Red))
-                        ? Arrays.asList(6, 7, 8, 9, 10, 11)
-                        : Arrays.asList(17, 18, 19, 20, 21, 22));
-                for (int tag : vision.getTagIds(0)) {
-                if (reefTags.contains(tag)) {
-                    System.out.println(tag);
-                    new SequentialCommandGroup(
-                    DriveCommands.pathToDestination(drive, () -> new Reef(DriveCommands.Direction.Right, tag))
-
-                    ).schedule();
-                    return;
-                }
-                }
-            }));
   }
 
   /**

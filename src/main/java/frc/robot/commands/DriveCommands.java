@@ -33,6 +33,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.drive.Drive;
 import java.text.DecimalFormat;
@@ -334,14 +335,39 @@ public class DriveCommands {
    */
   public static Command pathToDestination(Drive drive, Supplier<PathDestination> destination) {
     Pose2d targetPose = destination.get().getTargetPosition();
-    Logger.recordOutput("PathTedt", targetPose);
-    PathConstraints constraints =
-        new PathConstraints(
-            drive.getMaxLinearSpeedMetersPerSec(),
-            drive.getMaxAngularSpeedRadPerSec(),
-            ANGLE_MAX_VELOCITY,
-            ANGLE_MAX_ACCELERATION);
-    return AutoBuilder.pathfindToPose(targetPose, constraints);
+    Logger.recordOutput("Path to Destination", targetPose);
+    boolean isFlipped =
+        DriverStation.getAlliance().isPresent()
+            && DriverStation.getAlliance().get() == Alliance.Red;
+    if (Math.sqrt(
+            targetPose.minus(drive.getPose()).getX() * targetPose.minus(drive.getPose()).getX()
+                + targetPose.minus(drive.getPose()).getY()
+                    * targetPose.minus(drive.getPose()).getY())
+        > 1000) {
+      PathConstraints constraints =
+          new PathConstraints(
+              drive.getMaxLinearSpeedMetersPerSec(),
+              drive.getMaxAngularSpeedRadPerSec(),
+              ANGLE_MAX_VELOCITY,
+              ANGLE_MAX_ACCELERATION);
+      return AutoBuilder.pathfindToPose(targetPose, constraints);
+    } else {
+      return new RunCommand(
+              () -> {
+                ChassisSpeeds velocity =
+                    drive.driveController.calculate(
+                        drive.getPose(), targetPose, 5, targetPose.getRotation());
+                System.out.println(velocity);
+                drive.runVelocity(
+                    ChassisSpeeds.fromFieldRelativeSpeeds(
+                        velocity,
+                        isFlipped
+                            ? drive.getRotation().plus(new Rotation2d(Math.PI))
+                            : drive.getRotation()));
+              },
+              drive)
+          .until(() -> drive.driveController.atReference());
+    }
   }
 
   /**

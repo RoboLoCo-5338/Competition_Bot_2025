@@ -27,9 +27,11 @@ import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.controller.HolonomicDriveController;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Twist2d;
@@ -40,6 +42,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -51,7 +54,6 @@ import frc.robot.Constants;
 import frc.robot.Constants.Mode;
 import frc.robot.generated.TunerConstants;
 import frc.robot.util.LocalADStarAK;
-import frc.robot.util.NetworkTablePublisher;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import org.littletonrobotics.junction.AutoLogOutput;
@@ -108,6 +110,22 @@ public class Drive extends SubsystemBase {
       };
   private SwerveDrivePoseEstimator poseEstimator =
       new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, new Pose2d());
+  public HolonomicDriveController driveController =
+      new HolonomicDriveController(
+          new PIDController(
+              TunerConstants.driveGains.kP,
+              TunerConstants.driveGains.kI,
+              TunerConstants.driveGains.kD),
+          new PIDController(
+              TunerConstants.driveGains.kP,
+              TunerConstants.driveGains.kI,
+              TunerConstants.driveGains.kD),
+          new ProfiledPIDController(
+              TunerConstants.steerGains.kP,
+              TunerConstants.steerGains.kI,
+              TunerConstants.steerGains.kD,
+              new TrapezoidProfile.Constraints(
+                  getMaxAngularSpeedRadPerSec(), 2))); // TODO: update angle max acceleration
 
   public Drive(
       GyroIO gyroIO,
@@ -170,8 +188,7 @@ public class Drive extends SubsystemBase {
       module.periodic();
     }
     odometryLock.unlock();
-    NetworkTablePublisher.publishToNetworkTable(
-        "Position", poseEstimator.getEstimatedPosition(), Pose2d.struct);
+
     // Stop moving when disabled
     if (DriverStation.isDisabled()) {
       for (var module : modules) {
@@ -328,7 +345,6 @@ public class Drive extends SubsystemBase {
   /** Returns the current odometry pose. */
   @AutoLogOutput(key = "Odometry/Robot")
   public Pose2d getPose() {
-    Logger.recordOutput("ZeroedComponentPoses", new Pose3d[] {new Pose3d()});
     return poseEstimator.getEstimatedPosition();
   }
 
@@ -354,11 +370,6 @@ public class Drive extends SubsystemBase {
   /** Returns the maximum linear speed in meters per sec. */
   public double getMaxLinearSpeedMetersPerSec() {
     return TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
-  }
-
-  // TODO: make this correct
-  public double getMaxLinearAcceleration() {
-    return 3;
   }
 
   /** Returns the maximum angular speed in radians per sec. */
