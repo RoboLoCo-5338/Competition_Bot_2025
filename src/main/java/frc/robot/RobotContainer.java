@@ -182,9 +182,12 @@ public class RobotContainer {
     if (Math.abs(controllerAxis) < 0.2) {
       return 0;
     } else {
-      return controllerAxis;
+      return ( 1/ (1-0.2)) * (controllerAxis + (Math.signum(controllerAxis) * 0.2));
     }
   }
+
+
+
   /**
    * Use this method to define your button->command mappings. Buttons can be created by
    * instantiating a {@link GenericHID} or one of its subclasses ({@link
