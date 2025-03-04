@@ -342,7 +342,7 @@ public class DriveCommands {
             targetPose.minus(drive.getPose()).getX() * targetPose.minus(drive.getPose()).getX()
                 + targetPose.minus(drive.getPose()).getY()
                     * targetPose.minus(drive.getPose()).getY())
-        > 1000) {
+        > 0.5) {
       PathConstraints constraints =
           new PathConstraints(
               drive.getMaxLinearSpeedMetersPerSec(),
