@@ -33,7 +33,6 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.drive.Drive;
 import java.text.DecimalFormat;
@@ -347,26 +346,39 @@ public class DriveCommands {
       PathConstraints constraints =
           new PathConstraints(
               drive.getMaxLinearSpeedMetersPerSec(),
-              drive.getMaxAngularSpeedRadPerSec(),
+              3, // TODO:replace with a constant or smth
               ANGLE_MAX_VELOCITY,
               ANGLE_MAX_ACCELERATION);
       return AutoBuilder.pathfindToPose(targetPose, constraints);
     } else {
-      return new RunCommand(
-              () -> {
-                ChassisSpeeds velocity =
-                    drive.driveController.calculate(
-                        drive.getPose(), targetPose, 5, targetPose.getRotation());
-                System.out.println(velocity);
-                drive.runVelocity(
-                    ChassisSpeeds.fromFieldRelativeSpeeds(
-                        velocity,
-                        isFlipped
-                            ? drive.getRotation().plus(new Rotation2d(Math.PI))
-                            : drive.getRotation()));
-              },
-              drive)
-          .until(() -> drive.driveController.atReference());
+      return new Command() {
+        @Override
+        public void initialize() {
+          drive.autoXDriveController.reset();
+          drive.autoYDriveController.reset();
+          drive.autoTurnController.reset();
+
+          drive.autoXDriveController.setSetpoint(targetPose.getX());
+          drive.autoYDriveController.setSetpoint(targetPose.getY());
+          drive.autoTurnController.setSetpoint(targetPose.getRotation().getRadians());
+        }
+
+        @Override
+        public void execute() {
+          drive.runVelocity(
+              new ChassisSpeeds(
+                  drive.autoXDriveController.calculate(drive.getPose().getX()),
+                  drive.autoYDriveController.calculate(drive.getPose().getY()),
+                  drive.autoTurnController.calculate(drive.getPose().getRotation().getRadians())));
+        }
+
+        @Override
+        public boolean isFinished() {
+          return drive.autoXDriveController.atSetpoint()
+              && drive.autoYDriveController.atSetpoint()
+              && drive.autoTurnController.atSetpoint();
+        }
+      };
     }
   }
 
@@ -479,8 +491,7 @@ public class DriveCommands {
                           .getTagPose(tagId)
                           .get()
                           .getRotation()
-                          .toRotation2d()
-                          .plus(new Rotation2d(Math.PI))));
+                          .toRotation2d()));
         case Right:
           return allianceFlip(
               new Pose2d(2.865, 3.855, new Rotation2d()) // TODO: Change this to correcter pose
@@ -491,8 +502,7 @@ public class DriveCommands {
                           .getTagPose(tagId)
                           .get()
                           .getRotation()
-                          .toRotation2d()
-                          .plus(new Rotation2d(Math.PI))));
+                          .toRotation2d()));
         default:
           return new Pose2d();
       }
