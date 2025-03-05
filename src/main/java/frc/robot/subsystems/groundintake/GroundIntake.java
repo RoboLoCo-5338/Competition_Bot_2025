@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
+import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.Logger;
 
 public class GroundIntake extends SubsystemBase {
@@ -43,7 +44,7 @@ public class GroundIntake extends SubsystemBase {
     return new InstantCommand(() -> io.setArmPosition(position), this);
   }
 
-  public Command setGroundArmVelocity(double velocity) {
-    return new InstantCommand(() -> io.setArmVelocity(velocity), this);
+  public Command setGroundArmVelocity(DoubleSupplier velocity) {
+    return new InstantCommand(() -> io.setArmVelocity(velocity.getAsDouble()), this);
   }
 }

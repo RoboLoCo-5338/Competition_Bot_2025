@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.ElevatorConstants;
@@ -47,7 +48,7 @@ public class Elevator extends SubsystemBase {
    * @return A command that sets the elevator's position.
    */
   public Command setElevatorPosition(double position) {
-    return new InstantCommand(() -> io.setElevatorPosition(position), this);
+    return new RunCommand(() -> io.setElevatorPosition(position), this);
   }
 
   /**

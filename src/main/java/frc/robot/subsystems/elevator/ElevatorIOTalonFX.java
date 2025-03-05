@@ -69,10 +69,10 @@ public class ElevatorIOTalonFX implements ElevatorIO {
     lc = new LaserCan(ElevatorConstants.LASERCAN_ID);
     try {
       lc.setRangingMode(LaserCan.RangingMode.SHORT);
-      lc.setRegionOfInterest(new LaserCan.RegionOfInterest(8, 8, 16, 16));
-      lc.setTimingBudget(LaserCan.TimingBudget.TIMING_BUDGET_33MS);
+      // lc.setRegionOfInterest(new LaserCan.RegionOfInterest(8, 8, 16, 16));
+      // lc.setTimingBudget(LaserCan.TimingBudget.TIMING_BUDGET_33MS);
     } catch (ConfigurationFailedException e) {
-      // throw new Error("Guys laser can doesn't work" + e.getMessage());
+
       System.out.println("Configuration failed! " + e);
     }
   }
@@ -102,15 +102,18 @@ public class ElevatorIOTalonFX implements ElevatorIO {
 
   @Override
   public void setElevatorPosition(double position) {
-    elevatorMotor1.setControl(
-        elevator1PositionRequest.withPosition(position / ElevatorConstants.METERS_PER_ROTATION));
-    elevatorMotor2.setControl(
-        elevator2PositionRequest.withPosition(position / ElevatorConstants.METERS_PER_ROTATION));
+    elevator1PositionRequest.FeedForward = ElevatorConstants.ELEVATOR_FEEDFORWARD;
+    elevator2PositionRequest.FeedForward = ElevatorConstants.ELEVATOR_FEEDFORWARD;
+    elevator1PositionRequest.Velocity = 5;
+    elevator2PositionRequest.Velocity = 5;
+    elevator1PositionRequest.OverrideBrakeDurNeutral = true;
+    elevator2PositionRequest.OverrideBrakeDurNeutral = true;
+    elevatorMotor1.setControl(elevator1PositionRequest.withPosition(position));
+    elevatorMotor2.setControl(elevator2PositionRequest.withPosition(position));
   }
 
   @Override
   public void setElevatorVelocity(double velocity) {
-    System.out.println(velocity);
     elevator1VelocityRequest.FeedForward = ElevatorConstants.ELEVATOR_FEEDFORWARD;
     elevator2VelocityRequest.FeedForward = ElevatorConstants.ELEVATOR_FEEDFORWARD;
     elevatorMotor1.setControl(elevator1VelocityRequest.withVelocity(velocity));
@@ -120,7 +123,6 @@ public class ElevatorIOTalonFX implements ElevatorIO {
   @Override
   public int getLaserCanMeasurement() {
     Measurement m = lc.getMeasurement();
-    // System.out.println(m.status);
     if (m != null && m.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
       return m.distance_mm;
     } else {

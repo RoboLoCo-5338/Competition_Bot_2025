@@ -127,8 +127,8 @@ public interface ElevatorIO {
     config.Slot0.kG = ElevatorConstants.ELEVATOR_MOTOR_kG;
     config.Slot0.kV = ElevatorConstants.ELEVATOR_MOTOR_kV;
 
-    config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
-    config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 120;
+    // config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
+    // config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 120;
 
     var currentConfig = new CurrentLimitsConfigs();
     currentConfig.StatorCurrentLimitEnable = true;

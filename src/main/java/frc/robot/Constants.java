@@ -87,10 +87,10 @@ public final class Constants {
     public static final int ELEVATOR_MOTOR_CURRENT_LIMIT = 40;
     public static final int LASERCAN_ID = 50;
     public static final double ELEVATOR_FEEDFORWARD = 0.0;
-    public static final double ELEVATOR_MOTOR_kP = 0.0; // 0.3
+    public static final double ELEVATOR_MOTOR_kP = 0.1; // 0.3
     public static final double ELEVATOR_MOTOR_kI = 0.0;
     public static final double ELEVATOR_MOTOR_kD = 0.00;
-    public static final double ELEVATOR_MOTOR_kG = 0.0;
+    public static final double ELEVATOR_MOTOR_kG = 0.4; // 0.5
     public static final double ELEVATOR_MOTOR_kV = 0.0;
     public static final double LASERCAN_TO_ELEVATOR_POSITION = 1.0;
     public static final double ELEVATOR_EPSILON = 1e-2;
@@ -117,7 +117,7 @@ public final class Constants {
     public static final double EFFECTOR_KS = 0.0;
     public static final double EFFECTOR_KV = 0.0;
     public static final double EFFECTOR_KFF = 0.0;
-    public static final double EFFECTOR_KG = 0.0;
+    public static final double EFFECTOR_KG = 0.05;
     public static final int LASERCAN_1ID = -1;
     public static final int LASERCAN_2ID = -1;
     // Sim Constants
@@ -130,7 +130,7 @@ public final class Constants {
       // TODO change this
       public static final int ARM_CANID = 40; // CHANGED FOR TESTING
       public static final int ARM_CURRENT_LIMIT = 20;
-      public static final double ARM_KP = 0;
+      public static final double ARM_KP = 0.05;
       public static final double ARM_KI = 0;
       public static final double ARM_KD = 0;
       public static final double ARM_KFF = 0;
@@ -150,8 +150,8 @@ public final class Constants {
 
     public static final class IntakeConstants {
       public static final int INTAKE_CANID = 41; // CHANGED FOR TESTING
-      public static final int INTAKE_CURRENT_LIMIT = 20;
-      public static final double INTAKE_KP = 0.01;
+      public static final int INTAKE_CURRENT_LIMIT = 60;
+      public static final double INTAKE_KP = 0.00;
       public static final double INTAKE_KI = 0;
       public static final double INTAKE_KD = 0;
       public static final double INTAKE_KFF = 0;
