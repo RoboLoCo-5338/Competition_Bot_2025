@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -30,6 +31,14 @@ import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveCommands.Reef;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.ArmIO;
+import frc.robot.subsystems.arm.ArmIOSim;
+import frc.robot.subsystems.arm.ArmIOSpark;
+import frc.robot.subsystems.climb.Climb;
+import frc.robot.subsystems.climb.ClimbIO;
+import frc.robot.subsystems.climb.ClimbIOSim;
+import frc.robot.subsystems.climb.ClimbIOTalonFX;
 import frc.robot.subsystems.Vision.Vision;
 import frc.robot.subsystems.Vision.VisionIO;
 import frc.robot.subsystems.Vision.VisionIOPhotonVision;
@@ -40,6 +49,22 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
+import frc.robot.subsystems.elevator.Elevator;
+import frc.robot.subsystems.elevator.ElevatorIO;
+import frc.robot.subsystems.elevator.ElevatorIOSim;
+import frc.robot.subsystems.elevator.ElevatorIOTalonFX;
+import frc.robot.subsystems.endeffector.EndEffector;
+import frc.robot.subsystems.endeffector.EndEffectorIO;
+import frc.robot.subsystems.endeffector.EndEffectorIOSim;
+import frc.robot.subsystems.endeffector.EndEffectorIOTalonFX;
+import frc.robot.subsystems.groundintake.GroundIntake;
+import frc.robot.subsystems.groundintake.GroundIntakeIO;
+import frc.robot.subsystems.groundintake.GroundIntakeIOSim;
+import frc.robot.subsystems.groundintake.GroundIntakeIOSpark;
+import frc.robot.subsystems.led.AddressableLEDIO;
+import frc.robot.subsystems.led.LED;
+import frc.robot.subsystems.led.LEDIO;
+import frc.robot.subsystems.led.LEDIOSim;
 import java.util.Arrays;
 import java.util.List;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -55,10 +80,25 @@ public class RobotContainer {
   public final Drive drive;
   private final Vision vision;
 
-  //   public final LED led;
+  private final LED led;
+
+  private final Elevator elevator;
+
+  private final GroundIntake groundIntake;
+
+  private final EndEffector endEffector;
+
+  private final ButtonBindings ButtonBindingsController;
+
+  private final Climb climb;
+
+  private final Arm arm;
+
+  public CommandXboxController driverController = new CommandXboxController(0);
+
+  public CommandXboxController operatorController = new CommandXboxController(1);
 
   // Controller
-  private final CommandXboxController controller = new CommandXboxController(0);
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -83,6 +123,14 @@ public class RobotContainer {
                 // new VisionIOPhotonVision(VisionConstants.camera1Name,
                 // VisionConstants.robotToCamera1)
                 );
+        groundIntake = new GroundIntake(new GroundIntakeIOSpark());
+        endEffector = new EndEffector(new EndEffectorIOTalonFX());
+        elevator = new Elevator(new ElevatorIOTalonFX());
+        climb = new Climb(new ClimbIOTalonFX());
+        arm = new Arm(new ArmIOSpark());
+        ButtonBindingsController =
+            new ButtonBindings(drive, led, elevator, groundIntake, endEffector, climb, arm);
+
         break;
 
       case SIM:
@@ -94,6 +142,12 @@ public class RobotContainer {
                 new ModuleIOSim(TunerConstants.FrontRight),
                 new ModuleIOSim(TunerConstants.BackLeft),
                 new ModuleIOSim(TunerConstants.BackRight));
+        led = new LED(new LEDIOSim());
+        groundIntake = new GroundIntake(new GroundIntakeIOSim());
+        endEffector = new EndEffector(new EndEffectorIOSim());
+        elevator = new Elevator(new ElevatorIOSim());
+        climb = new Climb(new ClimbIOSim());
+        arm = new Arm(new ArmIOSim(((ElevatorIOSim) elevator.getIO()).getLigamentEnd()));
         vision =
             new Vision(
                 drive::addVisionMeasurement,
@@ -102,6 +156,8 @@ public class RobotContainer {
                 // new VisionIOPhotonVisionSim(VisionConstants.camera1Name,
                 // VisionConstants.robotToCamera1, drive::getPose)
                 );
+        ButtonBindingsController =
+            new ButtonBindings(drive, led, elevator, groundIntake, endEffector, climb, arm);
         break;
 
       default:
@@ -113,6 +169,15 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {},
                 new ModuleIO() {});
+
+        led = new LED(new LEDIO() {});
+        groundIntake = new GroundIntake(new GroundIntakeIO() {});
+        endEffector = new EndEffector(new EndEffectorIO() {});
+        elevator = new Elevator(new ElevatorIO() {});
+        climb = new Climb(new ClimbIO() {});
+        arm = new Arm(new ArmIO() {});
+        ButtonBindingsController =
+            new ButtonBindings(drive, led, elevator, groundIntake, endEffector, climb, arm);
         vision =
             new Vision(
                 drive::addVisionMeasurement, new VisionIO() {}
@@ -144,6 +209,14 @@ public class RobotContainer {
     configureButtonBindings();
   }
 
+  private double deadband(double controllerAxis) {
+    if (Math.abs(controllerAxis) < 0.2) {
+      return 0;
+    } else {
+      return (1 / (1 - 0.2)) * (controllerAxis + (Math.signum(controllerAxis) * 0.2));
+    }
+  }
+
   /**
    * Use this method to define your button->command mappings. Buttons can be created by
    * instantiating a {@link GenericHID} or one of its subclasses ({@link
@@ -152,28 +225,53 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Default command, normal field-relative drive
-    drive.setDefaultCommand(
-        DriveCommands.joystickDrive(
-            drive,
-            () -> -controller.getLeftY(),
-            () -> -controller.getLeftX(),
-            () -> -controller.getRightX()));
 
-    // Lock to 0° when A button is held
-    controller
-        .a()
-        .whileTrue(
-            DriveCommands.joystickDriveAtAngle(
-                drive,
-                () -> controller.getLeftY(),
-                () -> controller.getLeftX(),
-                () -> new Rotation2d()));
+    elevator.setDefaultCommand(
+        elevator.setElevatorVelocity(() -> deadband(-operatorController.getLeftY()) * 25));
 
-    // Switch to X pattern when X button is pressed
-    controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
+    operatorController
+        .leftTrigger()
+        .whileTrue(endEffector.setEndEffectorVelocity(60))
+        .onFalse(endEffector.setEndEffectorVelocity(0));
 
-    // Reset gyro to 0° when B button is pressed
-    controller
+    operatorController
+        .rightTrigger()
+        .whileTrue(endEffector.setEndEffectorVelocity(-60))
+        .onFalse(endEffector.setEndEffectorVelocity(0));
+
+    operatorController
+        .rightBumper()
+        .whileTrue(arm.setArmVelocity(0.5))
+        .onFalse(arm.setArmVelocity(0));
+
+    operatorController
+        .leftBumper()
+        .whileTrue(arm.setArmVelocity(-0.5))
+        .onFalse(arm.setArmVelocity(0));
+
+    // operatorController
+    //     .a()
+    //     .whileTrue(elevator.setElevatorPosition(57))
+    //     .onFalse(elevator.setElevatorVelocity(() -> 0.0));
+
+    // operatorController
+    //     .b()
+    //     .whileTrue(elevator.setElevatorPosition(102))
+    //     .onFalse(elevator.setElevatorVelocity(() -> 0.0));
+
+    // operatorController
+    //     .y()
+    //     .whileTrue(elevator.setElevatorPosition(93))
+    //     .onFalse(elevator.setElevatorVelocity(() -> 0.0));
+    // // driverController
+
+    //     .povUp()
+    //     .and(driverController.x())
+    //     .onTrue(climb.setClimbVelocity(0.4))
+    //     .onFalse(climb.setClimbVelocity(0));
+    driverController.povDown().onTrue(climb.setClimbVelocity(-2.9)).onFalse(climb.stopMotor());
+
+    driverController
         .b()
         .onTrue(
             Commands.runOnce(
@@ -182,6 +280,7 @@ public class RobotContainer {
                             new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
                     drive)
                 .ignoringDisable(true));
+  }
 
     // Turns to tag and locks rotation
     // controller
@@ -189,7 +288,7 @@ public class RobotContainer {
     //     .whileTrue(
     //         DriveCommands.reefStrafe(
     //             drive, () -> controller.getLeftY(), () -> controller.getLeftX()));
-    controller
+    driverController
         .y()
         .onTrue(
             new InstantCommand( // I hate commands so much
@@ -239,4 +338,12 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     return autoChooser.get();
   }
+
+  /**
+   * Maps a joystick input to a speed using an exponential function, which gives more precise
+   * control at lower speeds.
+   *
+   * @param x the input from the joystick
+   * @return the output speed
+   */
 }
