@@ -108,11 +108,9 @@ public class Drive extends SubsystemBase {
   private SwerveDrivePoseEstimator poseEstimator =
       new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, new Pose2d());
   public PIDController autoXDriveController =
-      new PIDController(
-          TunerConstants.driveGains.kP, TunerConstants.driveGains.kI, TunerConstants.driveGains.kD);
+      new PIDController(1, 0.1, TunerConstants.driveGains.kD);
   public PIDController autoYDriveController =
-      new PIDController(
-          TunerConstants.driveGains.kP, TunerConstants.driveGains.kI, TunerConstants.driveGains.kD);
+      new PIDController(1, 0.1, TunerConstants.driveGains.kD);
   public PIDController autoTurnController =
       new PIDController(
           TunerConstants.steerGains.kP,
@@ -169,6 +167,7 @@ public class Drive extends SubsystemBase {
                 (state) -> Logger.recordOutput("Drive/SysIdState", state.toString())),
             new SysIdRoutine.Mechanism(
                 (voltage) -> runCharacterization(voltage.in(Volts)), null, this));
+    autoTurnController.enableContinuousInput(-Math.PI, Math.PI);
   }
 
   @Override

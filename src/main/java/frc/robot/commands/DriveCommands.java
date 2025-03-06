@@ -342,7 +342,7 @@ public class DriveCommands {
             targetPose.minus(drive.getPose()).getX() * targetPose.minus(drive.getPose()).getX()
                 + targetPose.minus(drive.getPose()).getY()
                     * targetPose.minus(drive.getPose()).getY())
-        > 0.5) {
+        > 1) {
       PathConstraints constraints =
           new PathConstraints(
               drive.getMaxLinearSpeedMetersPerSec(),
@@ -366,10 +366,13 @@ public class DriveCommands {
         @Override
         public void execute() {
           drive.runVelocity(
-              new ChassisSpeeds(
-                  drive.autoXDriveController.calculate(drive.getPose().getX()),
-                  drive.autoYDriveController.calculate(drive.getPose().getY()),
-                  drive.autoTurnController.calculate(drive.getPose().getRotation().getRadians())));
+              ChassisSpeeds.fromFieldRelativeSpeeds(
+                  new ChassisSpeeds(
+                      drive.autoXDriveController.calculate(drive.getPose().getX()),
+                      drive.autoYDriveController.calculate(drive.getPose().getY()),
+                      drive.autoTurnController.calculate(
+                          drive.getPose().getRotation().getRadians())),
+                  drive.getPose().getRotation()));
         }
 
         @Override
@@ -377,6 +380,11 @@ public class DriveCommands {
           return drive.autoXDriveController.atSetpoint()
               && drive.autoYDriveController.atSetpoint()
               && drive.autoTurnController.atSetpoint();
+        }
+
+        @Override
+        public void end(boolean interrupted) {
+          System.out.println("done");
         }
       };
     }

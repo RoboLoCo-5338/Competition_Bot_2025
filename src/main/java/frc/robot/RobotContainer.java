@@ -200,12 +200,12 @@ public class RobotContainer {
                           ? Arrays.asList(6, 7, 8, 9, 10, 11)
                           : Arrays.asList(17, 18, 19, 20, 21, 22));
                   for (int tag : vision.getTagIds(0)) {
-                  if (reefTags.contains(tag)) {
-                    new SequentialCommandGroup(
-                            DriveCommands.pathToDestination(
-                                drive, () -> new Reef(DriveCommands.Direction.Left, tag)))
-                        .schedule();
-                  }
+                    if (reefTags.contains(tag)) {
+                      new SequentialCommandGroup(
+                              DriveCommands.pathToDestination(
+                                  drive, () -> new Reef(DriveCommands.Direction.Left, tag)))
+                          .schedule();
+                    }
                   }
                 }));
     controller
