@@ -42,6 +42,23 @@ public final class Constants {
     REPLAY
   }
 
+  public static final class PresetConstants{
+    public static final double elevatorl2 = 0.0;
+    public static final double elevatorl3 = 0.0;
+    public static final double elevatorl4 = 0.0;
+    public static final double elevatorNet = 0.0;
+    public static final double elevatorl3Algae = 0.0;
+
+    public static final double arml2 = 0.0;
+    public static final double arml3 = 0.0;
+    public static final double arml4 = 0.0;
+    public static final double armNet = 0.0;
+    public static final double arml3Algae = 0.0;
+
+    public static final double elevatorIntake = 0.0;
+    public static final double armIntake = 0.0;
+  }
+
   public static final class ArmConstants {
     public static final int ARM_MOTOR_ID = 44;
     public static final double ARM_MOTOR_KP = 3.5;
@@ -86,12 +103,22 @@ public final class Constants {
     public static final int ELEVATOR_MOTOR_ID2 = 45;
     public static final int ELEVATOR_MOTOR_CURRENT_LIMIT = 40;
     public static final int LASERCAN_ID = 50;
-    public static final double ELEVATOR_FEEDFORWARD = 0.0;
-    public static final double ELEVATOR_MOTOR_kP = 0.1; // 0.3
-    public static final double ELEVATOR_MOTOR_kI = 0.0;
-    public static final double ELEVATOR_MOTOR_kD = 0.00;
-    public static final double ELEVATOR_MOTOR_kG = 0.4; // 0.5
-    public static final double ELEVATOR_MOTOR_kV = 0.0;
+    public static final class ElevatorPositionConstants{
+      public static final double ELEVATOR_FEEDFORWARD = 0.0;
+      public static final double ELEVATOR_MOTOR_kP = 0.01; // 0.3
+      public static final double ELEVATOR_MOTOR_kI = 0.0;
+      public static final double ELEVATOR_MOTOR_kD = 0.00;
+      public static final double ELEVATOR_MOTOR_kG = 0.4; // 0.5
+      public static final double ELEVATOR_MOTOR_kV = 0.0;
+    }
+    public static final class ElevatorVelocityConstants{
+      public static final double ELEVATOR_FEEDFORWARD = 0.0;
+      public static final double ELEVATOR_MOTOR_kP = 0.2; // 0.3
+      public static final double ELEVATOR_MOTOR_kI = 0.0;
+      public static final double ELEVATOR_MOTOR_kD = 0.00;
+      public static final double ELEVATOR_MOTOR_kG = 0.4; // 0.5
+      public static final double ELEVATOR_MOTOR_kV = 0.0;
+    }
     public static final double LASERCAN_TO_ELEVATOR_POSITION = 1.0;
     public static final double ELEVATOR_EPSILON = 1e-2;
     public static final double ELEVATOR_kP_LASERCAN = 0.0;
