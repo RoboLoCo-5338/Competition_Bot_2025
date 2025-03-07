@@ -20,7 +20,6 @@ import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
-import frc.robot.Constants.GroundIntakeConstants;
 
 /**
  * This class defines the runtime mode used by AdvantageKit. The mode is always "real" when running
@@ -64,13 +63,13 @@ public final class Constants {
   public static final class ArmConstants {
     public static final int ARM_MOTOR_ID = 44;
     public static final String PREFERENCES_ID = "arm";
-    public static double ARM_MOTOR_KP = Preferences.getDouble(PREFERENCES_ID + "kP", 0.0);
+    public static double ARM_MOTOR_KP = Preferences.getDouble(PREFERENCES_ID + "kP", 3.5);
     public static double ARM_MOTOR_KI = Preferences.getDouble(PREFERENCES_ID + "kI", 0.0);
     public static double ARM_MOTOR_KD = Preferences.getDouble(PREFERENCES_ID + "kD", 0.0);
     public static double ARM_MOTOR_KG = Preferences.getDouble(PREFERENCES_ID + "kG", 0.0);
     public static double ARM_MOTOR_KV = Preferences.getDouble(PREFERENCES_ID + "kV", 0.0);
     public static double ARM_MOTOR_KFF = Preferences.getDouble(PREFERENCES_ID + "kFF", 0.0);
-    public static double ARM_MOTOR_KS = Preferences.getDouble(PREFERENCES_ID + "kS", 0.0);
+    public static double ARM_MOTOR_KS = Preferences.getDouble(PREFERENCES_ID + "kS", 0.1);
     public static final int ARM_MOTOR_CURRENT_LIMIT = 40;
     // Sim constants
     public static final double GEARING = 1.0 / 1.125;
@@ -82,13 +81,13 @@ public final class Constants {
     public static final double STARTING_ANGLE = Units.degreesToRadians(-90);
 
     public static void reloadConstants() {
-      ARM_MOTOR_KP = Preferences.getDouble(PREFERENCES_ID + "kP", 0.0);
+      ARM_MOTOR_KP = Preferences.getDouble(PREFERENCES_ID + "kP", 3.5);
       ARM_MOTOR_KI = Preferences.getDouble(PREFERENCES_ID + "kI", 0.0);
       ARM_MOTOR_KD = Preferences.getDouble(PREFERENCES_ID + "kD", 0.0);
       ARM_MOTOR_KG = Preferences.getDouble(PREFERENCES_ID + "kG", 0.0);
       ARM_MOTOR_KV = Preferences.getDouble(PREFERENCES_ID + "kV", 0.0);
       ARM_MOTOR_KFF = Preferences.getDouble(PREFERENCES_ID + "kFF", 0.0);
-      ARM_MOTOR_KS = Preferences.getDouble(PREFERENCES_ID + "kS", 0.0);
+      ARM_MOTOR_KS = Preferences.getDouble(PREFERENCES_ID + "kS", 0.1);
     }
   }
 
@@ -96,8 +95,8 @@ public final class Constants {
     public static final int CLIMB_MOTOR_ID = 46;
     public static final String PREFERENCES_ID = "climb";
     public static final int CLIMB_MOTOR_CURRENT_LIMIT = 120;
-    public static double CLIMB_kP = Preferences.getDouble(PREFERENCES_ID + "kP", 0.0);
-    public static double CLIMB_kI = Preferences.getDouble(PREFERENCES_ID + "kI", 0.0);
+    public static double CLIMB_kP = Preferences.getDouble(PREFERENCES_ID + "kP", 0.5);
+    public static double CLIMB_kI = Preferences.getDouble(PREFERENCES_ID + "kI", 0.2);
     public static double CLIMB_kD = Preferences.getDouble(PREFERENCES_ID + "kD", 0.0);
     public static double CLIMB_kS = Preferences.getDouble(PREFERENCES_ID + "kS", 0.0);
     // Sim Constants
@@ -111,8 +110,8 @@ public final class Constants {
     public static final double STARTING_ANGLE = Units.degreesToRadians(-148.47);
 
     public static void reloadConstants() {
-      CLIMB_kP = Preferences.getDouble(PREFERENCES_ID + "kP", 0.0);
-      CLIMB_kI = Preferences.getDouble(PREFERENCES_ID + "kI", 0.0);
+      CLIMB_kP = Preferences.getDouble(PREFERENCES_ID + "kP", 0.5);
+      CLIMB_kI = Preferences.getDouble(PREFERENCES_ID + "kI", 0.2);
       CLIMB_kD = Preferences.getDouble(PREFERENCES_ID + "kD", 0.0);
       CLIMB_kS = Preferences.getDouble(PREFERENCES_ID + "kS", 0.0);
     }
@@ -128,19 +127,19 @@ public final class Constants {
 
     public static final class ElevatorPositionConstants {
       public static final double ELEVATOR_FEEDFORWARD = 0.0;
-      public static double ELEVATOR_MOTOR_kP = Preferences.getDouble(PREFERENCES_ID + "kV", 0.0);
-      public static double ELEVATOR_MOTOR_kI = Preferences.getDouble(PREFERENCES_ID + "kI", 0.0);
+      public static double ELEVATOR_MOTOR_kP = Preferences.getDouble(PREFERENCES_ID + "kV", 0.3);
+      public static double ELEVATOR_MOTOR_kI = Preferences.getDouble(PREFERENCES_ID + "kI", 0.003);
       public static double ELEVATOR_MOTOR_kD = Preferences.getDouble(PREFERENCES_ID + "kD", 0.0);
-      public static double ELEVATOR_MOTOR_kG = Preferences.getDouble(PREFERENCES_ID + "kG", 0.0);
+      public static double ELEVATOR_MOTOR_kG = Preferences.getDouble(PREFERENCES_ID + "kG", 0.05);
       public static double ELEVATOR_MOTOR_kV = Preferences.getDouble(PREFERENCES_ID + "kV", 0.0);
     }
 
     public static final class ElevatorVelocityConstants {
       public static final double ELEVATOR_FEEDFORWARD = 0.0;
-      public static double ELEVATOR_MOTOR_kP = Preferences.getDouble(PREFERENCES_ID + "kV", 0.0);
-      public static double ELEVATOR_MOTOR_kI = Preferences.getDouble(PREFERENCES_ID + "kI", 0.0);
+      public static double ELEVATOR_MOTOR_kP = Preferences.getDouble(PREFERENCES_ID + "kV", 0.15);
+      public static double ELEVATOR_MOTOR_kI = Preferences.getDouble(PREFERENCES_ID + "kI", 0.025);
       public static double ELEVATOR_MOTOR_kD = Preferences.getDouble(PREFERENCES_ID + "kD", 0.0);
-      public static double ELEVATOR_MOTOR_kG = Preferences.getDouble(PREFERENCES_ID + "kG", 0.0);
+      public static double ELEVATOR_MOTOR_kG = Preferences.getDouble(PREFERENCES_ID + "kG", 0.2);
       public static double ELEVATOR_MOTOR_kV = Preferences.getDouble(PREFERENCES_ID + "kV", 0.0);
     }
 
@@ -164,24 +163,24 @@ public final class Constants {
 
     public static void reloadConstants() {
       ElevatorPositionConstants.ELEVATOR_MOTOR_kP =
-          Preferences.getDouble(PREFERENCES_ID + "kP", 0.0);
+          Preferences.getDouble(PREFERENCES_ID + "kP", 0.3);
       ElevatorPositionConstants.ELEVATOR_MOTOR_kI =
-          Preferences.getDouble(PREFERENCES_ID + "kI", 0.0);
+          Preferences.getDouble(PREFERENCES_ID + "kI", 0.03);
       ElevatorPositionConstants.ELEVATOR_MOTOR_kD =
           Preferences.getDouble(PREFERENCES_ID + "kD", 0.0);
       ElevatorPositionConstants.ELEVATOR_MOTOR_kG =
-          Preferences.getDouble(PREFERENCES_ID + "kG", 0.0);
+          Preferences.getDouble(PREFERENCES_ID + "kG", 0.05);
       ElevatorPositionConstants.ELEVATOR_MOTOR_kV =
           Preferences.getDouble(PREFERENCES_ID + "kV", 0.0);
 
       ElevatorVelocityConstants.ELEVATOR_MOTOR_kP =
-          Preferences.getDouble(PREFERENCES_ID + "kP", 0.0);
+          Preferences.getDouble(PREFERENCES_ID + "kP", 0.15);
       ElevatorVelocityConstants.ELEVATOR_MOTOR_kI =
-          Preferences.getDouble(PREFERENCES_ID + "kI", 0.0);
+          Preferences.getDouble(PREFERENCES_ID + "kI", 0.025);
       ElevatorVelocityConstants.ELEVATOR_MOTOR_kD =
           Preferences.getDouble(PREFERENCES_ID + "kD", 0.0);
       ElevatorVelocityConstants.ELEVATOR_MOTOR_kG =
-          Preferences.getDouble(PREFERENCES_ID + "kG", 0.0);
+          Preferences.getDouble(PREFERENCES_ID + "kG", 0.2);
       ElevatorVelocityConstants.ELEVATOR_MOTOR_kV =
           Preferences.getDouble(PREFERENCES_ID + "kV", 0.0);
       ELEVATOR_kP_LASERCAN = Preferences.getDouble(PREFERENCES_ID + "kP_LASERCAN", 0.0);
@@ -194,13 +193,13 @@ public final class Constants {
     public static final int EFFECTORID = 43;
     public static final int EFFECTOR_CURRENT_LIMIT = 20;
     public static final String PREFERENCES_ID = "endEffector";
-    public static double EFFECTOR_KP = Preferences.getDouble(PREFERENCES_ID + "kP", 0.0);
+    public static double EFFECTOR_KP = Preferences.getDouble(PREFERENCES_ID + "kP", 0.1);
     public static double EFFECTOR_KI = Preferences.getDouble(PREFERENCES_ID + "kI", 0.0);
     public static double EFFECTOR_KD = Preferences.getDouble(PREFERENCES_ID + "kD", 0.0);
     public static double EFFECTOR_KS = Preferences.getDouble(PREFERENCES_ID + "kS", 0.0);
     public static double EFFECTOR_KV = Preferences.getDouble(PREFERENCES_ID + "kV", 0.0);
     public static double EFFECTOR_KFF = Preferences.getDouble(PREFERENCES_ID + "kFF", 0.0);
-    public static double EFFECTOR_KG = Preferences.getDouble(PREFERENCES_ID + "kG", 0.0);
+    public static double EFFECTOR_KG = Preferences.getDouble(PREFERENCES_ID + "kG", 0.05);
     public static final int LASERCAN_1ID = -1;
     public static final int LASERCAN_2ID = -1;
     // Sim Constants
@@ -208,13 +207,13 @@ public final class Constants {
     public static final double GEARING = 1;
 
     public static void reloadConstants() {
-      EFFECTOR_KP = Preferences.getDouble(PREFERENCES_ID + "kP", 0.0);
+      EFFECTOR_KP = Preferences.getDouble(PREFERENCES_ID + "kP", 0.01);
       EFFECTOR_KI = Preferences.getDouble(PREFERENCES_ID + "kI", 0.0);
       EFFECTOR_KD = Preferences.getDouble(PREFERENCES_ID + "kD", 0.0);
       EFFECTOR_KS = Preferences.getDouble(PREFERENCES_ID + "kS", 0.0);
       EFFECTOR_KV = Preferences.getDouble(PREFERENCES_ID + "kV", 0.0);
       EFFECTOR_KFF = Preferences.getDouble(PREFERENCES_ID + "kFF", 0.0);
-      EFFECTOR_KG = Preferences.getDouble(PREFERENCES_ID + "kG", 0.0);
+      EFFECTOR_KG = Preferences.getDouble(PREFERENCES_ID + "kG", 0.05);
     }
   }
 
@@ -224,7 +223,7 @@ public final class Constants {
       public static final int ARM_CANID = 40; // CHANGED FOR TESTING
       public static final int ARM_CURRENT_LIMIT = 20;
       public static final String PREFERENCES_ID = "groundIntakeArm";
-      public static double ARM_KP = Preferences.getDouble(PREFERENCES_ID + "kP", 0.0);
+      public static double ARM_KP = Preferences.getDouble(PREFERENCES_ID + "kP", 0.05);
       public static double ARM_KI = Preferences.getDouble(PREFERENCES_ID + "kI", 0.0);
       public static double ARM_KD = Preferences.getDouble(PREFERENCES_ID + "kD", 0.0);
       public static double ARM_KFF = Preferences.getDouble(PREFERENCES_ID + "kFF", 0.0);
@@ -242,7 +241,7 @@ public final class Constants {
               GroundIntakeConstants.ArmConstants.LENGTH, Units.lbsToKilograms(4.9));
 
       public static void reloadConstants() {
-        ARM_KP = Preferences.getDouble(PREFERENCES_ID + "kP", 0.0);
+        ARM_KP = Preferences.getDouble(PREFERENCES_ID + "kP", 0.05);
         ARM_KI = Preferences.getDouble(PREFERENCES_ID + "kI", 0.0);
         ARM_KD = Preferences.getDouble(PREFERENCES_ID + "kD", 0.0);
         ARM_KFF = Preferences.getDouble(PREFERENCES_ID + "kFF", 0.0);
