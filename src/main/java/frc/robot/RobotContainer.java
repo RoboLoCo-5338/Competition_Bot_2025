@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.PresetCommands;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmIO;
@@ -216,10 +217,10 @@ public class RobotContainer {
         .whileTrue(arm.setArmVelocity(-0.5))
         .onFalse(arm.setArmVelocity(0));
 
-    // operatorController
-    //     .a()
-    //     .whileTrue(elevator.setElevatorPosition(57))
-    //     .onFalse(elevator.setElevatorVelocity(() -> 0.0));
+    operatorController
+        .a()
+        .whileTrue(PresetCommands.presetL2(elevator, endEffector, arm))
+        .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
 
     // operatorController
     //     .b()
@@ -253,8 +254,10 @@ public class RobotContainer {
     ButtonBindingsController.periodic();
   }
 
-  public void teleopPeriodic() {
+  public void teleopInit() {
     SmartDashboard.putNumber("Laser Can", elevator.io.getLaserCanMeasurement());
+    endEffector.setEndEffectorVelocity(0);
+    elevator.setElevatorVelocity(() -> 0);
   }
 
   /**

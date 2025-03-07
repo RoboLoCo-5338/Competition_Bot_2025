@@ -7,7 +7,6 @@ import au.grapplerobotics.LaserCan;
 import au.grapplerobotics.interfaces.LaserCanInterface.Measurement;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
-import com.ctre.phoenix6.configs.Slot1Configs;
 import com.ctre.phoenix6.hardware.ParentDevice;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.util.Units;
@@ -89,13 +88,13 @@ public class ElevatorIOTalonFX implements ElevatorIO {
             elevator2Position, elevator2Velocity, elevator2Current, elevator2AppliedVolts);
 
     inputs.elevator1Connected = elevator1ConnectedDebounce.calculate(motor1Status.isOK());
-    inputs.elevator1Position = Units.rotationsToRadians(elevator1Position.getValueAsDouble());
+    inputs.elevator1Position = elevator1Position.getValueAsDouble();
     inputs.elevator1Velocity = Units.rotationsToRadians(elevator1Velocity.getValueAsDouble());
     inputs.elevator1AppliedVolts = elevator1AppliedVolts.getValueAsDouble();
     inputs.elevator1CurrentAmps = elevator1Current.getValueAsDouble();
 
     inputs.elevator2Connected = elevator2ConnectedDebounce.calculate(motor2Status.isOK());
-    inputs.elevator2Position = Units.rotationsToRadians(elevator2Position.getValueAsDouble());
+    inputs.elevator2Position = elevator2Position.getValueAsDouble();
     inputs.elevator2Velocity = Units.rotationsToRadians(elevator2Velocity.getValueAsDouble());
     inputs.elevator2AppliedVolts = elevator2AppliedVolts.getValueAsDouble();
     inputs.elevator2CurrentAmps = elevator2Current.getValueAsDouble();
@@ -103,18 +102,21 @@ public class ElevatorIOTalonFX implements ElevatorIO {
 
   @Override
   public void setElevatorPosition(double position) {
-    elevator1PositionRequest.FeedForward = ElevatorConstants.ElevatorPositionConstants.ELEVATOR_FEEDFORWARD;
-    elevator2PositionRequest.FeedForward = ElevatorConstants.ElevatorPositionConstants.ELEVATOR_FEEDFORWARD;
-    elevator1PositionRequest.OverrideBrakeDurNeutral = true;
-    elevator2PositionRequest.OverrideBrakeDurNeutral = true;
+    // elevator1PositionRequest.FeedForward =
+    //     ElevatorConstants.ElevatorPositionConstants.ELEVATOR_FEEDFORWARD;
+    // elevator2PositionRequest.FeedForward =
+    //     ElevatorConstants.ElevatorPositionConstants.ELEVATOR_FEEDFORWARD;
+
     elevatorMotor1.setControl(elevator1PositionRequest.withPosition(position).withSlot(0));
     elevatorMotor2.setControl(elevator2PositionRequest.withPosition(position).withSlot(0));
   }
 
   @Override
   public void setElevatorVelocity(double velocity) {
-    elevator1VelocityRequest.FeedForward = ElevatorConstants.ElevatorVelocityConstants.ELEVATOR_FEEDFORWARD;
-    elevator2VelocityRequest.FeedForward = ElevatorConstants.ElevatorVelocityConstants.ELEVATOR_FEEDFORWARD;
+    elevator1VelocityRequest.FeedForward =
+        ElevatorConstants.ElevatorVelocityConstants.ELEVATOR_FEEDFORWARD;
+    elevator2VelocityRequest.FeedForward =
+        ElevatorConstants.ElevatorVelocityConstants.ELEVATOR_FEEDFORWARD;
     elevatorMotor1.setControl(elevator1VelocityRequest.withVelocity(velocity).withSlot(1));
     elevatorMotor2.setControl(elevator2VelocityRequest.withVelocity(velocity).withSlot(1));
   }

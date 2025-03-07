@@ -121,7 +121,7 @@ public interface ElevatorIO {
     config.Voltage.PeakForwardVoltage = 16;
     config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
-    //Slot 0 is position
+    // Slot 0 is position
     config.Slot0.GravityType = GravityTypeValue.Elevator_Static;
     config.Slot0.kP = ElevatorConstants.ElevatorPositionConstants.ELEVATOR_MOTOR_kP;
     config.Slot0.kI = ElevatorConstants.ElevatorPositionConstants.ELEVATOR_MOTOR_kI;
@@ -129,7 +129,7 @@ public interface ElevatorIO {
     config.Slot0.kG = ElevatorConstants.ElevatorPositionConstants.ELEVATOR_MOTOR_kG;
     config.Slot0.kV = ElevatorConstants.ElevatorPositionConstants.ELEVATOR_MOTOR_kV;
 
-    //Slot 1 is velocity
+    // Slot 1 is velocity
 
     config.Slot1.GravityType = GravityTypeValue.Elevator_Static;
     config.Slot1.kP = ElevatorConstants.ElevatorVelocityConstants.ELEVATOR_MOTOR_kP;
@@ -138,16 +138,15 @@ public interface ElevatorIO {
     config.Slot1.kG = ElevatorConstants.ElevatorVelocityConstants.ELEVATOR_MOTOR_kG;
     config.Slot1.kV = ElevatorConstants.ElevatorVelocityConstants.ELEVATOR_MOTOR_kV;
 
-
     config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
-    config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 120;
-    config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
-    config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = 0;
+    config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 22;
+    // config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
+    // config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = 0;
 
     var currentConfig = new CurrentLimitsConfigs();
     currentConfig.StatorCurrentLimitEnable = true;
     // CHANGE THIS VALUE OTHERWISE TORQUE MAY BE LIMITED/TOO HIGH
-    currentConfig.StatorCurrentLimit = 120;
+    currentConfig.StatorCurrentLimit = 140;
     config.CurrentLimits = currentConfig;
     if (motorNum == 2) config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     return config;

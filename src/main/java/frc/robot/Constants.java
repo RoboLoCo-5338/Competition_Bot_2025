@@ -42,17 +42,17 @@ public final class Constants {
     REPLAY
   }
 
-  public static final class PresetConstants{
-    public static final double elevatorl2 = 0.0;
-    public static final double elevatorl3 = 0.0;
-    public static final double elevatorl4 = 0.0;
-    public static final double elevatorNet = 0.0;
+  public static final class PresetConstants {
+    public static final double elevatorl2 = 9.147; // This was 17 for testing PID
+    public static final double elevatorl3 = 16.309;
+    public static final double elevatorl4 = 14.8;
+    public static final double elevatorNet = 17.0;
     public static final double elevatorl3Algae = 0.0;
 
-    public static final double arml2 = 0.0;
-    public static final double arml3 = 0.0;
-    public static final double arml4 = 0.0;
-    public static final double armNet = 0.0;
+    public static final double arml2 = 0.07;
+    public static final double arml3 = 0.07;
+    public static final double arml4 = 0.3;
+    public static final double armNet = 0.3;
     public static final double arml3Algae = 0.0;
 
     public static final double elevatorIntake = 0.0;
@@ -95,7 +95,7 @@ public final class Constants {
     public static final double MIN_ANGLE = Units.degreesToRadians(-148.47);
     public static final double MAX_ANGLE = Units.degreesToRadians(-90);
     public static final double STARTING_ANGLE = Units.degreesToRadians(-148.47);
-    //test commits
+    // test commits
   }
 
   public static final class ElevatorConstants {
@@ -104,22 +104,25 @@ public final class Constants {
     public static final int ELEVATOR_MOTOR_ID2 = 45;
     public static final int ELEVATOR_MOTOR_CURRENT_LIMIT = 40;
     public static final int LASERCAN_ID = 50;
-    public static final class ElevatorPositionConstants{
+
+    public static final class ElevatorPositionConstants {
       public static final double ELEVATOR_FEEDFORWARD = 0.0;
-      public static final double ELEVATOR_MOTOR_kP = 0.01; // 0.3
-      public static final double ELEVATOR_MOTOR_kI = 0.0;
+      public static final double ELEVATOR_MOTOR_kP = 0.3; // 0.3
+      public static final double ELEVATOR_MOTOR_kI = 0.03;
       public static final double ELEVATOR_MOTOR_kD = 0.00;
-      public static final double ELEVATOR_MOTOR_kG = 0.4; // 0.5
+      public static final double ELEVATOR_MOTOR_kG = 0.05; // 0.5
       public static final double ELEVATOR_MOTOR_kV = 0.0;
     }
-    public static final class ElevatorVelocityConstants{
+
+    public static final class ElevatorVelocityConstants {
       public static final double ELEVATOR_FEEDFORWARD = 0.0;
-      public static final double ELEVATOR_MOTOR_kP = 0.2; // 0.3
-      public static final double ELEVATOR_MOTOR_kI = 0.0;
+      public static final double ELEVATOR_MOTOR_kP = 0.15; // 0.3
+      public static final double ELEVATOR_MOTOR_kI = 0.025;
       public static final double ELEVATOR_MOTOR_kD = 0.00;
-      public static final double ELEVATOR_MOTOR_kG = 0.4; // 0.5
+      public static final double ELEVATOR_MOTOR_kG = 0.2; // 0.5
       public static final double ELEVATOR_MOTOR_kV = 0.0;
     }
+
     public static final double LASERCAN_TO_ELEVATOR_POSITION = 1.0;
     public static final double ELEVATOR_EPSILON = 1e-2;
     public static final double ELEVATOR_kP_LASERCAN = 0.0;
