@@ -22,9 +22,9 @@ public interface ElevatorIO {
           ElevatorConstants.ELEVATOR_MOTOR_ID2, TunerConstants.DrivetrainConstants.CANBusName);
 
   final PositionVoltage elevator1PositionRequest = new PositionVoltage(0.0);
-  final VelocityVoltage elevator1VelocityRequest = new VelocityVoltage(0.0);
+  final VelocityVoltage elevator1VelocityRequest = new VelocityVoltage(0);
   final PositionVoltage elevator2PositionRequest = new PositionVoltage(0.0);
-  final VelocityVoltage elevator2VelocityRequest = new VelocityVoltage(0.0);
+  final VelocityVoltage elevator2VelocityRequest = new VelocityVoltage(0);
 
   @AutoLog
   public static class ElevatorIOInputs {
@@ -119,18 +119,35 @@ public interface ElevatorIO {
   public default TalonFXConfiguration getConfiguration(int motorNum) {
     // TODO change these values
     var config = new TalonFXConfiguration();
+    config.Voltage.PeakForwardVoltage = 16;
     config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+
+    // Slot 0 is position
     config.Slot0.GravityType = GravityTypeValue.Elevator_Static;
-    config.Slot0.kP = ElevatorConstants.ELEVATOR_MOTOR_kP;
-    config.Slot0.kI = ElevatorConstants.ELEVATOR_MOTOR_kI;
-    config.Slot0.kD = ElevatorConstants.ELEVATOR_MOTOR_kD;
-    config.Slot0.kG = ElevatorConstants.ELEVATOR_MOTOR_kG;
-    config.Slot0.kV = ElevatorConstants.ELEVATOR_MOTOR_kV;
+    config.Slot0.kP = ElevatorConstants.ElevatorPositionConstants.ELEVATOR_MOTOR_kP;
+    config.Slot0.kI = ElevatorConstants.ElevatorPositionConstants.ELEVATOR_MOTOR_kI;
+    config.Slot0.kD = ElevatorConstants.ElevatorPositionConstants.ELEVATOR_MOTOR_kD;
+    config.Slot0.kG = ElevatorConstants.ElevatorPositionConstants.ELEVATOR_MOTOR_kG;
+    config.Slot0.kV = ElevatorConstants.ElevatorPositionConstants.ELEVATOR_MOTOR_kV;
+
+    // Slot 1 is velocity
+
+    config.Slot1.GravityType = GravityTypeValue.Elevator_Static;
+    config.Slot1.kP = ElevatorConstants.ElevatorVelocityConstants.ELEVATOR_MOTOR_kP;
+    config.Slot1.kI = ElevatorConstants.ElevatorVelocityConstants.ELEVATOR_MOTOR_kI;
+    config.Slot1.kD = ElevatorConstants.ElevatorVelocityConstants.ELEVATOR_MOTOR_kD;
+    config.Slot1.kG = ElevatorConstants.ElevatorVelocityConstants.ELEVATOR_MOTOR_kG;
+    config.Slot1.kV = ElevatorConstants.ElevatorVelocityConstants.ELEVATOR_MOTOR_kV;
+
+    config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
+    config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 22;
+    // config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
+    // config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = 0;
 
     var currentConfig = new CurrentLimitsConfigs();
     currentConfig.StatorCurrentLimitEnable = true;
     // CHANGE THIS VALUE OTHERWISE TORQUE MAY BE LIMITED/TOO HIGH
-    currentConfig.StatorCurrentLimit = 40;
+    currentConfig.StatorCurrentLimit = 140;
     config.CurrentLimits = currentConfig;
     if (motorNum == 2) config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     return config;

@@ -21,7 +21,7 @@ public class GroundIntakeCommands {
   }
 
   public static Command moveGroundIntakeArmRaw(GroundIntake groundIntake, double armSpeed) {
-    return new InstantCommand(() -> groundIntake.setGroundArmVelocity(armSpeed));
+    return new InstantCommand(() -> groundIntake.setGroundArmVelocity(() -> armSpeed));
   }
 
   public static Command moveGroundIntakeArm(

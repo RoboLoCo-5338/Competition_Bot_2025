@@ -5,10 +5,12 @@ import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.Mode;
+import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.Logger;
 
 public class Elevator extends SubsystemBase {
@@ -46,7 +48,7 @@ public class Elevator extends SubsystemBase {
    * @return A command that sets the elevator's position.
    */
   public Command setElevatorPosition(double position) {
-    return new InstantCommand(() -> io.setElevatorPosition(position), this);
+    return new RunCommand(() -> io.setElevatorPosition(position), this);
   }
 
   /**
@@ -88,8 +90,8 @@ public class Elevator extends SubsystemBase {
         this);
   }
 
-  public Command setElevatorVelocity(double velocity) {
-    return new InstantCommand(() -> io.setElevatorVelocity(velocity), this);
+  public Command setElevatorVelocity(DoubleSupplier velocity) {
+    return new InstantCommand(() -> io.setElevatorVelocity(velocity.getAsDouble()), this);
   }
 
   public ElevatorIO getIO() {

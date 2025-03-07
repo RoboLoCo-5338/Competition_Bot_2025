@@ -87,18 +87,19 @@ public interface ArmIO {
 
     armConfig
         .idleMode(IdleMode.kBrake)
+        .inverted(true)
         .smartCurrentLimit(ArmConstants.ARM_MOTOR_CURRENT_LIMIT)
         .voltageCompensation(12.0);
     armConfig
         .absoluteEncoder
         // TODO CHECK THIS
-        .inverted(false)
+        .inverted(true)
         .positionConversionFactor(1 / ArmConstants.GEARING)
         .velocityConversionFactor(1 / ArmConstants.GEARING);
     armConfig
         .closedLoop
-        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-        .positionWrappingEnabled(true)
+        .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
+        .positionWrappingEnabled(false)
         .pidf(
             ArmConstants.ARM_MOTOR_KP, ArmConstants.ARM_MOTOR_KI,
             ArmConstants.ARM_MOTOR_KD, ArmConstants.ARM_MOTOR_KFF);
@@ -111,6 +112,12 @@ public interface ArmIO {
         .appliedOutputPeriodMs(20)
         .busVoltagePeriodMs(20)
         .outputCurrentPeriodMs(20);
+
+    // added 3/6
+    // armConfig.softLimit.forwardSoftLimitEnabled(true);
+    // armConfig.softLimit.forwardSoftLimit(0.5);
+    // armConfig.softLimit.reverseSoftLimitEnabled(true);
+    // armConfig.softLimit.reverseSoftLimit(0);
 
     return armConfig;
   }

@@ -20,105 +20,146 @@ import frc.robot.subsystems.groundintake.GroundIntake;
 import frc.robot.subsystems.led.LED;
 
 public class ActionBindings {
-  public static Drive drive;
-  public static CommandXboxController driveController;
-  public static CommandXboxController operatorController;
-  public static double exponentialVariable = 25.0;
-  public static Climb climb;
-  public static Elevator elevator;
-  public static GroundIntake groundIntake;
-  public static EndEffector endEffector;
-  public static LED led;
-  public static Arm arm;
+  public Drive drive;
+  public CommandXboxController driveController;
+  public CommandXboxController operatorController;
+  public double exponentialVariable = 25.0;
+  public Climb climb;
+  public Elevator elevator;
+  public GroundIntake groundIntake;
+  public EndEffector endEffector;
+  public LED led;
+  public Arm arm;
 
-  public static Command lockToZero() {
+  public ActionBindings(
+      Drive drive,
+      CommandXboxController driveController,
+      CommandXboxController operatorController,
+      Climb climb,
+      Elevator elevator,
+      GroundIntake groundIntake,
+      EndEffector endEffector,
+      LED led,
+      Arm arm) {
+    this.drive = drive;
+    this.driveController = driveController;
+    this.operatorController = operatorController;
+    this.climb = climb;
+    this.elevator = elevator;
+    this.groundIntake = groundIntake;
+    this.endEffector = endEffector;
+    this.led = led;
+    this.arm = arm;
+  }
+
+  public Command lockToZero() {
     return DriveCommands.joystickDriveAtAngle(
-        drive,
+        this.drive,
         () -> -driveController.getLeftY(),
         () -> -driveController.getLeftX(),
         () -> new Rotation2d());
   }
 
-  public static Command climbPreset() {
+  public Command climbPreset() {
     return ButtonBindings.blankCommand("climbPreset");
   }
 
-  public static Command gyroReset() {
+  public Command gyroReset() {
     return Commands.runOnce(
             () -> drive.setPose(new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
             drive)
         .ignoringDisable(true);
   }
 
-  public static Command manualClimbDown() {
+  public Command manualClimbDown() {
     return ClimbCommands.moveClimbArm(climb, -0.4);
   }
 
-  public static Command manualClimbUp() {
+  public Command stopClimb() {
+    return ClimbCommands.moveClimbArm(climb, 0);
+  }
+
+  public Command manualClimbUp() {
     return ClimbCommands.moveClimbArm(climb, 0.4);
   }
 
-  public static Command manualElevatorUp() {
+  public Command manualElevatorStop() {
+    return ElevatorCommands.moveElevator(elevator, 0);
+  }
+
+  public Command manualElevatorUp() {
     return ElevatorCommands.moveElevator(elevator, 0.4);
   }
 
-  public static Command manualElevatorDown() {
+  public Command manualElevatorDown() {
     return ElevatorCommands.moveElevator(elevator, -0.4);
   }
 
-  public static Command l3Preset() {
+  public Command l3Preset() {
     return ButtonBindings.blankCommand("l3Preset");
   }
 
-  public static Command elevatorSlow() {
+  public Command elevatorSlow() {
     return ButtonBindings.blankCommand("elevatorSlow");
   }
 
-  public static Command l2Preset() {
+  public Command l2Preset() {
     return ButtonBindings.blankCommand("l2Preset");
   }
 
-  public static Command l4Preset() {
+  public Command l4Preset() {
     return ButtonBindings.blankCommand("l4Preset");
   }
 
-  public static Command elevatorFast() {
+  public Command elevatorFast() {
     return ButtonBindings.blankCommand("elevatorFast");
   }
 
-  public static Command manualArmDown() {
+  public Command manualArmDown() {
     return ArmCommands.moveArm(arm, -0.4);
   }
 
-  public static Command manualArmUp() {
+  public Command manualArmUp() {
     return ArmCommands.moveArm(arm, 0.4);
   }
 
-  public static Command netPreset() {
+  public Command manualArmStop() {
+    return ArmCommands.moveArm(arm, 0);
+  }
+
+  public Command netPreset() {
     return ButtonBindings.blankCommand("netPreset");
   }
 
-  public static Command groundIntakeIn() {
+  public Command groundIntakeIn() {
     return GroundIntakeCommands.moveGroundIntakeArm(groundIntake, -0.4, 0.4);
   }
 
-  public static Command groundIntakeOut() {
+  public Command groundIntakeOut() {
     return GroundIntakeCommands.moveGroundIntakeArm(groundIntake, 0.4, -0.4);
   }
 
-  public static Command endEffectorIn() {
+  public Command groundIntakeStop() {
+    return GroundIntakeCommands.moveGroundIntakeArm(groundIntake, 0, 0);
+  }
+
+  public Command endEffectorIn() {
     return EndEffectorCommands.moveEndEffector(endEffector, 0.4);
   }
 
-  public static Command endEffectorOut() {
+  public Command endEffectorOut() {
     return EndEffectorCommands.moveEndEffector(endEffector, -0.4);
   }
 
-  public static Command groundIntakeSlow() {
+  public Command endEffectorStop() {
+    return EndEffectorCommands.moveEndEffector(endEffector, 0);
+  }
+
+  public Command groundIntakeSlow() {
     return ButtonBindings.blankCommand("groundIntakeSlow");
   }
 
-  public static Command groundIntakeFast() {
+  public Command groundIntakeFast() {
     return ButtonBindings.blankCommand("groundIntakeFast");
   }
 }

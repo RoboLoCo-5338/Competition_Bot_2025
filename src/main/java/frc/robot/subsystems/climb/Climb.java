@@ -53,6 +53,10 @@ public class Climb extends SubsystemBase {
     return new InstantCommand(() -> climbIO.setClimbVelocity(velocity), this);
   }
 
+  public Command stopMotor() {
+    return new InstantCommand(() -> climbIO.disableMotor(), this);
+  }
+
   public void updatePID() {
     climbIO.updatePID();
   }

@@ -14,11 +14,17 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.PresetCommands;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmIO;
@@ -76,7 +82,9 @@ public class RobotContainer {
 
   private final Arm arm;
 
-  private double exponentialVariable = 25.0;
+  public CommandXboxController driverController = new CommandXboxController(0);
+
+  public CommandXboxController operatorController = new CommandXboxController(1);
 
   // Controller
 
@@ -168,6 +176,14 @@ public class RobotContainer {
     configureButtonBindings();
   }
 
+  private double deadband(double controllerAxis) {
+    if (Math.abs(controllerAxis) < 0.2) {
+      return 0;
+    } else {
+      return (1 / (1 - 0.2)) * (controllerAxis + (Math.signum(controllerAxis) * 0.2));
+    }
+  }
+
   /**
    * Use this method to define your button->command mappings. Buttons can be created by
    * instantiating a {@link GenericHID} or one of its subclasses ({@link
@@ -177,10 +193,70 @@ public class RobotContainer {
   private void configureButtonBindings() {
     // Default command, normal field-relative drive
 
+    elevator.setDefaultCommand(
+        elevator.setElevatorVelocity(() -> deadband(-operatorController.getLeftY()) * 25));
+
+    operatorController
+        .leftTrigger()
+        .whileTrue(endEffector.setEndEffectorVelocity(60))
+        .onFalse(endEffector.setEndEffectorVelocity(0));
+
+    operatorController
+        .rightTrigger()
+        .whileTrue(endEffector.setEndEffectorVelocity(-60))
+        .onFalse(endEffector.setEndEffectorVelocity(0));
+
+    operatorController
+        .rightBumper()
+        .whileTrue(arm.setArmVelocity(0.5))
+        .onFalse(arm.setArmVelocity(0));
+
+    operatorController
+        .leftBumper()
+        .whileTrue(arm.setArmVelocity(-0.5))
+        .onFalse(arm.setArmVelocity(0));
+
+    operatorController
+        .a()
+        .whileTrue(PresetCommands.presetL2(elevator, endEffector, arm))
+        .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
+
+    // operatorController
+    //     .b()
+    //     .whileTrue(elevator.setElevatorPosition(102))
+    //     .onFalse(elevator.setElevatorVelocity(() -> 0.0));
+
+    // operatorController
+    //     .y()
+    //     .whileTrue(elevator.setElevatorPosition(93))
+    //     .onFalse(elevator.setElevatorVelocity(() -> 0.0));
+    // // driverController
+
+    //     .povUp()
+    //     .and(driverController.x())
+    //     .onTrue(climb.setClimbVelocity(0.4))
+    //     .onFalse(climb.setClimbVelocity(0));
+    driverController.povDown().onTrue(climb.setClimbVelocity(-2.9)).onFalse(climb.stopMotor());
+
+    driverController
+        .b()
+        .onTrue(
+            Commands.runOnce(
+                    () ->
+                        drive.setPose(
+                            new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
+                    drive)
+                .ignoringDisable(true));
   }
 
   public void periodic() {
     ButtonBindingsController.periodic();
+  }
+
+  public void teleopInit() {
+    SmartDashboard.putNumber("Laser Can", elevator.io.getLaserCanMeasurement());
+    endEffector.setEndEffectorVelocity(0);
+    elevator.setElevatorVelocity(() -> 0);
   }
 
   /**
