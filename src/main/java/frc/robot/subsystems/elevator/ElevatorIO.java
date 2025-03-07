@@ -155,11 +155,17 @@ public interface ElevatorIO {
 
   public default void updatePID() {
     Slot0Configs pidConfig = new Slot0Configs();
-    pidConfig.kP = ElevatorConstants.ELEVATOR_MOTOR_kP;
-    pidConfig.kI = ElevatorConstants.ELEVATOR_MOTOR_kI;
-    pidConfig.kD = ElevatorConstants.ELEVATOR_MOTOR_kD;
-    pidConfig.kG = ElevatorConstants.ELEVATOR_MOTOR_kG;
-    pidConfig.kV = ElevatorConstants.ELEVATOR_MOTOR_kV;
+    pidConfig.kP = ElevatorConstants.ElevatorPositionConstants.ELEVATOR_MOTOR_kP;
+    pidConfig.kI = ElevatorConstants.ElevatorPositionConstants.ELEVATOR_MOTOR_kI;
+    pidConfig.kD = ElevatorConstants.ElevatorPositionConstants.ELEVATOR_MOTOR_kD;
+    pidConfig.kG = ElevatorConstants.ElevatorPositionConstants.ELEVATOR_MOTOR_kG;
+    pidConfig.kV = ElevatorConstants.ElevatorPositionConstants.ELEVATOR_MOTOR_kV;
+
+    pidConfig.kP = ElevatorConstants.ElevatorVelocityConstants.ELEVATOR_MOTOR_kP;
+    pidConfig.kI = ElevatorConstants.ElevatorVelocityConstants.ELEVATOR_MOTOR_kI;
+    pidConfig.kD = ElevatorConstants.ElevatorVelocityConstants.ELEVATOR_MOTOR_kD;
+    pidConfig.kG = ElevatorConstants.ElevatorVelocityConstants.ELEVATOR_MOTOR_kG;
+    pidConfig.kV = ElevatorConstants.ElevatorVelocityConstants.ELEVATOR_MOTOR_kV;
     elevatorMotor1.getConfigurator().apply(pidConfig);
     elevatorMotor2.getConfigurator().apply(pidConfig);
   }

@@ -109,6 +109,7 @@ public final class Constants {
     public static final double MIN_ANGLE = Units.degreesToRadians(-148.47);
     public static final double MAX_ANGLE = Units.degreesToRadians(-90);
     public static final double STARTING_ANGLE = Units.degreesToRadians(-148.47);
+
     public static void reloadConstants() {
       CLIMB_kP = Preferences.getDouble(PREFERENCES_ID + "kP", 0.0);
       CLIMB_kI = Preferences.getDouble(PREFERENCES_ID + "kI", 0.0);
@@ -162,17 +163,27 @@ public final class Constants {
         2 * ElevatorConstants.DRUM_RADIUS * Math.PI / ElevatorConstants.GEARING;
 
     public static void reloadConstants() {
-      ElevatorPositionConstants.ELEVATOR_MOTOR_kP = Preferences.getDouble(PREFERENCES_ID + "kP", 0.0);
-      ElevatorPositionConstants.ELEVATOR_MOTOR_kI = Preferences.getDouble(PREFERENCES_ID + "kI", 0.0);
-      ElevatorPositionConstants.ELEVATOR_MOTOR_kD = Preferences.getDouble(PREFERENCES_ID + "kD", 0.0);
-      ElevatorPositionConstants.ELEVATOR_MOTOR_kG = Preferences.getDouble(PREFERENCES_ID + "kG", 0.0);
-      ElevatorPositionConstants.ELEVATOR_MOTOR_kV = Preferences.getDouble(PREFERENCES_ID + "kV", 0.0);
+      ElevatorPositionConstants.ELEVATOR_MOTOR_kP =
+          Preferences.getDouble(PREFERENCES_ID + "kP", 0.0);
+      ElevatorPositionConstants.ELEVATOR_MOTOR_kI =
+          Preferences.getDouble(PREFERENCES_ID + "kI", 0.0);
+      ElevatorPositionConstants.ELEVATOR_MOTOR_kD =
+          Preferences.getDouble(PREFERENCES_ID + "kD", 0.0);
+      ElevatorPositionConstants.ELEVATOR_MOTOR_kG =
+          Preferences.getDouble(PREFERENCES_ID + "kG", 0.0);
+      ElevatorPositionConstants.ELEVATOR_MOTOR_kV =
+          Preferences.getDouble(PREFERENCES_ID + "kV", 0.0);
 
-      ElevatorVelocityConstants.ELEVATOR_MOTOR_kP = Preferences.getDouble(PREFERENCES_ID + "kP", 0.0);
-      ElevatorVelocityConstants.ELEVATOR_MOTOR_kI = Preferences.getDouble(PREFERENCES_ID + "kI", 0.0);
-      ElevatorVelocityConstants.ELEVATOR_MOTOR_kD = Preferences.getDouble(PREFERENCES_ID + "kD", 0.0);
-      ElevatorVelocityConstants.ELEVATOR_MOTOR_kG = Preferences.getDouble(PREFERENCES_ID + "kG", 0.0);
-      ElevatorVelocityConstants.ELEVATOR_MOTOR_kV = Preferences.getDouble(PREFERENCES_ID + "kV", 0.0);
+      ElevatorVelocityConstants.ELEVATOR_MOTOR_kP =
+          Preferences.getDouble(PREFERENCES_ID + "kP", 0.0);
+      ElevatorVelocityConstants.ELEVATOR_MOTOR_kI =
+          Preferences.getDouble(PREFERENCES_ID + "kI", 0.0);
+      ElevatorVelocityConstants.ELEVATOR_MOTOR_kD =
+          Preferences.getDouble(PREFERENCES_ID + "kD", 0.0);
+      ElevatorVelocityConstants.ELEVATOR_MOTOR_kG =
+          Preferences.getDouble(PREFERENCES_ID + "kG", 0.0);
+      ElevatorVelocityConstants.ELEVATOR_MOTOR_kV =
+          Preferences.getDouble(PREFERENCES_ID + "kV", 0.0);
       ELEVATOR_kP_LASERCAN = Preferences.getDouble(PREFERENCES_ID + "kP_LASERCAN", 0.0);
       ELEVATOR_kI_LASERCAN = Preferences.getDouble(PREFERENCES_ID + "kI_LASERCAN", 0.0);
       ELEVATOR_kD_LASERCAN = Preferences.getDouble(PREFERENCES_ID + "kD_LASERCAN", 0.0);

@@ -247,6 +247,18 @@ public class RobotContainer {
                             new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
                     drive)
                 .ignoringDisable(true));
+    driverController
+        .y()
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  Constants.reloadPreferences();
+                  arm.updatePID();
+                  climb.updatePID();
+                  elevator.updatePID();
+                  endEffector.updatePID();
+                  groundIntake.updatePID();
+                }));
   }
 
   public void periodic() {
