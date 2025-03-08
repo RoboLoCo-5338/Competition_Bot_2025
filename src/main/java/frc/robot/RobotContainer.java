@@ -239,10 +239,15 @@ public class RobotContainer {
         .x()
         .whileTrue(PresetCommands.presetL3(elevator, endEffector, arm))
         .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
+    // operatorController
+    //     .y()
+    //     .whileTrue(PresetCommands.presetL4(elevator, endEffector, arm))
+    //     .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
+
     operatorController
-        .y()
-        .whileTrue(PresetCommands.presetL4(elevator, endEffector, arm))
-        .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
+        .rightBumper()
+        .onTrue(endEffector.setEndEffectorVelocity(120))
+        .onFalse(endEffector.setEndEffectorVelocity(0));
 
     // operatorController
     //     .rightBumper()

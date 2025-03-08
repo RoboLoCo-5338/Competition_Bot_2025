@@ -43,7 +43,7 @@ public class PresetCommands {
 
   public static Command presetL3(Elevator elevator, EndEffector endEffector, Arm arm) {
     return new SequentialCommandGroup(
-        arm.setArmPosition(0.1),
+        endEffectorSet(endEffector, arm),
         new WaitCommand(0.3),
         elevator.setElevatorPosition(PresetConstants.elevatorl3));
   }
