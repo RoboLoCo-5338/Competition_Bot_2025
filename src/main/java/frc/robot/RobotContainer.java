@@ -246,7 +246,7 @@ public class RobotContainer {
 
     operatorController
         .rightBumper()
-        .onTrue(endEffector.setEndEffectorVelocity(-120))
+        .onTrue(endEffector.setEndEffectorSpeed(-1))
         .onFalse(endEffector.setEndEffectorVelocity(0));
 
     // operatorController

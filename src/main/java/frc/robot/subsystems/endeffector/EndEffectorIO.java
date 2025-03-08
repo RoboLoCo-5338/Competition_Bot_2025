@@ -46,4 +46,8 @@ public interface EndEffectorIO {
     config.CurrentLimits = currentConfig;
     return config;
   }
+
+  public default void setEndEffectorSpeed(double speed){
+    
+  }
 }
