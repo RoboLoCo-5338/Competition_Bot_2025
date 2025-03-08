@@ -43,10 +43,10 @@ public final class Constants {
   }
 
   public static final class PresetConstants {
-    public static final double elevatorl2 = 9.147; // This was 17 for testing PID
-    public static final double elevatorl3 = 16.309;
-    public static final double elevatorl4 = 14.8;
-    public static final double elevatorNet = 17.0;
+    public static final double elevatorl2 = 10; // This was 17 for testing PID
+    public static final double elevatorl3 = 16.855;
+    public static final double elevatorl4 = 16.373;
+    public static final double elevatorNet = 16.481;
     public static final double elevatorl3Algae = 0.0;
 
     public static final double arml2 = 0.07;
@@ -62,7 +62,7 @@ public final class Constants {
   public static final class ArmConstants {
     public static final int ARM_MOTOR_ID = 44;
     public static final double ARM_MOTOR_KP = 3.5;
-    public static final double ARM_MOTOR_KI = 0.0;
+    public static final double ARM_MOTOR_KI = 0.01;
     public static final double ARM_MOTOR_KD = 0.0;
     public static final double ARM_MOTOR_KG = 0.0;
     public static final double ARM_MOTOR_KV = 0.00;
@@ -107,8 +107,8 @@ public final class Constants {
 
     public static final class ElevatorPositionConstants {
       public static final double ELEVATOR_FEEDFORWARD = 0.0;
-      public static final double ELEVATOR_MOTOR_kP = 0.3; // 0.3
-      public static final double ELEVATOR_MOTOR_kI = 0.03;
+      public static final double ELEVATOR_MOTOR_kP = 0.25; // 0.3
+      public static final double ELEVATOR_MOTOR_kI = 0.02;
       public static final double ELEVATOR_MOTOR_kD = 0.00;
       public static final double ELEVATOR_MOTOR_kG = 0.05; // 0.5
       public static final double ELEVATOR_MOTOR_kV = 0.0;
@@ -117,7 +117,7 @@ public final class Constants {
     public static final class ElevatorVelocityConstants {
       public static final double ELEVATOR_FEEDFORWARD = 0.0;
       public static final double ELEVATOR_MOTOR_kP = 0.15; // 0.3
-      public static final double ELEVATOR_MOTOR_kI = 0.025;
+      public static final double ELEVATOR_MOTOR_kI = 0.03;
       public static final double ELEVATOR_MOTOR_kD = 0.00;
       public static final double ELEVATOR_MOTOR_kG = 0.2; // 0.5
       public static final double ELEVATOR_MOTOR_kV = 0.0;
@@ -160,15 +160,15 @@ public final class Constants {
     public static final class ArmConstants {
       // TODO change this
       public static final int ARM_CANID = 40; // CHANGED FOR TESTING
-      public static final int ARM_CURRENT_LIMIT = 20;
-      public static final double ARM_KP = 0.05;
+      public static final int ARM_CURRENT_LIMIT = 60;
+      public static final double ARM_KP = 0.01;
       public static final double ARM_KI = 0;
       public static final double ARM_KD = 0;
       public static final double ARM_KFF = 0;
       public static final double ARM_KS = 0;
       public static final double ARM_KV = 0;
       // Sim stuff
-      public static final double GEARING = 100;
+      public static final double GEARING = 1;
       public static final double LENGTH = Units.inchesToMeters(18.5);
       public static final double MOI =
           SingleJointedArmSim.estimateMOI(
@@ -181,8 +181,8 @@ public final class Constants {
 
     public static final class IntakeConstants {
       public static final int INTAKE_CANID = 41; // CHANGED FOR TESTING
-      public static final int INTAKE_CURRENT_LIMIT = 60;
-      public static final double INTAKE_KP = 0.00;
+      public static final int INTAKE_CURRENT_LIMIT = 80;
+      public static final double INTAKE_KP = 0.00045;
       public static final double INTAKE_KI = 0;
       public static final double INTAKE_KD = 0;
       public static final double INTAKE_KFF = 0;

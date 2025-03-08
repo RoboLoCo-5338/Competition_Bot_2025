@@ -14,6 +14,7 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -154,6 +155,9 @@ public class RobotContainer {
         break;
     }
 
+    NamedCommands.registerCommand("GroundI Outake", groundIntake.setGroundIntakeVelocity(-3600));
+    NamedCommands.registerCommand("GroundI Stop", groundIntake.setGroundIntakeVelocity(0));
+
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
@@ -172,6 +176,8 @@ public class RobotContainer {
         "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
     autoChooser.addOption(
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+    // autoChooser.addOption(
+    //     "1m Forward", A);
 
     // Configure the button bindings
     configureButtonBindings();
@@ -182,6 +188,14 @@ public class RobotContainer {
       return 0;
     } else {
       return (1 / (1 - 0.2)) * (controllerAxis + (Math.signum(controllerAxis) * 0.2));
+    }
+  }
+
+  private double easyDeadband(double val) {
+    if (Math.abs(val) < 0.07) {
+      return 0;
+    } else {
+      return val;
     }
   }
 
@@ -197,6 +211,8 @@ public class RobotContainer {
     elevator.setDefaultCommand(
         elevator.setElevatorVelocity(() -> deadband(-operatorController.getLeftY()) * 25));
 
+    arm.setDefaultCommand(arm.setArmVelocity(() -> easyDeadband(-operatorController.getRightY())));
+
     operatorController
         .leftTrigger()
         .whileTrue(endEffector.setEndEffectorVelocity(60))
@@ -207,21 +223,57 @@ public class RobotContainer {
         .whileTrue(endEffector.setEndEffectorVelocity(-60))
         .onFalse(endEffector.setEndEffectorVelocity(0));
 
-    operatorController
-        .rightBumper()
-        .whileTrue(arm.setArmVelocity(0.5))
-        .onFalse(arm.setArmVelocity(0));
-
-    operatorController
-        .leftBumper()
-        .whileTrue(arm.setArmVelocity(-0.5))
-        .onFalse(arm.setArmVelocity(0));
+    operatorController.y().onTrue(arm.setArmPosition(0.2)).onFalse(arm.setArmVelocity(() -> 0));
 
     operatorController
         .a()
+        .whileTrue(PresetCommands.stowElevator(elevator, endEffector, arm))
+        .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
+    operatorController
+        .b()
         .whileTrue(PresetCommands.presetL2(elevator, endEffector, arm))
         .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
+    operatorController
+        .x()
+        .whileTrue(PresetCommands.presetL3(elevator, endEffector, arm))
+        .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
+    operatorController
+        .y()
+        .whileTrue(PresetCommands.presetL4(elevator, endEffector, arm))
+        .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
 
+    // operatorController
+    //     .rightBumper()
+    //     .onTrue(arm.setArmPosition(0.1))
+    //     .onFalse(arm.setArmVelocity(() -> 0.0));
+
+    // left trigger intake preset + intake rollers
+    // left bumper outtake preset
+    // right bumper stow
+    // right trigger outtake
+    driverController
+        .rightTrigger()
+        .onTrue(groundIntake.setGroundIntakeVelocity(3600))
+        .onFalse(groundIntake.setGroundIntakeVelocity(0));
+
+    driverController
+        .leftTrigger()
+        .onTrue(groundIntake.setGroundIntakeVelocity(-3600))
+        .onFalse(groundIntake.setGroundIntakeVelocity(0));
+
+    driverController
+        .leftBumper()
+        .onTrue(groundIntake.setGroundArmVelocity(() -> 10))
+        .onFalse(groundIntake.setGroundArmVelocity(() -> 0.0));
+
+    driverController
+        .rightBumper()
+        .onTrue(groundIntake.setGroundArmVelocity(() -> -10))
+        .onFalse(groundIntake.setGroundArmVelocity(() -> 0.0));
+    driverController
+        .rightTrigger()
+        .onTrue(groundIntake.setGroundIntakeVelocity(3600))
+        .onFalse(groundIntake.setGroundIntakeVelocity(0.0));
     // operatorController
     //     .b()
     //     .whileTrue(elevator.setElevatorPosition(102))

@@ -113,10 +113,14 @@ public interface ArmIO {
 
     // added 3/6
     // armConfig.softLimit.forwardSoftLimitEnabled(true);
-    // armConfig.softLimit.forwardSoftLimit(0.5);
-    // armConfig.softLimit.reverseSoftLimitEnabled(true);
-    // armConfig.softLimit.reverseSoftLimit(0);
+    // armConfig.softLimit.forwardSoftLimit(0);
+    armConfig.softLimit.reverseSoftLimitEnabled(true);
+    armConfig.softLimit.reverseSoftLimit(0.014);
 
     return armConfig;
+  }
+
+  public default double getArmPosition(ArmIOInputs inputs) {
+    return 0.0;
   }
 }
