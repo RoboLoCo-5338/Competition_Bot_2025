@@ -211,7 +211,9 @@ public class RobotContainer {
     elevator.setDefaultCommand(
         elevator.setElevatorVelocity(() -> deadband(-operatorController.getLeftY()) * 25));
 
-    arm.setDefaultCommand(arm.setArmVelocity(() ->-operatorController.getRightY() * Math.abs(operatorController.getRightY())));
+    arm.setDefaultCommand(
+        arm.setArmVelocity(
+            () -> -operatorController.getRightY() * Math.abs(operatorController.getRightY())));
 
     operatorController
         .leftTrigger()
