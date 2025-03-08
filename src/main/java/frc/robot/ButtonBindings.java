@@ -226,7 +226,7 @@ public class ButtonBindings {
         DriveCommands.joystickDrive(
             drive,
             () -> -driveController.getLeftY(),
-            () -> -driveController.getLeftX() ,
+            () -> -driveController.getLeftX(),
             () -> -driveController.getRightX() * Math.abs(driveController.getRightX())));
     // elevator.setDefaultCommand(elevator.setElevatorVelocity(operatorController.getLeftY()));
     // handles translation and rotation driving (i think!?)
