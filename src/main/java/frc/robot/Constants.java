@@ -45,7 +45,7 @@ public final class Constants {
   public static final class PresetConstants {
     public static final double elevatorl2 = 10; // This was 17 for testing PID
     public static final double elevatorl3 = 16.95;
-    public static final double elevatorl4 = 18.73;
+    public static final double elevatorl4 = 18.93;
     public static final double elevatorNet = 16.481;
     public static final double elevatorl3Algae = 0.0;
 
@@ -63,11 +63,11 @@ public final class Constants {
     public static final int ARM_MOTOR_ID = 44;
     public static final double ARM_MOTOR_KP = 1;
     public static final double ARM_MOTOR_KI = 0.01;
-    public static final double ARM_MOTOR_KD = 0.1;
+    public static final double ARM_MOTOR_KD = 0.2;
     public static final double ARM_MOTOR_KG = 0.0;
     public static final double ARM_MOTOR_KV = 0.00;
     public static final double ARM_MOTOR_KFF = 0.0;
-    public static final double ARM_MOTOR_KS = 0.1;
+    public static final double ARM_MOTOR_KS = 0.0;
     public static final int ARM_MOTOR_CURRENT_LIMIT = 40;
     // Sim constants
     public static final double GEARING = 1.0 / 1.125;
