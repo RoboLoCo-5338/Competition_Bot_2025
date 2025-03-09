@@ -247,11 +247,11 @@ public class RobotContainer {
         .rightBumper()
         .onTrue(endEffector.setEndEffectorSpeed(-1))
         .onFalse(endEffector.setEndEffectorVelocity(0));
-      
-    operatorController
-      .leftBumper()
-      .onTrue(arm.setArmPosition(0.015))
-      .onFalse(arm.setArmVelocity(()->0.0));
+
+    // operatorController
+    //     .leftBumper()
+    //     .onTrue(arm.setArmPosition(0.015))
+    //     .onFalse(arm.setArmVelocity(() -> 0.0));
 
     // operatorController
     //     .rightBumper()
