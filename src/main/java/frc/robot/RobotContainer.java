@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
@@ -257,7 +258,7 @@ public class RobotContainer {
     // right bumper stow
     // right trigger outtake
     driverController
-        .rightTrigger()
+        .y()
         .onTrue(groundIntake.setGroundIntakeVelocity(3600))
         .onFalse(groundIntake.setGroundIntakeVelocity(0));
 
@@ -305,6 +306,12 @@ public class RobotContainer {
                             new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
                     drive)
                 .ignoringDisable(true));
+
+      driverController
+        .rightTrigger()
+        .onTrue(
+          new InstantCommand(()->{DriveCommands.slowMode=0.2;})
+        ).onFalse(new InstantCommand(()->{DriveCommands.slowMode=1;}));
   }
 
   public void periodic() {
