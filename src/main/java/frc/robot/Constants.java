@@ -51,7 +51,7 @@ public final class Constants {
 
     public static final double arml2 = 0.07;
     public static final double arml3 = 0.07;
-    public static final double arml4 = 0.634;
+    public static final double arml4 = 0.620;
     public static final double armNet = 0.3;
     public static final double arml3Algae = 0.0;
 
