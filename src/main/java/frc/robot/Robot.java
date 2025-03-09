@@ -160,6 +160,7 @@ public class Robot extends LoggedRobot {
   @Override
   public void teleopPeriodic() {
     // CommandScheduler.getInstance().schedule(robotContainer.led.setRainbowLED());
+    robotContainer.periodic();
 
   }
 
