@@ -276,10 +276,10 @@ public class RobotContainer {
         .rightBumper()
         .onTrue(groundIntake.setGroundArmVelocity(() -> -10))
         .onFalse(groundIntake.setGroundArmVelocity(() -> 0.0));
-    driverController
-        .rightTrigger()
-        .onTrue(groundIntake.setGroundIntakeVelocity(3600))
-        .onFalse(groundIntake.setGroundIntakeVelocity(0.0));
+    // driverController
+    //     .rightTrigger()
+    //     .onTrue(groundIntake.setGroundIntakeVelocity(3600))
+    //     .onFalse(groundIntake.setGroundIntakeVelocity(0.0));
     // operatorController
     //     .b()
     //     .whileTrue(elevator.setElevatorPosition(102))
@@ -307,11 +307,18 @@ public class RobotContainer {
                     drive)
                 .ignoringDisable(true));
 
-      driverController
+    driverController
         .rightTrigger()
         .onTrue(
-          new InstantCommand(()->{DriveCommands.slowMode=0.2;})
-        ).onFalse(new InstantCommand(()->{DriveCommands.slowMode=1;}));
+            new InstantCommand(
+                () -> {
+                  DriveCommands.slowMode = 0.4;
+                }))
+        .onFalse(
+            new InstantCommand(
+                () -> {
+                  DriveCommands.slowMode = 1;
+                }));
   }
 
   public void periodic() {
