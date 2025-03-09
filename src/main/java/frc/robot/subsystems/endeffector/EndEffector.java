@@ -34,7 +34,7 @@ public class EndEffector extends SubsystemBase {
     return new InstantCommand(() -> io.setEndEffectorVelocity(velocity), this);
   }
 
-  public Command setEndEffectorSpeed(double speed){
+  public Command setEndEffectorSpeed(double speed) {
     return new InstantCommand(() -> io.setEndEffectorSpeed(speed));
   }
 }

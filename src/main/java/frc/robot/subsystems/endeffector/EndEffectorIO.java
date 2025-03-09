@@ -47,7 +47,5 @@ public interface EndEffectorIO {
     return config;
   }
 
-  public default void setEndEffectorSpeed(double speed){
-    
-  }
+  public default void setEndEffectorSpeed(double speed) {}
 }
