@@ -32,9 +32,9 @@ public class ArmIOSpark implements ArmIO {
   @Override
   public void updateInputs(ArmIOInputs inputs) {
     sparkStickyFault = false;
-   // SmartDashboard.putNumber("ArmPosition Before", inputs.armPosition);
+    // SmartDashboard.putNumber("ArmPosition Before", inputs.armPosition);
     ifOk(armMotor, armEncoder::getPosition, (value) -> inputs.armPosition = value);
-    //SmartDashboard.putNumber("ArmPosition After", inputs.armPosition);
+    // SmartDashboard.putNumber("ArmPosition After", inputs.armPosition);
     ifOk(armMotor, armEncoder::getVelocity, (value) -> inputs.armVelocity = value);
     ifOk(
         armMotor,

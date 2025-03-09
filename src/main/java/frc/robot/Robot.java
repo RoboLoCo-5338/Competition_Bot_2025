@@ -161,7 +161,6 @@ public class Robot extends LoggedRobot {
   public void teleopPeriodic() {
     // CommandScheduler.getInstance().schedule(robotContainer.led.setRainbowLED());
     robotContainer.periodic();
-
   }
 
   /** This function is called once when test mode is enabled. */

@@ -310,8 +310,8 @@ public class RobotContainer {
   }
 
   public void periodic() {
-    //ButtonBindingsController.periodic();
-    SmartDashboard.putNumber("In arm periodic",arm.getArmPosition().getAsDouble());
+    // ButtonBindingsController.periodic();
+    SmartDashboard.putNumber("In arm periodic", arm.getArmPosition().getAsDouble());
   }
 
   public void teleopInit() {

@@ -60,6 +60,6 @@ public class Arm extends SubsystemBase {
   public DoubleSupplier getArmPosition() {
     SmartDashboard.putNumber("Getting arm position in Arm.java", armPosition);
     SmartDashboard.putNumber("Getting in arm.java 2", io.getArmPosition(inputs));
-    return () -> armPosition;
+    return ()->io.getArmPosition(inputs);
   }
 }
