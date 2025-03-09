@@ -61,8 +61,8 @@ public final class Constants {
 
   public static final class ArmConstants {
     public static final int ARM_MOTOR_ID = 44;
-    public static final double ARM_MOTOR_KP = 0.1; //3.5
-    public static final double ARM_MOTOR_KI = 0.00; //0.01
+    public static final double ARM_MOTOR_KP = 0.7; // 3.5
+    public static final double ARM_MOTOR_KI = 0.00; // 0.01
     public static final double ARM_MOTOR_KD = 0.0;
     public static final double ARM_MOTOR_KG = 0.0;
     public static final double ARM_MOTOR_KV = 0.00;
