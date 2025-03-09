@@ -278,7 +278,7 @@ public class RobotContainer {
         .onFalse(groundIntake.setGroundArmVelocity(() -> 0.0));
     // driverController
     //     .rightTrigger()
-    //     .onTrue(groundIntake.setGroundIntakeVelocity(3600))
+    //     .onTrue(groundIntake.setGroun  dIntakeVelocity(3600))
     //     .onFalse(groundIntake.setGroundIntakeVelocity(0.0));
     // operatorController
     //     .b()
@@ -312,7 +312,7 @@ public class RobotContainer {
         .onTrue(
             new InstantCommand(
                 () -> {
-                  DriveCommands.slowMode = 0.4;
+                  DriveCommands.slowMode = 0.7;
                 }))
         .onFalse(
             new InstantCommand(
