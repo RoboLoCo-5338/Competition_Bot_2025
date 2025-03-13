@@ -37,6 +37,7 @@ import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.drive.Drive;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.DoubleSupplier;
@@ -474,52 +475,76 @@ public class DriveCommands {
   public static class Reef extends PathDestination {
     Direction direction;
     int tagId;
+    Level level;
     /**
      * Creates a reef direction based on the currently visible tag.
      *
      * @param direction Whether to path to the left branch or the right branch
      * @param tagId ID of the tag used for pathing.
      */
-    public Reef(Direction direction, int tagId) {
+    public Reef(Direction direction, int tagId, Level level) {
       this.direction = direction;
       this.tagId = tagId;
+      this.level = level;
     }
 
     @Override
     public Pose2d getTargetPosition() {
       // rotates the left or right pose around the reef based on the tag id
-      switch (direction) {
-        case Left:
-          return allianceFlip(
-              new Pose2d(2.865, 4.157, new Rotation2d()) // TODO: Change this to correcter pose
-                  .rotateAround(
-                      new Translation2d(4.5, 4.03), // this is the center of the reef
-                      // new Rotation2d(Math.PI));
-                      VisionConstants.aprilTagLayout
-                          .getTagPose(tagId)
-                          .get()
-                          .getRotation()
-                          .toRotation2d()));
-        case Right:
-          return allianceFlip(
-              new Pose2d(2.865, 3.855, new Rotation2d()) // TODO: Change this to correcter pose
-                  .rotateAround(
-                      new Translation2d(4.5, 4.03),
-                      // new Rotation2d(Math.PI));
-                      VisionConstants.aprilTagLayout
-                          .getTagPose(tagId)
-                          .get()
-                          .getRotation()
-                          .toRotation2d()));
-        default:
-          return new Pose2d();
+      Pose2d o = new Pose2d();
+      switch (level) {
+        case L4:
+          if (direction == Direction.Right) o = new Pose2d();
+          else o = new Pose2d();
+          break;
+        default: // TODO: add level 1
+          if (direction == Direction.Right) o = new Pose2d();
+          else o = new Pose2d();
       }
+      return allianceFlip(
+          o.rotateAround(
+              new Translation2d(4.5, 4.03),
+              // new Rotation2d(Math.PI));
+              VisionConstants.aprilTagLayout.getTagPose(tagId).get().getRotation().toRotation2d()));
     }
+  }
+
+  public static ArrayList<Pose2d> getReefPoses(Direction direction, Level level) {
+    ArrayList<Pose2d> poses = new ArrayList<>();
+    for (int i = 0; i < 6; i++) {
+      Pose2d o = new Pose2d();
+      switch (level) {
+        case L4:
+          if (direction == Direction.Right) o = new Pose2d();
+          else o = new Pose2d();
+          break;
+        default: // TODO: add level 1
+          if (direction == Direction.Right) o = new Pose2d();
+          else o = new Pose2d();
+      }
+      poses.add(
+          o.rotateAround(
+              new Translation2d(4.5, 4.03),
+              // new Rotation2d(Math.PI));
+              VisionConstants.aprilTagLayout
+                  .getTagPose(i + 17)
+                  .get()
+                  .getRotation()
+                  .toRotation2d()));
+    }
+    return poses;
   }
 
   public enum Direction {
     Left,
     Right,
     None
+  }
+
+  public enum Level {
+    L1,
+    L2,
+    L3,
+    L4
   }
 }

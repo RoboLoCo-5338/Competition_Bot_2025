@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.DriveCommands.Level;
 import frc.robot.commands.DriveCommands.Reef;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Vision.Vision;
@@ -64,6 +65,7 @@ import frc.robot.subsystems.led.AddressableLEDIO;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.led.LEDIO;
 import frc.robot.subsystems.led.LEDIOSim;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -299,13 +301,30 @@ public class RobotContainer {
                           : Arrays.asList(17, 18, 19, 20, 21, 22));
                   for (int tag : vision.getTagIds(0)) {
                     if (reefTags.contains(tag)) {
-                      new SequentialCommandGroup(
+                      new SequentialCommandGroup( // for adding more commands
                               DriveCommands.pathToDestination(
-                                  drive, () -> new Reef(DriveCommands.Direction.Left, tag)))
+                                  drive,
+                                  () -> new Reef(DriveCommands.Direction.Left, tag, Level.L4)))
                           .schedule();
-                        return;
+                      return;
                     }
                   }
+                  ArrayList<Pose2d> poses =
+                      DriveCommands.getReefPoses(DriveCommands.Direction.Left, Level.L4);
+                  new SequentialCommandGroup(
+                      DriveCommands.pathToDestination(
+                          drive,
+                          () ->
+                              new Reef(
+                                  DriveCommands.Direction.Left,
+                                  poses.indexOf(drive.getPose().nearest(poses))
+                                      + ((DriverStation.getAlliance().isPresent()
+                                              && DriverStation.getAlliance()
+                                                  .get()
+                                                  .equals(Alliance.Red))
+                                          ? 6
+                                          : 17),
+                                  Level.L4)));
                 }));
     driverController
         .povRight()
@@ -320,13 +339,30 @@ public class RobotContainer {
                   for (int tag : vision.getTagIds(0)) {
                     if (reefTags.contains(tag)) {
                       System.out.println(tag);
-                      new SequentialCommandGroup(
+                      new SequentialCommandGroup( // for adding more commands
                               DriveCommands.pathToDestination(
-                                  drive, () -> new Reef(DriveCommands.Direction.Right, tag)))
+                                  drive,
+                                  () -> new Reef(DriveCommands.Direction.Right, tag, Level.L4)))
                           .schedule();
                       return;
                     }
                   }
+                  ArrayList<Pose2d> poses =
+                      DriveCommands.getReefPoses(DriveCommands.Direction.Right, Level.L4);
+                  new SequentialCommandGroup(
+                      DriveCommands.pathToDestination(
+                          drive,
+                          () ->
+                              new Reef(
+                                  DriveCommands.Direction.Right,
+                                  poses.indexOf(drive.getPose().nearest(poses))
+                                      + ((DriverStation.getAlliance().isPresent()
+                                              && DriverStation.getAlliance()
+                                                  .get()
+                                                  .equals(Alliance.Red))
+                                          ? 6
+                                          : 17),
+                                  Level.L4)));
                 }));
   }
 
