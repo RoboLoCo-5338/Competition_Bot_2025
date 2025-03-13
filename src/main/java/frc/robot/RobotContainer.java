@@ -303,6 +303,7 @@ public class RobotContainer {
                               DriveCommands.pathToDestination(
                                   drive, () -> new Reef(DriveCommands.Direction.Left, tag)))
                           .schedule();
+                        return;
                     }
                   }
                 }));
