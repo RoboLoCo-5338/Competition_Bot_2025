@@ -157,7 +157,13 @@ public class Robot extends LoggedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    // CommandScheduler.getInstance().schedule(robotContainer.led.setRainbowLED());
+    try {
+      System.out.print("[");
+      for (int id : robotContainer.vision.getTagIds(0)) System.out.print(id + " ");
+      System.out.println("]");
+    } catch (Exception e) {
+      // TODO: handle exception
+    }
   }
 
   /** This function is called once when test mode is enabled. */

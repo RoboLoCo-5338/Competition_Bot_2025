@@ -28,7 +28,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.DriveCommands;
-import frc.robot.commands.DriveCommands.Level;
 import frc.robot.commands.DriveCommands.Reef;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Vision.Vision;
@@ -79,7 +78,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
   // Subsystems
   public final Drive drive;
-  private final Vision vision;
+  public final Vision vision;
 
   private final LED led;
 
@@ -284,11 +283,11 @@ public class RobotContainer {
                 .ignoringDisable(true));
 
     // Turns to tag and locks rotation
-    // controller
+    // driverController
     //     .y()
     //     .whileTrue(
     //         DriveCommands.reefStrafe(
-    //             drive, () -> controller.getLeftY(), () -> controller.getLeftX()));
+    //             drive, () -> driverController.getLeftY(), () -> driverController.getLeftX()));
     driverController
         .y()
         .onTrue(
@@ -300,17 +299,25 @@ public class RobotContainer {
                           ? Arrays.asList(6, 7, 8, 9, 10, 11)
                           : Arrays.asList(17, 18, 19, 20, 21, 22));
                   for (int tag : vision.getTagIds(0)) {
+                    System.out.println("sees tag:" + tag);
                     if (reefTags.contains(tag)) {
                       new SequentialCommandGroup( // for adding more commands
                               DriveCommands.pathToDestination(
                                   drive,
-                                  () -> new Reef(DriveCommands.Direction.Left, tag, Level.L4)))
+                                  () ->
+                                      new Reef(
+                                          DriveCommands.Direction.Left,
+                                          tag,
+                                          DriveCommands.Level.L4)))
                           .schedule();
                       return;
                     }
                   }
                   ArrayList<Pose2d> poses =
-                      DriveCommands.getReefPoses(DriveCommands.Direction.Left, Level.L4);
+                      DriveCommands.getReefPoses(
+                          DriveCommands.Direction.Left, DriveCommands.Level.L4);
+                  System.out.println("need to go to best");
+
                   new SequentialCommandGroup(
                       DriveCommands.pathToDestination(
                           drive,
@@ -324,46 +331,46 @@ public class RobotContainer {
                                                   .equals(Alliance.Red))
                                           ? 6
                                           : 17),
-                                  Level.L4)));
+                                  DriveCommands.Level.L4)));
                 }));
-    driverController
-        .povRight()
-        .onTrue(
-            new InstantCommand( // I hate commands so much
-                () -> {
-                  List<Integer> reefTags =
-                      ((DriverStation.getAlliance().isPresent()
-                              && DriverStation.getAlliance().get().equals(Alliance.Red))
-                          ? Arrays.asList(6, 7, 8, 9, 10, 11)
-                          : Arrays.asList(17, 18, 19, 20, 21, 22));
-                  for (int tag : vision.getTagIds(0)) {
-                    if (reefTags.contains(tag)) {
-                      System.out.println(tag);
-                      new SequentialCommandGroup( // for adding more commands
-                              DriveCommands.pathToDestination(
-                                  drive,
-                                  () -> new Reef(DriveCommands.Direction.Right, tag, Level.L4)))
-                          .schedule();
-                      return;
-                    }
-                  }
-                  ArrayList<Pose2d> poses =
-                      DriveCommands.getReefPoses(DriveCommands.Direction.Right, Level.L4);
-                  new SequentialCommandGroup(
-                      DriveCommands.pathToDestination(
-                          drive,
-                          () ->
-                              new Reef(
-                                  DriveCommands.Direction.Right,
-                                  poses.indexOf(drive.getPose().nearest(poses))
-                                      + ((DriverStation.getAlliance().isPresent()
-                                              && DriverStation.getAlliance()
-                                                  .get()
-                                                  .equals(Alliance.Red))
-                                          ? 6
-                                          : 17),
-                                  Level.L4)));
-                }));
+    // driverController
+    //     .povRight()
+    //     .onTrue(
+    //         new InstantCommand( // I hate commands so much
+    //             () -> {
+    //               List<Integer> reefTags =
+    //                   ((DriverStation.getAlliance().isPresent()
+    //                           && DriverStation.getAlliance().get().equals(Alliance.Red))
+    //                       ? Arrays.asList(6, 7, 8, 9, 10, 11)
+    //                       : Arrays.asList(17, 18, 19, 20, 21, 22));
+    //               for (int tag : vision.getTagIds(0)) {
+    //                 if (reefTags.contains(tag)) {
+    //                   System.out.println(tag);
+    //                   new SequentialCommandGroup( // for adding more commands
+    //                           DriveCommands.pathToDestination(
+    //                               drive,
+    //                               () -> new Reef(DriveCommands.Direction.Right, tag, Level.L4)))
+    //                       .schedule();
+    //                   return;
+    //                 }
+    //               }
+    //               ArrayList<Pose2d> poses =
+    //                   DriveCommands.getReefPoses(DriveCommands.Direction.Right, Level.L4);
+    //               new SequentialCommandGroup(
+    //                   DriveCommands.pathToDestination(
+    //                       drive,
+    //                       () ->
+    //                           new Reef(
+    //                               DriveCommands.Direction.Right,
+    //                               poses.indexOf(drive.getPose().nearest(poses))
+    //                                   + ((DriverStation.getAlliance().isPresent()
+    //                                           && DriverStation.getAlliance()
+    //                                               .get()
+    //                                               .equals(Alliance.Red))
+    //                                       ? 6
+    //                                       : 17),
+    //                               Level.L4)));
+    //             }));
   }
 
   /**

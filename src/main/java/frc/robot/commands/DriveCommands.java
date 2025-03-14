@@ -315,7 +315,7 @@ public class DriveCommands {
               (DriverStation.getAlliance().isPresent()
                       && DriverStation.getAlliance()
                           .get()
-                          .equals(Alliance.Blue)) // TODO: switch to red
+                          .equals(Alliance.Red)) // TODO: switch to red
                   ? new Translation2d(13.06185, 4.03)
                   : new Translation2d(4.5, 4.03);
           Logger.recordOutput("Test/ReefPose", reef);
@@ -334,6 +334,7 @@ public class DriveCommands {
    * @return Command that makes the robot path to the destination
    */
   public static Command pathToDestination(Drive drive, Supplier<PathDestination> destination) {
+    System.out.println("runs");
     Pose2d targetPose = destination.get().getTargetPosition();
     Logger.recordOutput("Path to Destination", targetPose);
     boolean isFlipped =
@@ -343,7 +344,7 @@ public class DriveCommands {
             targetPose.minus(drive.getPose()).getX() * targetPose.minus(drive.getPose()).getX()
                 + targetPose.minus(drive.getPose()).getY()
                     * targetPose.minus(drive.getPose()).getY())
-        > 1) {
+        > 1000) {
       PathConstraints constraints =
           new PathConstraints(
               drive.getMaxLinearSpeedMetersPerSec(),
@@ -495,7 +496,7 @@ public class DriveCommands {
       switch (level) {
         case L4:
           if (direction == Direction.Right) o = new Pose2d();
-          else o = new Pose2d();
+          else o = new Pose2d(3.13, 4.14, new Rotation2d());
           break;
         default: // TODO: add level 1
           if (direction == Direction.Right) o = new Pose2d();
@@ -505,7 +506,12 @@ public class DriveCommands {
           o.rotateAround(
               new Translation2d(4.5, 4.03),
               // new Rotation2d(Math.PI));
-              VisionConstants.aprilTagLayout.getTagPose(tagId).get().getRotation().toRotation2d()));
+              VisionConstants.aprilTagLayout
+                  .getTagPose(tagId)
+                  .get()
+                  .getRotation()
+                  .toRotation2d()
+                  .plus(new Rotation2d(Math.PI))));
     }
   }
 
@@ -530,7 +536,8 @@ public class DriveCommands {
                   .getTagPose(i + 17)
                   .get()
                   .getRotation()
-                  .toRotation2d()));
+                  .toRotation2d()
+                  .plus(new Rotation2d(Math.PI))));
     }
     return poses;
   }
