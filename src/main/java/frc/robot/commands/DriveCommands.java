@@ -522,7 +522,7 @@ public class DriveCommands {
       switch (level) {
         case L4:
           if (direction == Direction.Right) o = new Pose2d();
-          else o = new Pose2d();
+          else o = new Pose2d(3.13, 4.14, new Rotation2d());
           break;
         default: // TODO: add level 1
           if (direction == Direction.Right) o = new Pose2d();
