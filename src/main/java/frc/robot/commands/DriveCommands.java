@@ -502,16 +502,16 @@ public class DriveCommands {
           if (direction == Direction.Right) o = new Pose2d();
           else o = new Pose2d();
       }
+      Rotation2d rot =
+          VisionConstants.aprilTagLayout.getTagPose(tagId).get().getRotation().toRotation2d();
+      if (DriverStation.getAlliance().isPresent()
+          && DriverStation.getAlliance().get() == Alliance.Blue)
+        rot = rot.plus(new Rotation2d(Math.PI));
       return allianceFlip(
           o.rotateAround(
               new Translation2d(4.5, 4.03),
               // new Rotation2d(Math.PI));
-              VisionConstants.aprilTagLayout
-                  .getTagPose(tagId)
-                  .get()
-                  .getRotation()
-                  .toRotation2d()
-                  .plus(new Rotation2d(Math.PI))));
+              rot));
     }
   }
 
@@ -528,16 +528,16 @@ public class DriveCommands {
           if (direction == Direction.Right) o = new Pose2d();
           else o = new Pose2d();
       }
+      Rotation2d rot =
+          VisionConstants.aprilTagLayout.getTagPose(i + 17).get().getRotation().toRotation2d();
+      if (DriverStation.getAlliance().isPresent()
+          && DriverStation.getAlliance().get() == Alliance.Blue)
+        rot = rot.plus(new Rotation2d(Math.PI));
       poses.add(
           o.rotateAround(
               new Translation2d(4.5, 4.03),
               // new Rotation2d(Math.PI));
-              VisionConstants.aprilTagLayout
-                  .getTagPose(i + 17)
-                  .get()
-                  .getRotation()
-                  .toRotation2d()
-                  .plus(new Rotation2d(Math.PI))));
+              rot));
     }
     return poses;
   }
