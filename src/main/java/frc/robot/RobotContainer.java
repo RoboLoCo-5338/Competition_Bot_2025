@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.VisionConstants;
@@ -64,7 +65,6 @@ import frc.robot.subsystems.led.AddressableLEDIO;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.led.LEDIO;
 import frc.robot.subsystems.led.LEDIOSim;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -102,6 +102,9 @@ public class RobotContainer {
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
+
+  // Vision Target
+  private int visionTargetID = -1;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -298,40 +301,25 @@ public class RobotContainer {
                               && DriverStation.getAlliance().get().equals(Alliance.Red))
                           ? Arrays.asList(6, 7, 8, 9, 10, 11)
                           : Arrays.asList(17, 18, 19, 20, 21, 22));
-                  for (int tag : vision.getTagIds(0)) {
-                    System.out.println("sees tag:" + tag);
-                    if (reefTags.contains(tag)) {
-                      new SequentialCommandGroup( // for adding more commands
-                              DriveCommands.pathToDestination(
-                                  drive,
-                                  () ->
-                                      new Reef(
-                                          DriveCommands.Direction.Left,
-                                          tag,
-                                          DriveCommands.Level.L4)))
-                          .schedule();
-                      return;
-                    }
-                  }
-                  ArrayList<Pose2d> poses =
-                      DriveCommands.getReefPoses(
-                          DriveCommands.Direction.Left, DriveCommands.Level.L4);
-                  System.out.println("need to go to best");
-
-                  new SequentialCommandGroup(
-                      DriveCommands.pathToDestination(
-                          drive,
-                          () ->
-                              new Reef(
-                                  DriveCommands.Direction.Left,
-                                  poses.indexOf(drive.getPose().nearest(poses))
-                                      + ((DriverStation.getAlliance().isPresent()
-                                              && DriverStation.getAlliance()
-                                                  .get()
-                                                  .equals(Alliance.Red))
-                                          ? 6
-                                          : 17),
-                                  DriveCommands.Level.L4)));
+                  new SequentialCommandGroup( // for adding more commands
+                          new WaitUntilCommand(
+                              () -> {
+                                for (int tag : vision.getTagIds(0))
+                                  if (reefTags.contains(tag)) {
+                                    setVisionTarget(tag);
+                                    return true;
+                                  }
+                                return false;
+                              }),
+                          DriveCommands.pathToDestination(
+                              drive,
+                              () ->
+                                  new Reef(
+                                      DriveCommands.Direction.Left,
+                                      visionTargetID,
+                                      DriveCommands.Level.L4)))
+                      .schedule();
+                  return;
                 }));
     // driverController
     //     .povRight()
@@ -382,11 +370,7 @@ public class RobotContainer {
     return autoChooser.get();
   }
 
-  /**
-   * Maps a joystick input to a speed using an exponential function, which gives more precise
-   * control at lower speeds.
-   *
-   * @param x the input from the joystick
-   * @return the output speed
-   */
+  public void setVisionTarget(int id) {
+    visionTargetID = id;
+  }
 }
