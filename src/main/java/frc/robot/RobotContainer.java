@@ -17,21 +17,17 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveCommands.Direction;
-import frc.robot.commands.DriveCommands.Reef;
 import frc.robot.commands.PresetCommands;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Vision.Vision;
@@ -68,9 +64,6 @@ import frc.robot.subsystems.led.AddressableLEDIO;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.led.LEDIO;
 import frc.robot.subsystems.led.LEDIOSim;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -197,8 +190,6 @@ public class RobotContainer {
 
     NamedCommands.registerCommand("GroundI Outake", groundIntake.setGroundIntakeVelocity(-3600));
     NamedCommands.registerCommand("GroundI Stop", groundIntake.setGroundIntakeVelocity(0));
-    NamedCommands.registerCommand("L4", PresetCommands.presetL4(elevator, endEffector, arm));
-    NamedCommands.registerCommand("AutoAlignL", );
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -359,12 +350,8 @@ public class RobotContainer {
     //     .whileTrue(
     //         DriveCommands.reefStrafe(
     //             drive, () -> driverController.getLeftY(), () -> driverController.getLeftX()));
-    driverController
-        .povLeft()
-        .onTrue(DriveCommands.reefAlign(drive, Direction.Left));
-    driverController
-        .povRight()
-        .onTrue(DriveCommands.reefAlign(drive, Direction.Right));
+    driverController.povLeft().onTrue(DriveCommands.reefAlign(drive, Direction.Left));
+    driverController.povRight().onTrue(DriveCommands.reefAlign(drive, Direction.Right));
 
     driverController
         .rightTrigger()

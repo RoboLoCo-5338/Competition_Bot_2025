@@ -16,7 +16,6 @@ package frc.robot.commands;
 import static edu.wpi.first.units.Units.Degrees;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.FlippingUtil;
 import edu.wpi.first.math.MathUtil;
@@ -35,12 +34,12 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.drive.Drive;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.DoubleSupplier;
@@ -545,26 +544,24 @@ public class DriveCommands {
     return poses;
   }
 
-  public static Command reefAlign(Drive drive, Direction direction){
+  public static Command reefAlign(Drive drive, Direction direction) {
     return new InstantCommand( // I hate commands so much
-                () -> {
-                  ArrayList<Pose2d> poses = DriveCommands.getReefPoses(Direction.Left);
-                  new SequentialCommandGroup(
-                          pathToDestination(
-                              drive,
-                              () ->
-                                  new Reef(
-                                      Direction.Left,
-                                      poses.indexOf(drive.getPose().nearest(poses))
-                                          + ((DriverStation.getAlliance().isPresent()
-                                                  && DriverStation.getAlliance()
-                                                      .get()
-                                                      .equals(Alliance.Red))
-                                              ? 6
-                                              : 17))))
-                      .schedule();
-                  ;
-                });
+        () -> {
+          ArrayList<Pose2d> poses = DriveCommands.getReefPoses(direction);
+          new SequentialCommandGroup(
+                  pathToDestination(
+                      drive,
+                      () ->
+                          new Reef(
+                              direction,
+                              poses.indexOf(drive.getPose().nearest(poses))
+                                  + ((DriverStation.getAlliance().isPresent()
+                                          && DriverStation.getAlliance().get().equals(Alliance.Red))
+                                      ? 6
+                                      : 17))))
+              .schedule();
+          ;
+        });
   }
 
   public enum Direction {
