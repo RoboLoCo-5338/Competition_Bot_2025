@@ -499,7 +499,7 @@ public class DriveCommands {
       Pose2d o = new Pose2d();
       switch (direction) {
         case Right:
-            o = new Pose2d(3.02, 3.84, new Rotation2d());
+          o = new Pose2d(3.02, 3.84, new Rotation2d());
           break;
         default: // TODO: add level 1
           o = new Pose2d(3.05, 4.22, new Rotation2d());
@@ -523,7 +523,7 @@ public class DriveCommands {
       Pose2d o = new Pose2d();
       switch (direction) {
         case Right:
-            o = new Pose2d(3.02, 3.84, new Rotation2d());
+          o = new Pose2d(3.02, 3.84, new Rotation2d());
           break;
         default: // TODO: add level 1
           o = new Pose2d(3.05, 4.22, new Rotation2d());

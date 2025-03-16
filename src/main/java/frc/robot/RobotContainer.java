@@ -31,7 +31,6 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveCommands.Direction;
-import frc.robot.commands.DriveCommands.Level;
 import frc.robot.commands.DriveCommands.Reef;
 import frc.robot.commands.PresetCommands;
 import frc.robot.generated.TunerConstants;
@@ -368,7 +367,7 @@ public class RobotContainer {
                               && DriverStation.getAlliance().get().equals(Alliance.Red))
                           ? Arrays.asList(6, 7, 8, 9, 10, 11)
                           : Arrays.asList(17, 18, 19, 20, 21, 22));
-                  ArrayList<Pose2d> poses = DriveCommands.getReefPoses(Direction.Left, Level.L3);
+                  ArrayList<Pose2d> poses = DriveCommands.getReefPoses(Direction.Left);
                   new SequentialCommandGroup(
                           DriveCommands.pathToDestination(
                               drive,
@@ -381,8 +380,7 @@ public class RobotContainer {
                                                       .get()
                                                       .equals(Alliance.Red))
                                               ? 6
-                                              : 17),
-                                      Level.L3)))
+                                              : 17))))
                       .schedule();
                   ;
                 }));
@@ -397,7 +395,7 @@ public class RobotContainer {
                           ? Arrays.asList(6, 7, 8, 9, 10, 11)
                           : Arrays.asList(17, 18, 19, 20, 21, 22));
                   ArrayList<Pose2d> poses =
-                      DriveCommands.getReefPoses(DriveCommands.Direction.Right, Level.L3);
+                      DriveCommands.getReefPoses(DriveCommands.Direction.Right);
                   new SequentialCommandGroup(
                           DriveCommands.pathToDestination(
                               drive,
@@ -410,8 +408,7 @@ public class RobotContainer {
                                                       .get()
                                                       .equals(Alliance.Red))
                                               ? 6
-                                              : 17),
-                                      Level.L3)))
+                                              : 17))))
                       .schedule();
                 }));
 
