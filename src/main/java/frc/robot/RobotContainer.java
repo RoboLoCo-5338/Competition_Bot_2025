@@ -14,6 +14,7 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -30,6 +31,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveCommands.Reef;
+import frc.robot.commands.PresetCommands;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Vision.Vision;
 import frc.robot.subsystems.Vision.VisionIO;
@@ -190,6 +192,9 @@ public class RobotContainer {
         break;
     }
 
+    NamedCommands.registerCommand("GroundI Outake", groundIntake.setGroundIntakeVelocity(-3600));
+    NamedCommands.registerCommand("GroundI Stop", groundIntake.setGroundIntakeVelocity(0));
+
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
@@ -208,6 +213,8 @@ public class RobotContainer {
         "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
     autoChooser.addOption(
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+    // autoChooser.addOption(
+    //     "1m Forward", A);
 
     // Configure the button bindings
     configureButtonBindings();
@@ -218,6 +225,14 @@ public class RobotContainer {
       return 0;
     } else {
       return (1 / (1 - 0.2)) * (controllerAxis + (Math.signum(controllerAxis) * 0.2));
+    }
+  }
+
+  private double easyDeadband(double val) {
+    if (Math.abs(val) < 0.07) {
+      return 0;
+    } else {
+      return val;
     }
   }
 
@@ -233,6 +248,10 @@ public class RobotContainer {
     elevator.setDefaultCommand(
         elevator.setElevatorVelocity(() -> deadband(-operatorController.getLeftY()) * 25));
 
+    arm.setDefaultCommand(
+        arm.setArmVelocity(
+            () -> -operatorController.getRightY() * Math.abs(operatorController.getRightY())));
+
     operatorController
         .leftTrigger()
         .whileTrue(endEffector.setEndEffectorVelocity(60))
@@ -244,20 +263,64 @@ public class RobotContainer {
         .onFalse(endEffector.setEndEffectorVelocity(0));
 
     operatorController
-        .rightBumper()
-        .whileTrue(arm.setArmVelocity(0.5))
-        .onFalse(arm.setArmVelocity(0));
+        .a()
+        .whileTrue(PresetCommands.stowElevator(elevator, endEffector, arm))
+        .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
+    operatorController
+        .b()
+        .whileTrue(PresetCommands.presetL2(elevator, endEffector, arm))
+        .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
+    operatorController
+        .x()
+        .whileTrue(PresetCommands.presetL3(elevator, endEffector, arm))
+        .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
+    operatorController
+        .y()
+        .whileTrue(PresetCommands.presetL4(elevator, endEffector, arm))
+        .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
 
     operatorController
-        .leftBumper()
-        .whileTrue(arm.setArmVelocity(-0.5))
-        .onFalse(arm.setArmVelocity(0));
+        .rightBumper()
+        .onTrue(endEffector.setEndEffectorSpeed(-1))
+        .onFalse(endEffector.setEndEffectorVelocity(0));
 
     // operatorController
-    //     .a()
-    //     .whileTrue(elevator.setElevatorPosition(57))
-    //     .onFalse(elevator.setElevatorVelocity(() -> 0.0));
+    //     .leftBumper()
+    //     .onTrue(arm.setArmPosition(0.015))
+    //     .onFalse(arm.setArmVelocity(() -> 0.0));
 
+    // operatorController
+    //     .rightBumper()
+    //     .onTrue(arm.setArmPosition(0.1))
+    //     .onFalse(arm.setArmVelocity(() -> 0.0));
+
+    // left trigger intake preset + intake rollers
+    // left bumper outtake preset
+    // right bumper stow
+    // right trigger outtake
+    driverController
+        .y()
+        .onTrue(groundIntake.setGroundIntakeVelocity(3600))
+        .onFalse(groundIntake.setGroundIntakeVelocity(0));
+
+    driverController
+        .leftTrigger()
+        .onTrue(groundIntake.setGroundIntakeVelocity(-3600))
+        .onFalse(groundIntake.setGroundIntakeVelocity(0));
+
+    driverController
+        .leftBumper()
+        .onTrue(groundIntake.setGroundArmVelocity(() -> 10))
+        .onFalse(groundIntake.setGroundArmVelocity(() -> 0.0));
+
+    driverController
+        .rightBumper()
+        .onTrue(groundIntake.setGroundArmVelocity(() -> -10))
+        .onFalse(groundIntake.setGroundArmVelocity(() -> 0.0));
+    // driverController
+    //     .rightTrigger()
+    //     .onTrue(groundIntake.setGroun  dIntakeVelocity(3600))
+    //     .onFalse(groundIntake.setGroundIntakeVelocity(0.0));
     // operatorController
     //     .b()
     //     .whileTrue(elevator.setElevatorPosition(102))
@@ -292,7 +355,7 @@ public class RobotContainer {
     //         DriveCommands.reefStrafe(
     //             drive, () -> driverController.getLeftY(), () -> driverController.getLeftX()));
     driverController
-        .y()
+        .a()
         .onTrue(
             new InstantCommand( // I hate commands so much
                 () -> {
@@ -359,6 +422,30 @@ public class RobotContainer {
     //                                       : 17),
     //                               Level.L4)));
     //             }));
+
+    driverController
+        .rightTrigger()
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  DriveCommands.slowMode = 0.7;
+                }))
+        .onFalse(
+            new InstantCommand(
+                () -> {
+                  DriveCommands.slowMode = 1;
+                }));
+  }
+
+  public void periodic() {
+    // ButtonBindingsController.periodic();
+    SmartDashboard.putNumber("In arm periodic", arm.getArmPosition().getAsDouble());
+  }
+
+  public void teleopInit() {
+    SmartDashboard.putNumber("Laser Can", elevator.io.getLaserCanMeasurement());
+    endEffector.setEndEffectorVelocity(0);
+    elevator.setElevatorVelocity(() -> 0);
   }
 
   /**

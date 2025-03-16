@@ -9,6 +9,7 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.function.DoubleSupplier;
 
 public class ArmIOSpark implements ArmIO {
@@ -30,9 +31,10 @@ public class ArmIOSpark implements ArmIO {
 
   @Override
   public void updateInputs(ArmIOInputs inputs) {
-
     sparkStickyFault = false;
+    // SmartDashboard.putNumber("ArmPosition Before", inputs.armPosition);
     ifOk(armMotor, armEncoder::getPosition, (value) -> inputs.armPosition = value);
+    // SmartDashboard.putNumber("ArmPosition After", inputs.armPosition);
     ifOk(armMotor, armEncoder::getVelocity, (value) -> inputs.armVelocity = value);
     ifOk(
         armMotor,
@@ -62,5 +64,11 @@ public class ArmIOSpark implements ArmIO {
     //     ffvolts,
     //     ArbFFUnits.kVoltage);
     armMotor.set(velocityRadPerSec);
+  }
+
+  @Override
+  public double getArmPosition(ArmIOInputs inputs) {
+    SmartDashboard.putNumber("Arm Positoin in method", inputs.armPosition);
+    return inputs.armPosition;
   }
 }
