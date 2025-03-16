@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.SimMechanism;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -114,7 +115,7 @@ public class Robot extends LoggedRobot {
     // This must be called from the robot's periodic block in order for anything in
     // the Command-based framework to work.
     CommandScheduler.getInstance().run();
-
+    robotContainer.periodic();
     // Return to normal thread priority
     Threads.setCurrentThreadPriority(false, 10);
   }
@@ -152,12 +153,14 @@ public class Robot extends LoggedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
+    robotContainer.teleopInit();
   }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
     // CommandScheduler.getInstance().schedule(robotContainer.led.setRainbowLED());
+    robotContainer.periodic();
   }
 
   /** This function is called once when test mode is enabled. */
@@ -177,5 +180,7 @@ public class Robot extends LoggedRobot {
 
   /** This function is called periodically whilst in simulation. */
   @Override
-  public void simulationPeriodic() {}
+  public void simulationPeriodic() {
+    SimMechanism.updateBatteryVoltages();
+  }
 }

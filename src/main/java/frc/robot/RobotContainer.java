@@ -14,24 +14,50 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.PresetCommands;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.AddressableLEDIO;
-import frc.robot.subsystems.LED;
+import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.ArmIO;
+import frc.robot.subsystems.arm.ArmIOSim;
+import frc.robot.subsystems.arm.ArmIOSpark;
+import frc.robot.subsystems.climb.Climb;
+import frc.robot.subsystems.climb.ClimbIO;
+import frc.robot.subsystems.climb.ClimbIOSim;
+import frc.robot.subsystems.climb.ClimbIOTalonFX;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
+import frc.robot.subsystems.elevator.Elevator;
+import frc.robot.subsystems.elevator.ElevatorIO;
+import frc.robot.subsystems.elevator.ElevatorIOSim;
+import frc.robot.subsystems.elevator.ElevatorIOTalonFX;
+import frc.robot.subsystems.endeffector.EndEffector;
+import frc.robot.subsystems.endeffector.EndEffectorIO;
+import frc.robot.subsystems.endeffector.EndEffectorIOSim;
+import frc.robot.subsystems.endeffector.EndEffectorIOTalonFX;
+import frc.robot.subsystems.groundintake.GroundIntake;
+import frc.robot.subsystems.groundintake.GroundIntakeIO;
+import frc.robot.subsystems.groundintake.GroundIntakeIOSim;
+import frc.robot.subsystems.groundintake.GroundIntakeIOSpark;
+import frc.robot.subsystems.led.AddressableLEDIO;
+import frc.robot.subsystems.led.LED;
+import frc.robot.subsystems.led.LEDIO;
+import frc.robot.subsystems.led.LEDIOSim;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -44,10 +70,25 @@ public class RobotContainer {
   // Subsystems
   private final Drive drive;
 
-  public final LED led;
+  private final LED led;
+
+  private final Elevator elevator;
+
+  private final GroundIntake groundIntake;
+
+  private final EndEffector endEffector;
+
+  private final ButtonBindings ButtonBindingsController;
+
+  private final Climb climb;
+
+  private final Arm arm;
+
+  public CommandXboxController driverController = new CommandXboxController(0);
+
+  public CommandXboxController operatorController = new CommandXboxController(1);
 
   // Controller
-  private final CommandXboxController controller = new CommandXboxController(0);
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -65,6 +106,14 @@ public class RobotContainer {
                 new ModuleIOTalonFX(TunerConstants.BackLeft),
                 new ModuleIOTalonFX(TunerConstants.BackRight));
         led = new LED(new AddressableLEDIO());
+        groundIntake = new GroundIntake(new GroundIntakeIOSpark());
+        endEffector = new EndEffector(new EndEffectorIOTalonFX());
+        elevator = new Elevator(new ElevatorIOTalonFX());
+        climb = new Climb(new ClimbIOTalonFX());
+        arm = new Arm(new ArmIOSpark());
+        ButtonBindingsController =
+            new ButtonBindings(drive, led, elevator, groundIntake, endEffector, climb, arm);
+
         break;
 
       case SIM:
@@ -76,7 +125,14 @@ public class RobotContainer {
                 new ModuleIOSim(TunerConstants.FrontRight),
                 new ModuleIOSim(TunerConstants.BackLeft),
                 new ModuleIOSim(TunerConstants.BackRight));
-        led = new LED(new AddressableLEDIO());
+        led = new LED(new LEDIOSim());
+        groundIntake = new GroundIntake(new GroundIntakeIOSim());
+        endEffector = new EndEffector(new EndEffectorIOSim());
+        elevator = new Elevator(new ElevatorIOSim());
+        climb = new Climb(new ClimbIOSim());
+        arm = new Arm(new ArmIOSim(((ElevatorIOSim) elevator.getIO()).getLigamentEnd()));
+        ButtonBindingsController =
+            new ButtonBindings(drive, led, elevator, groundIntake, endEffector, climb, arm);
         break;
 
       default:
@@ -88,10 +144,20 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {},
                 new ModuleIO() {});
-        // TODO change this
-        led = new LED(new AddressableLEDIO());
+
+        led = new LED(new LEDIO() {});
+        groundIntake = new GroundIntake(new GroundIntakeIO() {});
+        endEffector = new EndEffector(new EndEffectorIO() {});
+        elevator = new Elevator(new ElevatorIO() {});
+        climb = new Climb(new ClimbIO() {});
+        arm = new Arm(new ArmIO() {});
+        ButtonBindingsController =
+            new ButtonBindings(drive, led, elevator, groundIntake, endEffector, climb, arm);
         break;
     }
+
+    NamedCommands.registerCommand("GroundI Outake", groundIntake.setGroundIntakeVelocity(-3600));
+    NamedCommands.registerCommand("GroundI Stop", groundIntake.setGroundIntakeVelocity(0));
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -111,9 +177,27 @@ public class RobotContainer {
         "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
     autoChooser.addOption(
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+    // autoChooser.addOption(
+    //     "1m Forward", A);
 
     // Configure the button bindings
     configureButtonBindings();
+  }
+
+  private double deadband(double controllerAxis) {
+    if (Math.abs(controllerAxis) < 0.2) {
+      return 0;
+    } else {
+      return (1 / (1 - 0.2)) * (controllerAxis + (Math.signum(controllerAxis) * 0.2));
+    }
+  }
+
+  private double easyDeadband(double val) {
+    if (Math.abs(val) < 0.07) {
+      return 0;
+    } else {
+      return val;
+    }
   }
 
   /**
@@ -124,28 +208,101 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Default command, normal field-relative drive
-    drive.setDefaultCommand(
-        DriveCommands.joystickDrive(
-            drive,
-            () -> -controller.getLeftY(),
-            () -> -controller.getLeftX(),
-            () -> -controller.getRightX()));
 
-    // Lock to 0° when A button is held
-    controller
+    elevator.setDefaultCommand(
+        elevator.setElevatorVelocity(() -> deadband(-operatorController.getLeftY()) * 25));
+
+    arm.setDefaultCommand(
+        arm.setArmVelocity(
+            () -> -operatorController.getRightY() * Math.abs(operatorController.getRightY())));
+
+    operatorController
+        .leftTrigger()
+        .whileTrue(endEffector.setEndEffectorVelocity(60))
+        .onFalse(endEffector.setEndEffectorVelocity(0));
+
+    operatorController
+        .rightTrigger()
+        .whileTrue(endEffector.setEndEffectorVelocity(-60))
+        .onFalse(endEffector.setEndEffectorVelocity(0));
+
+    operatorController
         .a()
-        .whileTrue(
-            DriveCommands.joystickDriveAtAngle(
-                drive,
-                () -> -controller.getLeftY(),
-                () -> -controller.getLeftX(),
-                () -> new Rotation2d()));
+        .whileTrue(PresetCommands.stowElevator(elevator, endEffector, arm))
+        .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
+    operatorController
+        .b()
+        .whileTrue(PresetCommands.presetL2(elevator, endEffector, arm))
+        .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
+    operatorController
+        .x()
+        .whileTrue(PresetCommands.presetL3(elevator, endEffector, arm))
+        .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
+    operatorController
+        .y()
+        .whileTrue(PresetCommands.presetL4(elevator, endEffector, arm))
+        .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
 
-    // Switch to X pattern when X button is pressed
-    controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
+    operatorController
+        .rightBumper()
+        .onTrue(endEffector.setEndEffectorSpeed(-1))
+        .onFalse(endEffector.setEndEffectorVelocity(0));
 
-    // Reset gyro to 0° when B button is pressed
-    controller
+    // operatorController
+    //     .leftBumper()
+    //     .onTrue(arm.setArmPosition(0.015))
+    //     .onFalse(arm.setArmVelocity(() -> 0.0));
+
+    // operatorController
+    //     .rightBumper()
+    //     .onTrue(arm.setArmPosition(0.1))
+    //     .onFalse(arm.setArmVelocity(() -> 0.0));
+
+    // left trigger intake preset + intake rollers
+    // left bumper outtake preset
+    // right bumper stow
+    // right trigger outtake
+    driverController
+        .y()
+        .onTrue(groundIntake.setGroundIntakeVelocity(3600))
+        .onFalse(groundIntake.setGroundIntakeVelocity(0));
+
+    driverController
+        .leftTrigger()
+        .onTrue(groundIntake.setGroundIntakeVelocity(-3600))
+        .onFalse(groundIntake.setGroundIntakeVelocity(0));
+
+    driverController
+        .leftBumper()
+        .onTrue(groundIntake.setGroundArmVelocity(() -> 10))
+        .onFalse(groundIntake.setGroundArmVelocity(() -> 0.0));
+
+    driverController
+        .rightBumper()
+        .onTrue(groundIntake.setGroundArmVelocity(() -> -10))
+        .onFalse(groundIntake.setGroundArmVelocity(() -> 0.0));
+    // driverController
+    //     .rightTrigger()
+    //     .onTrue(groundIntake.setGroun  dIntakeVelocity(3600))
+    //     .onFalse(groundIntake.setGroundIntakeVelocity(0.0));
+    // operatorController
+    //     .b()
+    //     .whileTrue(elevator.setElevatorPosition(102))
+    //     .onFalse(elevator.setElevatorVelocity(() -> 0.0));
+
+    // operatorController
+    //     .y()
+    //     .whileTrue(elevator.setElevatorPosition(93))
+    //     .onFalse(elevator.setElevatorVelocity(() -> 0.0));
+    // // driverController
+
+    //     .povUp()
+    //     .and(driverController.x())
+    //     .onTrue(climb.setClimbVelocity(0.4))
+    //     .onFalse(climb.setClimbVelocity(0));
+    driverController.povDown().onTrue(climb.setClimbVelocity(-2.9)).onFalse(climb.stopMotor());
+
+    driverController
         .b()
         .onTrue(
             Commands.runOnce(
@@ -155,7 +312,29 @@ public class RobotContainer {
                     drive)
                 .ignoringDisable(true));
 
+    driverController
+        .rightTrigger()
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  DriveCommands.slowMode = 0.7;
+                }))
+        .onFalse(
+            new InstantCommand(
+                () -> {
+                  DriveCommands.slowMode = 1;
+                }));
+  }
 
+  public void periodic() {
+    // ButtonBindingsController.periodic();
+    SmartDashboard.putNumber("In arm periodic", arm.getArmPosition().getAsDouble());
+  }
+
+  public void teleopInit() {
+    SmartDashboard.putNumber("Laser Can", elevator.io.getLaserCanMeasurement());
+    endEffector.setEndEffectorVelocity(0);
+    elevator.setElevatorVelocity(() -> 0);
   }
 
   /**
@@ -166,4 +345,12 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     return autoChooser.get();
   }
+
+  /**
+   * Maps a joystick input to a speed using an exponential function, which gives more precise
+   * control at lower speeds.
+   *
+   * @param x the input from the joystick
+   * @return the output speed
+   */
 }
