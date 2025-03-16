@@ -26,11 +26,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.DriveCommands.Direction;
+import frc.robot.commands.DriveCommands.Level;
 import frc.robot.commands.DriveCommands.Reef;
 import frc.robot.commands.PresetCommands;
 import frc.robot.generated.TunerConstants;
@@ -68,8 +69,10 @@ import frc.robot.subsystems.led.AddressableLEDIO;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.led.LEDIO;
 import frc.robot.subsystems.led.LEDIOSim;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -356,7 +359,7 @@ public class RobotContainer {
     //         DriveCommands.reefStrafe(
     //             drive, () -> driverController.getLeftY(), () -> driverController.getLeftX()));
     driverController
-        .a()
+        .povLeft()
         .onTrue(
             new InstantCommand( // I hate commands so much
                 () -> {
@@ -365,64 +368,52 @@ public class RobotContainer {
                               && DriverStation.getAlliance().get().equals(Alliance.Red))
                           ? Arrays.asList(6, 7, 8, 9, 10, 11)
                           : Arrays.asList(17, 18, 19, 20, 21, 22));
-                  new SequentialCommandGroup( // for adding more commands
-                          new WaitUntilCommand(
-                              () -> {
-                                for (int tag : vision.getTagIds(0))
-                                  if (reefTags.contains(tag)) {
-                                    setVisionTarget(tag);
-                                    return true;
-                                  }
-                                return false;
-                              }),
+                  ArrayList<Pose2d> poses = DriveCommands.getReefPoses(Direction.Left, Level.L3);
+                  new SequentialCommandGroup(
                           DriveCommands.pathToDestination(
                               drive,
                               () ->
                                   new Reef(
-                                      DriveCommands.Direction.Left,
-                                      visionTargetID,
-                                      DriveCommands.Level.L4)))
+                                      Direction.Left,
+                                      poses.indexOf(drive.getPose().nearest(poses))
+                                          + ((DriverStation.getAlliance().isPresent()
+                                                  && DriverStation.getAlliance()
+                                                      .get()
+                                                      .equals(Alliance.Red))
+                                              ? 6
+                                              : 17),
+                                      Level.L3)))
                       .schedule();
-                  return;
+                  ;
                 }));
-    // driverController
-    //     .povRight()
-    //     .onTrue(
-    //         new InstantCommand( // I hate commands so much
-    //             () -> {
-    //               List<Integer> reefTags =
-    //                   ((DriverStation.getAlliance().isPresent()
-    //                           && DriverStation.getAlliance().get().equals(Alliance.Red))
-    //                       ? Arrays.asList(6, 7, 8, 9, 10, 11)
-    //                       : Arrays.asList(17, 18, 19, 20, 21, 22));
-    //               for (int tag : vision.getTagIds(0)) {
-    //                 if (reefTags.contains(tag)) {
-    //                   System.out.println(tag);
-    //                   new SequentialCommandGroup( // for adding more commands
-    //                           DriveCommands.pathToDestination(
-    //                               drive,
-    //                               () -> new Reef(DriveCommands.Direction.Right, tag, Level.L4)))
-    //                       .schedule();
-    //                   return;
-    //                 }
-    //               }
-    //               ArrayList<Pose2d> poses =
-    //                   DriveCommands.getReefPoses(DriveCommands.Direction.Right, Level.L4);
-    //               new SequentialCommandGroup(
-    //                   DriveCommands.pathToDestination(
-    //                       drive,
-    //                       () ->
-    //                           new Reef(
-    //                               DriveCommands.Direction.Right,
-    //                               poses.indexOf(drive.getPose().nearest(poses))
-    //                                   + ((DriverStation.getAlliance().isPresent()
-    //                                           && DriverStation.getAlliance()
-    //                                               .get()
-    //                                               .equals(Alliance.Red))
-    //                                       ? 6
-    //                                       : 17),
-    //                               Level.L4)));
-    //             }));
+    driverController
+        .povRight()
+        .onTrue(
+            new InstantCommand( // I hate commands so much
+                () -> {
+                  List<Integer> reefTags =
+                      ((DriverStation.getAlliance().isPresent()
+                              && DriverStation.getAlliance().get().equals(Alliance.Red))
+                          ? Arrays.asList(6, 7, 8, 9, 10, 11)
+                          : Arrays.asList(17, 18, 19, 20, 21, 22));
+                  ArrayList<Pose2d> poses =
+                      DriveCommands.getReefPoses(DriveCommands.Direction.Right, Level.L3);
+                  new SequentialCommandGroup(
+                          DriveCommands.pathToDestination(
+                              drive,
+                              () ->
+                                  new Reef(
+                                      DriveCommands.Direction.Right,
+                                      poses.indexOf(drive.getPose().nearest(poses))
+                                          + ((DriverStation.getAlliance().isPresent()
+                                                  && DriverStation.getAlliance()
+                                                      .get()
+                                                      .equals(Alliance.Red))
+                                              ? 6
+                                              : 17),
+                                      Level.L3)))
+                      .schedule();
+                }));
 
     driverController
         .rightTrigger()
@@ -441,6 +432,7 @@ public class RobotContainer {
   public void periodic() {
     // ButtonBindingsController.periodic();
     SmartDashboard.putNumber("In arm periodic", arm.getArmPosition().getAsDouble());
+    Logger.recordOutput("camera pose", Constants.VisionConstants.robotToCamera0);
   }
 
   public void teleopInit() {

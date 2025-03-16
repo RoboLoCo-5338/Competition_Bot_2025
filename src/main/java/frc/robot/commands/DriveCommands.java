@@ -357,9 +357,11 @@ public class DriveCommands {
               ANGLE_MAX_ACCELERATION);
       return AutoBuilder.pathfindToPose(targetPose, constraints);
     } else {
+
       return new Command() {
         @Override
         public void initialize() {
+          System.out.println("good");
           drive.autoXDriveController.reset();
           drive.autoYDriveController.reset();
           drive.autoTurnController.reset();
@@ -480,31 +482,27 @@ public class DriveCommands {
   public static class Reef extends PathDestination {
     Direction direction;
     int tagId;
-    Level level;
     /**
      * Creates a reef direction based on the currently visible tag.
      *
      * @param direction Whether to path to the left branch or the right branch
      * @param tagId ID of the tag used for pathing.
      */
-    public Reef(Direction direction, int tagId, Level level) {
+    public Reef(Direction direction, int tagId) {
       this.direction = direction;
       this.tagId = tagId;
-      this.level = level;
     }
 
     @Override
     public Pose2d getTargetPosition() {
       // rotates the left or right pose around the reef based on the tag id
       Pose2d o = new Pose2d();
-      switch (level) {
-        case L4:
-          if (direction == Direction.Right) o = new Pose2d();
-          else o = new Pose2d(3.13, 4.14, new Rotation2d());
+      switch (direction) {
+        case Right:
+            o = new Pose2d(3.02, 3.84, new Rotation2d());
           break;
         default: // TODO: add level 1
-          if (direction == Direction.Right) o = new Pose2d();
-          else o = new Pose2d();
+          o = new Pose2d(3.05, 4.22, new Rotation2d());
       }
       Rotation2d rot =
           VisionConstants.aprilTagLayout.getTagPose(tagId).get().getRotation().toRotation2d();
@@ -519,18 +517,16 @@ public class DriveCommands {
     }
   }
 
-  public static ArrayList<Pose2d> getReefPoses(Direction direction, Level level) {
+  public static ArrayList<Pose2d> getReefPoses(Direction direction) {
     ArrayList<Pose2d> poses = new ArrayList<>();
     for (int i = 0; i < 6; i++) {
       Pose2d o = new Pose2d();
-      switch (level) {
-        case L4:
-          if (direction == Direction.Right) o = new Pose2d();
-          else o = new Pose2d(3.13, 4.14, new Rotation2d());
+      switch (direction) {
+        case Right:
+            o = new Pose2d(3.02, 3.84, new Rotation2d());
           break;
         default: // TODO: add level 1
-          if (direction == Direction.Right) o = new Pose2d();
-          else o = new Pose2d();
+          o = new Pose2d(3.05, 4.22, new Rotation2d());
       }
       Rotation2d rot =
           VisionConstants.aprilTagLayout.getTagPose(i + 17).get().getRotation().toRotation2d();
@@ -550,12 +546,5 @@ public class DriveCommands {
     Left,
     Right,
     None
-  }
-
-  public enum Level {
-    L1,
-    L2,
-    L3,
-    L4
   }
 }
