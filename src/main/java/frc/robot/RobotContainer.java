@@ -197,6 +197,8 @@ public class RobotContainer {
 
     NamedCommands.registerCommand("GroundI Outake", groundIntake.setGroundIntakeVelocity(-3600));
     NamedCommands.registerCommand("GroundI Stop", groundIntake.setGroundIntakeVelocity(0));
+    NamedCommands.registerCommand("L4", PresetCommands.presetL4(elevator, endEffector, arm));
+    NamedCommands.registerCommand("AutoAlignL", );
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -359,58 +361,10 @@ public class RobotContainer {
     //             drive, () -> driverController.getLeftY(), () -> driverController.getLeftX()));
     driverController
         .povLeft()
-        .onTrue(
-            new InstantCommand( // I hate commands so much
-                () -> {
-                  List<Integer> reefTags =
-                      ((DriverStation.getAlliance().isPresent()
-                              && DriverStation.getAlliance().get().equals(Alliance.Red))
-                          ? Arrays.asList(6, 7, 8, 9, 10, 11)
-                          : Arrays.asList(17, 18, 19, 20, 21, 22));
-                  ArrayList<Pose2d> poses = DriveCommands.getReefPoses(Direction.Left);
-                  new SequentialCommandGroup(
-                          DriveCommands.pathToDestination(
-                              drive,
-                              () ->
-                                  new Reef(
-                                      Direction.Left,
-                                      poses.indexOf(drive.getPose().nearest(poses))
-                                          + ((DriverStation.getAlliance().isPresent()
-                                                  && DriverStation.getAlliance()
-                                                      .get()
-                                                      .equals(Alliance.Red))
-                                              ? 6
-                                              : 17))))
-                      .schedule();
-                  ;
-                }));
+        .onTrue(DriveCommands.reefAlign(drive, Direction.Left));
     driverController
         .povRight()
-        .onTrue(
-            new InstantCommand( // I hate commands so much
-                () -> {
-                  List<Integer> reefTags =
-                      ((DriverStation.getAlliance().isPresent()
-                              && DriverStation.getAlliance().get().equals(Alliance.Red))
-                          ? Arrays.asList(6, 7, 8, 9, 10, 11)
-                          : Arrays.asList(17, 18, 19, 20, 21, 22));
-                  ArrayList<Pose2d> poses =
-                      DriveCommands.getReefPoses(DriveCommands.Direction.Right);
-                  new SequentialCommandGroup(
-                          DriveCommands.pathToDestination(
-                              drive,
-                              () ->
-                                  new Reef(
-                                      DriveCommands.Direction.Right,
-                                      poses.indexOf(drive.getPose().nearest(poses))
-                                          + ((DriverStation.getAlliance().isPresent()
-                                                  && DriverStation.getAlliance()
-                                                      .get()
-                                                      .equals(Alliance.Red))
-                                              ? 6
-                                              : 17))))
-                      .schedule();
-                }));
+        .onTrue(DriveCommands.reefAlign(drive, Direction.Right));
 
     driverController
         .rightTrigger()
