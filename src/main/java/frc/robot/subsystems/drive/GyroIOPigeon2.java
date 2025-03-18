@@ -74,15 +74,15 @@ public class GyroIOPigeon2 implements GyroIO {
         yawPositionQueue.stream()
             .map((Double value) -> Rotation2d.fromDegrees(value))
             .toArray(Rotation2d[]::new);
-            inputs.odometryPitchPositions =
-            pitchPositionQueue.stream()
-                .map((Double value) -> Rotation2d.fromDegrees(value))
-                .toArray(Rotation2d[]::new);
-                inputs.odometryRollPositions =
-                rollPositionQueue.stream()
-                    .map((Double value) -> Rotation2d.fromDegrees(value))
-                    .toArray(Rotation2d[]::new);
-  
+    inputs.odometryPitchPositions =
+        pitchPositionQueue.stream()
+            .map((Double value) -> Rotation2d.fromDegrees(value))
+            .toArray(Rotation2d[]::new);
+    inputs.odometryRollPositions =
+        rollPositionQueue.stream()
+            .map((Double value) -> Rotation2d.fromDegrees(value))
+            .toArray(Rotation2d[]::new);
+
     odometryTimestampQueue.clear();
     yawPositionQueue.clear();
     rollPositionQueue.clear();
