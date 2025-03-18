@@ -50,6 +50,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
+import frc.robot.commands.DriveCommands;
 import frc.robot.generated.TunerConstants;
 import frc.robot.util.LocalADStarAK;
 import java.util.concurrent.locks.Lock;
@@ -383,21 +384,32 @@ public class Drive extends SubsystemBase {
   }
 
   public Command avoidTip() {
-    return new InstantCommand(
-        () -> {
-          double rollSpeed =
-              Math.abs(gyroInputs.rotation.getX()) > (tipped ? 1.5 : 6.0)
+    return DriveCommands.joystickDrive(this, () -> 
+      Math.abs(gyroInputs.rotation.getX()) > (tipped ? 1.5 : 6.0)
                   ? Math.pow(gyroInputs.rotation.getX() / 30.0, 3)
                       * getMaxLinearSpeedMetersPerSec()
                       * 3
-                  : 0;
-          double pitchSpeed =
-              Math.abs(gyroInputs.rotation.getY()) > (tipped ? 1.5 : 6.0)
+                  : 0
+    , () -> Math.abs(gyroInputs.rotation.getY()) > (tipped ? 1.5 : 6.0)
                   ? Math.pow(gyroInputs.rotation.getY() / 30.0, 3)
                       * getMaxLinearSpeedMetersPerSec()
                       * 3
-                  : 0;
-          runVelocity(new ChassisSpeeds(rollSpeed, pitchSpeed, 0));
-        });
+                  : 0, () -> 0);
+    // return new InstantCommand(
+    //     () -> {
+    //       double rollSpeed =
+    //           Math.abs(gyroInputs.rotation.getX()) > (tipped ? 1.5 : 6.0)
+    //               ? Math.pow(gyroInputs.rotation.getX() / 30.0, 3)
+    //                   * getMaxLinearSpeedMetersPerSec()
+    //                   * 3
+    //               : 0;
+    //       double pitchSpeed =
+    //           Math.abs(gyroInputs.rotation.getY()) > (tipped ? 1.5 : 6.0)
+    //               ? Math.pow(gyroInputs.rotation.getY() / 30.0, 3)
+    //                   * getMaxLinearSpeedMetersPerSec()
+    //                   * 3
+    //               : 0;
+    //       runVelocity(new ChassisSpeeds(rollSpeed, pitchSpeed, 0));
+    //     });
   }
 }
