@@ -5,6 +5,12 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "L4"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Center to Reef"
@@ -13,7 +19,7 @@
         {
           "type": "named",
           "data": {
-            "name": "GroundI Outake"
+            "name": "EndEffectorOut"
           }
         },
         {
@@ -25,7 +31,7 @@
         {
           "type": "named",
           "data": {
-            "name": "GroundI Stop"
+            "name": "EndEffectorStop"
           }
         }
       ]

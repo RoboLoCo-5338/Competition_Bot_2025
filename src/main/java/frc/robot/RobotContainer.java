@@ -17,6 +17,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -190,6 +191,10 @@ public class RobotContainer {
 
     NamedCommands.registerCommand("GroundI Outake", groundIntake.setGroundIntakeVelocity(-3600));
     NamedCommands.registerCommand("GroundI Stop", groundIntake.setGroundIntakeVelocity(0));
+    NamedCommands.registerCommand("L4", PresetCommands.presetL4(elevator, endEffector, arm));
+    NamedCommands.registerCommand("EndEffectorOut", endEffector.setEndEffectorVelocity(60));
+    NamedCommands.registerCommand("EndEffectorStop", endEffector.setEndEffectorVelocity(0));
+    
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
