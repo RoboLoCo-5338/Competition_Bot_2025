@@ -15,8 +15,6 @@ package frc.robot.commands;
 
 import static edu.wpi.first.units.Units.Degrees;
 
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.FlippingUtil;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -350,14 +348,15 @@ public class DriveCommands {
             targetPose.minus(drive.getPose()).getX() * targetPose.minus(drive.getPose()).getX()
                 + targetPose.minus(drive.getPose()).getY()
                     * targetPose.minus(drive.getPose()).getY())
-        > 1000) {
-      PathConstraints constraints =
-          new PathConstraints(
-              drive.getMaxLinearSpeedMetersPerSec(),
-              3, // TODO:replace with a constant or smth
-              ANGLE_MAX_VELOCITY,
-              ANGLE_MAX_ACCELERATION);
-      return AutoBuilder.pathfindToPose(targetPose, constraints);
+        > 3) {
+      return new InstantCommand();
+      //   PathConstraints constraints =
+      //       new PathConstraints(
+      //           drive.getMaxLinearSpeedMetersPerSec(),
+      //           3, // TODO:replace with a constant or smth
+      //           ANGLE_MAX_VELOCITY,
+      //           ANGLE_MAX_ACCELERATION);
+      //   return AutoBuilder.pathfindToPose(targetPose, constraints);
     } else {
 
       return new Command() {
@@ -378,10 +377,15 @@ public class DriveCommands {
           drive.runVelocity(
               ChassisSpeeds.fromFieldRelativeSpeeds(
                   new ChassisSpeeds(
-                      drive.autoXDriveController.calculate(drive.getPose().getX()),
-                      drive.autoYDriveController.calculate(drive.getPose().getY()),
-                      drive.autoTurnController.calculate(
-                          drive.getPose().getRotation().getRadians())),
+                      MathUtil.clamp(
+                          drive.autoXDriveController.calculate(drive.getPose().getX()), -1.5, 1.5),
+                      MathUtil.clamp(
+                          drive.autoYDriveController.calculate(drive.getPose().getY()), -1.5, 1.5),
+                      MathUtil.clamp(
+                          drive.autoTurnController.calculate(
+                              drive.getPose().getRotation().getRadians()),
+                          -1.5,
+                          1.5)),
                   drive.getPose().getRotation()));
         }
 
@@ -531,15 +535,26 @@ public class DriveCommands {
           o = new Pose2d(3.05, 4.22, new Rotation2d());
       }
       Rotation2d rot =
-          VisionConstants.aprilTagLayout.getTagPose(i + 17).get().getRotation().toRotation2d();
+          VisionConstants.aprilTagLayout
+              .getTagPose(
+                  i
+                      + ((DriverStation.getAlliance().isPresent()
+                              && DriverStation.getAlliance().get() == Alliance.Red)
+                          ? 6
+                          : 17))
+              .get()
+              .getRotation()
+              .toRotation2d();
       if (DriverStation.getAlliance().isPresent()
           && DriverStation.getAlliance().get() == Alliance.Blue)
         rot = rot.plus(new Rotation2d(Math.PI));
       poses.add(
-          o.rotateAround(
-              new Translation2d(4.5, 4.03),
-              // new Rotation2d(Math.PI));
-              rot));
+          allianceFlip(
+              o.rotateAround(
+                  new Translation2d(4.5, 4.03),
+                  // new Rotation2d(Math.PI));
+                  rot)));
+      Logger.recordOutput("Reef Poses", poses.get(poses.size() - 1));
     }
     return poses;
   }

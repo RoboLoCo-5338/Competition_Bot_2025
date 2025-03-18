@@ -217,10 +217,10 @@ public final class Constants {
     // (Not used by Limelight, configure in web UI instead)
     public static Transform3d robotToCamera0 =
         new Transform3d(
-            Units.inchesToMeters(14.5),
-            -Units.inchesToMeters(14.5 - 5.75),
-            Units.inchesToMeters(5.75),
-            new Rotation3d(0.0, -Units.degreesToRadians(15), 0.0));
+            Units.inchesToMeters(11.12),
+            -Units.inchesToMeters(9.77),
+            Units.inchesToMeters(5.98),
+            new Rotation3d(0.0, -Units.degreesToRadians(10), Units.degreesToRadians(22)));
     public static Transform3d robotToCamera1 =
         new Transform3d(0.0, 0.0, 0.0, new Rotation3d(0.0, -0.0, 0.0));
 
