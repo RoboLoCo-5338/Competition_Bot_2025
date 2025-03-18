@@ -43,6 +43,8 @@ public class GyroIOPigeon2 implements GyroIO {
 
   private final Queue<Double> odometryTimestampQueue;
   private final StatusSignal<AngularVelocity> yawVelocity = pigeon.getAngularVelocityZWorld();
+  private final StatusSignal<AngularVelocity> pitchVelocity = pigeon.getAngularVelocityYWorld();
+  private final StatusSignal<AngularVelocity> rollVelocity = pigeon.getAngularVelocityXWorld();
 
   public GyroIOPigeon2() {
     pigeon.getConfigurator().apply(new Pigeon2Configuration());
@@ -53,6 +55,8 @@ public class GyroIOPigeon2 implements GyroIO {
     roll.setUpdateFrequency(Drive.ODOMETRY_FREQUENCY);
 
     yawVelocity.setUpdateFrequency(50.0);
+    pitchVelocity.setUpdateFrequency(50.0);
+    rollVelocity.setUpdateFrequency(50.0);
 
     pigeon.optimizeBusUtilization();
     odometryTimestampQueue = PhoenixOdometryThread.getInstance().makeTimestampQueue();
@@ -66,8 +70,7 @@ public class GyroIOPigeon2 implements GyroIO {
     inputs.connected = BaseStatusSignal.refreshAll(yaw, yawVelocity).equals(StatusCode.OK);
     inputs.rotation = new Rotation3d(roll.getValue(), pitch.getValue(), yaw.getValue());
 
-    inputs.yawVelocityRadPerSec = Units.degreesToRadians(yawVelocity.getValueAsDouble());
-
+    inputs.rotationalVelocity = new Rotation3d(rollVelocity.getValueAsDouble(), pitchVelocity.getValueAsDouble(), yawVelocity.getValueAsDouble());
     inputs.odometryTimestampQueue =
         odometryTimestampQueue.stream().mapToDouble((Double value) -> value).toArray();
     inputs.odometryYawPositions =
