@@ -531,8 +531,17 @@ public class DriveCommands {
           o = new Pose2d(3.05, 4.22, new Rotation2d());
       }
       Rotation2d rot =
-          VisionConstants.aprilTagLayout.getTagPose(i + 17).get().getRotation().toRotation2d();
-      if (DriverStation.getAlliance().isPresent()
+          VisionConstants.aprilTagLayout
+              .getTagPose(
+                  i
+                      + ((DriverStation.getAlliance().isPresent()
+                              && DriverStation.getAlliance().get() == Alliance.Red)
+                          ? 6
+                          : 17))
+              .get()
+              .getRotation()
+              .toRotation2d();
+              if (DriverStation.getAlliance().isPresent()
           && DriverStation.getAlliance().get() == Alliance.Blue)
         rot = rot.plus(new Rotation2d(Math.PI));
       poses.add(

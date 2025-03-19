@@ -225,7 +225,7 @@ public final class Constants {
             Units.inchesToMeters(5.75),
             new Rotation3d(0.0, -Units.degreesToRadians(15), 0.0));
     public static Transform3d robotToCamera1 =
-        new Transform3d(0.0, 0.0, 0.0, new Rotation3d(0.0, -0.0, 0.0));
+        new Transform3d(Units.inchesToMeters(1.7), Units.inchesToMeters(.24), Units.inchesToMeters(36.7), new Rotation3d(0.0, -0.0, Math.PI));
 
     // Basic filtering thresholds
     public static double maxAmbiguity = 0.3;
