@@ -1,9 +1,11 @@
-name: Prevent PID Tuning
+name: Prevent PID Tuning on Main
 
 on:
   pull_request:
     types:
         - opened
+    branches:
+        - main
 
 jobs:
   checkTuning:
