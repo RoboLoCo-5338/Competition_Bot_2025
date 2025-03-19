@@ -120,9 +120,9 @@ public class RobotContainer {
             new Vision(
                 drive::addVisionMeasurement,
                 new VisionIOPhotonVision(
-                    VisionConstants.camera0Name, VisionConstants.robotToCamera0)
-                // new VisionIOPhotonVision(VisionConstants.camera1Name,
-                // VisionConstants.robotToCamera1)
+                    VisionConstants.camera0Name, VisionConstants.robotToCamera0),
+                new VisionIOPhotonVision(VisionConstants.camera1Name,
+                VisionConstants.robotToCamera1)
                 );
         groundIntake = new GroundIntake(new GroundIntakeIOSpark());
         endEffector = new EndEffector(new EndEffectorIOTalonFX());
@@ -154,9 +154,9 @@ public class RobotContainer {
             new Vision(
                 drive::addVisionMeasurement,
                 new VisionIOPhotonVisionSim(
-                    VisionConstants.camera0Name, VisionConstants.robotToCamera0, drive::getPose)
-                // new VisionIOPhotonVisionSim(VisionConstants.camera1Name,
-                // VisionConstants.robotToCamera1, drive::getPose)
+                    VisionConstants.camera0Name, VisionConstants.robotToCamera0, drive::getPose),
+                new VisionIOPhotonVisionSim(VisionConstants.camera1Name,
+                VisionConstants.robotToCamera1, drive::getPose)
                 );
         ButtonBindingsController =
             new ButtonBindings(drive, led, elevator, groundIntake, endEffector, climb, arm);
@@ -182,8 +182,8 @@ public class RobotContainer {
             new ButtonBindings(drive, led, elevator, groundIntake, endEffector, climb, arm);
         vision =
             new Vision(
-                drive::addVisionMeasurement, new VisionIO() {}
-                // new VisionIO() {}
+                drive::addVisionMeasurement, new VisionIO() {},
+                new VisionIO() {}
                 );
         break;
     }

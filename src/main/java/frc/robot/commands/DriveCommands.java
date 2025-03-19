@@ -545,7 +545,7 @@ public class DriveCommands {
               .get()
               .getRotation()
               .toRotation2d();
-      if (DriverStation.getAlliance().isPresent()
+              if (DriverStation.getAlliance().isPresent()
           && DriverStation.getAlliance().get() == Alliance.Blue)
         rot = rot.plus(new Rotation2d(Math.PI));
       poses.add(
