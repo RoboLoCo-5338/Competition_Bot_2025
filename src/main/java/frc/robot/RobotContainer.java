@@ -86,7 +86,6 @@ public class RobotContainer {
 
   private final EndEffector endEffector;
 
-  private final ButtonBindings ButtonBindingsController;
 
   private final Climb climb;
 
@@ -129,8 +128,6 @@ public class RobotContainer {
         climb = new Climb(new ClimbIOTalonFX());
         arm = new Arm(new ArmIOSpark());
         led = new LED(new AddressableLEDIO());
-        ButtonBindingsController =
-            new ButtonBindings(drive, led, elevator, groundIntake, endEffector, climb, arm);
 
         break;
 
@@ -156,8 +153,6 @@ public class RobotContainer {
                     VisionConstants.camera0Name, VisionConstants.robotToCamera0, drive::getPose),
                 new VisionIOPhotonVisionSim(
                     VisionConstants.camera1Name, VisionConstants.robotToCamera1, drive::getPose));
-        ButtonBindingsController =
-            new ButtonBindings(drive, led, elevator, groundIntake, endEffector, climb, arm);
         break;
 
       default:
@@ -176,8 +171,6 @@ public class RobotContainer {
         elevator = new Elevator(new ElevatorIO() {});
         climb = new Climb(new ClimbIO() {});
         arm = new Arm(new ArmIO() {});
-        ButtonBindingsController =
-            new ButtonBindings(drive, led, elevator, groundIntake, endEffector, climb, arm);
         vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
         break;
     }
