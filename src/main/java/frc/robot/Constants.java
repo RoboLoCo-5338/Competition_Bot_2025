@@ -21,10 +21,8 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Distance;
-import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
-import edu.wpi.first.wpilibj.util.Color;
 
 /**
  * This class defines the runtime mode used by AdvantageKit. The mode is always "real" when running
@@ -202,7 +200,7 @@ public final class Constants {
 
   public static final class LEDConstants {
     // TODO change this
-    public static final int LED_PWM_PORT = 0;
+    public static final int LED_PWM_PORT = 1;
     public static final int LED_LENGTH = 300;
     public static final int BARGE_RANGE = 70;
     public static final Distance LED_SPACING = Meters.of(1.0 / 50.0);
@@ -225,7 +223,11 @@ public final class Constants {
             Units.inchesToMeters(5.75),
             new Rotation3d(0.0, -Units.degreesToRadians(15), 0.0));
     public static Transform3d robotToCamera1 =
-        new Transform3d(Units.inchesToMeters(1.7), Units.inchesToMeters(.24), Units.inchesToMeters(36.7), new Rotation3d(0.0, -0.0, Math.PI));
+        new Transform3d(
+            Units.inchesToMeters(1.7),
+            Units.inchesToMeters(.24),
+            Units.inchesToMeters(36.7),
+            new Rotation3d(0.0, -0.0, Math.PI));
 
     // Basic filtering thresholds
     public static double maxAmbiguity = 0.3;
