@@ -244,35 +244,28 @@ public class RobotContainer {
 
     operatorController
         .leftTrigger()
-        .whileTrue(endEffector.setEndEffectorVelocity(60))
-        .onFalse(endEffector.setEndEffectorVelocity(0));
+        .whileTrue(endEffector.setEndEffectorVelocity(60));
 
     operatorController
         .rightTrigger()
-        .whileTrue(endEffector.setEndEffectorVelocity(-60))
-        .onFalse(endEffector.setEndEffectorVelocity(0));
+        .whileTrue(endEffector.setEndEffectorVelocity(-60));
 
     operatorController
         .a()
-        .whileTrue(PresetCommands.stowElevator(elevator, endEffector, arm))
-        .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
+        .whileTrue(PresetCommands.stowElevator(elevator, endEffector, arm));
     operatorController
         .b()
-        .whileTrue(PresetCommands.presetL2(elevator, endEffector, arm))
-        .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
+        .whileTrue(PresetCommands.presetL2(elevator, endEffector, arm));
     operatorController
         .x()
-        .whileTrue(PresetCommands.presetL3(elevator, endEffector, arm))
-        .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
+        .whileTrue(PresetCommands.presetL3(elevator, endEffector, arm));
     operatorController
         .y()
-        .whileTrue(PresetCommands.presetL4(elevator, endEffector, arm))
-        .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
+        .whileTrue(PresetCommands.presetL4(elevator, endEffector, arm));
 
     operatorController
         .rightBumper()
-        .onTrue(endEffector.setEndEffectorSpeed(-1))
-        .onFalse(endEffector.setEndEffectorVelocity(0));
+        .onTrue(endEffector.setEndEffectorSpeed(-1));
 
     // operatorController
     //     .leftBumper()
@@ -290,23 +283,19 @@ public class RobotContainer {
     // right trigger outtake
     driverController
         .y()
-        .onTrue(groundIntake.setGroundIntakeVelocity(3600))
-        .onFalse(groundIntake.setGroundIntakeVelocity(0));
+        .onTrue(groundIntake.setGroundIntakeVelocity(3600));
 
     driverController
         .leftTrigger()
-        .onTrue(groundIntake.setGroundIntakeVelocity(-3600))
-        .onFalse(groundIntake.setGroundIntakeVelocity(0));
+        .onTrue(groundIntake.setGroundIntakeVelocity(-3600));
 
     driverController
         .leftBumper()
-        .onTrue(groundIntake.setGroundArmVelocity(() -> 10))
-        .onFalse(groundIntake.setGroundArmVelocity(() -> 0.0));
+        .onTrue(groundIntake.setGroundArmVelocity(() -> 10));
 
     driverController
         .rightBumper()
-        .onTrue(groundIntake.setGroundArmVelocity(() -> -10))
-        .onFalse(groundIntake.setGroundArmVelocity(() -> 0.0));
+        .onTrue(groundIntake.setGroundArmVelocity(() -> -10));
     // driverController
     //     .rightTrigger()
     //     .onTrue(groundIntake.setGroun  dIntakeVelocity(3600))
@@ -326,7 +315,7 @@ public class RobotContainer {
     //     .and(driverController.x())
     //     .onTrue(climb.setClimbVelocity(0.4))
     //     .onFalse(climb.setClimbVelocity(0));
-    driverController.povDown().onTrue(climb.setClimbVelocity(-2.9)).onFalse(climb.stopMotor());
+    driverController.povDown().onTrue(climb.setClimbVelocity(-2.9));
 
     driverController
         .b()

@@ -5,6 +5,8 @@ import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
@@ -42,7 +44,7 @@ public class Arm extends SubsystemBase {
    * @return A command that sets the arm to the given position.
    */
   public Command setArmPosition(double position) {
-    return new InstantCommand(() -> io.setArmPosition(position), this);
+    return new StartEndCommand(() -> io.setArmPosition(position), () -> io.setArmVelocity(0), this);
   }
 
   /**
@@ -54,7 +56,7 @@ public class Arm extends SubsystemBase {
    * @return A command that sets the arm to the given velocity.
    */
   public Command setArmVelocity(DoubleSupplier velocity) {
-    return new InstantCommand(() -> io.setArmVelocity(velocity.getAsDouble()), this);
+    return new StartEndCommand(() -> io.setArmVelocity(velocity.getAsDouble()), () -> io.setArmVelocity(0), this);
   }
 
   public DoubleSupplier getArmPosition() {

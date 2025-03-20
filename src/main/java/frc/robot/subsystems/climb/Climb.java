@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
@@ -50,10 +51,6 @@ public class Climb extends SubsystemBase {
    * @return An InstantCommand that sets the climb motor to the specified velocity.
    */
   public Command setClimbVelocity(double velocity) {
-    return new InstantCommand(() -> climbIO.setClimbVelocity(velocity), this);
-  }
-
-  public Command stopMotor() {
-    return new InstantCommand(() -> climbIO.disableMotor(), this);
+    return new StartEndCommand(() -> climbIO.setClimbVelocity(velocity), () -> climbIO.disableMotor(), this);
   }
 }
