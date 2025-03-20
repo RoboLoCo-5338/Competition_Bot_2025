@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -47,6 +46,7 @@ public class GroundIntake extends SubsystemBase {
   }
 
   public Command setGroundArmVelocity(DoubleSupplier velocity) {
-    return new StartEndCommand(() -> io.setArmVelocity(velocity.getAsDouble()), () -> io.setArmVelocity(0), this);
+    return new StartEndCommand(
+        () -> io.setArmVelocity(velocity.getAsDouble()), () -> io.setArmVelocity(0), this);
   }
 }

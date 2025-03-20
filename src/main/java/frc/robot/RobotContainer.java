@@ -86,7 +86,6 @@ public class RobotContainer {
 
   private final EndEffector endEffector;
 
-
   private final Climb climb;
 
   private final Arm arm;
@@ -235,30 +234,16 @@ public class RobotContainer {
         arm.setArmVelocity(
             () -> -operatorController.getRightY() * Math.abs(operatorController.getRightY())));
 
-    operatorController
-        .leftTrigger()
-        .whileTrue(endEffector.setEndEffectorVelocity(60));
+    operatorController.leftTrigger().whileTrue(endEffector.setEndEffectorVelocity(60));
 
-    operatorController
-        .rightTrigger()
-        .whileTrue(endEffector.setEndEffectorVelocity(-60));
+    operatorController.rightTrigger().whileTrue(endEffector.setEndEffectorVelocity(-60));
 
-    operatorController
-        .a()
-        .whileTrue(PresetCommands.stowElevator(elevator, endEffector, arm));
-    operatorController
-        .b()
-        .whileTrue(PresetCommands.presetL2(elevator, endEffector, arm));
-    operatorController
-        .x()
-        .whileTrue(PresetCommands.presetL3(elevator, endEffector, arm));
-    operatorController
-        .y()
-        .whileTrue(PresetCommands.presetL4(elevator, endEffector, arm));
+    operatorController.a().whileTrue(PresetCommands.stowElevator(elevator, endEffector, arm));
+    operatorController.b().whileTrue(PresetCommands.presetL2(elevator, endEffector, arm));
+    operatorController.x().whileTrue(PresetCommands.presetL3(elevator, endEffector, arm));
+    operatorController.y().whileTrue(PresetCommands.presetL4(elevator, endEffector, arm));
 
-    operatorController
-        .rightBumper()
-        .onTrue(endEffector.setEndEffectorSpeed(-1));
+    operatorController.rightBumper().onTrue(endEffector.setEndEffectorSpeed(-1));
 
     // operatorController
     //     .leftBumper()
@@ -274,21 +259,13 @@ public class RobotContainer {
     // left bumper outtake preset
     // right bumper stow
     // right trigger outtake
-    driverController
-        .y()
-        .onTrue(groundIntake.setGroundIntakeVelocity(3600));
+    driverController.y().onTrue(groundIntake.setGroundIntakeVelocity(3600));
 
-    driverController
-        .leftTrigger()
-        .onTrue(groundIntake.setGroundIntakeVelocity(-3600));
+    driverController.leftTrigger().onTrue(groundIntake.setGroundIntakeVelocity(-3600));
 
-    driverController
-        .leftBumper()
-        .onTrue(groundIntake.setGroundArmVelocity(() -> 10));
+    driverController.leftBumper().onTrue(groundIntake.setGroundArmVelocity(() -> 10));
 
-    driverController
-        .rightBumper()
-        .onTrue(groundIntake.setGroundArmVelocity(() -> -10));
+    driverController.rightBumper().onTrue(groundIntake.setGroundArmVelocity(() -> -10));
     // driverController
     //     .rightTrigger()
     //     .onTrue(groundIntake.setGroun  dIntakeVelocity(3600))

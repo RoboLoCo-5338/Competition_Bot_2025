@@ -51,6 +51,7 @@ public class Climb extends SubsystemBase {
    * @return An InstantCommand that sets the climb motor to the specified velocity.
    */
   public Command setClimbVelocity(double velocity) {
-    return new StartEndCommand(() -> climbIO.setClimbVelocity(velocity), () -> climbIO.disableMotor(), this);
+    return new StartEndCommand(
+        () -> climbIO.setClimbVelocity(velocity), () -> climbIO.disableMotor(), this);
   }
 }
