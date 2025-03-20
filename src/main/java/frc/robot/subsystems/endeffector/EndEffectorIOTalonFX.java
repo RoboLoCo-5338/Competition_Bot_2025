@@ -72,19 +72,6 @@ public class EndEffectorIOTalonFX implements EndEffectorIO {
     inputs.endEffectorVelocity = Units.rotationsToRadians(endEffectorVelocity.getValueAsDouble());
     inputs.endEffectorAppliedVolts = endEffectorAppliedVolts.getValueAsDouble();
     inputs.endEffectorCurrentAmps = endEffectorCurrent.getValueAsDouble();
-
-    Measurement m = LcEffector1.getMeasurement();
-    if (m != null && m.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
-      inputs.endEffectorDistance1 = m.distance_mm;
-    } else {
-      inputs.endEffectorDistance1 = -1;
-    }
-    m = LcEffector2.getMeasurement();
-    if (m != null && m.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
-      inputs.endEffectorDistance2 = m.distance_mm;
-    } else {
-      inputs.endEffectorDistance2 = -1;
-    }
   }
 
   @Override
@@ -96,5 +83,25 @@ public class EndEffectorIOTalonFX implements EndEffectorIO {
   @Override
   public void setEndEffectorSpeed(double speed) {
     endEffectorMotor.set(speed);
+  }
+
+  @Override
+  public int getLaserCanmeasurement1() {
+    Measurement m1 = LcEffector1.getMeasurement();
+    if (m1 != null && m1.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
+      return m1.distance_mm;
+    } else {
+      return -1;
+    }
+  }
+
+  @Override
+  public int getLaserCanMeasurement2() {
+    Measurement m2 = LcEffector2.getMeasurement();
+    if (m2 != null && m2.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
+      return m2.distance_mm;
+    } else {
+      return -1;
+    }
   }
 }

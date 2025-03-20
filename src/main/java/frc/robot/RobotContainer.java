@@ -24,11 +24,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveCommands.Direction;
+import frc.robot.commands.EndEffectorCommands;
 import frc.robot.commands.PresetCommands;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Vision.Vision;
@@ -189,11 +191,19 @@ public class RobotContainer {
         break;
     }
 
+    // Set up commands for auto
     NamedCommands.registerCommand("GroundI Outake", groundIntake.setGroundIntakeVelocity(-3600));
     NamedCommands.registerCommand("GroundI Stop", groundIntake.setGroundIntakeVelocity(0));
-    NamedCommands.registerCommand("L4", PresetCommands.presetL4(elevator, endEffector, arm));
-    NamedCommands.registerCommand("EndEffectorOut", endEffector.setEndEffectorVelocity(60));
-    NamedCommands.registerCommand("EndEffectorStop", endEffector.setEndEffectorVelocity(0));
+    NamedCommands.registerCommand("L4 Preset", PresetCommands.presetL4(elevator, endEffector, arm));
+    NamedCommands.registerCommand(
+        "Endeffector Out",
+        new RunCommand(() -> EndEffectorCommands.moveEndEffector(endEffector, 60), endEffector));
+    NamedCommands.registerCommand(
+        "Endeffector In", EndEffectorCommands.moveEndEffectorLaserCan(endEffector));
+    NamedCommands.registerCommand(
+        "Endeffector Stop", EndEffectorCommands.moveEndEffector(endEffector, 0));
+    NamedCommands.registerCommand("Align Left", DriveCommands.reefAlign(drive, Direction.Left));
+    NamedCommands.registerCommand("Align Right", DriveCommands.reefAlign(drive, Direction.Right));
     
 
     // Set up auto routines
