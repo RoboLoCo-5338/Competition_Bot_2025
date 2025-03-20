@@ -33,10 +33,6 @@ import frc.robot.commands.DriveCommands.Direction;
 import frc.robot.commands.EndEffectorCommands;
 import frc.robot.commands.PresetCommands;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.Vision.Vision;
-import frc.robot.subsystems.Vision.VisionIO;
-import frc.robot.subsystems.Vision.VisionIOPhotonVision;
-import frc.robot.subsystems.Vision.VisionIOPhotonVisionSim;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmIO;
 import frc.robot.subsystems.arm.ArmIOSim;
@@ -67,6 +63,10 @@ import frc.robot.subsystems.led.AddressableLEDIO;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.led.LEDIO;
 import frc.robot.subsystems.led.LEDIOSim;
+import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.vision.VisionIO;
+import frc.robot.subsystems.vision.VisionIOPhotonVision;
+import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -123,10 +123,9 @@ public class RobotContainer {
             new Vision(
                 drive::addVisionMeasurement,
                 new VisionIOPhotonVision(
-                    VisionConstants.camera0Name, VisionConstants.robotToCamera0)
-                // new VisionIOPhotonVision(VisionConstants.camera1Name,
-                // VisionConstants.robotToCamera1)
-                );
+                    VisionConstants.camera0Name, VisionConstants.robotToCamera0),
+                new VisionIOPhotonVision(
+                    VisionConstants.camera1Name, VisionConstants.robotToCamera1));
         groundIntake = new GroundIntake(new GroundIntakeIOSpark());
         endEffector = new EndEffector(new EndEffectorIOTalonFX());
         elevator = new Elevator(new ElevatorIOTalonFX());
@@ -157,10 +156,9 @@ public class RobotContainer {
             new Vision(
                 drive::addVisionMeasurement,
                 new VisionIOPhotonVisionSim(
-                    VisionConstants.camera0Name, VisionConstants.robotToCamera0, drive::getPose)
-                // new VisionIOPhotonVisionSim(VisionConstants.camera1Name,
-                // VisionConstants.robotToCamera1, drive::getPose)
-                );
+                    VisionConstants.camera0Name, VisionConstants.robotToCamera0, drive::getPose),
+                new VisionIOPhotonVisionSim(
+                    VisionConstants.camera1Name, VisionConstants.robotToCamera1, drive::getPose));
         ButtonBindingsController =
             new ButtonBindings(drive, led, elevator, groundIntake, endEffector, climb, arm);
         break;
@@ -183,11 +181,7 @@ public class RobotContainer {
         arm = new Arm(new ArmIO() {});
         ButtonBindingsController =
             new ButtonBindings(drive, led, elevator, groundIntake, endEffector, climb, arm);
-        vision =
-            new Vision(
-                drive::addVisionMeasurement, new VisionIO() {}
-                // new VisionIO() {}
-                );
+        vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
         break;
     }
 
@@ -309,25 +303,25 @@ public class RobotContainer {
     // left bumper outtake preset
     // right bumper stow
     // right trigger outtake
-    driverController
-        .y()
-        .onTrue(groundIntake.setGroundIntakeVelocity(3600))
-        .onFalse(groundIntake.setGroundIntakeVelocity(0));
+    // driverController
+    //     .y()
+    //     .onTrue(groundIntake.setGroundIntakeVelocity(3600))
+    //     .onFalse(groundIntake.setGroundIntakeVelocity(0));
 
-    driverController
-        .leftTrigger()
-        .onTrue(groundIntake.setGroundIntakeVelocity(-3600))
-        .onFalse(groundIntake.setGroundIntakeVelocity(0));
+    // driverController
+    //     .leftTrigger()
+    //     .onTrue(groundIntake.setGroundIntakeVelocity(-3600))
+    //     .onFalse(groundIntake.setGroundIntakeVelocity(0));
 
-    driverController
-        .leftBumper()
-        .onTrue(groundIntake.setGroundArmVelocity(() -> 10))
-        .onFalse(groundIntake.setGroundArmVelocity(() -> 0.0));
+    // driverController
+    //     .leftBumper()
+    //     .onTrue(groundIntake.setGroundArmVelocity(() -> 10))
+    //     .onFalse(groundIntake.setGroundArmVelocity(() -> 0.0));
 
-    driverController
-        .rightBumper()
-        .onTrue(groundIntake.setGroundArmVelocity(() -> -10))
-        .onFalse(groundIntake.setGroundArmVelocity(() -> 0.0));
+    // driverController
+    //     .rightBumper()
+    //     .onTrue(groundIntake.setGroundArmVelocity(() -> -10))
+    //     .onFalse(groundIntake.setGroundArmVelocity(() -> 0.0));
     // driverController
     //     .rightTrigger()
     //     .onTrue(groundIntake.setGroun  dIntakeVelocity(3600))

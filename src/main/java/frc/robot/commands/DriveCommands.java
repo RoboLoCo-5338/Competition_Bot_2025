@@ -15,8 +15,6 @@ package frc.robot.commands;
 
 import static edu.wpi.first.units.Units.Degrees;
 
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.FlippingUtil;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -30,6 +28,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -56,6 +55,10 @@ public class DriveCommands {
   private static final double FF_RAMP_RATE = 0.1; // Volts/Sec
   private static final double WHEEL_RADIUS_MAX_VELOCITY = 0.25; // Rad/Sec
   private static final double WHEEL_RADIUS_RAMP_RATE = 0.05; // Rad/Sec^2
+
+  private static boolean isFlipped =
+      (DriverStation.isFMSAttached() && !RobotBase.isSimulation())
+          && DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red;
 
   public static double slowMode = 1;
 
@@ -103,9 +106,6 @@ public class DriveCommands {
                   linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec(),
                   linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec(),
                   omega * drive.getMaxAngularSpeedRadPerSec());
-          boolean isFlipped =
-              DriverStation.getAlliance().isPresent()
-                  && DriverStation.getAlliance().get() == Alliance.Red;
           drive.runVelocity(
               ChassisSpeeds.fromFieldRelativeSpeeds(
                   speeds,
@@ -154,9 +154,6 @@ public class DriveCommands {
                       linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec(),
                       linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec(),
                       omega);
-              boolean isFlipped =
-                  DriverStation.getAlliance().isPresent()
-                      && DriverStation.getAlliance().get() == Alliance.Red;
               drive.runVelocity(
                   ChassisSpeeds.fromFieldRelativeSpeeds(
                       speeds,
@@ -318,10 +315,7 @@ public class DriveCommands {
         () -> {
           Translation2d robot = drive.getPose().getTranslation();
           Translation2d reef =
-              (DriverStation.getAlliance().isPresent()
-                      && DriverStation.getAlliance()
-                          .get()
-                          .equals(Alliance.Red)) // TODO: switch to red
+              (isFlipped) // TODO: switch to red
                   ? new Translation2d(13.06185, 4.03)
                   : new Translation2d(4.5, 4.03);
           Logger.recordOutput("Test/ReefPose", reef);
@@ -343,21 +337,19 @@ public class DriveCommands {
     System.out.println("runs");
     Pose2d targetPose = destination.get().getTargetPosition();
     Logger.recordOutput("Path to Destination", targetPose);
-    boolean isFlipped =
-        DriverStation.getAlliance().isPresent()
-            && DriverStation.getAlliance().get() == Alliance.Red;
     if (Math.sqrt(
             targetPose.minus(drive.getPose()).getX() * targetPose.minus(drive.getPose()).getX()
                 + targetPose.minus(drive.getPose()).getY()
                     * targetPose.minus(drive.getPose()).getY())
-        > 1000) {
-      PathConstraints constraints =
-          new PathConstraints(
-              drive.getMaxLinearSpeedMetersPerSec(),
-              3, // TODO:replace with a constant or smth
-              ANGLE_MAX_VELOCITY,
-              ANGLE_MAX_ACCELERATION);
-      return AutoBuilder.pathfindToPose(targetPose, constraints);
+        > 3) {
+      return new InstantCommand();
+      //   PathConstraints constraints =
+      //       new PathConstraints(
+      //           drive.getMaxLinearSpeedMetersPerSec(),
+      //           3, // TODO:replace with a constant or smth
+      //           ANGLE_MAX_VELOCITY,
+      //           ANGLE_MAX_ACCELERATION);
+      //   return AutoBuilder.pathfindToPose(targetPose, constraints);
     } else {
 
       return new Command() {
@@ -378,10 +370,15 @@ public class DriveCommands {
           drive.runVelocity(
               ChassisSpeeds.fromFieldRelativeSpeeds(
                   new ChassisSpeeds(
-                      drive.autoXDriveController.calculate(drive.getPose().getX()),
-                      drive.autoYDriveController.calculate(drive.getPose().getY()),
-                      drive.autoTurnController.calculate(
-                          drive.getPose().getRotation().getRadians())),
+                      MathUtil.clamp(
+                          drive.autoXDriveController.calculate(drive.getPose().getX()), -1.5, 1.5),
+                      MathUtil.clamp(
+                          drive.autoYDriveController.calculate(drive.getPose().getY()), -1.5, 1.5),
+                      MathUtil.clamp(
+                          drive.autoTurnController.calculate(
+                              drive.getPose().getRotation().getRadians()),
+                          -1.5,
+                          1.5)),
                   drive.getPose().getRotation()));
         }
 
@@ -407,10 +404,7 @@ public class DriveCommands {
    * @return Flipped Pose
    */
   public static Pose2d allianceFlip(Pose2d pose) {
-    return (DriverStation.getAlliance().isPresent()
-            && DriverStation.getAlliance().get().equals(Alliance.Red))
-        ? FlippingUtil.flipFieldPose(pose)
-        : pose;
+    return (isFlipped) ? FlippingUtil.flipFieldPose(pose) : pose;
   }
 
   private static class WheelRadiusCharacterizationState {
@@ -501,16 +495,14 @@ public class DriveCommands {
       Pose2d o = new Pose2d();
       switch (direction) {
         case Right:
-          o = new Pose2d(3.02, 3.84, new Rotation2d());
+          o = new Pose2d(3.02, 3.75, new Rotation2d());
           break;
         default: // TODO: add level 1
-          o = new Pose2d(3.05, 4.22, new Rotation2d());
+          o = new Pose2d(3.05, 4.13, new Rotation2d());
       }
       Rotation2d rot =
           VisionConstants.aprilTagLayout.getTagPose(tagId).get().getRotation().toRotation2d();
-      if (DriverStation.getAlliance().isPresent()
-          && DriverStation.getAlliance().get() == Alliance.Blue)
-        rot = rot.plus(new Rotation2d(Math.PI));
+      if (!isFlipped) rot = rot.plus(new Rotation2d(Math.PI));
       return allianceFlip(
           o.rotateAround(
               new Translation2d(4.5, 4.03),
@@ -525,21 +517,25 @@ public class DriveCommands {
       Pose2d o = new Pose2d();
       switch (direction) {
         case Right:
-          o = new Pose2d(3.02, 3.84, new Rotation2d());
+          o = new Pose2d(3.02, 3.75, new Rotation2d());
           break;
         default: // TODO: add level 1
-          o = new Pose2d(3.05, 4.22, new Rotation2d());
+          o = new Pose2d(3.05, 4.13, new Rotation2d());
       }
       Rotation2d rot =
-          VisionConstants.aprilTagLayout.getTagPose(i + 17).get().getRotation().toRotation2d();
-      if (DriverStation.getAlliance().isPresent()
-          && DriverStation.getAlliance().get() == Alliance.Blue)
-        rot = rot.plus(new Rotation2d(Math.PI));
+          VisionConstants.aprilTagLayout
+              .getTagPose(i + ((isFlipped) ? 6 : 17))
+              .get()
+              .getRotation()
+              .toRotation2d();
+      if (!isFlipped) rot = rot.plus(new Rotation2d(Math.PI));
       poses.add(
-          o.rotateAround(
-              new Translation2d(4.5, 4.03),
-              // new Rotation2d(Math.PI));
-              rot));
+          allianceFlip(
+              o.rotateAround(
+                  new Translation2d(4.5, 4.03),
+                  // new Rotation2d(Math.PI));
+                  rot)));
+      Logger.recordOutput("Reef Poses", poses.get(poses.size() - 1));
     }
     return poses;
   }
@@ -555,10 +551,7 @@ public class DriveCommands {
                           new Reef(
                               direction,
                               poses.indexOf(drive.getPose().nearest(poses))
-                                  + ((DriverStation.getAlliance().isPresent()
-                                          && DriverStation.getAlliance().get().equals(Alliance.Red))
-                                      ? 6
-                                      : 17))))
+                                  + ((isFlipped) ? 6 : 17))))
               .schedule();
           ;
         });
