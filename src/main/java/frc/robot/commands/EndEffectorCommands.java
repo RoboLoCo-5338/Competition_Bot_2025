@@ -14,7 +14,7 @@ public class EndEffectorCommands {
     return endEffector.io.endEffectorMotor.getPosition().getValueAsDouble();
   }
 
-    public static Command moveEndEffectorLaserCan(EndEffector endEffector) {
+  public static Command moveEndEffectorLaserCan(EndEffector endEffector) {
     // return new SequentialCommandGroup(
     //     endEffector.setEndEffectorVelocity(60),
     //     new WaitUntilCommand(

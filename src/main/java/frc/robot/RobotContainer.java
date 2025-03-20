@@ -17,7 +17,6 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -198,7 +197,6 @@ public class RobotContainer {
         "Endeffector Stop", EndEffectorCommands.moveEndEffector(endEffector, 0));
     NamedCommands.registerCommand("Align Left", DriveCommands.reefAlign(drive, Direction.Left));
     NamedCommands.registerCommand("Align Right", DriveCommands.reefAlign(drive, Direction.Right));
-    
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -341,6 +339,16 @@ public class RobotContainer {
     //     .and(driverController.x())
     //     .onTrue(climb.setClimbVelocity(0.4))
     //     .onFalse(climb.setClimbVelocity(0));
+
+    driverController
+        .rightBumper()
+        .whileTrue(endEffector.setEndEffectorVelocity(-60))
+        .onFalse(endEffector.setEndEffectorVelocity(0));
+    driverController
+        .leftBumper()
+        .whileTrue(endEffector.setEndEffectorVelocity(-60))
+        .onFalse(endEffector.setEndEffectorVelocity(0));
+
     driverController.povDown().onTrue(climb.setClimbVelocity(-2.9)).onFalse(climb.stopMotor());
 
     driverController

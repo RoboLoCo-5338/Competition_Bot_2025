@@ -371,14 +371,14 @@ public class DriveCommands {
               ChassisSpeeds.fromFieldRelativeSpeeds(
                   new ChassisSpeeds(
                       MathUtil.clamp(
-                          drive.autoXDriveController.calculate(drive.getPose().getX()), -1.5, 1.5),
+                          drive.autoXDriveController.calculate(drive.getPose().getX()), -3, 3),
                       MathUtil.clamp(
-                          drive.autoYDriveController.calculate(drive.getPose().getY()), -1.5, 1.5),
+                          drive.autoYDriveController.calculate(drive.getPose().getY()), -3, 3),
                       MathUtil.clamp(
                           drive.autoTurnController.calculate(
                               drive.getPose().getRotation().getRadians()),
-                          -1.5,
-                          1.5)),
+                          -3,
+                          3)),
                   drive.getPose().getRotation()));
         }
 
