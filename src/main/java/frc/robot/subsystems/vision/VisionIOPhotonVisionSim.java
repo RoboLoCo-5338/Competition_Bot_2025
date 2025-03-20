@@ -1,11 +1,11 @@
-package frc.robot.subsystems.Vision;
+package frc.robot.subsystems.vision;
 
 import static frc.robot.Constants.VisionConstants.aprilTagLayout;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import frc.robot.Constants.VisionConstants;
-import frc.robot.subsystems.Vision.VisionIO.VisionIOInputs;
+import frc.robot.subsystems.vision.VisionIO.VisionIOInputs;
 import java.util.function.Supplier;
 import org.photonvision.simulation.PhotonCameraSim;
 import org.photonvision.simulation.SimCameraProperties;
