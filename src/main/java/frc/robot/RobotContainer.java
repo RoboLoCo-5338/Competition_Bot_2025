@@ -288,25 +288,25 @@ public class RobotContainer {
     // left bumper outtake preset
     // right bumper stow
     // right trigger outtake
-    driverController
-        .y()
-        .onTrue(groundIntake.setGroundIntakeVelocity(3600))
-        .onFalse(groundIntake.setGroundIntakeVelocity(0));
+    // driverController
+    //     .y()
+    //     .onTrue(groundIntake.setGroundIntakeVelocity(3600))
+    //     .onFalse(groundIntake.setGroundIntakeVelocity(0));
 
-    driverController
-        .leftTrigger()
-        .onTrue(groundIntake.setGroundIntakeVelocity(-3600))
-        .onFalse(groundIntake.setGroundIntakeVelocity(0));
+    // driverController
+    //     .leftTrigger()
+    //     .onTrue(groundIntake.setGroundIntakeVelocity(-3600))
+    //     .onFalse(groundIntake.setGroundIntakeVelocity(0));
 
-    driverController
-        .leftBumper()
-        .onTrue(groundIntake.setGroundArmVelocity(() -> 10))
-        .onFalse(groundIntake.setGroundArmVelocity(() -> 0.0));
+    // driverController
+    //     .leftBumper()
+    //     .onTrue(groundIntake.setGroundArmVelocity(() -> 10))
+    //     .onFalse(groundIntake.setGroundArmVelocity(() -> 0.0));
 
-    driverController
-        .rightBumper()
-        .onTrue(groundIntake.setGroundArmVelocity(() -> -10))
-        .onFalse(groundIntake.setGroundArmVelocity(() -> 0.0));
+    // driverController
+    //     .rightBumper()
+    //     .onTrue(groundIntake.setGroundArmVelocity(() -> -10))
+    //     .onFalse(groundIntake.setGroundArmVelocity(() -> 0.0));
     // driverController
     //     .rightTrigger()
     //     .onTrue(groundIntake.setGroun  dIntakeVelocity(3600))
