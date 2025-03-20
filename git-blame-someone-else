@@ -16,4 +16,4 @@ COMMIT=$(git rev-parse --short $2)
   git rebase --continue
 } &> /dev/null
 
-echo "$AUTHOR_NAME is now the author of $COMMIT. You're officially an asshole.";
+echo "$AUTHOR_NAME is now the author of $COMMIT. You're officially a butthole.";
