@@ -1,0 +1,28 @@
+name: Prevent PID Tuning on Main
+
+on:
+  pull_request:
+    types:
+        - opened
+    branches:
+        - main
+
+jobs:
+  checkTuning:
+    name: Prevent PID Tuning Branch From Being Merged into Main
+    if: startsWith(github.head_ref, 'PID-Tuning/')
+    runs-on: ubuntu-latest
+    steps:
+        - uses: actions/checkout@v4
+          name: Checkout the Repo
+          with:
+            fetch-depth: 0
+        - name: Close the PR
+          env: 
+            GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          run: |
+            git config --global user.name "Gerald"
+            git config --global user.email "team5338@gmail.com"
+            git pr checkout ${{github.event.number}}
+            git pr comment -b Sorry, but you can't merge this branch into main because it uses PID tuning code.
+            git pr close
