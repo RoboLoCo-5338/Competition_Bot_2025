@@ -477,6 +477,8 @@ public class DriveCommands {
   public static class Reef extends PathDestination {
     Direction direction;
     int tagId;
+    static Pose2d reefRight = new Pose2d(3.02, 3.75, new Rotation2d());
+    static Pose2d reefLeft = new Pose2d(3.05, 4.13, new Rotation2d());
     /**
      * Creates a reef direction based on the currently visible tag.
      *
@@ -494,10 +496,10 @@ public class DriveCommands {
       Pose2d o = new Pose2d();
       switch (direction) {
         case Right:
-          o = new Pose2d(3.02, 3.75, new Rotation2d());
+          o = reefRight;
           break;
         default: // TODO: add level 1
-          o = new Pose2d(3.05, 4.13, new Rotation2d());
+          o = reefLeft;
       }
       Rotation2d rot =
           VisionConstants.aprilTagLayout.getTagPose(tagId).get().getRotation().toRotation2d();
@@ -516,10 +518,10 @@ public class DriveCommands {
       Pose2d o = new Pose2d();
       switch (direction) {
         case Right:
-          o = new Pose2d(3.02, 3.75, new Rotation2d());
+          o = Reef.reefRight;
           break;
         default: // TODO: add level 1
-          o = new Pose2d(3.05, 4.13, new Rotation2d());
+          o = Reef.reefRight;
       }
       Rotation2d rot =
           VisionConstants.aprilTagLayout
