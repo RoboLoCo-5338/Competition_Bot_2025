@@ -2,12 +2,20 @@ package frc.robot.subsystems.led;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.LEDPattern;
+import edu.wpi.first.wpilibj.LEDPattern.GradientType;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.LEDConstants;
+import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.elevator.Elevator;
+import frc.robot.subsystems.endeffector.EndEffector;
+
 import org.littletonrobotics.junction.Logger;
 
 public class LED extends SubsystemBase {
@@ -59,5 +67,25 @@ public class LED extends SubsystemBase {
   public Command setProgressMaskCommand(double progress) {
     LEDPattern pattern = LEDPattern.progressMaskLayer(() -> progress);
     return new InstantCommand(() -> io.setLEDPattern(pattern));
+  }
+
+  public static double getDistanceFromBarge(Drive drive) {
+    if (DriverStation.getAlliance().orElse(Alliance.Blue).equals(Alliance.Blue)) {
+      return (-drive.getPose().getX() + 325.68) / LEDConstants.BARGE_RANGE;
+    } else {
+      return (drive.getPose().getX() - 365.20) / LEDConstants.BARGE_RANGE;
+    }
+  }
+
+  public Command setBargeIndicator(Drive drive, Elevator elevator) {
+    return new RunCommand(
+        () -> {
+          if (getDistanceFromBarge(drive) < 1.0 && elevator.io.elevatorMotor1.getPosition().getValueAsDouble() > 2.0) {
+            var progress = LEDPattern.progressMaskLayer(() -> getDistanceFromBarge(drive));
+            io.setLEDPattern(
+                LEDPattern.gradient(GradientType.kContinuous, Color.kRed, Color.kBlue)
+                    .mask(progress));
+          }
+        });
   }
 }

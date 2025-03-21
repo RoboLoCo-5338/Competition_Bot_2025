@@ -16,7 +16,12 @@ package frc.robot;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants.DriveMotorArrangement;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants.SteerMotorArrangement;
+
+import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.Threads;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.generated.TunerConstants;
@@ -37,6 +42,9 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 public class Robot extends LoggedRobot {
   private Command autonomousCommand;
   private RobotContainer robotContainer;
+  AddressableLED m_led;
+  AddressableLEDBuffer buffer;
+  LEDPattern solidColorBarge;
 
   public Robot() {
     // Record metadata
@@ -98,6 +106,12 @@ public class Robot extends LoggedRobot {
       }
     }
 
+    m_led = new AddressableLED(0);
+    buffer = new AddressableLEDBuffer(123);
+    m_led.setLength(buffer.getLength());
+    m_led.setData(buffer);
+    m_led.start();
+    
     // Instantiate our RobotContainer. This will perform all our button bindings,
     // and put our autonomous chooser on the dashboard.
     robotContainer = new RobotContainer();
@@ -106,6 +120,14 @@ public class Robot extends LoggedRobot {
   /** This function is called periodically during all modes. */
   @Override
   public void robotPeriodic() {
+    if (robotContainer.drive.getPose().getX() > 7.9121) {
+      solidColorBarge = LEDPattern.solid(Color.kGreen);
+    } else {
+      solidColorBarge = LEDPattern.solid(Color.kRed);
+    }
+    solidColorBarge.applyTo(buffer);
+    m_led.setData(buffer);
+
     // Switch thread to high priority to improve loop timing
     Threads.setCurrentThreadPriority(true, 99);
 

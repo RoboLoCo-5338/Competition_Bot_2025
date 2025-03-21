@@ -200,8 +200,9 @@ public final class Constants {
 
   public static final class LEDConstants {
     // TODO change this
-    public static final int LED_PWM_PORT = 0;
+    public static final int LED_PWM_PORT = 1;
     public static final int LED_LENGTH = 300;
+    public static final int BARGE_RANGE = 70;
     public static final Distance LED_SPACING = Meters.of(1.0 / 50.0);
   }
 

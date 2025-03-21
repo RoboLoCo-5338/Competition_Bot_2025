@@ -11,4 +11,6 @@ public interface LEDIO {
   public default void updateInputs(LedIOInputs inputs) {}
 
   public default void setLEDPattern(LEDPattern pattern) {}
+
+  public default void changeLEDPort(int port) {}
 }
