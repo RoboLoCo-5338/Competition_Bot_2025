@@ -344,8 +344,8 @@ public class RobotContainer {
     //     .whileTrue(
     //         DriveCommands.reefStrafe(
     //             drive, () -> driverController.getLeftY(), () -> driverController.getLeftX()));
-    driverController.povLeft().onTrue(DriveCommands.reefAlign(drive, Direction.Left));
-    driverController.povRight().onTrue(DriveCommands.reefAlign(drive, Direction.Right));
+    driverController.povLeft().onTrue(DriveCommands.reefAlign(drive, Direction.Left).until(() -> deadband(driverController.getLeftY())>0 || deadband(driverController.getLeftX())>0 || deadband(driverController.getRightX())>0));
+    driverController.povRight().onTrue(DriveCommands.reefAlign(drive, Direction.Right).until(() -> deadband(driverController.getLeftY())>0 || deadband(driverController.getLeftX())>0 || deadband(driverController.getRightX())>0));
 
     driverController
         .rightTrigger()
