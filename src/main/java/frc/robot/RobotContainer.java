@@ -59,10 +59,7 @@ import frc.robot.subsystems.groundintake.GroundIntake;
 import frc.robot.subsystems.groundintake.GroundIntakeIO;
 import frc.robot.subsystems.groundintake.GroundIntakeIOSim;
 import frc.robot.subsystems.groundintake.GroundIntakeIOSpark;
-import frc.robot.subsystems.led.AddressableLEDIO;
 import frc.robot.subsystems.led.LED;
-import frc.robot.subsystems.led.LEDIO;
-import frc.robot.subsystems.led.LEDIOSim;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOPhotonVision;
@@ -134,7 +131,7 @@ public class RobotContainer {
         climb = new Climb(new ClimbIOTalonFX());
         arm = new Arm(new ArmIOSpark());
         led = new LED();
-      
+
         //  led.setBargeIndicator(drive, elevator);
         ButtonBindingsController =
             new ButtonBindings(drive, led, elevator, groundIntake, endEffector, climb, arm);
@@ -349,7 +346,7 @@ public class RobotContainer {
     Logger.recordOutput("camera pose", Constants.VisionConstants.robotToCamera0);
     led.setBargeIndicator(drive, elevator).schedule();
   }
-  
+
   public void teleopInit() {
     SmartDashboard.putNumber("Laser Can", endEffector.io.getLaserCanmeasurement1());
     endEffector.setEndEffectorVelocity(0);
