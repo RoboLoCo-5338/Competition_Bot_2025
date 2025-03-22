@@ -193,10 +193,8 @@ public class RobotContainer {
     NamedCommands.registerCommand("L4 Preset", PresetCommands.presetL4(elevator, endEffector, arm));
     NamedCommands.registerCommand("L2 Preset", PresetCommands.presetL2(elevator, endEffector, arm));
 
-    NamedCommands.registerCommand(
-        "Endeffector Out", endEffector.setEndEffectorVelocity(60));
-    NamedCommands.registerCommand(
-        "Endeffector Stop", endEffector.setEndEffectorVelocity(0));
+    NamedCommands.registerCommand("Endeffector Out", endEffector.setEndEffectorVelocity(60));
+    NamedCommands.registerCommand("Endeffector Stop", endEffector.setEndEffectorVelocity(0));
     NamedCommands.registerCommand(
         "Align Left", DriveCommands.reefAlign(drive, Direction.Left, driverController, led));
     NamedCommands.registerCommand(
