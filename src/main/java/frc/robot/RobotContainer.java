@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.DriveCommands;
@@ -97,6 +98,8 @@ public class RobotContainer {
 
   public CommandXboxController operatorController = new CommandXboxController(1);
 
+  private boolean useVision = true;
+
   // Controller
 
   // Dashboard inputs
@@ -129,8 +132,8 @@ public class RobotContainer {
         elevator = new Elevator(new ElevatorIOTalonFX());
         climb = new Climb(new ClimbIOTalonFX());
         arm = new Arm(new ArmIOSpark());
-        led = new LED(new LEDIO() {});
-        led.setRainbowLEDCommand();
+        led = new LED();
+      
         //  led.setBargeIndicator(drive, elevator);
         ButtonBindingsController =
             new ButtonBindings(drive, led, elevator, groundIntake, endEffector, climb, arm);
@@ -146,7 +149,7 @@ public class RobotContainer {
                 new ModuleIOSim(TunerConstants.FrontRight),
                 new ModuleIOSim(TunerConstants.BackLeft),
                 new ModuleIOSim(TunerConstants.BackRight));
-        led = new LED(new LEDIOSim());
+        led = new LED();
         groundIntake = new GroundIntake(new GroundIntakeIOSim());
         endEffector = new EndEffector(new EndEffectorIOSim());
         elevator = new Elevator(new ElevatorIOSim());
@@ -173,7 +176,7 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {});
 
-        led = new LED(new LEDIO() {});
+        led = new LED();
         groundIntake = new GroundIntake(new GroundIntakeIO() {});
         endEffector = new EndEffector(new EndEffectorIO() {});
         elevator = new Elevator(new ElevatorIO() {});
@@ -295,32 +298,41 @@ public class RobotContainer {
     driverController
         .b()
         .onTrue(
-            Commands.runOnce(
-                    () ->
-                        drive.setPose(
-                            new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
-                    drive)
-                .ignoringDisable(true));
+            Commands.runOnce(() -> disableVision())
+                .andThen(
+                    Commands.runOnce(
+                            () ->
+                                drive.setPose(
+                                    new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
+                            drive)
+                        .ignoringDisable(true)));
 
     // Turns to tag and locks rotation
+    // driverController
+    //     .y()
+    //     .whileTrue(
+    //         DriveCommands.reefStrafe(
+    //             drive, () -> driverController.getLeftY(), () -> driverController.getLeftX()));
     driverController
         .povLeft()
+        .and(new Trigger(() -> useVision))
         .onTrue(
             DriveCommands.reefAlign(drive, Direction.Left)
                 .until(
                     () ->
-                        Math.abs(deadband(driverController.getLeftX())) > 0
-                            || Math.abs(deadband(driverController.getLeftY())) > 0
-                            || Math.abs(deadband(driverController.getRightX())) > 0));
+                        deadband(driverController.getLeftY()) > 0
+                            || deadband(driverController.getLeftX()) > 0
+                            || deadband(driverController.getRightX()) > 0));
     driverController
         .povRight()
+        .and(new Trigger(() -> useVision))
         .onTrue(
             DriveCommands.reefAlign(drive, Direction.Right)
                 .until(
                     () ->
-                        Math.abs(deadband(driverController.getLeftX())) > 0
-                            || Math.abs(deadband(driverController.getLeftY())) > 0
-                            || Math.abs(deadband(driverController.getRightX())) > 0));
+                        deadband(driverController.getLeftY()) > 0
+                            || deadband(driverController.getLeftX()) > 0
+                            || deadband(driverController.getRightX()) > 0));
 
     driverController
         .rightTrigger()
@@ -359,5 +371,9 @@ public class RobotContainer {
 
   public void setVisionTarget(int id) {
     visionTargetID = id;
+  }
+
+  public void disableVision() {
+    useVision = false;
   }
 }
