@@ -130,7 +130,7 @@ public class RobotContainer {
         elevator = new Elevator(new ElevatorIOTalonFX());
         climb = new Climb(new ClimbIOTalonFX());
         arm = new Arm(new ArmIOSpark());
-        led = new LED(new AddressableLEDIO());
+        led = new LED(new LEDIO() {});
         led.setRainbowLEDCommand();
         //  led.setBargeIndicator(drive, elevator);
         ButtonBindingsController =
