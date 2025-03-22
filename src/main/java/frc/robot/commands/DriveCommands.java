@@ -477,7 +477,7 @@ public class DriveCommands {
     Direction direction;
     int tagId;
     static Pose2d reefRight = new Pose2d(3.02, 3.77, new Rotation2d());
-    static Pose2d reefLeft = new Pose2d(3.05, 4.16, new Rotation2d());
+    static Pose2d reefLeft = new Pose2d(3.05, 4.175, new Rotation2d());
     /**
      * Creates a reef direction based on the currently visible tag.
      *
