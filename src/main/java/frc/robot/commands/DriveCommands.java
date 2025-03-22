@@ -551,7 +551,8 @@ public class DriveCommands {
                           new Reef(
                               direction,
                               poses.indexOf(drive.getPose().nearest(poses))
-                                  + ((isFlipped) ? 6 : 17))))
+                                  + ((isFlipped) ? 6 : 17)))
+                                  )
               .schedule();
           ;
         });
