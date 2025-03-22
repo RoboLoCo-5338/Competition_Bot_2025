@@ -109,11 +109,11 @@ public class Drive extends SubsystemBase {
   private SwerveDrivePoseEstimator poseEstimator =
       new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, new Pose2d());
   public PIDController autoXDriveController =
-      new PIDController(2, 0.1, TunerConstants.driveGains.kD);
+      new PIDController(2, 0.2, TunerConstants.driveGains.kD);
   public PIDController autoYDriveController =
-      new PIDController(2, 0.1, TunerConstants.driveGains.kD);
+      new PIDController(2, 0.2, TunerConstants.driveGains.kD);
   public PIDController autoTurnController =
-      new PIDController(2, 0, 0); // TODO: update angle max acceleration
+      new PIDController(2, 0.2, 0); // TODO: update angle max acceleration
 
   private static boolean useVision;
 

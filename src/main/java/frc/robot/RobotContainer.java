@@ -284,7 +284,7 @@ public class RobotContainer {
         .whileTrue(endEffector.setEndEffectorVelocity(60))
         .onFalse(endEffector.setEndEffectorVelocity(0));
     driverController
-        .leftBumper()
+        .leftTrigger()
         .whileTrue(endEffector.setEndEffectorVelocity(-60))
         .onFalse(endEffector.setEndEffectorVelocity(0));
 
