@@ -63,16 +63,12 @@ public class PresetCommands {
         arm.setArmVelocity(() -> 0));
   }
 
-  public static Command netPreset(EndEffector endEffector, Arm arm) {
-    return new ParallelCommandGroup(
-        arm.setArmPosition(0),
-        new SequentialCommandGroup(new WaitCommand(0.5), endEffector.setEndEffectorSpeed(-1)));
-  }
-
   public static Command netShoot(Arm arm, EndEffector endEffector) {
-    return new SequentialCommandGroup(
-        arm.setArmPosition(0.909), // placeholder
-        new WaitCommand(0.5), // placehlder
-        endEffector.setEndEffectorSpeed(-1));
+    return new ParallelCommandGroup(
+        arm.setArmPosition(0.920), // placeholder
+        new SequentialCommandGroup(
+          new WaitCommand(0.3), // placehlder
+          endEffector.setEndEffectorSpeed(-1))
+        );
   }
 }

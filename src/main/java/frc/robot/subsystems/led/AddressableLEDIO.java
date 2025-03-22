@@ -39,7 +39,7 @@ public class AddressableLEDIO implements LEDIO {
     m_led.setData(m_ledBuffer);
   }
 
-  public void changeLEDPort(int port) {
+  public void changeLEDPort(int port) {                     
     m_led.close();
     m_led = new AddressableLED(port);
   }
