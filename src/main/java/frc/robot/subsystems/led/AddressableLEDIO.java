@@ -8,8 +8,7 @@ import frc.robot.subsystems.led.LEDIO.LedIOInputs;
 
 public class AddressableLEDIO implements LEDIO {
   private AddressableLED m_led = new AddressableLED(LEDConstants.LED_PWM_PORT);
-  private AddressableLEDBuffer m_ledBuffer =
-      new AddressableLEDBuffer(LEDConstants.LED_LENGTH);
+  private AddressableLEDBuffer m_ledBuffer = new AddressableLEDBuffer(LEDConstants.LED_LENGTH);
 
   public AddressableLEDIO() {
     m_led.setLength(m_ledBuffer.getLength());

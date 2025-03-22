@@ -58,7 +58,6 @@ import frc.robot.subsystems.groundintake.GroundIntake;
 import frc.robot.subsystems.groundintake.GroundIntakeIO;
 import frc.robot.subsystems.groundintake.GroundIntakeIOSim;
 import frc.robot.subsystems.groundintake.GroundIntakeIOSpark;
-import frc.robot.subsystems.led.AddressableLEDIO;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.led.LEDIO;
 import frc.robot.subsystems.led.LEDIOSim;
@@ -131,7 +130,7 @@ public class RobotContainer {
         climb = new Climb(new ClimbIOTalonFX());
         arm = new Arm(new ArmIOSpark());
         led = new LED(new LEDIO() {});
-      //  led.setBargeIndicator(drive, elevator);
+        //  led.setBargeIndicator(drive, elevator);
         ButtonBindingsController =
             new ButtonBindings(drive, led, elevator, groundIntake, endEffector, climb, arm);
 
@@ -217,7 +216,6 @@ public class RobotContainer {
         "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
     autoChooser.addOption(
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
- 
 
     // Configure the button bindings
     configureButtonBindings();
@@ -230,7 +228,6 @@ public class RobotContainer {
       return (1 / (1 - 0.2)) * (controllerAxis + (Math.signum(controllerAxis) * 0.2));
     }
   }
-
 
   /**
    * Use this method to define your button->command mappings. Buttons can be created by
@@ -280,9 +277,6 @@ public class RobotContainer {
         .onTrue(endEffector.setEndEffectorSpeed(-1))
         .onFalse(endEffector.setEndEffectorVelocity(0));
 
- 
-
-
     driverController
         .rightBumper()
         .whileTrue(endEffector.setEndEffectorVelocity(60))
@@ -291,8 +285,6 @@ public class RobotContainer {
         .leftBumper()
         .whileTrue(endEffector.setEndEffectorVelocity(-60))
         .onFalse(endEffector.setEndEffectorVelocity(0));
-
-
 
     driverController
         .b()
@@ -305,8 +297,24 @@ public class RobotContainer {
                 .ignoringDisable(true));
 
     // Turns to tag and locks rotation
-    driverController.povLeft().onTrue(DriveCommands.reefAlign(drive, Direction.Left).until(() -> Math.abs(deadband(driverController.getLeftX())) > 0 || Math.abs(deadband(driverController.getLeftY())) >0 || Math.abs(deadband(driverController.getRightX())) > 0));
-    driverController.povRight().onTrue(DriveCommands.reefAlign(drive, Direction.Right).until(() -> Math.abs(deadband(driverController.getLeftX())) > 0 || Math.abs(deadband(driverController.getLeftY())) >0 || Math.abs(deadband(driverController.getRightX())) > 0));
+    driverController
+        .povLeft()
+        .onTrue(
+            DriveCommands.reefAlign(drive, Direction.Left)
+                .until(
+                    () ->
+                        Math.abs(deadband(driverController.getLeftX())) > 0
+                            || Math.abs(deadband(driverController.getLeftY())) > 0
+                            || Math.abs(deadband(driverController.getRightX())) > 0));
+    driverController
+        .povRight()
+        .onTrue(
+            DriveCommands.reefAlign(drive, Direction.Right)
+                .until(
+                    () ->
+                        Math.abs(deadband(driverController.getLeftX())) > 0
+                            || Math.abs(deadband(driverController.getLeftY())) > 0
+                            || Math.abs(deadband(driverController.getRightX())) > 0));
 
     driverController
         .rightTrigger()

@@ -28,7 +28,6 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -477,8 +476,8 @@ public class DriveCommands {
   public static class Reef extends PathDestination {
     Direction direction;
     int tagId;
-    static Pose2d reefRight = new Pose2d(3.02, 3.75, new Rotation2d());
-    static Pose2d reefLeft = new Pose2d(3.05, 4.13, new Rotation2d());
+    static Pose2d reefRight = new Pose2d(3.02, 3.77, new Rotation2d());
+    static Pose2d reefLeft = new Pose2d(3.05, 4.16, new Rotation2d());
     /**
      * Creates a reef direction based on the currently visible tag.
      *
