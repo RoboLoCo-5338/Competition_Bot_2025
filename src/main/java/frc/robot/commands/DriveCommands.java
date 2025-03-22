@@ -28,6 +28,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -570,20 +571,21 @@ public class DriveCommands {
                   controller);
 
           new SequentialCommandGroup(
+                  led.turnColor(Color.kYellow),
                   move,
                   new InstantCommand(() -> System.out.println(DriveCommands.canceled)),
                   led.turnGreen(),
-                  new WaitCommand(0.3),
+                  new WaitCommand(0.15),
                   led.turnOff(),
-                  new WaitCommand(0.3),
+                  new WaitCommand(0.15),
                   led.turnGreen(),
-                  new WaitCommand(0.3),
+                  new WaitCommand(0.15),
                   led.turnOff(),
-                  new WaitCommand(0.3),
+                  new WaitCommand(0.10),
                   led.turnGreen(),
-                  new WaitCommand(0.3),
+                  new WaitCommand(0.10),
                   led.turnOff(),
-                  new WaitCommand(0.5)
+                  new WaitCommand(0.10)
                  )
               .schedule();
         });
