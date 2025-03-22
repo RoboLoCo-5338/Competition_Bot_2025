@@ -2,6 +2,8 @@ package frc.robot.subsystems.led;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -33,11 +35,9 @@ public class LED extends SubsystemBase {
     m_led.start();
   }
 
-  public InstantCommand turnGreen(boolean inverted) {
-    System.out.println(inverted);
-    System.out.println(DriveCommands.canceled);
-    System.out.println("========");
-    if (inverted) {
+  public InstantCommand turnGreen(BooleanSupplier inverted) {
+  
+    if (inverted.getAsBoolean()) {
       return new InstantCommand(
           () -> {
             LEDPattern red = LEDPattern.solid(Color.kRed);

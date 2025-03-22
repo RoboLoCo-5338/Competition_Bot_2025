@@ -389,7 +389,7 @@ public class DriveCommands {
 
         @Override
         public boolean isFinished() {
-         
+
           boolean canceled = driverController.leftStick().getAsBoolean();
           if (canceled) {
             DriveCommands.canceled = true;
@@ -571,16 +571,17 @@ public class DriveCommands {
 
           new SequentialCommandGroup(
                   move,
+                  new WaitCommand(0.0),
                   new InstantCommand(() -> System.out.println(DriveCommands.canceled)),
-                  led.turnGreen(DriveCommands.canceled),
+                  led.turnGreen(() -> DriveCommands.canceled),
                   new WaitCommand(0.3),
                   led.turnOff(),
                   new WaitCommand(0.3),
-                  led.turnGreen(DriveCommands.canceled),
+                  led.turnGreen(() -> DriveCommands.canceled),
                   new WaitCommand(0.3),
                   led.turnOff(),
                   new WaitCommand(0.3),
-                  led.turnGreen(DriveCommands.canceled),
+                  led.turnGreen(() -> DriveCommands.canceled),
                   new WaitCommand(0.3),
                   led.turnOff(),
                   new WaitCommand(0.5),
