@@ -284,6 +284,11 @@ public class RobotContainer {
         .onTrue(endEffector.setEndEffectorSpeed(-1))
         .onFalse(endEffector.setEndEffectorVelocity(0));
 
+    operatorController
+        .leftBumper()
+        .onTrue(PresetCommands.netPreset(endEffector, arm))
+        .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
+
     driverController
         .rightBumper()
         .whileTrue(endEffector.setEndEffectorVelocity(60))

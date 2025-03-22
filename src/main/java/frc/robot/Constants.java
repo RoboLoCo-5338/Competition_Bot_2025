@@ -111,10 +111,10 @@ public final class Constants {
 
     public static final class ElevatorPositionConstants {
       public static final double ELEVATOR_FEEDFORWARD = 0.0;
-      public static final double ELEVATOR_MOTOR_kP = 0.25; // 0.3
+      public static final double ELEVATOR_MOTOR_kP = 0.28; // 0.3
       public static final double ELEVATOR_MOTOR_kI = 0.02;
       public static final double ELEVATOR_MOTOR_kD = 0.00;
-      public static final double ELEVATOR_MOTOR_kG = 0.6; // 0.5
+      public static final double ELEVATOR_MOTOR_kG = 0.5; // 0.5
       public static final double ELEVATOR_MOTOR_kV = 0.0;
     }
 
