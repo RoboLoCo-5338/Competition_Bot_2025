@@ -364,7 +364,7 @@ public class DriveCommands {
           drive.autoXDriveController.reset();
           drive.autoYDriveController.reset();
           drive.autoTurnController.reset();
-          
+
           drive.autoXDriveController.setSetpoint(targetPose.getX());
           drive.autoYDriveController.setSetpoint(targetPose.getY());
           drive.autoTurnController.setSetpoint(targetPose.getRotation().getRadians());
@@ -583,8 +583,7 @@ public class DriveCommands {
                   led.turnGreen(),
                   new WaitCommand(0.3),
                   led.turnOff(),
-                  new WaitCommand(0.5)
-                 )
+                  new WaitCommand(0.5))
               .schedule();
         });
   }
