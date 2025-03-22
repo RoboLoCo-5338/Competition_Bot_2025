@@ -322,23 +322,16 @@ public class RobotContainer {
     driverController
         .povLeft()
         .and(() -> drive.useVision)
-        .onTrue(
-            DriveCommands.reefAlign(drive, Direction.Left, driverController, led)
-                .until(
-                    () ->
-                        deadband(driverController.getLeftY()) > 0
-                            || deadband(driverController.getLeftX()) > 0
-                            || deadband(driverController.getRightX()) > 0));
+        .onTrue(DriveCommands.reefAlign(drive, Direction.Left, driverController, led));
     driverController
         .povRight()
-        .and(() -> drive.useVision)
-        .onTrue(
-            DriveCommands.reefAlign(drive, Direction.Right, driverController, led)
-                .until(
-                    () ->
-                        deadband(driverController.getLeftY()) > 0
-                            || deadband(driverController.getLeftX()) > 0
-                            || deadband(driverController.getRightX()) > 0));
+        .and(
+            () -> {
+              System.out.println(
+                  "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" + drive.useVision);
+              return drive.useVision;
+            })
+        .onTrue(DriveCommands.reefAlign(drive, Direction.Right, driverController, led));
 
     driverController
         .rightTrigger()
@@ -357,6 +350,7 @@ public class RobotContainer {
   public void periodic() {
     // ButtonBindingsController.periodic();
     Logger.recordOutput("camera pose", Constants.VisionConstants.robotToCamera0);
+    // System.out.println(drive.useVision);
   }
 
   public void teleopInit() {

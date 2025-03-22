@@ -554,6 +554,7 @@ public class DriveCommands {
       Drive drive, Direction direction, CommandXboxController controller, LED led) {
     return new InstantCommand( // I hate commands so much
         () -> {
+          System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
           ArrayList<Pose2d> poses = DriveCommands.getReefPoses(direction);
           Command move =
               pathToDestination(
