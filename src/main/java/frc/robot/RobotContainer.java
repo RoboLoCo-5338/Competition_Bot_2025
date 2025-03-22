@@ -78,7 +78,7 @@ public class RobotContainer {
   public final Drive drive;
   public final Vision vision;
 
-  private final LED led;
+  public final LED led;
 
   private final Elevator elevator;
 
@@ -344,7 +344,6 @@ public class RobotContainer {
   public void periodic() {
     // ButtonBindingsController.periodic();
     Logger.recordOutput("camera pose", Constants.VisionConstants.robotToCamera0);
-    led.setBargeIndicator(drive, elevator).schedule();
   }
 
   public void teleopInit() {
