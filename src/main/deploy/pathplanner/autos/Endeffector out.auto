@@ -9,6 +9,12 @@
           "data": {
             "name": "Endeffector Out"
           }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 5.0
+          }
         }
       ]
     }
