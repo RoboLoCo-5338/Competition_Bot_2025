@@ -290,7 +290,7 @@ public class RobotContainer {
 
     driverController
         .x()
-        .whileTrue(groundIntake.setGroundIntakeVelocity(-3600))
+        .whileTrue(groundIntake.setIntakeSpeed(-1))
         .onFalse(groundIntake.setGroundIntakeVelocity(0));
     driverController
         .b()
