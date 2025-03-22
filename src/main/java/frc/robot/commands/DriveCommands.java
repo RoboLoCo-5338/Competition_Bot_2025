@@ -389,13 +389,15 @@ public class DriveCommands {
 
         @Override
         public boolean isFinished() {
+         
           boolean canceled = driverController.leftStick().getAsBoolean();
           if (canceled) {
             DriveCommands.canceled = true;
+            System.out.println("Finishing!");
           }
-          return drive.autoXDriveController.atSetpoint()
+          return (drive.autoXDriveController.atSetpoint()
                   && drive.autoYDriveController.atSetpoint()
-                  && drive.autoTurnController.atSetpoint()
+                  && drive.autoTurnController.atSetpoint())
               || canceled;
         }
 

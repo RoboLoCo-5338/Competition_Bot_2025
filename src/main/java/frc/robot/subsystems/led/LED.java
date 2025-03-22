@@ -44,7 +44,7 @@ public class LED extends SubsystemBase {
             red.applyTo(buffer);
             m_led.setData(buffer);
           });
-      }
+    }
     return new InstantCommand(
         () -> {
           LEDPattern green = LEDPattern.solid(Color.kGreen);
