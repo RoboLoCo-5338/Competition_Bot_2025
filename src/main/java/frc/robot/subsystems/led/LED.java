@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.LEDConstants;
+import frc.robot.commands.DriveCommands;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.elevator.Elevator;
 
@@ -33,15 +34,17 @@ public class LED extends SubsystemBase {
   }
 
   public InstantCommand turnGreen(boolean inverted) {
-
+    System.out.println(inverted);
+    System.out.println(DriveCommands.canceled);
+    System.out.println("========");
     if (inverted) {
       return new InstantCommand(
-        () -> {
-          LEDPattern red = LEDPattern.solid(Color.kRed);
-          red.applyTo(buffer);
-          m_led.setData(buffer);
-        });
-    }
+          () -> {
+            LEDPattern red = LEDPattern.solid(Color.kRed);
+            red.applyTo(buffer);
+            m_led.setData(buffer);
+          });
+      }
     return new InstantCommand(
         () -> {
           LEDPattern green = LEDPattern.solid(Color.kGreen);
