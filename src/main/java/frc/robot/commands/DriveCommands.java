@@ -37,7 +37,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.VisionConstants;
-import frc.robot.RobotContainer;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.led.LED;
 import java.text.DecimalFormat;
@@ -391,20 +390,21 @@ public class DriveCommands {
 
         @Override
         public boolean isFinished() {
+
           boolean canceled = driverController.leftStick().getAsBoolean();
           if (canceled) {
             DriveCommands.canceled = true;
+            System.out.println("Finishing!");
           }
-          return drive.autoXDriveController.atSetpoint()
+          return (drive.autoXDriveController.atSetpoint()
                   && drive.autoYDriveController.atSetpoint()
-                  && drive.autoTurnController.atSetpoint()
+                  && drive.autoTurnController.atSetpoint())
               || canceled;
         }
 
         @Override
         public void end(boolean interrupted) {
           System.out.println("done");
-          
         }
       };
     }
@@ -559,7 +559,6 @@ public class DriveCommands {
       Drive drive, Direction direction, CommandXboxController controller, LED led) {
     return new InstantCommand( // I hate commands so much
         () -> {
-         
           ArrayList<Pose2d> poses = DriveCommands.getReefPoses(direction);
           canceled = false;
           Command move =
@@ -570,19 +569,19 @@ public class DriveCommands {
                           direction,
                           poses.indexOf(drive.getPose().nearest(poses)) + ((isFlipped) ? 6 : 17)),
                   controller);
-          
+
           new SequentialCommandGroup(
                   move,
                   new InstantCommand(() -> System.out.println(DriveCommands.canceled)),
-                  led.turnGreen(DriveCommands.canceled),
+                  led.turnGreen(),
                   new WaitCommand(0.3),
                   led.turnOff(),
                   new WaitCommand(0.3),
-                  led.turnGreen(DriveCommands.canceled),
+                  led.turnGreen(),
                   new WaitCommand(0.3),
                   led.turnOff(),
                   new WaitCommand(0.3),
-                  led.turnGreen(DriveCommands.canceled),
+                  led.turnGreen(),
                   new WaitCommand(0.3),
                   led.turnOff(),
                   new WaitCommand(0.5),
