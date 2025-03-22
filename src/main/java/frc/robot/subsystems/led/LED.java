@@ -65,7 +65,7 @@ public class LED extends SubsystemBase {
   }
 
   public InstantCommand turnColor(Color color) {
-    
+
     return new InstantCommand(
         () -> {
           LEDPattern colorPattern = LEDPattern.solid(color);

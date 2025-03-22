@@ -225,19 +225,17 @@ public class RobotContainer {
     configureButtonBindings();
 
     new SequentialCommandGroup(
-        new WaitCommand(2.0),
-        led.turnColor(Color.kWhite),
-        new WaitCommand(0.3),
-        led.turnOff(),
-        new WaitCommand(0.3),
-        led.turnColor(Color.kWhite), 
-        new WaitCommand(0.3),
-        led.turnOff(),
-        new WaitCommand(0.3),
-        led.turnColor(Color.kWhite) 
-      
-    ).schedule(); //start it off as rainbow
-
+            new WaitCommand(2.0),
+            led.turnColor(Color.kWhite),
+            new WaitCommand(0.3),
+            led.turnOff(),
+            new WaitCommand(0.3),
+            led.turnColor(Color.kWhite),
+            new WaitCommand(0.3),
+            led.turnOff(),
+            new WaitCommand(0.3),
+            led.turnColor(Color.kWhite))
+        .schedule(); // start it off as rainbow
   }
 
   public static double deadband(double controllerAxis) {
@@ -256,7 +254,6 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Default command, normal field-relative drive
-   
 
     led.isCloseToBarge(drive).whileTrue(led.setBargeIndicator(drive, elevator));
     elevator.setDefaultCommand(
@@ -305,7 +302,7 @@ public class RobotContainer {
 
     operatorController
         .leftBumper()
-        .onTrue(PresetCommands.netPreset(endEffector, arm))
+        .onTrue(PresetCommands.netShoot(arm, endEffector))
         .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
 
     driverController
