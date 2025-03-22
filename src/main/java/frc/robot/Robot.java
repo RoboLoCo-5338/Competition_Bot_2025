@@ -16,7 +16,12 @@ package frc.robot;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants.DriveMotorArrangement;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants.SteerMotorArrangement;
+
+import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.Threads;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.generated.TunerConstants;
@@ -37,6 +42,9 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 public class Robot extends LoggedRobot {
   private Command autonomousCommand;
   private RobotContainer robotContainer;
+  private final AddressableLED m_led;
+  private final AddressableLEDBuffer buffer;
+  private final LEDPattern pattern;
 
   public Robot() {
     // Record metadata
@@ -97,16 +105,24 @@ public class Robot extends LoggedRobot {
             "You are using an unsupported swerve configuration, which this template does not support without manual customization. The 2025 release of Phoenix supports some swerve configurations which were not available during 2025 beta testing, preventing any development and support from the AdvantageKit developers.");
       }
     }
-
     // Instantiate our RobotContainer. This will perform all our button bindings,
     // and put our autonomous chooser on the dashboard.
     robotContainer = new RobotContainer();
+
+    m_led = new AddressableLED(0);
+    buffer = new AddressableLEDBuffer(123);
+    pattern = LEDPattern.solid(Color.kCyan);
+    m_led.setLength(buffer.getLength());
+    m_led.setData(buffer);
+    m_led.start();
   }
 
   /** This function is called periodically during all modes. */
   @Override
   public void robotPeriodic() {
-    CommandScheduler.getInstance().schedule(robotContainer.led.setBargeIndicator(null, null));
+    pattern.applyTo(buffer);
+    m_led.setData(buffer);
+    // CommandScheduler.getInstance().schedule(robotContainer.led.setBargeIndicator(null, null));
     // Switch thread to high priority to improve loop timing
     Threads.setCurrentThreadPriority(true, 99);
 

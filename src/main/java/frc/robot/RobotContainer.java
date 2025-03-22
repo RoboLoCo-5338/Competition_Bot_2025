@@ -289,6 +289,10 @@ public class RobotContainer {
         .onFalse(endEffector.setEndEffectorVelocity(0));
 
     driverController
+        .x()
+        .whileTrue(groundIntake.setGroundIntakeVelocity(-3600))
+        .onFalse(groundIntake.setGroundIntakeVelocity(0));
+    driverController
         .b()
         .onTrue(
             Commands.runOnce(() -> Drive.disableVision())
