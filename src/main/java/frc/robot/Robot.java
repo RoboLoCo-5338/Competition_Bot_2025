@@ -145,8 +145,8 @@ public class Robot extends LoggedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.schedule();
     }
-    robotContainer.startRainbow().schedule();;
-    
+    robotContainer.startRainbow().schedule();
+    ;
   }
 
   /** This function is called periodically during autonomous. */

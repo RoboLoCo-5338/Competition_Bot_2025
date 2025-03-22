@@ -575,13 +575,21 @@ public class DriveCommands {
                   elevatorHeight);
 
           new SequentialCommandGroup(
-                  led.turnColor(Color.kOrange),
+                  led.turnColor(Color.kOrange), // change to davids commit of wait 3 instead of flash
                   move,
                   new InstantCommand(() -> System.out.println(DriveCommands.canceled)),
                   led.turnGreen(),
-                  new WaitCommand(3)
-                  
-                 )
+                  new WaitCommand(0.3),
+                  led.turnOff(),
+                  new WaitCommand(0.3),
+                  led.turnGreen(),
+                  new WaitCommand(0.3),
+                  led.turnOff(),
+                  new WaitCommand(0.3),
+                  led.turnGreen(),
+                  new WaitCommand(0.3),
+                  led.turnOff(),
+                  new WaitCommand(0.5))
               .schedule();
         });
   }

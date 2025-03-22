@@ -30,6 +30,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Stop Preset"
+          }
+        },
+        {
           "type": "deadline",
           "data": {
             "commands": [
