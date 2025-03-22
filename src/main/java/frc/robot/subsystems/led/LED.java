@@ -99,7 +99,7 @@ public class LED extends SubsystemBase {
   }
 
   public Trigger isCloseToBarge(Drive drive) {
-    return new Trigger(() -> getDistanceFromBarge(drive) < -0.5);
+    return new Trigger(() -> getDistanceFromBarge(drive) < 1.0); // this is not in meters. its a percentage.
   }
 
   public Command setBargeIndicator(Drive drive, Elevator elevator) {

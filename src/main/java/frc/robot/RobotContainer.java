@@ -349,8 +349,6 @@ public class RobotContainer {
         .povRight()
         .and(
             () -> {
-              System.out.println(
-                  "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" + drive.useVision);
               return drive.useVision;
             })
         .onTrue(DriveCommands.reefAlign(drive, Direction.Right, driverController, led));
