@@ -10,7 +10,7 @@ public class EndEffectorCommands {
   public static Command moveEndEffector(EndEffector endEffector, double speed) {
     return new InstantCommand(() -> endEffector.setEndEffectorVelocity(speed));
   }
-  // value is in rotations  
+  // value is in rotations
   public static double getEndEffectorPosition(EndEffector endEffector) {
     return endEffector.io.endEffectorMotor.getPosition().getValueAsDouble();
   }
