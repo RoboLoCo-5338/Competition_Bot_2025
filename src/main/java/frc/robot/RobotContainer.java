@@ -33,7 +33,6 @@ import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveCommands.Direction;
 import frc.robot.commands.EndEffectorCommands;
-import frc.robot.commands.GroundIntakeCommands;
 import frc.robot.commands.PresetCommands;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.arm.Arm;
@@ -308,12 +307,12 @@ public class RobotContainer {
 
     operatorController
         .povUp()
-        .whileTrue(groundIntake.setGroundArmVelocity(() -> -1.0))
+        .whileTrue(groundIntake.setGroundArmVelocity(() -> -5.0))
         .onFalse(groundIntake.setGroundArmVelocity(() -> 0.0));
 
     operatorController
         .povDown()
-        .whileTrue(groundIntake.setGroundArmVelocity(() -> 1.0))
+        .whileTrue(groundIntake.setGroundArmVelocity(() -> 5.0))
         .onFalse(groundIntake.setGroundArmVelocity(() -> 0.0));
 
     operatorController
