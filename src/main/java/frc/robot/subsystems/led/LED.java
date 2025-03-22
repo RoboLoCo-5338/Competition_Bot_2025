@@ -35,24 +35,21 @@ public class LED extends SubsystemBase {
 
   public InstantCommand turnGreen() {
     System.out.println("command: " + DriveCommands.canceled);
-    
-      return new InstantCommand(
-          () -> {
-            if (DriveCommands.canceled) {
 
-              LEDPattern red = LEDPattern.solid(Color.kRed);
-              red.applyTo(buffer);
-              m_led.setData(buffer);
-            } else {
-              LEDPattern green = LEDPattern.solid(Color.kGreen);
-              green.applyTo(buffer);
-              m_led.setData(buffer);
-            }
+    return new InstantCommand(
+        () -> {
+          if (DriveCommands.canceled) {
 
-          });
-    }
-    
-  
+            LEDPattern red = LEDPattern.solid(Color.kRed);
+            red.applyTo(buffer);
+            m_led.setData(buffer);
+          } else {
+            LEDPattern green = LEDPattern.solid(Color.kGreen);
+            green.applyTo(buffer);
+            m_led.setData(buffer);
+          }
+        });
+  }
 
   public InstantCommand turnOff() {
 
