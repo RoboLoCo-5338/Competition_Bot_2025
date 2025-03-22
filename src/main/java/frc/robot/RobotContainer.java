@@ -25,7 +25,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.DriveCommands;
@@ -60,8 +59,6 @@ import frc.robot.subsystems.groundintake.GroundIntakeIO;
 import frc.robot.subsystems.groundintake.GroundIntakeIOSim;
 import frc.robot.subsystems.groundintake.GroundIntakeIOSpark;
 import frc.robot.subsystems.led.LED;
-import frc.robot.subsystems.led.LEDIO;
-import frc.robot.subsystems.led.LEDIOSim;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOPhotonVision;
@@ -80,7 +77,7 @@ public class RobotContainer {
   public final Drive drive;
   public final Vision vision;
 
-  private final LED led;
+  public final LED led;
 
   private final Elevator elevator;
 
@@ -97,8 +94,6 @@ public class RobotContainer {
   public CommandXboxController driverController = new CommandXboxController(0);
 
   public CommandXboxController operatorController = new CommandXboxController(1);
-
-  private boolean useVision = true;
 
   // Controller
 
@@ -133,7 +128,7 @@ public class RobotContainer {
         climb = new Climb(new ClimbIOTalonFX());
         arm = new Arm(new ArmIOSpark());
         led = new LED();
-      
+
         //  led.setBargeIndicator(drive, elevator);
         ButtonBindingsController =
             new ButtonBindings(drive, led, elevator, groundIntake, endEffector, climb, arm);
@@ -199,8 +194,10 @@ public class RobotContainer {
         "Endeffector In", EndEffectorCommands.moveEndEffectorLaserCan(endEffector));
     NamedCommands.registerCommand(
         "Endeffector Stop", EndEffectorCommands.moveEndEffector(endEffector, 0));
-    NamedCommands.registerCommand("Align Left", DriveCommands.reefAlign(drive, Direction.Left));
-    NamedCommands.registerCommand("Align Right", DriveCommands.reefAlign(drive, Direction.Right));
+    NamedCommands.registerCommand(
+        "Align Left", DriveCommands.reefAlign(drive, Direction.Left, driverController, led));
+    NamedCommands.registerCommand(
+        "Align Right", DriveCommands.reefAlign(drive, Direction.Right, driverController, led));
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -225,7 +222,7 @@ public class RobotContainer {
     configureButtonBindings();
   }
 
-  private double deadband(double controllerAxis) {
+  public static double deadband(double controllerAxis) {
     if (Math.abs(controllerAxis) < 0.2) {
       return 0;
     } else {
@@ -242,6 +239,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     // Default command, normal field-relative drive
 
+    led.isCloseToBarge(drive).whileTrue(led.setBargeIndicator(drive, elevator));
     elevator.setDefaultCommand(
         elevator.setElevatorVelocity(() -> deadband(-operatorController.getLeftY()) * 25));
 
@@ -291,14 +289,22 @@ public class RobotContainer {
         .whileTrue(endEffector.setEndEffectorVelocity(60))
         .onFalse(endEffector.setEndEffectorVelocity(0));
     driverController
-        .leftBumper()
+        .leftTrigger()
         .whileTrue(endEffector.setEndEffectorVelocity(-60))
         .onFalse(endEffector.setEndEffectorVelocity(0));
 
     driverController
+        .x()
+        .onTrue(groundIntake.setIntakeSpeed(-1))
+        .onFalse(groundIntake.setGroundIntakeVelocity(0));
+    driverController
         .b()
         .onTrue(
-            Commands.runOnce(() -> disableVision())
+            Commands.runOnce(
+                    () -> {
+                      System.out.println("runs");
+                      drive.disableVision();
+                    })
                 .andThen(
                     Commands.runOnce(
                             () ->
@@ -315,9 +321,9 @@ public class RobotContainer {
     //             drive, () -> driverController.getLeftY(), () -> driverController.getLeftX()));
     driverController
         .povLeft()
-        .and(new Trigger(() -> useVision))
+        .and(() -> drive.useVision)
         .onTrue(
-            DriveCommands.reefAlign(drive, Direction.Left)
+            DriveCommands.reefAlign(drive, Direction.Left, driverController, led)
                 .until(
                     () ->
                         deadband(driverController.getLeftY()) > 0
@@ -325,9 +331,9 @@ public class RobotContainer {
                             || deadband(driverController.getRightX()) > 0));
     driverController
         .povRight()
-        .and(new Trigger(() -> useVision))
+        .and(() -> drive.useVision)
         .onTrue(
-            DriveCommands.reefAlign(drive, Direction.Right)
+            DriveCommands.reefAlign(drive, Direction.Right, driverController, led)
                 .until(
                     () ->
                         deadband(driverController.getLeftY()) > 0
@@ -351,7 +357,6 @@ public class RobotContainer {
   public void periodic() {
     // ButtonBindingsController.periodic();
     Logger.recordOutput("camera pose", Constants.VisionConstants.robotToCamera0);
-    // led.setBargeIndicator(drive, elevator).schedule();
   }
 
   public void teleopInit() {
@@ -371,9 +376,5 @@ public class RobotContainer {
 
   public void setVisionTarget(int id) {
     visionTargetID = id;
-  }
-
-  public void disableVision() {
-    useVision = false;
   }
 }

@@ -108,11 +108,13 @@ public class Drive extends SubsystemBase {
   private SwerveDrivePoseEstimator poseEstimator =
       new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, new Pose2d());
   public PIDController autoXDriveController =
-      new PIDController(2, 0.1, TunerConstants.driveGains.kD);
+      new PIDController(2, 0.2, TunerConstants.driveGains.kD);
   public PIDController autoYDriveController =
-      new PIDController(2, 0.1, TunerConstants.driveGains.kD);
+      new PIDController(2, 0.2, TunerConstants.driveGains.kD);
   public PIDController autoTurnController =
-      new PIDController(2, 0, 0); // TODO: update angle max acceleration
+      new PIDController(2, 0.2, 0); // TODO: update angle max acceleration
+
+  public boolean useVision;
 
   public Drive(
       GyroIO gyroIO,
@@ -346,13 +348,24 @@ public class Drive extends SubsystemBase {
     poseEstimator.resetPosition(rawGyroRotation, getModulePositions(), pose);
   }
 
+  public void disableVision() {
+    System.out.println("Disabling vision");
+    useVision = false;
+  }
+
+  public void enableVision() {
+    useVision = true;
+  }
+
   /** Adds a new timestamped vision measurement. */
   public void addVisionMeasurement(
       Pose2d visionRobotPoseMeters,
       double timestampSeconds,
       Matrix<N3, N1> visionMeasurementStdDevs) {
-    poseEstimator.addVisionMeasurement(
-        visionRobotPoseMeters, timestampSeconds, visionMeasurementStdDevs);
+    if (useVision) {
+      poseEstimator.addVisionMeasurement(
+          visionRobotPoseMeters, timestampSeconds, visionMeasurementStdDevs);
+    }
   }
 
   /** Returns the maximum linear speed in meters per sec. */

@@ -33,8 +33,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.VisionConstants;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.led.LED;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -55,7 +59,7 @@ public class DriveCommands {
   private static final double WHEEL_RADIUS_MAX_VELOCITY = 0.25; // Rad/Sec
   private static final double WHEEL_RADIUS_RAMP_RATE = 0.05; // Rad/Sec^2
 
-  private static boolean isFlipped =
+  public static boolean isFlipped =
       DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red;
 
   public static double slowMode = 1;
@@ -84,6 +88,7 @@ public class DriveCommands {
       DoubleSupplier xSupplier,
       DoubleSupplier ySupplier,
       DoubleSupplier omegaSupplier) {
+    System.out.println("is flipped:" + isFlipped);
 
     return Commands.run(
         () -> {
@@ -331,7 +336,8 @@ public class DriveCommands {
    * @param destination Destination that the robot paths to
    * @return Command that makes the robot path to the destination
    */
-  public static Command pathToDestination(Drive drive, Supplier<PathDestination> destination) {
+  public static Command pathToDestination(
+      Drive drive, Supplier<PathDestination> destination, CommandXboxController driverController) {
     System.out.println("runs");
     Pose2d targetPose = destination.get().getTargetPosition();
     Logger.recordOutput("Path to Destination", targetPose);
@@ -353,7 +359,8 @@ public class DriveCommands {
       return new Command() {
         @Override
         public void initialize() {
-          System.out.println("good");
+          System.out.println(DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red);
+          System.out.println(isFlipped);
           drive.autoXDriveController.reset();
           drive.autoYDriveController.reset();
           drive.autoTurnController.reset();
@@ -383,8 +390,11 @@ public class DriveCommands {
         @Override
         public boolean isFinished() {
           return drive.autoXDriveController.atSetpoint()
-              && drive.autoYDriveController.atSetpoint()
-              && drive.autoTurnController.atSetpoint();
+                  && drive.autoYDriveController.atSetpoint()
+                  && drive.autoTurnController.atSetpoint()
+              || (RobotContainer.deadband(driverController.getLeftY()) > 0
+                  || RobotContainer.deadband(driverController.getLeftX()) > 0
+                  || RobotContainer.deadband(driverController.getRightX()) > 0);
         }
 
         @Override
@@ -540,21 +550,28 @@ public class DriveCommands {
     return poses;
   }
 
-  public static Command reefAlign(Drive drive, Direction direction) {
+  public static Command reefAlign(
+      Drive drive, Direction direction, CommandXboxController controller, LED led) {
     return new InstantCommand( // I hate commands so much
         () -> {
           ArrayList<Pose2d> poses = DriveCommands.getReefPoses(direction);
+          Command move =
+              pathToDestination(
+                  drive,
+                  () ->
+                      new Reef(
+                          direction,
+                          poses.indexOf(drive.getPose().nearest(poses)) + ((isFlipped) ? 6 : 17)),
+                  controller);
+
           new SequentialCommandGroup(
-                  pathToDestination(
-                      drive,
-                      () ->
-                          new Reef(
-                              direction,
-                              poses.indexOf(drive.getPose().nearest(poses))
-                                  + ((isFlipped) ? 6 : 17)))
-                                  )
+                  move,
+                  led.turnGreen(),
+                  new WaitCommand(0.5),
+                  led.turnOff(),
+                  new WaitCommand(5),
+                  led.goRainbow())
               .schedule();
-          ;
         });
   }
 
