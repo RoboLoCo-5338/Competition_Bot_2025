@@ -114,7 +114,7 @@ public class Drive extends SubsystemBase {
   public PIDController autoTurnController =
       new PIDController(2, 0.2, 0); // TODO: update angle max acceleration
 
-  public boolean useVision;
+  public boolean useVision = true;
 
   public Drive(
       GyroIO gyroIO,

@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Right to Reef"
+            "pathName": "Right to ReefGI"
           }
         },
         {
@@ -26,6 +26,12 @@
           "type": "named",
           "data": {
             "name": "GroundI Stop"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Right Reef to SourceGI"
           }
         }
       ]
