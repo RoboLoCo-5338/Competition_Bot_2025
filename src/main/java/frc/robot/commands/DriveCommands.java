@@ -33,6 +33,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.drive.Drive;
 import java.text.DecimalFormat;
@@ -43,6 +44,7 @@ import java.util.List;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
+
 
 public class DriveCommands {
   private static final double DEADBAND = 0.06;
@@ -540,21 +542,35 @@ public class DriveCommands {
     return poses;
   }
 
-  public static Command reefAlign(Drive drive, Direction direction) {
+  private static double deadband(double controllerAxis) {
+    if (Math.abs(controllerAxis) < 0.2) {
+      return 0;
+    } else {
+      return (1 / (1 - 0.2)) * (controllerAxis + (Math.signum(controllerAxis) * 0.2));
+    }
+  }
+  public static Command reefAlign(Drive drive, Direction direction, CommandXboxController controller, SequentialCommandGroup flashCommand) {
     return new InstantCommand( // I hate commands so much
         () -> {
           ArrayList<Pose2d> poses = DriveCommands.getReefPoses(direction);
-          new SequentialCommandGroup(
-                  pathToDestination(
+          Command move =
+              pathToDestination(
                       drive,
                       () ->
                           new Reef(
                               direction,
                               poses.indexOf(drive.getPose().nearest(poses))
                                   + ((isFlipped) ? 6 : 17)))
-                                  )
+                  .until(
+                      () -> {
+                        return deadband(controller.getLeftY()) > 0
+                            || deadband(controller.getLeftX()) > 0
+                            || deadband(controller.getRightX()) > 0;
+                      });
+
+          new SequentialCommandGroup(move)
+              .andThen(flashCommand)
               .schedule();
-          ;
         });
   }
 
