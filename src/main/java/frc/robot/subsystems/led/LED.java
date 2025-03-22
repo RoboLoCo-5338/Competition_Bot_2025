@@ -11,7 +11,10 @@ import edu.wpi.first.wpilibj.LEDPattern.GradientType;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.LEDConstants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.elevator.Elevator;
@@ -37,6 +40,36 @@ public class LED extends SubsystemBase {
    *     progress and 1.0 means full progress.
    * @return An InstantCommand that applies the progress mask pattern to the LED.
    */
+
+  public SequentialCommandGroup flashGreen() {
+    return new SequentialCommandGroup(
+        new InstantCommand(
+            () -> {
+              LEDPattern green = LEDPattern.solid(Color.kGreen);
+              green.applyTo(buffer);
+              m_led.setData(buffer);
+            }),
+        new WaitCommand(0.5),
+        new InstantCommand(
+            () -> {
+              LEDPattern off = LEDPattern.kOff;
+              off.applyTo(buffer);
+              m_led.setData(buffer);
+            }),
+        new WaitCommand(5),
+        new InstantCommand(
+            () -> {
+              LEDPattern rainbow = LEDPattern.rainbow(255, 128);
+              LEDPattern scrollingRainbow =
+                  rainbow.scrollAtAbsoluteSpeed(MetersPerSecond.of(2), LEDConstants.LED_SPACING);
+              scrollingRainbow.applyTo(buffer);
+              m_led.setData(buffer);
+            })
+      );
+            
+
+
+  }
   public static double getDistanceFromBarge(Drive drive) {
     if (DriverStation.getAlliance().orElse(Alliance.Blue).equals(Alliance.Blue)) {
       return (-drive.getPose().getX() + .272272) / LEDConstants.BARGE_RANGE;

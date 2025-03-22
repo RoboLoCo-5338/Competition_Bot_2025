@@ -46,6 +46,7 @@ import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
+
 public class DriveCommands {
   private static final double DEADBAND = 0.06;
   private static final double ANGLE_KP = 5.0;
@@ -553,17 +554,18 @@ public class DriveCommands {
     return new InstantCommand( // I hate commands so much
         () -> {
           ArrayList<Pose2d> poses = DriveCommands.getReefPoses(direction);
-          new SequentialCommandGroup(
-                  pathToDestination(
+          Command move =
+              pathToDestination(
                       drive,
                       () ->
                           new Reef(
                               direction,
                               poses.indexOf(drive.getPose().nearest(poses))
-                                  + ((isFlipped) ? 6 : 17)),
-                      controller))
+                                  + ((isFlipped) ? 6 : 17)));
+
+          new SequentialCommandGroup(move)
+              .andThen(flashCommand)
               .schedule();
-          ;
         });
   }
 
