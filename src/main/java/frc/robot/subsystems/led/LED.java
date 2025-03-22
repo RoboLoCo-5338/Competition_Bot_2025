@@ -95,6 +95,12 @@ public class LED extends SubsystemBase {
                     .mask(progress).applyTo(buffer);
                   
                 m_led.setData(buffer);
+          } else {
+            LEDPattern rainbow = LEDPattern.rainbow(255, 128);
+            LEDPattern scrollingRainbow =
+                rainbow.scrollAtAbsoluteSpeed(MetersPerSecond.of(2), LEDConstants.LED_SPACING);
+            scrollingRainbow.applyTo(buffer);
+            m_led.setData(buffer);
           }
         });
   }

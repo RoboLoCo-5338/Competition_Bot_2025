@@ -335,7 +335,7 @@ public class RobotContainer {
   public void periodic() {
     // ButtonBindingsController.periodic();
     Logger.recordOutput("camera pose", Constants.VisionConstants.robotToCamera0);
-    led.setBargeIndicator(drive, elevator);
+    led.setBargeIndicator(drive, elevator).schedule();
   }
   
   public void teleopInit() {
