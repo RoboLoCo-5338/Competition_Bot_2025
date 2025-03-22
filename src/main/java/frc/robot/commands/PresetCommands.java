@@ -67,8 +67,7 @@ public class PresetCommands {
     return new ParallelCommandGroup(
         arm.setArmPosition(0.920), // placeholder
         new SequentialCommandGroup(
-          new WaitCommand(0.3), // placehlder
-          endEffector.setEndEffectorSpeed(-1))
-        );
+            new WaitCommand(0.3), // placehlder
+            endEffector.setEndEffectorSpeed(-1)));
   }
 }
