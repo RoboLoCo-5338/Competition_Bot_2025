@@ -2,8 +2,6 @@ package frc.robot.subsystems.led;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
-import java.util.function.BooleanSupplier;
-
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -17,9 +15,9 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.LEDConstants;
-import frc.robot.commands.DriveCommands;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.elevator.Elevator;
+import java.util.function.BooleanSupplier;
 
 public class LED extends SubsystemBase {
 
@@ -36,7 +34,7 @@ public class LED extends SubsystemBase {
   }
 
   public InstantCommand turnGreen(BooleanSupplier inverted) {
-  
+
     if (inverted.getAsBoolean()) {
       return new InstantCommand(
           () -> {
