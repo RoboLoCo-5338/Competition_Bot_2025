@@ -571,21 +571,12 @@ public class DriveCommands {
                   controller);
 
           new SequentialCommandGroup(
-                  led.turnColor(Color.kYellow),
+                  led.turnColor(Color.kOrange),
                   move,
                   new InstantCommand(() -> System.out.println(DriveCommands.canceled)),
                   led.turnGreen(),
-                  new WaitCommand(0.15),
-                  led.turnOff(),
-                  new WaitCommand(0.15),
-                  led.turnGreen(),
-                  new WaitCommand(0.15),
-                  led.turnOff(),
-                  new WaitCommand(0.10),
-                  led.turnGreen(),
-                  new WaitCommand(0.10),
-                  led.turnOff(),
-                  new WaitCommand(0.10)
+                  new WaitCommand(3)
+                  
                  )
               .schedule();
         });
