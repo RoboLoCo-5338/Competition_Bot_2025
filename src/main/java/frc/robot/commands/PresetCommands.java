@@ -14,22 +14,22 @@ public class PresetCommands {
 
   public static Command endEffectorSet(EndEffector endEffector, Arm arm) {
     SmartDashboard.putNumber("arm position", arm.getArmPosition().getAsDouble());
-    if (arm.getArmPosition().getAsDouble() > 0.310) {
+    if (arm.getArmPosition().getAsDouble() > 0.524) {
       SmartDashboard.putString("preset2", "we are inside don't do anything case");
 
       return arm.setArmVelocity(() -> 0);
     } else {
       SmartDashboard.putString("preset2", "we are inside do anything case");
-      return arm.setArmPosition(0.310);
+      return arm.setArmPosition(0.524);
     }
   }
 
   public static Command stowElevator(Elevator elevator, EndEffector endEffector, Arm arm) {
     return new SequentialCommandGroup(
-        arm.setArmPosition(0.310),
+        arm.setArmPosition(0.520),
         new WaitCommand(0.3),
         elevator.setElevatorPosition(0),
-        arm.setArmPosition(0.310));
+        arm.setArmPosition(0.520));
   }
 
   public static Command presetL2(Elevator elevator, EndEffector endEffector, Arm arm) {
@@ -63,9 +63,11 @@ public class PresetCommands {
         arm.setArmVelocity(() -> 0));
   }
 
-  public static Command netPreset(EndEffector endEffector, Arm arm) {
+  public static Command netShoot(Arm arm, EndEffector endEffector) {
     return new ParallelCommandGroup(
-        arm.setArmPosition(0),
-        new SequentialCommandGroup(new WaitCommand(0.5), endEffector.setEndEffectorSpeed(-1)));
+        arm.setArmPosition(0.920), // placeholder
+        new SequentialCommandGroup(
+            new WaitCommand(0.3), // placehlder
+            endEffector.setEndEffectorSpeed(-1)));
   }
 }

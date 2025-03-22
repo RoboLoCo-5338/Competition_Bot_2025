@@ -44,7 +44,6 @@ import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -109,11 +108,11 @@ public class Drive extends SubsystemBase {
   private SwerveDrivePoseEstimator poseEstimator =
       new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, new Pose2d());
   public PIDController autoXDriveController =
-      new PIDController(2, 0.1, TunerConstants.driveGains.kD);
+      new PIDController(2, 0.2, TunerConstants.driveGains.kD);
   public PIDController autoYDriveController =
-      new PIDController(2, 0.1, TunerConstants.driveGains.kD);
+      new PIDController(2, 0.2, TunerConstants.driveGains.kD);
   public PIDController autoTurnController =
-      new PIDController(2, 0, 0); // TODO: update angle max acceleration
+      new PIDController(2, 0.2, 0); // TODO: update angle max acceleration
 
   public boolean useVision;
 
@@ -144,9 +143,7 @@ public class Drive extends SubsystemBase {
         new PPHolonomicDriveController(
             new PIDConstants(5.0, 0.0, 0.0), new PIDConstants(5.0, 0.0, 0.0)),
         PP_CONFIG,
-        () ->
-            (DriverStation.isFMSAttached() && !RobotBase.isSimulation())
-                && DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
+        () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
         this);
     Pathfinding.setPathfinder(new LocalADStarAK());
     PathPlannerLogging.setLogActivePathCallback(

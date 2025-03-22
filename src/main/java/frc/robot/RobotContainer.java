@@ -119,9 +119,9 @@ public class RobotContainer {
             new Vision(
                 drive::addVisionMeasurement,
                 new VisionIOPhotonVision(
-                    VisionConstants.camera0Name, VisionConstants.robotToCamera0),
-                new VisionIOPhotonVision(
-                    VisionConstants.camera1Name, VisionConstants.robotToCamera1));
+                    VisionConstants.camera0Name, VisionConstants.robotToCamera0));
+        // new VisionIOPhotonVision(
+        //     VisionConstants.camera1Name, VisionConstants.robotToCamera1));
         groundIntake = new GroundIntake(new GroundIntakeIOSpark());
         endEffector = new EndEffector(new EndEffectorIOTalonFX());
         elevator = new Elevator(new ElevatorIOTalonFX());
@@ -258,6 +258,11 @@ public class RobotContainer {
         .onFalse(endEffector.setEndEffectorVelocity(0));
 
     operatorController
+        .leftBumper()
+        .whileTrue(PresetCommands.netShoot(arm, endEffector))
+        .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
+
+    operatorController
         .a()
         .whileTrue(PresetCommands.stowElevator(elevator, endEffector, arm))
         .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
@@ -284,10 +289,14 @@ public class RobotContainer {
         .whileTrue(endEffector.setEndEffectorVelocity(60))
         .onFalse(endEffector.setEndEffectorVelocity(0));
     driverController
-        .leftBumper()
+        .leftTrigger()
         .whileTrue(endEffector.setEndEffectorVelocity(-60))
         .onFalse(endEffector.setEndEffectorVelocity(0));
 
+    driverController
+        .x()
+        .onTrue(groundIntake.setIntakeSpeed(-1))
+        .onFalse(groundIntake.setGroundIntakeVelocity(0));
     driverController
         .b()
         .onTrue(

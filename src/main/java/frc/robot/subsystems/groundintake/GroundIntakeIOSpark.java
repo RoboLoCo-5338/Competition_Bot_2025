@@ -99,4 +99,9 @@ public class GroundIntakeIOSpark implements GroundIntakeIO {
         ffvolts,
         ArbFFUnits.kVoltage);
   }
+
+  @Override
+  public void setIntakeSpeed(double speed) {
+    intakeMotor.set(speed);
+  }
 }
