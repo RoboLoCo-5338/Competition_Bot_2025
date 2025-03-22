@@ -223,9 +223,8 @@ public class RobotContainer {
 
     // Configure the button bindings
     configureButtonBindings();
-
     new SequentialCommandGroup(
-            new WaitCommand(2.0),
+            new WaitCommand(5.0),
             led.turnColor(Color.kWhite),
             new WaitCommand(0.3),
             led.turnOff(),
@@ -236,6 +235,8 @@ public class RobotContainer {
             new WaitCommand(0.3),
             led.turnColor(Color.kWhite))
         .schedule(); // start it off as rainbow
+
+    
   }
 
   public static double deadband(double controllerAxis) {
@@ -387,6 +388,9 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return autoChooser.get();
+  }
+  public Command startRainbow() {
+    return led.goRainbow();
   }
 
   public void setVisionTarget(int id) {
