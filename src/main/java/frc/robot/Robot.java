@@ -41,9 +41,6 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 public class Robot extends LoggedRobot {
   private Command autonomousCommand;
   private RobotContainer robotContainer;
-  private final AddressableLED m_led;
-  private final AddressableLEDBuffer buffer;
-  private final LEDPattern pattern;
 
   public Robot() {
     // Record metadata
@@ -107,20 +104,11 @@ public class Robot extends LoggedRobot {
     // Instantiate our RobotContainer. This will perform all our button bindings,
     // and put our autonomous chooser on the dashboard.
     robotContainer = new RobotContainer();
-
-    m_led = new AddressableLED(0);
-    buffer = new AddressableLEDBuffer(123);
-    pattern = LEDPattern.solid(Color.kCyan);
-    m_led.setLength(buffer.getLength());
-    m_led.setData(buffer);
-    m_led.start();
   }
 
   /** This function is called periodically during all modes. */
   @Override
   public void robotPeriodic() {
-    pattern.applyTo(buffer);
-    m_led.setData(buffer);
     // CommandScheduler.getInstance().schedule(robotContainer.led.setBargeIndicator(null, null));
     // Switch thread to high priority to improve loop timing
     Threads.setCurrentThreadPriority(true, 99);
