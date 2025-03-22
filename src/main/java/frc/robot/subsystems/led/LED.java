@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.LEDConstants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.elevator.Elevator;
@@ -22,11 +23,44 @@ public class LED extends SubsystemBase {
   private final AddressableLEDBuffer buffer;
 
   public LED() {
-    m_led = new AddressableLED(3);
+
+    m_led = new AddressableLED(0);
     buffer = new AddressableLEDBuffer(123);
     m_led.setLength(buffer.getLength());
     m_led.setData(buffer);
     m_led.start();
+  }
+
+  public InstantCommand turnGreen() {
+
+    return new InstantCommand(
+        () -> {
+          LEDPattern green = LEDPattern.solid(Color.kGreen);
+          green.applyTo(buffer);
+          m_led.setData(buffer);
+        });
+  }
+
+  public InstantCommand turnOff() {
+
+    return new InstantCommand(
+        () -> {
+          LEDPattern off = LEDPattern.kOff;
+          off.applyTo(buffer);
+          m_led.setData(buffer);
+        });
+  }
+
+  public InstantCommand goRainbow() {
+
+    return new InstantCommand(
+        () -> {
+          LEDPattern rainbow = LEDPattern.rainbow(255, 128);
+          LEDPattern scrollingRainbow =
+              rainbow.scrollAtAbsoluteSpeed(MetersPerSecond.of(2), LEDConstants.LED_SPACING);
+          scrollingRainbow.applyTo(buffer);
+          m_led.setData(buffer);
+        });
   }
 
   /**
@@ -44,24 +78,20 @@ public class LED extends SubsystemBase {
     }
   }
 
+  public Trigger isCloseToBarge(Drive drive) {
+    return new Trigger(() -> getDistanceFromBarge(drive) < -0.5);
+  }
+
   public Command setBargeIndicator(Drive drive, Elevator elevator) {
-    return new InstantCommand(
+    return new RunCommand(
         () -> {
-          if (getDistanceFromBarge(drive) < 1.0) {
-            var progress = LEDPattern.progressMaskLayer(() -> getDistanceFromBarge(drive));
+          var progress = LEDPattern.progressMaskLayer(() -> getDistanceFromBarge(drive));
 
-            LEDPattern.gradient(GradientType.kContinuous, Color.kCyan, Color.kYellow)
-                .mask(progress)
-                .applyTo(buffer);
+          LEDPattern.gradient(GradientType.kContinuous, Color.kCyan, Color.kYellow)
+              .mask(progress)
+              .applyTo(buffer);
 
-            m_led.setData(buffer);
-          } else {
-            LEDPattern rainbow = LEDPattern.rainbow(255, 128);
-            LEDPattern scrollingRainbow =
-                rainbow.scrollAtAbsoluteSpeed(MetersPerSecond.of(2), LEDConstants.LED_SPACING);
-            scrollingRainbow.applyTo(buffer);
-            m_led.setData(buffer);
-          }
+          m_led.setData(buffer);
         });
   }
 }
