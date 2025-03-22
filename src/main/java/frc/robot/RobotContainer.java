@@ -24,10 +24,12 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.DriveCommands;
@@ -81,7 +83,7 @@ public class RobotContainer {
   public final Vision vision;
 
   public final LED led;
-
+  public static boolean doRainbow = true;
   private final Elevator elevator;
 
   private final GroundIntake groundIntake;
@@ -190,6 +192,8 @@ public class RobotContainer {
     NamedCommands.registerCommand("GroundI Outake", groundIntake.setGroundIntakeVelocity(-3600));
     NamedCommands.registerCommand("GroundI Stop", groundIntake.setGroundIntakeVelocity(0));
     NamedCommands.registerCommand("L4 Preset", PresetCommands.presetL4(elevator, endEffector, arm));
+    NamedCommands.registerCommand("L2 Preset", PresetCommands.presetL2(elevator, endEffector, arm));
+
     NamedCommands.registerCommand(
         "Endeffector Out",
         new RunCommand(() -> EndEffectorCommands.moveEndEffector(endEffector, 60), endEffector));
@@ -201,6 +205,8 @@ public class RobotContainer {
         "Align Left", DriveCommands.reefAlign(drive, Direction.Left, driverController, led, () -> elevator.getElevatorPosition()));
     NamedCommands.registerCommand(
         "Align Right", DriveCommands.reefAlign(drive, Direction.Right, driverController, led, () -> elevator.getElevatorPosition()));
+    NamedCommands.registerCommand(
+        "IntakeLaserCAN", EndEffectorCommands.moveEndEffectorLaserCan(endEffector));
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -223,9 +229,8 @@ public class RobotContainer {
 
     // Configure the button bindings
     configureButtonBindings();
-
     new SequentialCommandGroup(
-            new WaitCommand(2.0),
+            new WaitCommand(5.0),
             led.turnColor(Color.kWhite),
             new WaitCommand(0.3),
             led.turnOff(),
@@ -236,6 +241,9 @@ public class RobotContainer {
             new WaitCommand(0.3),
             led.turnColor(Color.kWhite))
         .schedule(); // start it off as rainbow
+    new Trigger(() -> RobotContainer.doRainbow).whileTrue(startRainbow()); //
+
+    
   }
 
   public static double deadband(double controllerAxis) {
@@ -255,7 +263,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     // Default command, normal field-relative drive
 
-    led.isCloseToBarge(drive).whileTrue(led.setBargeIndicator(drive, elevator));
+    led.isCloseToBarge(drive).onTrue(new InstantCommand(() -> {RobotContainer.doRainbow = false;})).onFalse(new InstantCommand(() -> RobotContainer.doRainbow = true)).whileTrue(led.setBargeIndicator(drive, elevator));
     elevator.setDefaultCommand(
         elevator.setElevatorVelocity(() -> deadband(-operatorController.getLeftY()) * 25));
 
@@ -305,6 +313,26 @@ public class RobotContainer {
         .onTrue(PresetCommands.netShoot(arm, endEffector))
         .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
 
+    operatorController
+        .povUp()
+        .whileTrue(groundIntake.setGroundArmVelocity(() -> -5.0))
+        .onFalse(groundIntake.setGroundArmVelocity(() -> 0.0));
+
+    operatorController
+        .povDown()
+        .whileTrue(groundIntake.setGroundArmVelocity(() -> 5.0))
+        .onFalse(groundIntake.setGroundArmVelocity(() -> 0.0));
+
+    operatorController
+        .povRight()
+        .whileTrue(groundIntake.setGroundIntakeVelocity(-3600.0))
+        .onFalse(groundIntake.setGroundIntakeVelocity(0.0));
+
+    operatorController
+        .povLeft()
+        .whileTrue(groundIntake.setGroundIntakeVelocity(3600.0))
+        .onFalse(groundIntake.setGroundIntakeVelocity(0.0));
+
     driverController
         .rightBumper()
         .whileTrue(endEffector.setEndEffectorVelocity(60))
@@ -343,15 +371,17 @@ public class RobotContainer {
     driverController
         .povLeft()
         .and(() -> drive.useVision)
+        .onTrue(new InstantCommand(() -> RobotContainer.doRainbow = false))
+        .onFalse(new InstantCommand(() -> RobotContainer.doRainbow = true))
         .onTrue(DriveCommands.reefAlign(drive, Direction.Left, driverController, led, () -> elevator.getElevatorPosition()));
     driverController
         .povRight()
         .and(
             () -> {
-              System.out.println(
-                  "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" + drive.useVision);
               return drive.useVision;
             })
+        .onTrue(new InstantCommand(() -> RobotContainer.doRainbow = false))
+        .onFalse(new InstantCommand(() -> RobotContainer.doRainbow = true))
         .onTrue(DriveCommands.reefAlign(drive, Direction.Right, driverController, led, () -> elevator.getElevatorPosition()));
 
     driverController
@@ -387,6 +417,9 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return autoChooser.get();
+  }
+  public RunCommand startRainbow() {
+    return led.goRainbow();
   }
 
   public void setVisionTarget(int id) {
