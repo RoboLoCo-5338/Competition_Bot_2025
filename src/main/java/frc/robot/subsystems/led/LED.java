@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.LEDPattern.GradientType;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -61,16 +62,16 @@ public class LED extends SubsystemBase {
         });
   }
 
-  public InstantCommand goRainbow() {
-
-    return new InstantCommand(
+  public RunCommand goRainbow() {
+    LEDPattern rainbow = LEDPattern.rainbow(255, 128);
+    LEDPattern scrollingRainbow =
+    rainbow.scrollAtAbsoluteSpeed(MetersPerSecond.of(2), LEDConstants.LED_SPACING);
+    return new RunCommand(
         () -> {
-          LEDPattern rainbow = LEDPattern.rainbow(255, 128);
-          LEDPattern scrollingRainbow =
-              rainbow.scrollAtAbsoluteSpeed(MetersPerSecond.of(2), LEDConstants.LED_SPACING);
+          
           scrollingRainbow.applyTo(buffer);
           m_led.setData(buffer);
-        });
+        }, this);
   }
 
   public InstantCommand turnColor(Color color) {
@@ -99,7 +100,7 @@ public class LED extends SubsystemBase {
   }
 
   public Trigger isCloseToBarge(Drive drive) {
-    return new Trigger(() -> getDistanceFromBarge(drive) < -0.5);
+    return new Trigger(() -> getDistanceFromBarge(drive) < 1.0); // this is not in meters. its a percentage.
   }
 
   public Command setBargeIndicator(Drive drive, Elevator elevator) {
