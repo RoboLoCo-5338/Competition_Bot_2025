@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.DriveCommands;
@@ -95,6 +96,8 @@ public class RobotContainer {
   public CommandXboxController driverController = new CommandXboxController(0);
 
   public CommandXboxController operatorController = new CommandXboxController(1);
+
+  private boolean useVision = true;
 
   // Controller
 
@@ -331,12 +334,14 @@ public class RobotContainer {
     driverController
         .b()
         .onTrue(
-            Commands.runOnce(
-                    () ->
-                        drive.setPose(
-                            new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
-                    drive)
-                .ignoringDisable(true));
+            Commands.runOnce(() -> disableVision())
+                .andThen(
+                    Commands.runOnce(
+                            () ->
+                                drive.setPose(
+                                    new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
+                            drive)
+                        .ignoringDisable(true)));
 
     // Turns to tag and locks rotation
     // driverController
@@ -344,8 +349,26 @@ public class RobotContainer {
     //     .whileTrue(
     //         DriveCommands.reefStrafe(
     //             drive, () -> driverController.getLeftY(), () -> driverController.getLeftX()));
-    driverController.povLeft().onTrue(DriveCommands.reefAlign(drive, Direction.Left).until(() -> deadband(driverController.getLeftY())>0 || deadband(driverController.getLeftX())>0 || deadband(driverController.getRightX())>0));
-    driverController.povRight().onTrue(DriveCommands.reefAlign(drive, Direction.Right).until(() -> deadband(driverController.getLeftY())>0 || deadband(driverController.getLeftX())>0 || deadband(driverController.getRightX())>0));
+    driverController
+        .povLeft()
+        .and(new Trigger(() -> useVision))
+        .onTrue(
+            DriveCommands.reefAlign(drive, Direction.Left)
+                .until(
+                    () ->
+                        deadband(driverController.getLeftY()) > 0
+                            || deadband(driverController.getLeftX()) > 0
+                            || deadband(driverController.getRightX()) > 0));
+    driverController
+        .povRight()
+        .and(new Trigger(() -> useVision))
+        .onTrue(
+            DriveCommands.reefAlign(drive, Direction.Right)
+                .until(
+                    () ->
+                        deadband(driverController.getLeftY()) > 0
+                            || deadband(driverController.getLeftX()) > 0
+                            || deadband(driverController.getRightX()) > 0));
 
     driverController
         .rightTrigger()
@@ -384,5 +407,9 @@ public class RobotContainer {
 
   public void setVisionTarget(int id) {
     visionTargetID = id;
+  }
+
+  public void disableVision() {
+    useVision = false;
   }
 }
