@@ -2,6 +2,8 @@ package frc.robot.subsystems.led;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
+import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.LEDPattern;
@@ -20,9 +22,17 @@ public class LED extends SubsystemBase {
 
   private final LEDIO io;
   private final LedIOInputsAutoLogged inputs = new LedIOInputsAutoLogged();
-
+  
+  private final AddressableLED m_led;
+  private final AddressableLEDBuffer buffer;
+  
   public LED(LEDIO io) {
     this.io = io;
+     m_led = new AddressableLED(0);
+    buffer = new AddressableLEDBuffer(123);
+    m_led.setLength(buffer.getLength());
+    m_led.setData(buffer);
+    m_led.start();
   }
 
   /** Updates the LED states and logs the current state. */
@@ -69,21 +79,22 @@ public class LED extends SubsystemBase {
 
   public static double getDistanceFromBarge(Drive drive) {
     if (DriverStation.getAlliance().orElse(Alliance.Blue).equals(Alliance.Blue)) {
-      return (-drive.getPose().getX() + 325.68) / LEDConstants.BARGE_RANGE;
+      return (-drive.getPose().getX() + 7.272272) / LEDConstants.BARGE_RANGE;
     } else {
-      return (drive.getPose().getX() - 365.20) / LEDConstants.BARGE_RANGE;
+      return (drive.getPose().getX() - 10.27) / LEDConstants.BARGE_RANGE;
     }
   }
 
   public Command setBargeIndicator(Drive drive, Elevator elevator) {
-    return new RunCommand(
+    return new InstantCommand(
         () -> {
-          if (getDistanceFromBarge(drive) < 1.0
-              && elevator.io.elevatorMotor1.getPosition().getValueAsDouble() > 2.0) {
+          if (getDistanceFromBarge(drive) < 1.0) {
             var progress = LEDPattern.progressMaskLayer(() -> getDistanceFromBarge(drive));
-            io.setLEDPattern(
+          
                 LEDPattern.gradient(GradientType.kContinuous, Color.kRed, Color.kBlue)
-                    .mask(progress));
+                    .mask(progress).applyTo(buffer);
+                  
+                m_led.setData(buffer);
           }
         });
   }

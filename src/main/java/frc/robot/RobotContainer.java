@@ -335,8 +335,9 @@ public class RobotContainer {
   public void periodic() {
     // ButtonBindingsController.periodic();
     Logger.recordOutput("camera pose", Constants.VisionConstants.robotToCamera0);
+    led.setBargeIndicator(drive, elevator);
   }
-
+  
   public void teleopInit() {
     SmartDashboard.putNumber("Laser Can", endEffector.io.getLaserCanmeasurement1());
     endEffector.setEndEffectorVelocity(0);
