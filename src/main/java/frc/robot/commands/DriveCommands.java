@@ -32,10 +32,13 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.led.LED;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -548,7 +551,7 @@ public class DriveCommands {
   }
 
   public static Command reefAlign(
-      Drive drive, Direction direction, CommandXboxController controller, Command flashCommand) {
+      Drive drive, Direction direction, CommandXboxController controller, LED led) {
     return new InstantCommand( // I hate commands so much
         () -> {
           ArrayList<Pose2d> poses = DriveCommands.getReefPoses(direction);
@@ -561,7 +564,14 @@ public class DriveCommands {
                           poses.indexOf(drive.getPose().nearest(poses)) + ((isFlipped) ? 6 : 17)),
                   controller);
 
-          move.andThen(flashCommand).schedule();
+          new SequentialCommandGroup(
+                  move,
+                  led.turnGreen(),
+                  new WaitCommand(0.5),
+                  led.turnOff(),
+                  new WaitCommand(5),
+                  led.goRainbow())
+              .schedule();
         });
   }
 

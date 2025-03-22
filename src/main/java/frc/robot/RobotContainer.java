@@ -77,7 +77,7 @@ public class RobotContainer {
   public final Drive drive;
   public final Vision vision;
 
-  private final LED led;
+  public final LED led;
 
   private final Elevator elevator;
 
@@ -197,11 +197,9 @@ public class RobotContainer {
     NamedCommands.registerCommand(
         "Endeffector Stop", EndEffectorCommands.moveEndEffector(endEffector, 0));
     NamedCommands.registerCommand(
-        "Align Left",
-        DriveCommands.reefAlign(drive, Direction.Left, driverController, led.flashGreen()));
+        "Align Left", DriveCommands.reefAlign(drive, Direction.Left, driverController, led));
     NamedCommands.registerCommand(
-        "Align Right",
-        DriveCommands.reefAlign(drive, Direction.Right, driverController, led.flashGreen()));
+        "Align Right", DriveCommands.reefAlign(drive, Direction.Right, driverController, led));
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -243,6 +241,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     // Default command, normal field-relative drive
 
+    led.isCloseToBarge(drive).whileTrue(led.setBargeIndicator(drive, elevator));
     elevator.setDefaultCommand(
         elevator.setElevatorVelocity(() -> deadband(-operatorController.getLeftY()) * 25));
 
@@ -313,7 +312,7 @@ public class RobotContainer {
         .povLeft()
         .and(() -> useVision)
         .onTrue(
-            DriveCommands.reefAlign(drive, Direction.Left, driverController, led.flashGreen())
+            DriveCommands.reefAlign(drive, Direction.Left, driverController, led)
                 .until(
                     () ->
                         deadband(driverController.getLeftY()) > 0
@@ -323,7 +322,7 @@ public class RobotContainer {
         .povRight()
         .and(() -> useVision)
         .onTrue(
-            DriveCommands.reefAlign(drive, Direction.Right, driverController, led.flashGreen())
+            DriveCommands.reefAlign(drive, Direction.Right, driverController, led)
                 .until(
                     () ->
                         deadband(driverController.getLeftY()) > 0
@@ -347,7 +346,6 @@ public class RobotContainer {
   public void periodic() {
     // ButtonBindingsController.periodic();
     Logger.recordOutput("camera pose", Constants.VisionConstants.robotToCamera0);
-    led.setBargeIndicator(drive, elevator).schedule();
   }
 
   public void teleopInit() {
