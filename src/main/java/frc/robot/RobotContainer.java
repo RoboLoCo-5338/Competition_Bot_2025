@@ -318,12 +318,12 @@ public class RobotContainer {
 
     operatorController
         .povRight()
-        .whileTrue(GroundIntakeCommands.moveGroundIntakeWheels(groundIntake, 1.0))
+        .whileTrue(GroundIntakeCommands.moveGroundIntakeWheels(groundIntake, -3600.0))
         .onFalse(GroundIntakeCommands.moveGroundIntakeWheels(groundIntake, 0.0));
 
     operatorController
         .povLeft()
-        .whileTrue(GroundIntakeCommands.moveGroundIntakeWheels(groundIntake, -1.0))
+        .whileTrue(GroundIntakeCommands.moveGroundIntakeWheels(groundIntake, 3600.0))
         .onFalse(GroundIntakeCommands.moveGroundIntakeWheels(groundIntake, 0.0));
 
     driverController
