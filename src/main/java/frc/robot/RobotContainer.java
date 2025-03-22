@@ -195,9 +195,7 @@ public class RobotContainer {
 
     NamedCommands.registerCommand(
         "Endeffector Out",
-        new RunCommand(() -> EndEffectorCommands.moveEndEffector(endEffector, 60), endEffector));
-    NamedCommands.registerCommand(
-        "Endeffector In", EndEffectorCommands.moveEndEffectorLaserCan(endEffector));
+        EndEffectorCommands.moveEndEffector(endEffector, 60));
     NamedCommands.registerCommand(
         "Endeffector Stop", EndEffectorCommands.moveEndEffector(endEffector, 0));
     NamedCommands.registerCommand(
