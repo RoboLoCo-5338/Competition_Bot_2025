@@ -257,14 +257,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     // Default command, normal field-relative drive
 
-    led.isCloseToBarge(drive)
-        .onTrue(
-            new InstantCommand(
-                () -> {
-                  RobotContainer.doRainbow = false;
-                }))
-        .onFalse(new InstantCommand(() -> RobotContainer.doRainbow = true))
-        .whileTrue(led.setBargeIndicator(drive, elevator));
+    led.isCloseToBarge(drive).whileTrue(new InstantCommand(() -> {RobotContainer.doRainbow = false;})).onFalse(new InstantCommand(() -> RobotContainer.doRainbow = true)).whileTrue(led.setBargeIndicator(drive, elevator));
     elevator.setDefaultCommand(
         elevator.setElevatorVelocity(() -> deadband(-operatorController.getLeftY()) * 25));
 
