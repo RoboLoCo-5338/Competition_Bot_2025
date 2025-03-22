@@ -583,8 +583,8 @@ public class DriveCommands {
                   led.turnGreen(),
                   new WaitCommand(0.3),
                   led.turnOff(),
-                  new WaitCommand(0.5),
-                  led.goRainbow())
+                  new WaitCommand(0.5)
+                 )
               .schedule();
         });
   }
