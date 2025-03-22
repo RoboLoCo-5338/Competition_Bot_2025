@@ -48,7 +48,7 @@ public class LED extends SubsystemBase {
 
   public static double getDistanceFromBarge(Drive drive) {
     if (DriverStation.getAlliance().orElse(Alliance.Blue).equals(Alliance.Blue)) {
-      return (-drive.getPose().getX() + .272272) / LEDConstants.BARGE_RANGE;
+      return (-drive.getPose().getX() + 8.272272) / LEDConstants.BARGE_RANGE;
     } else {
       return (drive.getPose().getX() - 9.27) / LEDConstants.BARGE_RANGE;
     }
