@@ -190,6 +190,8 @@ public class RobotContainer {
     NamedCommands.registerCommand("GroundI Outake", groundIntake.setGroundIntakeVelocity(-3600));
     NamedCommands.registerCommand("GroundI Stop", groundIntake.setGroundIntakeVelocity(0));
     NamedCommands.registerCommand("L4 Preset", PresetCommands.presetL4(elevator, endEffector, arm));
+    NamedCommands.registerCommand("L2 Preset", PresetCommands.presetL2(elevator, endEffector, arm));
+
     NamedCommands.registerCommand(
         "Endeffector Out",
         new RunCommand(() -> EndEffectorCommands.moveEndEffector(endEffector, 60), endEffector));
@@ -201,6 +203,8 @@ public class RobotContainer {
         "Align Left", DriveCommands.reefAlign(drive, Direction.Left, driverController, led));
     NamedCommands.registerCommand(
         "Align Right", DriveCommands.reefAlign(drive, Direction.Right, driverController, led));
+    NamedCommands.registerCommand(
+        "IntakeLaserCAN", EndEffectorCommands.moveEndEffectorLaserCan(endEffector));
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
