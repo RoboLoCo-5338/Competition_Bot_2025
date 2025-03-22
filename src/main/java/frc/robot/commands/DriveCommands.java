@@ -36,6 +36,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.led.LED;
@@ -561,6 +562,7 @@ public class DriveCommands {
         () -> {
           ArrayList<Pose2d> poses = DriveCommands.getReefPoses(direction);
           canceled = false;
+          RobotContainer.doRainbow = false;
           Command move =
               pathToDestination(
                   drive,
@@ -575,17 +577,10 @@ public class DriveCommands {
                   move,
                   new InstantCommand(() -> System.out.println(DriveCommands.canceled)),
                   led.turnGreen(),
-                  new WaitCommand(0.3),
-                  led.turnOff(),
-                  new WaitCommand(0.3),
-                  led.turnGreen(),
-                  new WaitCommand(0.3),
-                  led.turnOff(),
-                  new WaitCommand(0.3),
-                  led.turnGreen(),
-                  new WaitCommand(0.3),
-                  led.turnOff(),
-                  new WaitCommand(0.5))
+                  new WaitCommand(3.0),
+                  new InstantCommand(() -> RobotContainer.doRainbow = true)
+                  
+                 )
               .schedule();
         });
   }
