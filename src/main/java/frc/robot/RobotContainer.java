@@ -197,9 +197,11 @@ public class RobotContainer {
     NamedCommands.registerCommand(
         "Endeffector Stop", EndEffectorCommands.moveEndEffector(endEffector, 0));
     NamedCommands.registerCommand(
-        "Align Left", DriveCommands.reefAlign(drive, Direction.Left, driverController, led.flashGreen()));
+        "Align Left",
+        DriveCommands.reefAlign(drive, Direction.Left, driverController, led.flashGreen()));
     NamedCommands.registerCommand(
-        "Align Right", DriveCommands.reefAlign(drive, Direction.Right, driverController, led.flashGreen()));
+        "Align Right",
+        DriveCommands.reefAlign(drive, Direction.Right, driverController, led.flashGreen()));
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());

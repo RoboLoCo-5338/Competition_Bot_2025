@@ -32,7 +32,6 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.RobotContainer;
@@ -45,7 +44,6 @@ import java.util.List;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
-
 
 public class DriveCommands {
   private static final double DEADBAND = 0.06;
@@ -556,16 +554,14 @@ public class DriveCommands {
           ArrayList<Pose2d> poses = DriveCommands.getReefPoses(direction);
           Command move =
               pathToDestination(
-                      drive,
-                      () ->
-                          new Reef(
-                              direction,
-                              poses.indexOf(drive.getPose().nearest(poses))
-                                  + ((isFlipped) ? 6 : 17)), controller);
+                  drive,
+                  () ->
+                      new Reef(
+                          direction,
+                          poses.indexOf(drive.getPose().nearest(poses)) + ((isFlipped) ? 6 : 17)),
+                  controller);
 
-          new SequentialCommandGroup(move)
-              .andThen(flashCommand)
-              .schedule();
+          move.andThen(flashCommand).schedule();
         });
   }
 
