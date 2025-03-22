@@ -95,8 +95,6 @@ public class RobotContainer {
 
   public CommandXboxController operatorController = new CommandXboxController(1);
 
-  private boolean useVision = true;
-
   // Controller
 
   // Dashboard inputs
@@ -293,7 +291,11 @@ public class RobotContainer {
     driverController
         .b()
         .onTrue(
-            Commands.runOnce(() -> Drive.disableVision())
+            Commands.runOnce(
+                    () -> {
+                      System.out.println("runs");
+                      drive.disableVision();
+                    })
                 .andThen(
                     Commands.runOnce(
                             () ->
@@ -310,7 +312,7 @@ public class RobotContainer {
     //             drive, () -> driverController.getLeftY(), () -> driverController.getLeftX()));
     driverController
         .povLeft()
-        .and(() -> useVision)
+        .and(() -> drive.useVision)
         .onTrue(
             DriveCommands.reefAlign(drive, Direction.Left, driverController, led)
                 .until(
@@ -320,7 +322,7 @@ public class RobotContainer {
                             || deadband(driverController.getRightX()) > 0));
     driverController
         .povRight()
-        .and(() -> useVision)
+        .and(() -> drive.useVision)
         .onTrue(
             DriveCommands.reefAlign(drive, Direction.Right, driverController, led)
                 .until(

@@ -115,7 +115,7 @@ public class Drive extends SubsystemBase {
   public PIDController autoTurnController =
       new PIDController(2, 0, 0); // TODO: update angle max acceleration
 
-  private static boolean useVision;
+  public boolean useVision;
 
   public Drive(
       GyroIO gyroIO,
@@ -351,11 +351,12 @@ public class Drive extends SubsystemBase {
     poseEstimator.resetPosition(rawGyroRotation, getModulePositions(), pose);
   }
 
-  public static void disableVision() {
+  public void disableVision() {
+    System.out.println("Disabling vision");
     useVision = false;
   }
 
-  public static void enableVision() {
+  public void enableVision() {
     useVision = true;
   }
 
