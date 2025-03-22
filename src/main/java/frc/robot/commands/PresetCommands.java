@@ -14,13 +14,13 @@ public class PresetCommands {
 
   public static Command endEffectorSet(EndEffector endEffector, Arm arm) {
     SmartDashboard.putNumber("arm position", arm.getArmPosition().getAsDouble());
-    if (arm.getArmPosition().getAsDouble() > 0.310) {
+    if (arm.getArmPosition().getAsDouble() > 0.524) {
       SmartDashboard.putString("preset2", "we are inside don't do anything case");
 
       return arm.setArmVelocity(() -> 0);
     } else {
       SmartDashboard.putString("preset2", "we are inside do anything case");
-      return arm.setArmPosition(0.310);
+      return arm.setArmPosition(0.524);
     }
   }
 
