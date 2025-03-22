@@ -313,6 +313,26 @@ public class RobotContainer {
         .onTrue(PresetCommands.netShoot(arm, endEffector))
         .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
 
+    operatorController
+        .povUp()
+        .whileTrue(groundIntake.setGroundArmVelocity(() -> -5.0))
+        .onFalse(groundIntake.setGroundArmVelocity(() -> 0.0));
+
+    operatorController
+        .povDown()
+        .whileTrue(groundIntake.setGroundArmVelocity(() -> 5.0))
+        .onFalse(groundIntake.setGroundArmVelocity(() -> 0.0));
+
+    operatorController
+        .povRight()
+        .whileTrue(groundIntake.setGroundIntakeVelocity(-3600.0))
+        .onFalse(groundIntake.setGroundIntakeVelocity(0.0));
+
+    operatorController
+        .povLeft()
+        .whileTrue(groundIntake.setGroundIntakeVelocity(3600.0))
+        .onFalse(groundIntake.setGroundIntakeVelocity(0.0));
+
     driverController
         .rightBumper()
         .whileTrue(endEffector.setEndEffectorVelocity(60))
