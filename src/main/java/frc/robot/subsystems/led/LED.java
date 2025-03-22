@@ -50,12 +50,11 @@ public class LED extends SubsystemBase {
         () -> {
           if (getDistanceFromBarge(drive) < 1.0) {
             var progress = LEDPattern.progressMaskLayer(() -> getDistanceFromBarge(drive));
-
-            LEDPattern.gradient(GradientType.kContinuous, Color.kRed, Color.kBlue)
-                .mask(progress)
-                .applyTo(buffer);
-
-            m_led.setData(buffer);
+          
+                LEDPattern.gradient(GradientType.kContinuous, Color.kCyan, Color.kYellow)
+                    .mask(progress).applyTo(buffer);
+                  
+                m_led.setData(buffer);
           } else {
             LEDPattern rainbow = LEDPattern.rainbow(255, 128);
             LEDPattern scrollingRainbow =

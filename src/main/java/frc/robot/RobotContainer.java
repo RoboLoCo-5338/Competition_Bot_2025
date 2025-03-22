@@ -292,7 +292,7 @@ public class RobotContainer {
     driverController
         .b()
         .onTrue(
-            Commands.runOnce(() -> disableVision())
+            Commands.runOnce(() -> Drive.disableVision())
                 .andThen(
                     Commands.runOnce(
                             () ->
@@ -365,9 +365,5 @@ public class RobotContainer {
 
   public void setVisionTarget(int id) {
     visionTargetID = id;
-  }
-
-  public void disableVision() {
-    useVision = false;
   }
 }
