@@ -51,6 +51,7 @@ import org.littletonrobotics.junction.Logger;
 
 public class DriveCommands {
   private static final double DEADBAND = 0.06;
+  public static boolean canceled = false;
   private static final double ANGLE_KP = 5.0;
   private static final double ANGLE_KD = 0.4;
   private static final double ANGLE_MAX_VELOCITY = 8.0;
@@ -390,17 +391,20 @@ public class DriveCommands {
 
         @Override
         public boolean isFinished() {
+          boolean canceled = driverController.leftStick().getAsBoolean();
+          if (canceled) {
+            DriveCommands.canceled = true;
+          }
           return drive.autoXDriveController.atSetpoint()
                   && drive.autoYDriveController.atSetpoint()
                   && drive.autoTurnController.atSetpoint()
-              || (RobotContainer.deadband(driverController.getLeftY()) > 0
-                  || RobotContainer.deadband(driverController.getLeftX()) > 0
-                  || RobotContainer.deadband(driverController.getRightX()) > 0);
+              || canceled;
         }
 
         @Override
         public void end(boolean interrupted) {
           System.out.println("done");
+          
         }
       };
     }
@@ -557,6 +561,7 @@ public class DriveCommands {
         () -> {
           System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
           ArrayList<Pose2d> poses = DriveCommands.getReefPoses(direction);
+          canceled = false;
           Command move =
               pathToDestination(
                   drive,
@@ -568,15 +573,15 @@ public class DriveCommands {
 
           new SequentialCommandGroup(
                   move,
-                  led.turnGreen(),
+                  led.turnGreen(DriveCommands.canceled),
                   new WaitCommand(0.3),
                   led.turnOff(),
                   new WaitCommand(0.3),
-                  led.turnGreen(),
+                  led.turnGreen(DriveCommands.canceled),
                   new WaitCommand(0.3),
                   led.turnOff(),
                   new WaitCommand(0.3),
-                  led.turnGreen(),
+                  led.turnGreen(DriveCommands.canceled),
                   new WaitCommand(0.3),
                   led.turnOff(),
                   new WaitCommand(0.5),
