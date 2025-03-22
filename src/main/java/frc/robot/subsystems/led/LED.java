@@ -61,16 +61,16 @@ public class LED extends SubsystemBase {
         });
   }
 
-  public InstantCommand goRainbow() {
-
-    return new InstantCommand(
+  public RunCommand goRainbow() {
+    LEDPattern rainbow = LEDPattern.rainbow(255, 128);
+    LEDPattern scrollingRainbow =
+    rainbow.scrollAtAbsoluteSpeed(MetersPerSecond.of(2), LEDConstants.LED_SPACING);
+    return new RunCommand(
         () -> {
-          LEDPattern rainbow = LEDPattern.rainbow(255, 128);
-          LEDPattern scrollingRainbow =
-              rainbow.scrollAtAbsoluteSpeed(MetersPerSecond.of(2), LEDConstants.LED_SPACING);
+          
           scrollingRainbow.applyTo(buffer);
           m_led.setData(buffer);
-        });
+        }, this);
   }
 
   public InstantCommand turnColor(Color color) {

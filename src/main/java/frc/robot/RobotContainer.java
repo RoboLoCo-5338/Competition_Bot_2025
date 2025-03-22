@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.DriveCommands;
@@ -81,7 +82,7 @@ public class RobotContainer {
   public final Vision vision;
 
   public final LED led;
-
+  public static boolean doRainbow = true;
   private final Elevator elevator;
 
   private final GroundIntake groundIntake;
@@ -235,6 +236,7 @@ public class RobotContainer {
             new WaitCommand(0.3),
             led.turnColor(Color.kWhite))
         .schedule(); // start it off as rainbow
+    new Trigger(() -> RobotContainer.doRainbow).whileTrue(startRainbow()); //
 
     
   }
@@ -256,7 +258,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     // Default command, normal field-relative drive
 
-    led.isCloseToBarge(drive).whileTrue(led.setBargeIndicator(drive, elevator));
+    led.isCloseToBarge(drive).onTrue(new InstantCommand(() -> {RobotContainer.doRainbow = false;})).onFalse(new InstantCommand(() -> RobotContainer.doRainbow = true)).whileTrue(led.setBargeIndicator(drive, elevator));
     elevator.setDefaultCommand(
         elevator.setElevatorVelocity(() -> deadband(-operatorController.getLeftY()) * 25));
 
@@ -344,6 +346,8 @@ public class RobotContainer {
     driverController
         .povLeft()
         .and(() -> drive.useVision)
+        .onTrue(new InstantCommand(() -> RobotContainer.doRainbow = false))
+        .onFalse(new InstantCommand(() -> RobotContainer.doRainbow = true))
         .onTrue(DriveCommands.reefAlign(drive, Direction.Left, driverController, led));
     driverController
         .povRight()
@@ -351,6 +355,8 @@ public class RobotContainer {
             () -> {
               return drive.useVision;
             })
+        .onTrue(new InstantCommand(() -> RobotContainer.doRainbow = false))
+        .onFalse(new InstantCommand(() -> RobotContainer.doRainbow = true))
         .onTrue(DriveCommands.reefAlign(drive, Direction.Right, driverController, led));
 
     driverController
@@ -387,7 +393,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     return autoChooser.get();
   }
-  public Command startRainbow() {
+  public RunCommand startRainbow() {
     return led.goRainbow();
   }
 

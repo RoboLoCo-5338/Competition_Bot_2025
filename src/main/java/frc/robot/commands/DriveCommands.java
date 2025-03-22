@@ -364,7 +364,7 @@ public class DriveCommands {
           drive.autoXDriveController.reset();
           drive.autoYDriveController.reset();
           drive.autoTurnController.reset();
-
+          
           drive.autoXDriveController.setSetpoint(targetPose.getX());
           drive.autoYDriveController.setSetpoint(targetPose.getY());
           drive.autoTurnController.setSetpoint(targetPose.getRotation().getRadians());
