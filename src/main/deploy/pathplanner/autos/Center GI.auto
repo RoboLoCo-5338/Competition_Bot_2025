@@ -13,7 +13,7 @@
         {
           "type": "named",
           "data": {
-            "name": "EndEffectorOut"
+            "name": "GroundI Outake"
           }
         },
         {
@@ -25,7 +25,7 @@
         {
           "type": "named",
           "data": {
-            "name": "EndEffectorStop"
+            "name": "GroundI Stop"
           }
         }
       ]
