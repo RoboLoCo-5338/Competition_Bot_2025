@@ -64,6 +64,16 @@ public class LED extends SubsystemBase {
         });
   }
 
+  public InstantCommand turnColor(Color color) {
+    
+    return new InstantCommand(
+        () -> {
+          LEDPattern colorPattern = LEDPattern.solid(color);
+          colorPattern.applyTo(buffer);
+          m_led.setData(buffer);
+        });
+  }
+
   /**
    * Creates an InstantCommand to set an LED pattern that represents progress.
    *
