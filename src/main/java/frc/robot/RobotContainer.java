@@ -258,7 +258,7 @@ public class RobotContainer {
     // Default command, normal field-relative drive
 
     led.isCloseToBarge(drive)
-        .onTrue(
+        .whileTrue(
             new InstantCommand(
                 () -> {
                   RobotContainer.doRainbow = false;
@@ -372,8 +372,6 @@ public class RobotContainer {
     driverController
         .povLeft()
         .and(() -> drive.useVision)
-        .onTrue(new InstantCommand(() -> RobotContainer.doRainbow = false))
-        .onFalse(new InstantCommand(() -> RobotContainer.doRainbow = true))
         .onTrue(DriveCommands.reefAlign(drive, Direction.Left, driverController, led, () -> elevator.getElevatorPosition()));
     driverController
         .povRight()
@@ -381,8 +379,6 @@ public class RobotContainer {
             () -> {
               return drive.useVision;
             })
-        .onTrue(new InstantCommand(() -> RobotContainer.doRainbow = false))
-        .onFalse(new InstantCommand(() -> RobotContainer.doRainbow = true))
         .onTrue(DriveCommands.reefAlign(drive, Direction.Right, driverController, led, () -> elevator.getElevatorPosition()));
 
     driverController

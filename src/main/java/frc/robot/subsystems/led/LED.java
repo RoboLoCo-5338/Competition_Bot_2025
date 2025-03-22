@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.LEDPattern;
-import edu.wpi.first.wpilibj.LEDPattern.GradientType;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -64,7 +63,7 @@ public class LED extends SubsystemBase {
   public RunCommand goRainbow() {
     LEDPattern rainbow = LEDPattern.rainbow(255, 128);
     LEDPattern scrollingRainbow =
-        rainbow.scrollAtAbsoluteSpeed(MetersPerSecond.of(2), LEDConstants.LED_SPACING);
+        rainbow.scrollAtAbsoluteSpeed(MetersPerSecond.of(0.3), LEDConstants.LED_SPACING);
     return new RunCommand(
         () -> {
           scrollingRainbow.applyTo(buffer);
@@ -106,10 +105,7 @@ public class LED extends SubsystemBase {
   public Command setBargeIndicator(Drive drive, Elevator elevator) {
     return new RunCommand(
         () -> {
-          var progress = LEDPattern.progressMaskLayer(() -> getDistanceFromBarge(drive));
-
-          LEDPattern.gradient(GradientType.kContinuous, Color.kCyan, Color.kYellow)
-              .mask(progress)
+          LEDPattern.solid(Color.lerpRGB(Color.kOrange, Color.kBlue, getDistanceFromBarge(drive)))
               .applyTo(buffer);
 
           m_led.setData(buffer);

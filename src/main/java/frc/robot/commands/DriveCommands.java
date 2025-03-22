@@ -29,8 +29,8 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -38,6 +38,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.VisionConstants;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.led.LED;
 import java.text.DecimalFormat;
@@ -564,6 +565,7 @@ public class DriveCommands {
         () -> {
           ArrayList<Pose2d> poses = DriveCommands.getReefPoses(direction);
           canceled = false;
+          RobotContainer.doRainbow = false;
           Command move =
               pathToDestination(
                   drive,
@@ -575,21 +577,13 @@ public class DriveCommands {
                   elevatorHeight);
 
           new SequentialCommandGroup(
-                  led.turnColor(Color.kOrange), // change to davids commit of wait 3 instead of flash
+                  led.turnColor(
+                      Color.kOrange), // change to davids commit of wait 3 instead of flash
                   move,
                   new InstantCommand(() -> System.out.println(DriveCommands.canceled)),
                   led.turnGreen(),
-                  new WaitCommand(0.3),
-                  led.turnOff(),
-                  new WaitCommand(0.3),
-                  led.turnGreen(),
-                  new WaitCommand(0.3),
-                  led.turnOff(),
-                  new WaitCommand(0.3),
-                  led.turnGreen(),
-                  new WaitCommand(0.3),
-                  led.turnOff(),
-                  new WaitCommand(0.5))
+                  new WaitCommand(3.0),
+                  new InstantCommand(() -> RobotContainer.doRainbow = true))
               .schedule();
         });
   }
