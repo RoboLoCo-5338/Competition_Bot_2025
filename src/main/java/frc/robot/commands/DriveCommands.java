@@ -571,8 +571,8 @@ public class DriveCommands {
 
           new SequentialCommandGroup(
                   move,
-                  new WaitCommand(10),
                   new InstantCommand(() -> System.out.println(DriveCommands.canceled)),
+                  new WaitCommand(10),
                   led.turnGreen(),
                   new WaitCommand(0.3),
                   led.turnOff(),
