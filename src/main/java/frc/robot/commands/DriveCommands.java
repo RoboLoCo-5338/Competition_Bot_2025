@@ -51,6 +51,7 @@ import org.littletonrobotics.junction.Logger;
 
 public class DriveCommands {
   private static final double DEADBAND = 0.06;
+  public static boolean canceled = false;
   private static final double ANGLE_KP = 5.0;
   private static final double ANGLE_KD = 0.4;
   private static final double ANGLE_MAX_VELOCITY = 8.0;
@@ -390,17 +391,20 @@ public class DriveCommands {
 
         @Override
         public boolean isFinished() {
+          boolean canceled = driverController.leftStick().getAsBoolean();
+          if (canceled) {
+            DriveCommands.canceled = true;
+          }
           return drive.autoXDriveController.atSetpoint()
                   && drive.autoYDriveController.atSetpoint()
                   && drive.autoTurnController.atSetpoint()
-              || (RobotContainer.deadband(driverController.getLeftY()) > 0
-                  || RobotContainer.deadband(driverController.getLeftX()) > 0
-                  || RobotContainer.deadband(driverController.getRightX()) > 0);
+              || canceled;
         }
 
         @Override
         public void end(boolean interrupted) {
           System.out.println("done");
+          
         }
       };
     }
@@ -487,7 +491,7 @@ public class DriveCommands {
   public static class Reef extends PathDestination {
     Direction direction;
     int tagId;
-    static Pose2d reefRight = new Pose2d(3.02, 3.77, new Rotation2d());
+    static Pose2d reefRight = new Pose2d(3.02, 3.77 + 0.05 + 0.0127, new Rotation2d());
     static Pose2d reefLeft = new Pose2d(3.05, 4.175, new Rotation2d());
     /**
      * Creates a reef direction based on the currently visible tag.
@@ -555,8 +559,9 @@ public class DriveCommands {
       Drive drive, Direction direction, CommandXboxController controller, LED led) {
     return new InstantCommand( // I hate commands so much
         () -> {
-          System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+         
           ArrayList<Pose2d> poses = DriveCommands.getReefPoses(direction);
+          canceled = false;
           Command move =
               pathToDestination(
                   drive,
@@ -565,22 +570,23 @@ public class DriveCommands {
                           direction,
                           poses.indexOf(drive.getPose().nearest(poses)) + ((isFlipped) ? 6 : 17)),
                   controller);
-
+          
           new SequentialCommandGroup(
                   move,
-                  led.turnGreen(),
+                  new InstantCommand(() -> System.out.println(DriveCommands.canceled)),
+                  led.turnGreen(DriveCommands.canceled),
                   new WaitCommand(0.3),
                   led.turnOff(),
                   new WaitCommand(0.3),
-                  led.turnGreen(),
+                  led.turnGreen(DriveCommands.canceled),
                   new WaitCommand(0.3),
                   led.turnOff(),
                   new WaitCommand(0.3),
-                  led.turnGreen(),
+                  led.turnGreen(DriveCommands.canceled),
                   new WaitCommand(0.3),
                   led.turnOff(),
                   new WaitCommand(0.5),
-                  led.turnColor(Color.kWhite))
+                  led.goRainbow())
               .schedule();
         });
   }
