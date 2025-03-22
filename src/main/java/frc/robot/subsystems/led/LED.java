@@ -79,9 +79,9 @@ public class LED extends SubsystemBase {
 
   public static double getDistanceFromBarge(Drive drive) {
     if (DriverStation.getAlliance().orElse(Alliance.Blue).equals(Alliance.Blue)) {
-      return (-drive.getPose().getX() + 7.272272) / LEDConstants.BARGE_RANGE;
+      return (-drive.getPose().getX() + 8.272272) / LEDConstants.BARGE_RANGE;
     } else {
-      return (drive.getPose().getX() - 10.27) / LEDConstants.BARGE_RANGE;
+      return (drive.getPose().getX() - 9.27) / LEDConstants.BARGE_RANGE;
     }
   }
 
@@ -91,7 +91,7 @@ public class LED extends SubsystemBase {
           if (getDistanceFromBarge(drive) < 1.0) {
             var progress = LEDPattern.progressMaskLayer(() -> getDistanceFromBarge(drive));
           
-                LEDPattern.gradient(GradientType.kContinuous, Color.kRed, Color.kBlue)
+                LEDPattern.gradient(GradientType.kContinuous, Color.kYellow, Color.kCyan)
                     .mask(progress).applyTo(buffer);
                   
                 m_led.setData(buffer);

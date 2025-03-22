@@ -202,7 +202,7 @@ public final class Constants {
     // TODO change this
     public static final int LED_PWM_PORT = 0;
     public static final int LED_LENGTH = 123;
-    public static final int BARGE_RANGE = 70;
+    public static final int BARGE_RANGE =  1;
     public static final Distance LED_SPACING = Meters.of(1.0 / 50.0);
   }
 
@@ -243,7 +243,7 @@ public final class Constants {
     public static double[] cameraStdDevFactors =
         new double[] {
           1.0, // Camera 0
-          1.0 // Camera 1
+          2.0 // Camera 1
         };
 
     // Multipliers to apply for MegaTag 2 observations
