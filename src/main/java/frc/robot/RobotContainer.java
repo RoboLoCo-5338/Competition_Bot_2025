@@ -257,6 +257,11 @@ public class RobotContainer {
         .onFalse(endEffector.setEndEffectorVelocity(0));
 
     operatorController
+        .leftBumper()
+        .whileTrue(PresetCommands.netShoot(arm, endEffector))
+        .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
+
+    operatorController
         .a()
         .whileTrue(PresetCommands.stowElevator(elevator, endEffector, arm))
         .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
