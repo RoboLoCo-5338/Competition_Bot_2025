@@ -25,7 +25,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.DriveCommands;
@@ -59,10 +58,7 @@ import frc.robot.subsystems.groundintake.GroundIntake;
 import frc.robot.subsystems.groundintake.GroundIntakeIO;
 import frc.robot.subsystems.groundintake.GroundIntakeIOSim;
 import frc.robot.subsystems.groundintake.GroundIntakeIOSpark;
-import frc.robot.subsystems.led.AddressableLEDIO;
 import frc.robot.subsystems.led.LED;
-import frc.robot.subsystems.led.LEDIO;
-import frc.robot.subsystems.led.LEDIOSim;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOPhotonVision;
@@ -134,7 +130,7 @@ public class RobotContainer {
         climb = new Climb(new ClimbIOTalonFX());
         arm = new Arm(new ArmIOSpark());
         led = new LED();
-      
+
         //  led.setBargeIndicator(drive, elevator);
         ButtonBindingsController =
             new ButtonBindings(drive, led, elevator, groundIntake, endEffector, climb, arm);
@@ -200,8 +196,10 @@ public class RobotContainer {
         "Endeffector In", EndEffectorCommands.moveEndEffectorLaserCan(endEffector));
     NamedCommands.registerCommand(
         "Endeffector Stop", EndEffectorCommands.moveEndEffector(endEffector, 0));
-    NamedCommands.registerCommand("Align Left", DriveCommands.reefAlign(drive, Direction.Left));
-    NamedCommands.registerCommand("Align Right", DriveCommands.reefAlign(drive, Direction.Right));
+    NamedCommands.registerCommand(
+        "Align Left", DriveCommands.reefAlign(drive, Direction.Left, driverController));
+    NamedCommands.registerCommand(
+        "Align Right", DriveCommands.reefAlign(drive, Direction.Right, driverController));
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -226,7 +224,7 @@ public class RobotContainer {
     configureButtonBindings();
   }
 
-  private double deadband(double controllerAxis) {
+  public static double deadband(double controllerAxis) {
     if (Math.abs(controllerAxis) < 0.2) {
       return 0;
     } else {
@@ -311,9 +309,9 @@ public class RobotContainer {
     //             drive, () -> driverController.getLeftY(), () -> driverController.getLeftX()));
     driverController
         .povLeft()
-        .and(new Trigger(() -> useVision))
+        .and(() -> useVision)
         .onTrue(
-            DriveCommands.reefAlign(drive, Direction.Left)
+            DriveCommands.reefAlign(drive, Direction.Left, driverController)
                 .until(
                     () ->
                         deadband(driverController.getLeftY()) > 0
@@ -321,9 +319,9 @@ public class RobotContainer {
                             || deadband(driverController.getRightX()) > 0));
     driverController
         .povRight()
-        .and(new Trigger(() -> useVision))
+        .and(() -> useVision)
         .onTrue(
-            DriveCommands.reefAlign(drive, Direction.Right)
+            DriveCommands.reefAlign(drive, Direction.Right, driverController)
                 .until(
                     () ->
                         deadband(driverController.getLeftY()) > 0
@@ -349,7 +347,7 @@ public class RobotContainer {
     Logger.recordOutput("camera pose", Constants.VisionConstants.robotToCamera0);
     led.setBargeIndicator(drive, elevator).schedule();
   }
-  
+
   public void teleopInit() {
     SmartDashboard.putNumber("Laser Can", endEffector.io.getLaserCanmeasurement1());
     endEffector.setEndEffectorVelocity(0);
