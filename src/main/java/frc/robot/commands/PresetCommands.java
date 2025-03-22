@@ -56,17 +56,19 @@ public class PresetCommands {
             elevator.setElevatorPosition(PresetConstants.elevatorl4)));
   }
 
-  public static Command net(Elevator elevator, EndEffector endEffector, Arm arm) {
-    return new SequentialCommandGroup(
-        arm.setArmPosition(0.1),
-        new WaitCommand(0.3),
-        elevator.setElevatorPosition(PresetConstants.elevatorNet));
-  }
+  
 
   public static Command stopAll(Elevator elevator, EndEffector endEffector, Arm arm) {
     return new SequentialCommandGroup(
         elevator.setElevatorVelocity(() -> 0.0),
         endEffector.setEndEffectorVelocity(0),
         arm.setArmVelocity(() -> 0));
+  }
+
+  public static Command netPreset(EndEffector endEffector, Arm arm) {
+    return new ParallelCommandGroup(
+      arm.setArmPosition(0),
+      new SequentialCommandGroup(new WaitCommand(0.5), endEffector.setEndEffectorSpeed(-1))
+    );
   }
 }

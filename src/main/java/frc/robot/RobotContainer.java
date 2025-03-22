@@ -130,8 +130,8 @@ public class RobotContainer {
         elevator = new Elevator(new ElevatorIOTalonFX());
         climb = new Climb(new ClimbIOTalonFX());
         arm = new Arm(new ArmIOSpark());
-        led = new LED(new AddressableLEDIO());
-        led.setBargeIndicator(drive, elevator);
+        led = new LED(new LEDIO() {});
+      //  led.setBargeIndicator(drive, elevator);
         ButtonBindingsController =
             new ButtonBindings(drive, led, elevator, groundIntake, endEffector, climb, arm);
 
@@ -217,8 +217,7 @@ public class RobotContainer {
         "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
     autoChooser.addOption(
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-    // autoChooser.addOption(
-    //     "1m Forward", A);
+ 
 
     // Configure the button bindings
     configureButtonBindings();
@@ -232,13 +231,6 @@ public class RobotContainer {
     }
   }
 
-  private double easyDeadband(double val) {
-    if (Math.abs(val) < 0.07) {
-      return 0;
-    } else {
-      return val;
-    }
-  }
 
   /**
    * Use this method to define your button->command mappings. Buttons can be created by
@@ -258,12 +250,12 @@ public class RobotContainer {
 
     operatorController
         .leftTrigger()
-        .whileTrue(endEffector.setEndEffectorVelocity(60))
+        .whileTrue(endEffector.setEndEffectorVelocity(100))
         .onFalse(endEffector.setEndEffectorVelocity(0));
 
     operatorController
         .rightTrigger()
-        .whileTrue(endEffector.setEndEffectorVelocity(-60))
+        .whileTrue(endEffector.setEndEffectorVelocity(-100))
         .onFalse(endEffector.setEndEffectorVelocity(0));
 
     operatorController
@@ -288,69 +280,19 @@ public class RobotContainer {
         .onTrue(endEffector.setEndEffectorSpeed(-1))
         .onFalse(endEffector.setEndEffectorVelocity(0));
 
-    // operatorController
-    //     .leftBumper()
-    //     .onTrue(arm.setArmPosition(0.015))
-    //     .onFalse(arm.setArmVelocity(() -> 0.0));
+ 
 
-    // operatorController
-    //     .rightBumper()
-    //     .onTrue(arm.setArmPosition(0.1))
-    //     .onFalse(arm.setArmVelocity(() -> 0.0));
-
-    // left trigger intake preset + intake rollers
-    // left bumper outtake preset
-    // right bumper stow
-    // right trigger outtake
-    // driverController
-    //     .y()
-    //     .onTrue(groundIntake.setGroundIntakeVelocity(3600))
-    //     .onFalse(groundIntake.setGroundIntakeVelocity(0));
-
-    // driverController
-    //     .leftTrigger()
-    //     .onTrue(groundIntake.setGroundIntakeVelocity(-3600))
-    //     .onFalse(groundIntake.setGroundIntakeVelocity(0));
-
-    // driverController
-    //     .leftBumper()
-    //     .onTrue(groundIntake.setGroundArmVelocity(() -> 10))
-    //     .onFalse(groundIntake.setGroundArmVelocity(() -> 0.0));
-
-    // driverController
-    //     .rightBumper()
-    //     .onTrue(groundIntake.setGroundArmVelocity(() -> -10))
-    //     .onFalse(groundIntake.setGroundArmVelocity(() -> 0.0));
-    // driverController
-    //     .rightTrigger()
-    //     .onTrue(groundIntake.setGroun  dIntakeVelocity(3600))
-    //     .onFalse(groundIntake.setGroundIntakeVelocity(0.0));
-    // operatorController
-    //     .b()
-    //     .whileTrue(elevator.setElevatorPosition(102))
-    //     .onFalse(elevator.setElevatorVelocity(() -> 0.0));
-
-    // operatorController
-    //     .y()
-    //     .whileTrue(elevator.setElevatorPosition(93))
-    //     .onFalse(elevator.setElevatorVelocity(() -> 0.0));
-    // // driverController
-
-    //     .povUp()
-    //     .and(driverController.x())
-    //     .onTrue(climb.setClimbVelocity(0.4))
-    //     .onFalse(climb.setClimbVelocity(0));
 
     driverController
         .rightBumper()
-        .whileTrue(endEffector.setEndEffectorVelocity(-60))
+        .whileTrue(endEffector.setEndEffectorVelocity(60))
         .onFalse(endEffector.setEndEffectorVelocity(0));
     driverController
         .leftBumper()
         .whileTrue(endEffector.setEndEffectorVelocity(-60))
         .onFalse(endEffector.setEndEffectorVelocity(0));
 
-    driverController.povDown().onTrue(climb.setClimbVelocity(-2.9)).onFalse(climb.stopMotor());
+
 
     driverController
         .b()
@@ -363,11 +305,6 @@ public class RobotContainer {
                 .ignoringDisable(true));
 
     // Turns to tag and locks rotation
-    // driverController
-    //     .y()
-    //     .whileTrue(
-    //         DriveCommands.reefStrafe(
-    //             drive, () -> driverController.getLeftY(), () -> driverController.getLeftX()));
     driverController.povLeft().onTrue(DriveCommands.reefAlign(drive, Direction.Left).until(() -> Math.abs(deadband(driverController.getLeftX())) > 0 || Math.abs(deadband(driverController.getLeftY())) >0 || Math.abs(deadband(driverController.getRightX())) > 0));
     driverController.povRight().onTrue(DriveCommands.reefAlign(drive, Direction.Right).until(() -> Math.abs(deadband(driverController.getLeftX())) > 0 || Math.abs(deadband(driverController.getLeftY())) >0 || Math.abs(deadband(driverController.getRightX())) > 0));
 
@@ -387,12 +324,11 @@ public class RobotContainer {
 
   public void periodic() {
     // ButtonBindingsController.periodic();
-    SmartDashboard.putNumber("In arm periodic", arm.getArmPosition().getAsDouble());
     Logger.recordOutput("camera pose", Constants.VisionConstants.robotToCamera0);
   }
 
   public void teleopInit() {
-    SmartDashboard.putNumber("Laser Can", elevator.io.getLaserCanMeasurement());
+    SmartDashboard.putNumber("Laser Can", endEffector.io.getLaserCanmeasurement1());
     endEffector.setEndEffectorVelocity(0);
     elevator.setElevatorVelocity(() -> 0);
   }

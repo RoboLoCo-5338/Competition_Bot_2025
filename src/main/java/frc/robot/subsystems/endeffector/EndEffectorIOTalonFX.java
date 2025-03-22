@@ -23,11 +23,7 @@ public class EndEffectorIOTalonFX implements EndEffectorIO {
   private final Debouncer effectorDebouncer = new Debouncer(0.5);
 
   private final LaserCan LcEffector1;
-  private final LaserCan LcEffector2; // why is it screaming at me here
-  // aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-  // bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
-  // have you tried simply being more skilled
-  // - david
+  private final LaserCan LcEffector2; 
   public EndEffectorIOTalonFX() {
 
     endEffectorVelocity = endEffectorMotor.getVelocity();
