@@ -37,8 +37,8 @@ public class LED extends SubsystemBase {
     if (inverted) {
       return new InstantCommand(
         () -> {
-          LEDPattern green = LEDPattern.solid(Color.kRed);
-          green.applyTo(buffer);
+          LEDPattern red = LEDPattern.solid(Color.kRed);
+          red.applyTo(buffer);
           m_led.setData(buffer);
         });
     }

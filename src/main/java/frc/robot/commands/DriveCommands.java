@@ -559,7 +559,7 @@ public class DriveCommands {
       Drive drive, Direction direction, CommandXboxController controller, LED led) {
     return new InstantCommand( // I hate commands so much
         () -> {
-          System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+         
           ArrayList<Pose2d> poses = DriveCommands.getReefPoses(direction);
           canceled = false;
           Command move =
@@ -570,9 +570,10 @@ public class DriveCommands {
                           direction,
                           poses.indexOf(drive.getPose().nearest(poses)) + ((isFlipped) ? 6 : 17)),
                   controller);
-
+          
           new SequentialCommandGroup(
                   move,
+                  new InstantCommand(() -> System.out.println(DriveCommands.canceled)),
                   led.turnGreen(DriveCommands.canceled),
                   new WaitCommand(0.3),
                   led.turnOff(),
@@ -585,7 +586,7 @@ public class DriveCommands {
                   new WaitCommand(0.3),
                   led.turnOff(),
                   new WaitCommand(0.5),
-                  led.turnColor(Color.kWhite))
+                  led.goRainbow())
               .schedule();
         });
   }
