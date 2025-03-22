@@ -18,7 +18,6 @@ import frc.robot.Constants.LEDConstants;
 import frc.robot.commands.DriveCommands;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.elevator.Elevator;
-import java.util.function.BooleanSupplier;
 
 public class LED extends SubsystemBase {
 
@@ -35,7 +34,7 @@ public class LED extends SubsystemBase {
   }
 
   public InstantCommand turnGreen() {
-
+    System.out.println("command: " + DriveCommands.canceled);
     if (DriveCommands.canceled) {
       return new InstantCommand(
           () -> {
