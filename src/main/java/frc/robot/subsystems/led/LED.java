@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.LEDConstants;
+import frc.robot.commands.DriveCommands;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.elevator.Elevator;
 import java.util.function.BooleanSupplier;
@@ -33,9 +34,9 @@ public class LED extends SubsystemBase {
     m_led.start();
   }
 
-  public InstantCommand turnGreen(BooleanSupplier inverted) {
+  public InstantCommand turnGreen() {
 
-    if (inverted.getAsBoolean()) {
+    if (DriveCommands.canceled) {
       return new InstantCommand(
           () -> {
             LEDPattern red = LEDPattern.solid(Color.kRed);
