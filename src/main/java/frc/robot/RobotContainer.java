@@ -197,9 +197,9 @@ public class RobotContainer {
     NamedCommands.registerCommand(
         "Endeffector Stop", EndEffectorCommands.moveEndEffector(endEffector, 0));
     NamedCommands.registerCommand(
-        "Align Left", DriveCommands.reefAlign(drive, Direction.Left, driverController));
+        "Align Left", DriveCommands.reefAlign(drive, Direction.Left, driverController, led.flashGreen()));
     NamedCommands.registerCommand(
-        "Align Right", DriveCommands.reefAlign(drive, Direction.Right, driverController));
+        "Align Right", DriveCommands.reefAlign(drive, Direction.Right, driverController, led.flashGreen()));
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -311,7 +311,7 @@ public class RobotContainer {
         .povLeft()
         .and(() -> useVision)
         .onTrue(
-            DriveCommands.reefAlign(drive, Direction.Left, driverController)
+            DriveCommands.reefAlign(drive, Direction.Left, driverController, led.flashGreen())
                 .until(
                     () ->
                         deadband(driverController.getLeftY()) > 0
@@ -321,7 +321,7 @@ public class RobotContainer {
         .povRight()
         .and(() -> useVision)
         .onTrue(
-            DriveCommands.reefAlign(drive, Direction.Right, driverController)
+            DriveCommands.reefAlign(drive, Direction.Right, driverController, led.flashGreen())
                 .until(
                     () ->
                         deadband(driverController.getLeftY()) > 0

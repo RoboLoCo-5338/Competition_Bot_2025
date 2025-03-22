@@ -550,7 +550,7 @@ public class DriveCommands {
   }
 
   public static Command reefAlign(
-      Drive drive, Direction direction, CommandXboxController controller) {
+      Drive drive, Direction direction, CommandXboxController controller, Command flashCommand) {
     return new InstantCommand( // I hate commands so much
         () -> {
           ArrayList<Pose2d> poses = DriveCommands.getReefPoses(direction);
@@ -561,7 +561,7 @@ public class DriveCommands {
                           new Reef(
                               direction,
                               poses.indexOf(drive.getPose().nearest(poses))
-                                  + ((isFlipped) ? 6 : 17)));
+                                  + ((isFlipped) ? 6 : 17)), controller);
 
           new SequentialCommandGroup(move)
               .andThen(flashCommand)
