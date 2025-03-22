@@ -143,8 +143,7 @@ public class Drive extends SubsystemBase {
             new PIDConstants(5.0, 0.0, 0.0), new PIDConstants(5.0, 0.0, 0.0)),
         PP_CONFIG,
         () ->
-            (DriverStation.isFMSAttached() && !RobotBase.isSimulation())
-                && DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
+                DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
         this);
     Pathfinding.setPathfinder(new LocalADStarAK());
     PathPlannerLogging.setLogActivePathCallback(

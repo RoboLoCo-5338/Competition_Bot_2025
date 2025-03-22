@@ -20,7 +20,6 @@ import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.Threads;
-import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.generated.TunerConstants;
@@ -138,7 +137,6 @@ public class Robot extends LoggedRobot {
     CommandScheduler.getInstance().run();
     // Return to normal thread priority
     Threads.setCurrentThreadPriority(false, 10);
-  
   }
 
   /** This function is called once when the robot is disabled. */

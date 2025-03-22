@@ -73,7 +73,6 @@ public class PresetCommands {
     return new SequentialCommandGroup(
         arm.setArmPosition(0.0), // placeholder
         new WaitCommand(0.5), // placehlder
-        endEffector.setEndEffectorSpeed(-1)
-    );
+        endEffector.setEndEffectorSpeed(-1));
   }
 }

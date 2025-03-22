@@ -123,8 +123,8 @@ public class RobotContainer {
                 drive::addVisionMeasurement,
                 new VisionIOPhotonVision(
                     VisionConstants.camera0Name, VisionConstants.robotToCamera0));
-                // new VisionIOPhotonVision(
-                //     VisionConstants.camera1Name, VisionConstants.robotToCamera1));
+        // new VisionIOPhotonVision(
+        //     VisionConstants.camera1Name, VisionConstants.robotToCamera1));
         groundIntake = new GroundIntake(new GroundIntakeIOSpark());
         endEffector = new EndEffector(new EndEffectorIOTalonFX());
         elevator = new Elevator(new ElevatorIOTalonFX());
@@ -335,9 +335,9 @@ public class RobotContainer {
   public void periodic() {
     // ButtonBindingsController.periodic();
     Logger.recordOutput("camera pose", Constants.VisionConstants.robotToCamera0);
-    led.setBargeIndicator(drive, elevator).schedule();
+    // led.setBargeIndicator(drive, elevator).schedule();
   }
-  
+
   public void teleopInit() {
     SmartDashboard.putNumber("Laser Can", endEffector.io.getLaserCanmeasurement1());
     endEffector.setEndEffectorVelocity(0);

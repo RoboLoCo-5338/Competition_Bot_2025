@@ -22,13 +22,13 @@ public class LED extends SubsystemBase {
 
   private final LEDIO io;
   private final LedIOInputsAutoLogged inputs = new LedIOInputsAutoLogged();
-  
+
   private final AddressableLED m_led;
   private final AddressableLEDBuffer buffer;
-  
+
   public LED(LEDIO io) {
     this.io = io;
-     m_led = new AddressableLED(0);
+    m_led = new AddressableLED(0);
     buffer = new AddressableLEDBuffer(123);
     m_led.setLength(buffer.getLength());
     m_led.setData(buffer);
@@ -90,11 +90,12 @@ public class LED extends SubsystemBase {
         () -> {
           if (getDistanceFromBarge(drive) < 1.0) {
             var progress = LEDPattern.progressMaskLayer(() -> getDistanceFromBarge(drive));
-          
-                LEDPattern.gradient(GradientType.kContinuous, Color.kYellow, Color.kCyan)
-                    .mask(progress).applyTo(buffer);
-                  
-                m_led.setData(buffer);
+
+            LEDPattern.gradient(GradientType.kContinuous, Color.kYellow, Color.kCyan)
+                .mask(progress)
+                .applyTo(buffer);
+
+            m_led.setData(buffer);
           } else {
             LEDPattern rainbow = LEDPattern.rainbow(255, 128);
             LEDPattern scrollingRainbow =
