@@ -238,7 +238,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Default command, normal field-relative drive
-
+    led.goRainbow().schedule(); //start it off as rainbow
     led.isCloseToBarge(drive).whileTrue(led.setBargeIndicator(drive, elevator));
     elevator.setDefaultCommand(
         elevator.setElevatorVelocity(() -> deadband(-operatorController.getLeftY()) * 25));
