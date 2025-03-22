@@ -58,6 +58,7 @@ import frc.robot.subsystems.groundintake.GroundIntake;
 import frc.robot.subsystems.groundintake.GroundIntakeIO;
 import frc.robot.subsystems.groundintake.GroundIntakeIOSim;
 import frc.robot.subsystems.groundintake.GroundIntakeIOSpark;
+import frc.robot.subsystems.led.AddressableLEDIO;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.led.LEDIO;
 import frc.robot.subsystems.led.LEDIOSim;
@@ -129,7 +130,8 @@ public class RobotContainer {
         elevator = new Elevator(new ElevatorIOTalonFX());
         climb = new Climb(new ClimbIOTalonFX());
         arm = new Arm(new ArmIOSpark());
-        led = new LED(new LEDIO() {});
+        led = new LED(new AddressableLEDIO());
+        led.setRainbowLEDCommand();
         //  led.setBargeIndicator(drive, elevator);
         ButtonBindingsController =
             new ButtonBindings(drive, led, elevator, groundIntake, endEffector, climb, arm);

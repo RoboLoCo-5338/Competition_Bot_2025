@@ -53,9 +53,9 @@ public final class Constants {
     public static final double elevatorNet = 16.481;
     public static final double elevatorl3Algae = 0.0;
 
-    public static final double arml2 = 0.07;
-    public static final double arml3 = 0.07;
-    public static final double arml4 = 0.599;
+    public static final double arml2 = 0.53;
+    public static final double arml3 = 0.53;
+    public static final double arml4 = 0.800;
     public static final double armNet = 0.3;
     public static final double arml3Algae = 0.0;
 
@@ -200,8 +200,8 @@ public final class Constants {
 
   public static final class LEDConstants {
     // TODO change this
-    public static final int LED_PWM_PORT = 1;
-    public static final int LED_LENGTH = 300;
+    public static final int LED_PWM_PORT = 0;
+    public static final int LED_LENGTH = 123;
     public static final int BARGE_RANGE = 70;
     public static final Distance LED_SPACING = Meters.of(1.0 / 50.0);
   }
