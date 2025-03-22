@@ -33,6 +33,7 @@ import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveCommands.Direction;
 import frc.robot.commands.EndEffectorCommands;
+import frc.robot.commands.GroundIntakeCommands;
 import frc.robot.commands.PresetCommands;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.arm.Arm;
@@ -304,6 +305,26 @@ public class RobotContainer {
         .leftBumper()
         .onTrue(PresetCommands.netShoot(arm, endEffector))
         .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
+
+    operatorController
+        .povUp()
+        .whileTrue(GroundIntakeCommands.moveGroundIntakeArmRaw(groundIntake, -1.0))
+        .onFalse(GroundIntakeCommands.moveGroundIntakeArmRaw(groundIntake, 0.0));
+
+    operatorController
+        .povDown()
+        .whileTrue(GroundIntakeCommands.moveGroundIntakeArmRaw(groundIntake, 1.0))
+        .onFalse(GroundIntakeCommands.moveGroundIntakeArmRaw(groundIntake, 0.0));
+
+    operatorController
+        .povRight()
+        .whileTrue(GroundIntakeCommands.moveGroundIntakeWheels(groundIntake, 1.0))
+        .onFalse(GroundIntakeCommands.moveGroundIntakeWheels(groundIntake, 0.0));
+
+    operatorController
+        .povLeft()
+        .whileTrue(GroundIntakeCommands.moveGroundIntakeWheels(groundIntake, -1.0))
+        .onFalse(GroundIntakeCommands.moveGroundIntakeWheels(groundIntake, 0.0));
 
     driverController
         .rightBumper()
