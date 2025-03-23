@@ -282,9 +282,7 @@ public class RobotContainer {
         .whileTrue(endEffector.setEndEffectorVelocity(-100))
         .onFalse(endEffector.setEndEffectorVelocity(0));
 
-    operatorController.povUp().onTrue(PresetCommands.moveEndEffectorLaserCan(endEffector));
-    // .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
-
+    operatorController.leftStick().onTrue(PresetCommands.moveEndEffectorLaserCan(endEffector));
     operatorController
         .a()
         .whileTrue(PresetCommands.stowElevator(elevator, endEffector, arm))
@@ -312,10 +310,10 @@ public class RobotContainer {
         .onTrue(PresetCommands.netShoot(arm, endEffector))
         .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
 
-    // operatorController
-    //     .povUp()
-    //     .whileTrue(groundIntake.setGroundArmVelocity(() -> -10.0))
-    //     .onFalse(groundIntake.setGroundArmVelocity(() -> 0.0));
+    operatorController
+        .povUp()
+        .whileTrue(groundIntake.setGroundArmVelocity(() -> -10.0))
+        .onFalse(groundIntake.setGroundArmVelocity(() -> 0.0));
 
     operatorController
         .povDown()
