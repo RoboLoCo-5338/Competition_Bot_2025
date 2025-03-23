@@ -17,15 +17,15 @@
     {
       "anchor": {
         "x": 5.524,
-        "y": 5.366
+        "y": 5.366178977272727
       },
       "prevControl": {
         "x": 6.022579545454545,
-        "y": 6.0640113636363635
+        "y": 6.064190340909091
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Reef Left 1"
     }
   ],
   "rotationTargets": [],

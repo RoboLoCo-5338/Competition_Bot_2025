@@ -550,7 +550,7 @@ public class DriveCommands {
           o = Reef.reefRight;
           break;
         default: // TODO: add level 1
-          o = Reef.reefRight;
+          o = Reef.reefLeft;
       }
       Rotation2d rot =
           VisionConstants.aprilTagLayout
@@ -565,8 +565,10 @@ public class DriveCommands {
                   new Translation2d(4.5, 4.03),
                   // new Rotation2d(Math.PI));
                   rot)));
-      Logger.recordOutput("Reef Poses", poses.get(poses.size() - 1));
     }
+    Pose2d[] p = new Pose2d[6];
+    poses.toArray(p);
+    Logger.recordOutput("Reef Poses", poses.toArray(p));
     return poses;
   }
 
