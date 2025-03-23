@@ -27,7 +27,7 @@ import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -40,6 +40,8 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -107,12 +109,13 @@ public class Drive extends SubsystemBase {
       };
   private SwerveDrivePoseEstimator poseEstimator =
       new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, new Pose2d());
-  public PIDController autoXDriveController =
-      new PIDController(2, 0.2, TunerConstants.driveGains.kD);
-  public PIDController autoYDriveController =
-      new PIDController(2, 0.2, TunerConstants.driveGains.kD);
-  public PIDController autoTurnController =
-      new PIDController(2, 0.2, 0); // TODO: update angle max acceleration
+  public TrapezoidProfile.Constraints autoConstraints = new Constraints(4.8, 4);
+  public ProfiledPIDController autoXDriveController =
+      new ProfiledPIDController(2, 0.2, TunerConstants.driveGains.kD, autoConstraints);
+  public ProfiledPIDController autoYDriveController =
+      new ProfiledPIDController(2, 0.2, TunerConstants.driveGains.kD, autoConstraints);
+  public ProfiledPIDController autoTurnController =
+      new ProfiledPIDController(2, 0.2, 0, autoConstraints); // TODO: update angle max acceleration
 
   public boolean useVision = true;
 
@@ -310,7 +313,7 @@ public class Drive extends SubsystemBase {
 
   /** Returns the measured chassis speeds of the robot. */
   @AutoLogOutput(key = "SwerveChassisSpeeds/Measured")
-  private ChassisSpeeds getChassisSpeeds() {
+  public ChassisSpeeds getChassisSpeeds() {
     return kinematics.toChassisSpeeds(getModuleStates());
   }
 

@@ -191,17 +191,22 @@ public class RobotContainer {
     NamedCommands.registerCommand("L4 Preset", PresetCommands.presetL4(elevator, endEffector, arm));
     NamedCommands.registerCommand("L2 Preset", PresetCommands.presetL2(elevator, endEffector, arm));
 
-    NamedCommands.registerCommand("Endeffector Out", endEffector.setEndEffectorVelocity(60));
-    NamedCommands.registerCommand("Endeffector Out L4", endEffector.setEndEffectorVelocity(-60));
+    NamedCommands.registerCommand("Endeffector Out", endEffector.setEndEffectorVelocity(100));
+    NamedCommands.registerCommand("Endeffector Out L4", endEffector.setEndEffectorVelocity(-100));
     NamedCommands.registerCommand("Endeffector Stop", endEffector.setEndEffectorVelocity(0));
     NamedCommands.registerCommand(
-        "Align Left", DriveCommands.reefAlign(drive, Direction.Left, driverController, led));
+        "Align Left",
+        DriveCommands.reefAlign(
+            drive, Direction.Left, driverController, led, () -> elevator.getElevatorPosition()));
     NamedCommands.registerCommand(
-        "Align Right", DriveCommands.reefAlign(drive, Direction.Right, driverController, led));
+        "Align Right",
+        DriveCommands.reefAlign(
+            drive, Direction.Right, driverController, led, () -> elevator.getElevatorPosition()));
     NamedCommands.registerCommand(
         "IntakeLaserCAN", PresetCommands.moveEndEffectorLaserCan(endEffector));
     NamedCommands.registerCommand(
         "Stop Preset", PresetCommands.stopAll(elevator, endEffector, arm));
+    NamedCommands.registerCommand("StowPreset", PresetCommands.stowElevator(elevator, endEffector, arm));
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -366,14 +371,26 @@ public class RobotContainer {
     driverController
         .povLeft()
         .and(() -> drive.useVision)
-        .onTrue(DriveCommands.reefAlign(drive, Direction.Left, driverController, led));
+        .onTrue(
+            DriveCommands.reefAlign(
+                drive,
+                Direction.Left,
+                driverController,
+                led,
+                () -> elevator.getElevatorPosition()));
     driverController
         .povRight()
         .and(
             () -> {
               return drive.useVision;
             })
-        .onTrue(DriveCommands.reefAlign(drive, Direction.Right, driverController, led));
+        .onTrue(
+            DriveCommands.reefAlign(
+                drive,
+                Direction.Right,
+                driverController,
+                led,
+                () -> elevator.getElevatorPosition()));
 
     driverController
         .rightTrigger()
