@@ -145,7 +145,8 @@ public class Robot extends LoggedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.schedule();
     }
-    robotContainer.startRainbow().schedule();
+    robotContainer.preEnable = false;
+    // robotContainer.startRainbow().schedule(); probably dont need this
     ;
   }
 
@@ -163,6 +164,7 @@ public class Robot extends LoggedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
+    robotContainer.preEnable = false;
     robotContainer.teleopInit();
   }
 
