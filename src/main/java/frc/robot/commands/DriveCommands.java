@@ -364,16 +364,9 @@ public class DriveCommands {
 
         @Override
         public void initialize() {
-          drive.autoXDriveController.reset(
-              new TrapezoidProfile.State(
-                  drive.getPose().getX(), drive.getChassisSpeeds().vxMetersPerSecond));
-          drive.autoYDriveController.reset(
-              new TrapezoidProfile.State(
-                  drive.getPose().getY(), drive.getChassisSpeeds().vyMetersPerSecond));
-          drive.autoTurnController.reset(
-              new TrapezoidProfile.State(
-                  drive.getPose().getRotation().getRadians(),
-                  drive.getChassisSpeeds().omegaRadiansPerSecond));
+          drive.autoXDriveController.reset();
+          drive.autoYDriveController.reset();
+          drive.autoTurnController.reset();
 
           drive.autoXDriveController.setTolerance(0.05);
           drive.autoYDriveController.setTolerance(0.05);
@@ -385,17 +378,9 @@ public class DriveCommands {
 
         @Override
         public void execute() {
-          drive.autoXDriveController.setGoal(targetPose.getX());
-          drive.autoYDriveController.setGoal(targetPose.getY());
-          drive.autoTurnController.setGoal(targetPose.getRotation().getRadians());
-          drive.autoConstraints =
-              new TrapezoidProfile.Constraints(
-                  drive.autoConstraints.maxVelocity,
-                  -0.204561 * Math.sqrt(9.60314 * elevatorHeight.getAsDouble() + 0.00114581)
-                      + 4.00692); // https://www.desmos.com/calculator/8ovbs1zqzo
-          drive.autoXDriveController.setConstraints(drive.autoConstraints);
-          drive.autoYDriveController.setConstraints(drive.autoConstraints);
-          drive.autoTurnController.setConstraints(drive.autoConstraints);
+          drive.autoXDriveController.setSetpoint(targetPose.getX());
+          drive.autoYDriveController.setSetpoint(targetPose.getY());
+          drive.autoTurnController.setSetpoint(targetPose.getRotation().getRadians());
           drive.runVelocity(
               ChassisSpeeds.fromFieldRelativeSpeeds(
                   new ChassisSpeeds(
@@ -414,9 +399,9 @@ public class DriveCommands {
             DriveCommands.canceled = true;
             System.out.println("Finishing!");
           }
-          return (drive.autoXDriveController.atGoal()
-                  && drive.autoYDriveController.atGoal()
-                  && drive.autoTurnController.atGoal())
+          return (drive.autoXDriveController.atSetpoint()
+                  && drive.autoYDriveController.atSetpoint()
+                  && drive.autoTurnController.atSetpoint())
               || canceled;
         }
 
