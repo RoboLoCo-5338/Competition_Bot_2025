@@ -316,12 +316,12 @@ public class RobotContainer {
 
     operatorController
         .povUp()
-        .whileTrue(groundIntake.setGroundArmVelocity(() -> -5.0))
+        .whileTrue(groundIntake.setGroundArmVelocity(() -> -10.0))
         .onFalse(groundIntake.setGroundArmVelocity(() -> 0.0));
 
     operatorController
         .povDown()
-        .whileTrue(groundIntake.setGroundArmVelocity(() -> 5.0))
+        .whileTrue(groundIntake.setGroundArmVelocity(() -> 10.0))
         .onFalse(groundIntake.setGroundArmVelocity(() -> 0.0));
 
     operatorController
