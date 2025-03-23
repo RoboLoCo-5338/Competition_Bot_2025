@@ -17,22 +17,22 @@ public class PresetCommands {
 
   public static Command endEffectorSet(EndEffector endEffector, Arm arm) {
     SmartDashboard.putNumber("arm position", arm.getArmPosition().getAsDouble());
-    if (arm.getArmPosition().getAsDouble() > 0.560) {
+    if (arm.getArmPosition().getAsDouble() > 0.61) {
       SmartDashboard.putString("preset2", "we are inside don't do anything case");
 
       return arm.setArmVelocity(() -> 0);
     } else {
       SmartDashboard.putString("preset2", "we are inside do anything case");
-      return arm.setArmPosition(0.560);
+      return arm.setArmPosition(0.610);
     }
   }
 
   public static Command stowElevator(Elevator elevator, EndEffector endEffector, Arm arm) {
     return new SequentialCommandGroup(
-        arm.setArmPosition(0.560),
+        arm.setArmPosition(0.610),
         new WaitCommand(0.3),
-        elevator.setElevatorPosition(0),
-        arm.setArmPosition(0.530));
+        elevator.setElevatorPosition(0.05),
+        arm.setArmPosition(0.580));
   }
 
   public static Command presetL2(Elevator elevator, EndEffector endEffector, Arm arm) {
