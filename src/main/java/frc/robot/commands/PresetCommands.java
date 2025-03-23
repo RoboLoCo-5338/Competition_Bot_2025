@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -79,20 +80,23 @@ public class PresetCommands {
       return new InstantCommand();
     }
     return new SequentialCommandGroup(
-        new RunCommand(() -> endEffector.setEndEffectorVelocity(60), endEffector)
+        new RepeatCommand(endEffector.setEndEffectorVelocity(60))
             .until(
                 () ->
                     (endEffector.getIO().getLaserCanMeasurement1() < 100
                         && endEffector.getIO().getLaserCanMeasurement2() < 100)),
-        new RunCommand(() -> endEffector.setEndEffectorVelocity(60))
+        new RepeatCommand(endEffector.setEndEffectorVelocity(60))
             .until(
                 () ->
                     (endEffector.getIO().getLaserCanMeasurement2() < 100
                         && endEffector.getIO().getLaserCanMeasurement1() > 90)),
-        new RunCommand(() -> endEffector.setEndEffectorVelocity(60), endEffector)
+        new RepeatCommand(endEffector.setEndEffectorVelocity(60))
             .until(
                 () ->
                     (endEffector.getIO().getLaserCanMeasurement1() < 100
-                        && endEffector.getIO().getLaserCanMeasurement2() < 100)));
+                        && endEffector.getIO().getLaserCanMeasurement2() < 100)),
+        endEffector.setEndEffectorVelocity(0.0);
+                        );
+                        
   }
 }
