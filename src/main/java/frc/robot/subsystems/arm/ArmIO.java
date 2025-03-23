@@ -115,7 +115,7 @@ public interface ArmIO {
     // armConfig.softLimit.forwardSoftLimitEnabled(true);
     // armConfig.softLimit.forwardSoftLimit(0);
     armConfig.softLimit.reverseSoftLimitEnabled(true);
-    armConfig.softLimit.reverseSoftLimit(0.428);
+    armConfig.softLimit.reverseSoftLimit(0.485);
 
     return armConfig;
   }

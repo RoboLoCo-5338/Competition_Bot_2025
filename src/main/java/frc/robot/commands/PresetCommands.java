@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.Constants;
 import frc.robot.Constants.PresetConstants;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.elevator.Elevator;
@@ -14,22 +15,22 @@ public class PresetCommands {
 
   public static Command endEffectorSet(EndEffector endEffector, Arm arm) {
     SmartDashboard.putNumber("arm position", arm.getArmPosition().getAsDouble());
-    if (arm.getArmPosition().getAsDouble() > 0.524) {
+    if (arm.getArmPosition().getAsDouble() > 0.560) {
       SmartDashboard.putString("preset2", "we are inside don't do anything case");
 
       return arm.setArmVelocity(() -> 0);
     } else {
       SmartDashboard.putString("preset2", "we are inside do anything case");
-      return arm.setArmPosition(0.524);
+      return arm.setArmPosition(0.560);
     }
   }
 
   public static Command stowElevator(Elevator elevator, EndEffector endEffector, Arm arm) {
     return new SequentialCommandGroup(
-        arm.setArmPosition(0.524),
+        arm.setArmPosition(0.560),
         new WaitCommand(0.3),
         elevator.setElevatorPosition(0),
-        arm.setArmPosition(0.524));
+        arm.setArmPosition(0.530));
   }
 
   public static Command presetL2(Elevator elevator, EndEffector endEffector, Arm arm) {
@@ -65,7 +66,7 @@ public class PresetCommands {
 
   public static Command netShoot(Arm arm, EndEffector endEffector) {
     return new ParallelCommandGroup(
-        arm.setArmPosition(0.92),
-        new SequentialCommandGroup(new WaitCommand(0.5), endEffector.setEndEffectorSpeed(-1)));
+        arm.setArmPosition(Constants.PresetConstants.armNet),
+        new SequentialCommandGroup(new WaitCommand(0.8), endEffector.setEndEffectorSpeed(-1)));
   }
 }

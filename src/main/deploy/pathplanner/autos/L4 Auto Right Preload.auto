@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left L2"
+            "pathName": "Right to Reef"
           }
         },
         {
@@ -23,7 +23,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "L2 Preset"
+                  "name": "L4 Preset"
                 }
               }
             ]

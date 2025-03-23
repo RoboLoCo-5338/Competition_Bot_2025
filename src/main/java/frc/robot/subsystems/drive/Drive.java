@@ -111,11 +111,11 @@ public class Drive extends SubsystemBase {
       new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, new Pose2d());
   public TrapezoidProfile.Constraints autoConstraints = new Constraints(4.8, 4);
   public ProfiledPIDController autoXDriveController =
-      new ProfiledPIDController(2, 0.1, TunerConstants.driveGains.kD, autoConstraints);
+      new ProfiledPIDController(2, 0.2, TunerConstants.driveGains.kD, autoConstraints);
   public ProfiledPIDController autoYDriveController =
-      new ProfiledPIDController(2, 0.1, TunerConstants.driveGains.kD, autoConstraints);
+      new ProfiledPIDController(2, 0.2, TunerConstants.driveGains.kD, autoConstraints);
   public ProfiledPIDController autoTurnController =
-      new ProfiledPIDController(2, 0.1, 0, autoConstraints); // TODO: update angle max acceleration
+      new ProfiledPIDController(2, 0.2, 0, autoConstraints); // TODO: update angle max acceleration
 
   public boolean useVision = true;
 
