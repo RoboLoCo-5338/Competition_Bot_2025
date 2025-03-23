@@ -196,9 +196,13 @@ public class RobotContainer {
     NamedCommands.registerCommand("Endeffector Out", endEffector.setEndEffectorVelocity(60));
     NamedCommands.registerCommand("Endeffector Stop", endEffector.setEndEffectorVelocity(0));
     NamedCommands.registerCommand(
-        "Align Left", DriveCommands.reefAlign(drive, Direction.Left, driverController, led, () -> elevator.getElevatorPosition()));
+        "Align Left",
+        DriveCommands.reefAlign(
+            drive, Direction.Left, driverController, led, () -> elevator.getElevatorPosition()));
     NamedCommands.registerCommand(
-        "Align Right", DriveCommands.reefAlign(drive, Direction.Right, driverController, led, () -> elevator.getElevatorPosition()));
+        "Align Right",
+        DriveCommands.reefAlign(
+            drive, Direction.Right, driverController, led, () -> elevator.getElevatorPosition()));
     NamedCommands.registerCommand(
         "IntakeLaserCAN", EndEffectorCommands.moveEndEffectorLaserCan(endEffector));
     NamedCommands.registerCommand(
@@ -372,14 +376,26 @@ public class RobotContainer {
     driverController
         .povLeft()
         .and(() -> drive.useVision)
-        .onTrue(DriveCommands.reefAlign(drive, Direction.Left, driverController, led, () -> elevator.getElevatorPosition()));
+        .onTrue(
+            DriveCommands.reefAlign(
+                drive,
+                Direction.Left,
+                driverController,
+                led,
+                () -> elevator.getElevatorPosition()));
     driverController
         .povRight()
         .and(
             () -> {
               return drive.useVision;
             })
-        .onTrue(DriveCommands.reefAlign(drive, Direction.Right, driverController, led, () -> elevator.getElevatorPosition()));
+        .onTrue(
+            DriveCommands.reefAlign(
+                drive,
+                Direction.Right,
+                driverController,
+                led,
+                () -> elevator.getElevatorPosition()));
 
     driverController
         .rightTrigger()

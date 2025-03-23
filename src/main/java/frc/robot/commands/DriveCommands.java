@@ -25,7 +25,6 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -340,8 +339,10 @@ public class DriveCommands {
    * @return Command that makes the robot path to the destination
    */
   public static Command pathToDestination(
-      Drive drive, Supplier<PathDestination> destination, CommandXboxController driverController, DoubleSupplier elevatorHeight) {
-    System.out.println("runs");
+      Drive drive,
+      Supplier<PathDestination> destination,
+      CommandXboxController driverController,
+      DoubleSupplier elevatorHeight) {
     Pose2d targetPose = destination.get().getTargetPosition();
     Logger.recordOutput("Path to Destination", targetPose);
     if (Math.sqrt(
@@ -360,35 +361,45 @@ public class DriveCommands {
     } else {
 
       return new Command() {
+
         @Override
         public void initialize() {
-          System.out.println(DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red);
-          System.out.println(isFlipped);
-          drive.autoXDriveController.reset(new TrapezoidProfile.State(drive.getPose().getX(), drive.getChassisSpeeds().vxMetersPerSecond));
-          drive.autoYDriveController.reset(new TrapezoidProfile.State(drive.getPose().getY(), drive.getChassisSpeeds().vyMetersPerSecond));
-          drive.autoTurnController.reset(new TrapezoidProfile.State(drive.getPose().getRotation().getRadians(), drive.getChassisSpeeds().omegaRadiansPerSecond));
+          drive.autoXDriveController.reset(
+              new TrapezoidProfile.State(
+                  drive.getPose().getX(), drive.getChassisSpeeds().vxMetersPerSecond));
+          drive.autoYDriveController.reset(
+              new TrapezoidProfile.State(
+                  drive.getPose().getY(), drive.getChassisSpeeds().vyMetersPerSecond));
+          drive.autoTurnController.reset(
+              new TrapezoidProfile.State(
+                  drive.getPose().getRotation().getRadians(),
+                  drive.getChassisSpeeds().omegaRadiansPerSecond));
 
           // drive.autoXDriveController.setSetpoint(targetPose.getX());
           // drive.autoYDriveController.setSetpoint(targetPose.getY());
           // drive.autoTurnController.setSetpoint(targetPose.getRotation().getRadians());
-          drive.autoXDriveController.setGoal(new State(targetPose.getX(), 0));
-          drive.autoXDriveController.setGoal(new State(targetPose.getY(), 0));
-          drive.autoXDriveController.setGoal(new State(targetPose.getRotation().getRadians(), 0));
         }
 
         @Override
         public void execute() {
-          drive.autoConstraints= new TrapezoidProfile.Constraints(drive.autoConstraints.maxVelocity, -0.204561*Math.sqrt(9.60314*elevatorHeight.getAsDouble()+0.00114581)+4.00692); //https://www.desmos.com/calculator/8ovbs1zqzo
+          drive.autoXDriveController.setGoal(targetPose.getX());
+          drive.autoYDriveController.setGoal(targetPose.getY());
+          drive.autoTurnController.setGoal(targetPose.getRotation().getRadians());
+          drive.autoConstraints =
+              new TrapezoidProfile.Constraints(
+                  drive.autoConstraints.maxVelocity,
+                  -0.204561 * Math.sqrt(9.60314 * elevatorHeight.getAsDouble() + 0.00114581)
+                      + 4.00692); // https://www.desmos.com/calculator/8ovbs1zqzo
           drive.autoXDriveController.setConstraints(drive.autoConstraints);
           drive.autoYDriveController.setConstraints(drive.autoConstraints);
           drive.autoTurnController.setConstraints(drive.autoConstraints);
           drive.runVelocity(
               ChassisSpeeds.fromFieldRelativeSpeeds(
                   new ChassisSpeeds(
-                          drive.autoXDriveController.calculate(drive.getPose().getX()),
-                          drive.autoYDriveController.calculate(drive.getPose().getY()),
-                          drive.autoTurnController.calculate(
-                              drive.getPose().getRotation().getRadians())),
+                      drive.autoXDriveController.calculate(drive.getPose().getX()),
+                      drive.autoYDriveController.calculate(drive.getPose().getY()),
+                      drive.autoTurnController.calculate(
+                          drive.getPose().getRotation().getRadians())),
                   drive.getPose().getRotation()));
         }
 
@@ -400,9 +411,9 @@ public class DriveCommands {
             DriveCommands.canceled = true;
             System.out.println("Finishing!");
           }
-          return (drive.autoXDriveController.atSetpoint()
-                  && drive.autoYDriveController.atSetpoint()
-                  && drive.autoTurnController.atSetpoint())
+          return (drive.autoXDriveController.atGoal()
+                  && drive.autoYDriveController.atGoal()
+                  && drive.autoTurnController.atGoal())
               || canceled;
         }
 
@@ -560,9 +571,14 @@ public class DriveCommands {
   }
 
   public static Command reefAlign(
-      Drive drive, Direction direction, CommandXboxController controller, LED led, DoubleSupplier elevatorHeight) {
+      Drive drive,
+      Direction direction,
+      CommandXboxController controller,
+      LED led,
+      DoubleSupplier elevatorHeight) {
     return new InstantCommand( // I hate commands so much
         () -> {
+          System.out.println("reef align starts");
           ArrayList<Pose2d> poses = DriveCommands.getReefPoses(direction);
           canceled = false;
           RobotContainer.doRainbow = false;
