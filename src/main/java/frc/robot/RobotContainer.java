@@ -284,8 +284,8 @@ public class RobotContainer {
 
     operatorController
         .povUp()
-        .onTrue(PresetCommands.moveEndEffectorLaserCan(endEffector))
-        .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
+        .onTrue(PresetCommands.moveEndEffectorLaserCan(endEffector));
+        // .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
 
     operatorController
         .a()
