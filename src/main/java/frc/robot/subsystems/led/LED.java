@@ -1,6 +1,7 @@
 package frc.robot.subsystems.led;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.Seconds;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
@@ -50,7 +51,19 @@ public class LED extends SubsystemBase {
         });
   }
 
-  public InstantCommand turnOff() {
+  public RunCommand pulseBlue() {
+    LEDPattern blue = LEDPattern.solid(Color.kBlue);
+
+    LEDPattern pulsingBlue = blue.breathe(Seconds.of(5));
+    return new RunCommand(
+        () -> {
+          pulsingBlue.applyTo(buffer);
+          m_led.setData(buffer);
+          
+        },
+        this);
+  }
+   public InstantCommand turnOff() {
 
     return new InstantCommand(
         () -> {
@@ -91,24 +104,30 @@ public class LED extends SubsystemBase {
    */
   public static double getDistanceFromBarge(Drive drive) {
     if (DriverStation.getAlliance().orElse(Alliance.Blue).equals(Alliance.Blue)) {
-      return (-drive.getPose().getX() + 8.272272) / LEDConstants.BARGE_RANGE;
+      return (-drive.getPose().getX() + 8.272272);
     } else {
-      return (drive.getPose().getX() - 9.27) / LEDConstants.BARGE_RANGE;
+      return (drive.getPose().getX() - 9.27);
     }
   }
 
   public Trigger isCloseToBarge(Drive drive) {
     return new Trigger(
-        () -> getDistanceFromBarge(drive) < 1.0); // this is not in meters. its a percentage.
+        () -> getDistanceFromBarge(drive) < 1.45 && getDistanceFromBarge(drive) > 0.60);
+  }
+  public Trigger isCriticalToBarge(Drive drive) {
+    return new Trigger(
+        () -> getDistanceFromBarge(drive) < 0.60);
   }
 
-  public Command setBargeIndicator(Drive drive, Elevator elevator) {
-    return new RunCommand(
-        () -> {
-          LEDPattern.solid(Color.lerpRGB(Color.kOrange, Color.kBlue, getDistanceFromBarge(drive)))
-              .applyTo(buffer);
+  // public Command setBargeIndicator(Drive drive, Elevator elevator) {
+  //   return new RunCommand(
+  //       () -> {
+        
 
-          m_led.setData(buffer);
-        });
-  }
+  //         LEDPattern.solid(Color.kWhite)
+  //             .applyTo(buffer);
+
+  //         m_led.setData(buffer);
+  //       });
+  // }
 }

@@ -83,6 +83,7 @@ public class RobotContainer {
 
   public final LED led;
   public static boolean doRainbow = true;
+  public static boolean preEnable = true;
   private final Elevator elevator;
 
   private final GroundIntake groundIntake;
@@ -94,6 +95,7 @@ public class RobotContainer {
   private final Climb climb;
 
   private final Arm arm;
+
 
   public CommandXboxController driverController = new CommandXboxController(0);
 
@@ -225,19 +227,16 @@ public class RobotContainer {
 
     // Configure the button bindings
     configureButtonBindings();
-    new SequentialCommandGroup(
-            new WaitCommand(5.0),
-            led.turnColor(Color.kWhite),
-            new WaitCommand(0.3),
-            led.turnOff(),
-            new WaitCommand(0.3),
-            led.turnColor(Color.kWhite),
-            new WaitCommand(0.3),
-            led.turnOff(),
-            new WaitCommand(0.3),
-            led.turnColor(Color.kWhite))
-        .schedule(); // start it off as rainbow
-    new Trigger(() -> RobotContainer.doRainbow).whileTrue(startRainbow()); //
+    
+
+
+    // LED Stuff
+    new Trigger(() -> RobotContainer.doRainbow && !RobotContainer.preEnable).whileTrue(startRainbow()); 
+    new Trigger(() -> RobotContainer.preEnable).whileTrue(led.pulseBlue());
+
+    led.isCloseToBarge(drive).and(() -> !RobotContainer.preEnable).whileTrue(new InstantCommand(() -> RobotContainer.doRainbow = false)).whileTrue(led.turnColor(Color.kWhite)).onFalse(new InstantCommand(() -> RobotContainer.doRainbow = true));
+    led.isCriticalToBarge(drive).and(() -> !RobotContainer.preEnable).whileTrue(new InstantCommand(() -> RobotContainer.doRainbow = false)).whileTrue(led.turnColor(Color.kDarkBlue));
+    
   }
 
   public static double deadband(double controllerAxis) {
@@ -257,14 +256,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     // Default command, normal field-relative drive
 
-    led.isCloseToBarge(drive)
-        .whileTrue(
-            new InstantCommand(
-                () -> {
-                  RobotContainer.doRainbow = false;
-                }))
-        .onFalse(new InstantCommand(() -> RobotContainer.doRainbow = true))
-        .whileTrue(led.setBargeIndicator(drive, elevator));
+   
     elevator.setDefaultCommand(
         elevator.setElevatorVelocity(() -> deadband(-operatorController.getLeftY()) * 25));
 
