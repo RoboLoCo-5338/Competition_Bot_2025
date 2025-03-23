@@ -33,7 +33,6 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveCommands.Direction;
-import frc.robot.commands.EndEffectorCommands;
 import frc.robot.commands.PresetCommands;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.arm.Arm;
@@ -196,6 +195,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("L2 Preset", PresetCommands.presetL2(elevator, endEffector, arm));
 
     NamedCommands.registerCommand("Endeffector Out", endEffector.setEndEffectorVelocity(60));
+    NamedCommands.registerCommand("Endeffector Out L4", endEffector.setEndEffectorVelocity(-60));
     NamedCommands.registerCommand("Endeffector Stop", endEffector.setEndEffectorVelocity(0));
     NamedCommands.registerCommand(
         "Align Left",
@@ -206,7 +206,7 @@ public class RobotContainer {
         DriveCommands.reefAlign(
             drive, Direction.Right, driverController, led, () -> elevator.getElevatorPosition()));
     NamedCommands.registerCommand(
-        "IntakeLaserCAN", EndEffectorCommands.moveEndEffectorLaserCan(endEffector));
+        "IntakeLaserCAN", PresetCommands.moveEndEffectorLaserCan(endEffector));
     NamedCommands.registerCommand(
         "Stop Preset", PresetCommands.stopAll(elevator, endEffector, arm));
 
@@ -278,10 +278,10 @@ public class RobotContainer {
         .whileTrue(endEffector.setEndEffectorVelocity(-100))
         .onFalse(endEffector.setEndEffectorVelocity(0));
 
-    operatorController
-        .leftBumper()
-        .whileTrue(PresetCommands.netShoot(arm, endEffector))
-        .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
+    // operatorController
+    //     .povUp()
+    //     .onTrue(PresetCommands.moveEndEffectorLaserCan(endEffector))
+    //     .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
 
     operatorController
         .a()
@@ -410,7 +410,7 @@ public class RobotContainer {
   }
 
   public void teleopInit() {
-    SmartDashboard.putNumber("Laser Can", endEffector.io.getLaserCanmeasurement1());
+    SmartDashboard.putNumber("Laser Can", endEffector.io.getLaserCanMeasurement1());
     endEffector.setEndEffectorVelocity(0);
     elevator.setElevatorVelocity(() -> 0);
   }
