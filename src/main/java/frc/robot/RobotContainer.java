@@ -314,10 +314,10 @@ public class RobotContainer {
         .onTrue(PresetCommands.netShoot(arm, endEffector))
         .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
 
-    operatorController
-        .povUp()
-        .whileTrue(groundIntake.setGroundArmVelocity(() -> -10.0))
-        .onFalse(groundIntake.setGroundArmVelocity(() -> 0.0));
+    // operatorController
+    //     .povUp()
+    //     .whileTrue(groundIntake.setGroundArmVelocity(() -> -10.0))
+    //     .onFalse(groundIntake.setGroundArmVelocity(() -> 0.0));
 
     operatorController
         .povDown()
