@@ -235,7 +235,7 @@ public class RobotContainer {
     new Trigger(() -> RobotContainer.preEnable).whileTrue(led.pulseBlue());
 
     led.isCloseToBarge(drive).and(() -> !RobotContainer.preEnable).whileTrue(new InstantCommand(() -> RobotContainer.doRainbow = false)).whileTrue(led.turnColor(Color.kWhite)).onFalse(new InstantCommand(() -> RobotContainer.doRainbow = true));
-    led.isCriticalToBarge(drive).and(() -> !RobotContainer.preEnable).whileTrue(new InstantCommand(() -> RobotContainer.doRainbow = false)).whileTrue(led.turnColor(Color.kDarkBlue));
+    led.isCriticalToBarge(drive).and(() -> !RobotContainer.preEnable).whileTrue(new InstantCommand(() -> RobotContainer.doRainbow = false)).onTrue(led.sendBargeIndicator(operatorController)).whileTrue(led.turnColor(Color.kDarkBlue));
     
   }
 
