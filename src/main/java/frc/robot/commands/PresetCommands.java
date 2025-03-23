@@ -72,8 +72,9 @@ public class PresetCommands {
         new SequentialCommandGroup(new WaitCommand(0.8), endEffector.setEndEffectorSpeed(-1)));
   }
 
-    public static Command moveEndEffectorLaserCan(EndEffector endEffector) {
-    if (endEffector.getIO().getLaserCanMeasurement1() == -1 || endEffector.getIO().getLaserCanMeasurement2() == -1) {
+  public static Command moveEndEffectorLaserCan(EndEffector endEffector) {
+    if (endEffector.getIO().getLaserCanMeasurement1() == -1
+        || endEffector.getIO().getLaserCanMeasurement2() == -1) {
       System.out.println("At least one LaserCAN measurement is broken");
       return new InstantCommand();
     }

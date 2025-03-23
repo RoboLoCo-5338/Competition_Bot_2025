@@ -33,7 +33,6 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveCommands.Direction;
-import frc.robot.commands.EndEffectorCommands;
 import frc.robot.commands.PresetCommands;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.arm.Arm;
@@ -194,6 +193,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("L2 Preset", PresetCommands.presetL2(elevator, endEffector, arm));
 
     NamedCommands.registerCommand("Endeffector Out", endEffector.setEndEffectorVelocity(60));
+    NamedCommands.registerCommand("Endeffector Out L4", endEffector.setEndEffectorVelocity(-60));
     NamedCommands.registerCommand("Endeffector Stop", endEffector.setEndEffectorVelocity(0));
     NamedCommands.registerCommand(
         "Align Left", DriveCommands.reefAlign(drive, Direction.Left, driverController, led));
