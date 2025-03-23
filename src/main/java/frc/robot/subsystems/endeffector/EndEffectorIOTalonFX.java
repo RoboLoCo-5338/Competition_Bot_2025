@@ -65,7 +65,8 @@ public class EndEffectorIOTalonFX implements EndEffectorIO {
             endEffectorVelocity, endEffectorCurrent, endEffectorAppliedVolts);
 
     inputs.endEffectorConnected = effectorDebouncer.calculate(motor1Status.isOK());
-
+    inputs.endEffectorDistance1 = getLaserCanMeasurement1();
+    inputs.endEffectorDistance2 = getLaserCanMeasurement2();
     inputs.endEffectorVelocity = Units.rotationsToRadians(endEffectorVelocity.getValueAsDouble());
     inputs.endEffectorAppliedVolts = endEffectorAppliedVolts.getValueAsDouble();
     inputs.endEffectorCurrentAmps = endEffectorCurrent.getValueAsDouble();
@@ -83,11 +84,12 @@ public class EndEffectorIOTalonFX implements EndEffectorIO {
   }
 
   @Override
-  public int getLaserCanmeasurement1() {
+  public int getLaserCanMeasurement1() {
     Measurement m1 = LcEffector1.getMeasurement();
     if (m1 != null && m1.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
       return m1.distance_mm;
     } else {
+      System.out.println("lasercan 1 status: " + m1.status);
       return -1;
     }
   }
@@ -98,6 +100,7 @@ public class EndEffectorIOTalonFX implements EndEffectorIO {
     if (m2 != null && m2.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
       return m2.distance_mm;
     } else {
+      System.out.println("lasercan 2 status: " + m2.status);
       return -1;
     }
   }

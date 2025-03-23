@@ -200,7 +200,7 @@ public class RobotContainer {
     NamedCommands.registerCommand(
         "Align Right", DriveCommands.reefAlign(drive, Direction.Right, driverController, led));
     NamedCommands.registerCommand(
-        "IntakeLaserCAN", EndEffectorCommands.moveEndEffectorLaserCan(endEffector));
+        "IntakeLaserCAN", PresetCommands.moveEndEffectorLaserCan(endEffector));
     NamedCommands.registerCommand(
         "Stop Preset", PresetCommands.stopAll(elevator, endEffector, arm));
 
@@ -283,8 +283,8 @@ public class RobotContainer {
         .onFalse(endEffector.setEndEffectorVelocity(0));
 
     operatorController
-        .leftBumper()
-        .whileTrue(PresetCommands.netShoot(arm, endEffector))
+        .povUp()
+        .onTrue(PresetCommands.moveEndEffectorLaserCan(endEffector))
         .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
 
     operatorController
@@ -314,10 +314,10 @@ public class RobotContainer {
         .onTrue(PresetCommands.netShoot(arm, endEffector))
         .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
 
-    operatorController
-        .povUp()
-        .whileTrue(groundIntake.setGroundArmVelocity(() -> -5.0))
-        .onFalse(groundIntake.setGroundArmVelocity(() -> 0.0));
+    // operatorController
+    //     .povUp()
+    //     .whileTrue(groundIntake.setGroundArmVelocity(() -> -5.0))
+    //     .onFalse(groundIntake.setGroundArmVelocity(() -> 0.0));
 
     operatorController
         .povDown()
@@ -402,7 +402,7 @@ public class RobotContainer {
   }
 
   public void teleopInit() {
-    SmartDashboard.putNumber("Laser Can", endEffector.io.getLaserCanmeasurement1());
+    SmartDashboard.putNumber("Laser Can", endEffector.io.getLaserCanMeasurement1());
     endEffector.setEndEffectorVelocity(0);
     elevator.setElevatorVelocity(() -> 0);
   }

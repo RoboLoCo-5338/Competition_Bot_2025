@@ -71,6 +71,12 @@
           "data": {
             "name": "Endeffector Stop"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Left to Reef Move Back"
+          }
         }
       ]
     }

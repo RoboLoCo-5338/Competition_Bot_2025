@@ -14,31 +14,4 @@ public class EndEffectorCommands {
   public static double getEndEffectorPosition(EndEffector endEffector) {
     return endEffector.io.endEffectorMotor.getPosition().getValueAsDouble();
   }
-
-  public static Command moveEndEffectorLaserCan(EndEffector endEffector) {
-    // return new SequentialCommandGroup(
-    //     endEffector.setEndEffectorVelocity(60),
-    //     new WaitUntilCommand(
-    //         () ->
-    //             (endEffector.getIO().getLaserCanmeasurement1() > 101.6
-    //                 && endEffector.getIO().getLaserCanMeasurement2() > 101.6)),
-    //     endEffector.setEndEffectorSpeed(0));
-
-    return new SequentialCommandGroup(
-        new RunCommand(() -> endEffector.setEndEffectorVelocity(60), endEffector)
-            .until(
-                () ->
-                    (endEffector.getIO().getLaserCanmeasurement1() < 100
-                        && endEffector.getIO().getLaserCanMeasurement2() < 100)),
-        new RunCommand(() -> endEffector.setEndEffectorVelocity(60))
-            .until(
-                () ->
-                    (endEffector.getIO().getLaserCanMeasurement2() < 100
-                        && endEffector.getIO().getLaserCanmeasurement1() > 90)),
-        new RunCommand(() -> endEffector.setEndEffectorVelocity(60), endEffector)
-            .until(
-                () ->
-                    (endEffector.getIO().getLaserCanmeasurement1() < 100
-                        && endEffector.getIO().getLaserCanMeasurement2() < 100)));
-  }
 }
