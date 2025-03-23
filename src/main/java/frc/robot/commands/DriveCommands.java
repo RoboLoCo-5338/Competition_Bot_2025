@@ -375,9 +375,9 @@ public class DriveCommands {
                   drive.getPose().getRotation().getRadians(),
                   drive.getChassisSpeeds().omegaRadiansPerSecond));
 
-          drive.autoXDriveController.setTolerance(0.025);
-          drive.autoYDriveController.setTolerance(0.025);
-          drive.autoTurnController.setTolerance(0.025);
+          drive.autoXDriveController.setTolerance(0.05);
+          drive.autoYDriveController.setTolerance(0.05);
+          drive.autoTurnController.setTolerance(0.05);
           // drive.autoXDriveController.setSetpoint(targetPose.getX());
           // drive.autoYDriveController.setSetpoint(targetPose.getY());
           // drive.autoTurnController.setSetpoint(targetPose.getRotation().getRadians());
