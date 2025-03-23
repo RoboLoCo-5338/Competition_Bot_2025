@@ -206,8 +206,8 @@ public class RobotContainer {
         "IntakeLaserCAN", PresetCommands.moveEndEffectorLaserCan(endEffector));
     NamedCommands.registerCommand(
         "Stop Preset", PresetCommands.stopAll(elevator, endEffector, arm));
-    NamedCommands.registerCommand(
-        "StowPreset", PresetCommands.fullIn(elevator, endEffector, arm));
+    NamedCommands.registerCommand("StowPreset", PresetCommands.fullIn(elevator, endEffector, arm));
+    NamedCommands.registerCommand("Stow2", arm.setArmPosition(0.54));
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());

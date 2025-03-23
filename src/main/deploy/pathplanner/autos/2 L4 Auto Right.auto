@@ -93,6 +93,12 @@
         {
           "type": "named",
           "data": {
+            "name": "Stow2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "Stop Preset"
           }
         },
