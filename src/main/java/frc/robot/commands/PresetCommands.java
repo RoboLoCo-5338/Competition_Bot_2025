@@ -67,6 +67,6 @@ public class PresetCommands {
   public static Command netShoot(Arm arm, EndEffector endEffector) {
     return new ParallelCommandGroup(
         arm.setArmPosition(Constants.PresetConstants.armNet),
-        new SequentialCommandGroup(new WaitCommand(0.5), endEffector.setEndEffectorSpeed(-1)));
+        new SequentialCommandGroup(new WaitCommand(0.8), endEffector.setEndEffectorSpeed(-1)));
   }
 }
