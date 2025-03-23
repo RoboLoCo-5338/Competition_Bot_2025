@@ -37,9 +37,7 @@ public class PresetCommands {
 
   public static Command fullIn(Elevator elevator, EndEffector endEffector, Arm arm) {
     return new SequentialCommandGroup(
-        arm.setArmPosition(0.61),
-        new WaitCommand(0.3),
-        elevator.setElevatorPosition(0.05));
+        arm.setArmPosition(0.61), new WaitCommand(0.3), elevator.setElevatorPosition(0.05));
   }
 
   public static Command presetL2(Elevator elevator, EndEffector endEffector, Arm arm) {
