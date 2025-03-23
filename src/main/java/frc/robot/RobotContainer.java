@@ -232,9 +232,7 @@ public class RobotContainer {
     configureButtonBindings();
 
     // LED Stuff
-    new Trigger(() -> RobotContainer.doRainbow)
-        .whileTrue(startRainbow());
-    
+    new Trigger(() -> RobotContainer.doRainbow).whileTrue(startRainbow());
 
     led.isCloseToBarge(drive)
         .and(() -> !RobotContainer.preEnable)
