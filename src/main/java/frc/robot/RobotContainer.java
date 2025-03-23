@@ -231,9 +231,9 @@ public class RobotContainer {
     configureButtonBindings();
 
     // LED Stuff
-    new Trigger(() -> RobotContainer.doRainbow && !RobotContainer.preEnable)
+    new Trigger(() -> RobotContainer.doRainbow)
         .whileTrue(startRainbow());
-    new Trigger(() -> RobotContainer.preEnable).whileTrue(led.pulseBlue());
+    
 
     led.isCloseToBarge(drive)
         .and(() -> !RobotContainer.preEnable)
