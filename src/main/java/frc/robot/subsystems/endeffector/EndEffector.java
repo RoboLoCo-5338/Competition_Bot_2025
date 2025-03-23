@@ -33,7 +33,7 @@ public class EndEffector extends SubsystemBase {
   public Command setEndEffectorVelocity(double velocity) {
     return new InstantCommand(
         () -> {
-          System.out.println("Moving end effector");
+      
           io.setEndEffectorVelocity(velocity);
         },
         this);

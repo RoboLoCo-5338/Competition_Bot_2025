@@ -80,21 +80,26 @@ public class PresetCommands {
       return new InstantCommand();
     }
     return new SequentialCommandGroup(
+      new InstantCommand(() -> System.out.println("0")),
         new RepeatCommand(endEffector.setEndEffectorVelocity(60))
             .until(
                 () ->
                     (endEffector.getIO().getLaserCanMeasurement1() < 100
                         && endEffector.getIO().getLaserCanMeasurement2() < 100)),
-        new RepeatCommand(endEffector.setEndEffectorVelocity(60))
-            .until(
-                () ->
-                    (endEffector.getIO().getLaserCanMeasurement2() < 100
-                        && endEffector.getIO().getLaserCanMeasurement1() > 90)),
-        new RepeatCommand(endEffector.setEndEffectorVelocity(60))
-            .until(
-                () ->
-                    (endEffector.getIO().getLaserCanMeasurement1() < 100
-                        && endEffector.getIO().getLaserCanMeasurement2() < 100)),
-        endEffector.setEndEffectorVelocity(0.0));
+                        new InstantCommand(() -> System.out.println("1")),
+        // new RepeatCommand(endEffector.setEndEffectorVelocity(60))
+        //     .until(
+        //         () ->
+        //             (endEffector.getIO().getLaserCanMeasurement2() < 100
+        //                 && endEffector.getIO().getLaserCanMeasurement1() > 90)),
+        // new RepeatCommand(endEffector.setEndEffectorVelocity(60))
+        //     .until(
+        //         () ->
+        //             (endEffector.getIO().getLaserCanMeasurement1() < 100
+        //                 && endEffector.getIO().getLaserCanMeasurement2() < 100)),
+        endEffector.setEndEffectorVelocity(0.0),
+        new InstantCommand(() -> System.out.println("2"))
+        
+        );
   }
 }

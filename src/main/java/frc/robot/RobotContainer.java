@@ -282,10 +282,8 @@ public class RobotContainer {
         .whileTrue(endEffector.setEndEffectorVelocity(-100))
         .onFalse(endEffector.setEndEffectorVelocity(0));
 
-    operatorController
-        .povUp()
-        .onTrue(PresetCommands.moveEndEffectorLaserCan(endEffector));
-        // .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
+    operatorController.povUp().onTrue(PresetCommands.moveEndEffectorLaserCan(endEffector));
+    // .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
 
     operatorController
         .a()
