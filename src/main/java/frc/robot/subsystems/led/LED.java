@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -21,7 +20,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.LEDConstants;
 import frc.robot.commands.DriveCommands;
 import frc.robot.subsystems.drive.Drive;
-import frc.robot.subsystems.elevator.Elevator;
 
 public class LED extends SubsystemBase {
 
@@ -63,11 +61,11 @@ public class LED extends SubsystemBase {
         () -> {
           pulsingBlue.applyTo(buffer);
           m_led.setData(buffer);
-          
         },
         this);
   }
-   public InstantCommand turnOff() {
+
+  public InstantCommand turnOff() {
 
     return new InstantCommand(
         () -> {
@@ -118,28 +116,26 @@ public class LED extends SubsystemBase {
     return new Trigger(
         () -> getDistanceFromBarge(drive) < 1.45 && getDistanceFromBarge(drive) > 0.60);
   }
+
   public Trigger isCriticalToBarge(Drive drive) {
-    return new Trigger(
-        () -> getDistanceFromBarge(drive) < 0.60);
+    return new Trigger(() -> getDistanceFromBarge(drive) < 0.60);
   }
+
   public SequentialCommandGroup sendBargeIndicator(CommandXboxController controller) {
     return new SequentialCommandGroup(
         new InstantCommand(
             () -> {
               controller.setRumble(RumbleType.kBothRumble, 1.0);
-        
             }),
         new WaitCommand(0.5),
         new InstantCommand(
-          () -> {
-            controller.setRumble(RumbleType.kBothRumble, 0.0);
-            
-          }));
+            () -> {
+              controller.setRumble(RumbleType.kBothRumble, 0.0);
+            }));
   }
   // public Command setBargeIndicator(Drive drive, Elevator elevator) {
   //   return new RunCommand(
   //       () -> {
-        
 
   //         LEDPattern.solid(Color.kWhite)
   //             .applyTo(buffer);

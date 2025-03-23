@@ -535,8 +535,8 @@ public class DriveCommands {
         case Right:
           o = Reef.reefRight;
           break;
-        default: // TODO: add level 1
-          o = Reef.reefRight;
+        default:
+          o = Reef.reefLeft;
       }
       Rotation2d rot =
           VisionConstants.aprilTagLayout
