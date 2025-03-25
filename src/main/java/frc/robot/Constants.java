@@ -15,6 +15,10 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.Meters;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -43,16 +47,16 @@ public final class Constants {
   }
 
   public static final class PresetConstants {
-    public static final double elevatorl2 = 10; // This was 17 for testing PID
-    public static final double elevatorl3 = 16.95;
-    public static final double elevatorl4 = 19.35;
-    public static final double elevatorNet = 16.481;
+    public static final double elevatorl2 = 10.05; // This was 17 for testing PID
+    public static final double elevatorl3 = 17;
+    public static final double elevatorl4 = 19.40;
+    public static final double elevatorNet = 16.486;
     public static final double elevatorl3Algae = 0.0;
 
-    public static final double arml2 = 0.07;
-    public static final double arml3 = 0.07;
-    public static final double arml4 = 0.599;
-    public static final double armNet = 0.3;
+    public static final double arml2 = 0.543;
+    public static final double arml3 = 0.543;
+    public static final double arml4 = 0.89;
+    public static final double armNet = 0.950; // change
     public static final double arml3Algae = 0.0;
 
     public static final double elevatorIntake = 0.0;
@@ -107,10 +111,10 @@ public final class Constants {
 
     public static final class ElevatorPositionConstants {
       public static final double ELEVATOR_FEEDFORWARD = 0.0;
-      public static final double ELEVATOR_MOTOR_kP = 0.25; // 0.3
+      public static final double ELEVATOR_MOTOR_kP = 0.28; // 0.3
       public static final double ELEVATOR_MOTOR_kI = 0.02;
       public static final double ELEVATOR_MOTOR_kD = 0.00;
-      public static final double ELEVATOR_MOTOR_kG = 0.6; // 0.5
+      public static final double ELEVATOR_MOTOR_kG = 0.5; // 0.5
       public static final double ELEVATOR_MOTOR_kV = 0.0;
     }
 
@@ -149,8 +153,8 @@ public final class Constants {
     public static final double EFFECTOR_KV = 0.0;
     public static final double EFFECTOR_KFF = 0.0;
     public static final double EFFECTOR_KG = 0.05;
-    public static final int LASERCAN_1ID = -1;
-    public static final int LASERCAN_2ID = -1;
+    public static final int LASERCAN_1ID = 51;
+    public static final int LASERCAN_2ID = 52;
     // Sim Constants
     public static final double MOI = 0.0002048478;
     public static final double GEARING = 1;
@@ -197,7 +201,54 @@ public final class Constants {
   public static final class LEDConstants {
     // TODO change this
     public static final int LED_PWM_PORT = 0;
-    public static final int LED_LENGTH = 300;
+    public static final int LED_LENGTH = 123;
+    public static final int BARGE_RANGE = 1;
     public static final Distance LED_SPACING = Meters.of(1.0 / 50.0);
+  }
+
+  public class VisionConstants {
+    public static AprilTagFieldLayout aprilTagLayout =
+        AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeAndyMark);
+
+    // Camera names, must match names configured on coprocessor
+    public static String camera0Name = "camera_0";
+    public static String camera1Name = "camera_1";
+
+    // Robot to camera transforms
+    // (Not used by Limelight, configure in web UI instead)
+    public static Transform3d robotToCamera0 =
+        new Transform3d(
+            Units.inchesToMeters(11.12),
+            -Units.inchesToMeters(9.77),
+            Units.inchesToMeters(5.98),
+            new Rotation3d(0.0, -Units.degreesToRadians(10), Units.degreesToRadians(22)));
+    public static Transform3d robotToCamera1 =
+        new Transform3d(
+            Units.inchesToMeters(1.7),
+            Units.inchesToMeters(.24),
+            Units.inchesToMeters(36.7),
+            new Rotation3d(0.0, -0.0, Math.PI));
+
+    // Basic filtering thresholds
+    public static double maxAmbiguity = 0.3;
+    public static double maxZError = 0.75;
+
+    // Standard deviation baselines, for 1 meter distance and 1 tag
+    // (Adjusted automatically based on distance and # of tags)
+    public static double linearStdDevBaseline = 0.02; // Meters
+    public static double angularStdDevBaseline = 0.06; // Radians
+
+    // Standard deviation multipliers for each camera
+    // (Adjust to trust some cameras more than others)
+    public static double[] cameraStdDevFactors =
+        new double[] {
+          1.0, // Camera 0
+          2.0 // Camera 1
+        };
+
+    // Multipliers to apply for MegaTag 2 observations
+    public static double linearStdDevMegatag2Factor = 0.5; // More stable than full 3D solve
+    public static double angularStdDevMegatag2Factor =
+        Double.POSITIVE_INFINITY; // No rotation data available
   }
 }

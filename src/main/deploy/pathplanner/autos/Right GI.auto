@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Right to Reef"
+            "pathName": "Right to ReefGI"
           }
         },
         {
@@ -19,7 +19,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.0
+            "waitTime": 3.0
           }
         },
         {
@@ -27,11 +27,17 @@
           "data": {
             "name": "GroundI Stop"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Right Reef to SourceGI"
+          }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "GI",
   "choreoAuto": false
 }

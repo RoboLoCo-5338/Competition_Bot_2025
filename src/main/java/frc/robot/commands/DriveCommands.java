@@ -13,6 +13,9 @@
 
 package frc.robot.commands;
 
+import static edu.wpi.first.units.Units.Degrees;
+
+import com.pathplanner.lib.util.FlippingUtil;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -26,18 +29,29 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Constants.VisionConstants;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.led.LED;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
+import org.littletonrobotics.junction.Logger;
 
 public class DriveCommands {
   private static final double DEADBAND = 0.06;
+  public static boolean canceled = false;
   private static final double ANGLE_KP = 5.0;
   private static final double ANGLE_KD = 0.4;
   private static final double ANGLE_MAX_VELOCITY = 8.0;
@@ -46,6 +60,9 @@ public class DriveCommands {
   private static final double FF_RAMP_RATE = 0.1; // Volts/Sec
   private static final double WHEEL_RADIUS_MAX_VELOCITY = 0.25; // Rad/Sec
   private static final double WHEEL_RADIUS_RAMP_RATE = 0.05; // Rad/Sec^2
+
+  public static boolean isFlipped =
+      DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red;
 
   public static double slowMode = 1;
 
@@ -73,6 +90,7 @@ public class DriveCommands {
       DoubleSupplier xSupplier,
       DoubleSupplier ySupplier,
       DoubleSupplier omegaSupplier) {
+    System.out.println("is flipped:" + isFlipped);
 
     return Commands.run(
         () -> {
@@ -93,9 +111,6 @@ public class DriveCommands {
                   linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec(),
                   linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec(),
                   omega * drive.getMaxAngularSpeedRadPerSec());
-          boolean isFlipped =
-              DriverStation.getAlliance().isPresent()
-                  && DriverStation.getAlliance().get() == Alliance.Red;
           drive.runVelocity(
               ChassisSpeeds.fromFieldRelativeSpeeds(
                   speeds,
@@ -144,9 +159,6 @@ public class DriveCommands {
                       linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec(),
                       linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec(),
                       omega);
-              boolean isFlipped =
-                  DriverStation.getAlliance().isPresent()
-                      && DriverStation.getAlliance().get() == Alliance.Red;
               drive.runVelocity(
                   ChassisSpeeds.fromFieldRelativeSpeeds(
                       speeds,
@@ -291,10 +303,300 @@ public class DriveCommands {
                               + " inches");
                     })));
   }
+  /**
+   * Locks rotation onto the center of the reef
+   *
+   * @param drive Drivetrain
+   * @param xSupplier Supplier of x velocity
+   * @param ySupplier Supplier of y velocity
+   * @return Command to strafe around the reef center
+   */
+  public static Command reefStrafe(
+      Drive drive, DoubleSupplier xSupplier, DoubleSupplier ySupplier) {
+    return joystickDriveAtAngle(
+        drive,
+        xSupplier,
+        ySupplier,
+        () -> {
+          Translation2d robot = drive.getPose().getTranslation();
+          Translation2d reef =
+              (isFlipped) // TODO: switch to red
+                  ? new Translation2d(13.06185, 4.03)
+                  : new Translation2d(4.5, 4.03);
+          Logger.recordOutput("Test/ReefPose", reef);
+          Logger.recordOutput(
+              "Test/TurnAngle",
+              new Rotation2d(Math.atan2(reef.getY() - robot.getY(), reef.getX() - robot.getX())));
+          return new Rotation2d(Math.atan2(reef.getY() - robot.getY(), reef.getX() - robot.getX()));
+        });
+  }
+
+  /**
+   * Paths to one of the destinations on the field
+   *
+   * @param drive Drivetrain
+   * @param destination Destination that the robot paths to
+   * @return Command that makes the robot path to the destination
+   */
+  public static Command pathToDestination(
+      Drive drive,
+      Supplier<PathDestination> destination,
+      CommandXboxController driverController,
+      DoubleSupplier elevatorHeight) {
+    Pose2d targetPose = destination.get().getTargetPosition();
+    Logger.recordOutput("Path to Destination", targetPose);
+    if (Math.sqrt(
+            targetPose.minus(drive.getPose()).getX() * targetPose.minus(drive.getPose()).getX()
+                + targetPose.minus(drive.getPose()).getY()
+                    * targetPose.minus(drive.getPose()).getY())
+        > 3) {
+      return new InstantCommand();
+      //   PathConstraints constraints =
+      //       new PathConstraints(
+      //           drive.getMaxLinearSpeedMetersPerSec(),
+      //           3, // TODO:replace with a constant or smth
+      //           ANGLE_MAX_VELOCITY,
+      //           ANGLE_MAX_ACCELERATION);
+      //   return AutoBuilder.pathfindToPose(targetPose, constraints);
+    } else {
+
+      return new Command() {
+
+        @Override
+        public void initialize() {
+          drive.autoXDriveController.reset();
+          drive.autoYDriveController.reset();
+          drive.autoTurnController.reset();
+
+          drive.autoXDriveController.setTolerance(0.05);
+          drive.autoYDriveController.setTolerance(0.05);
+          drive.autoTurnController.setTolerance(0.05);
+          // drive.autoXDriveController.setSetpoint(targetPose.getX());
+          // drive.autoYDriveController.setSetpoint(targetPose.getY());
+          // drive.autoTurnController.setSetpoint(targetPose.getRotation().getRadians());
+        }
+
+        @Override
+        public void execute() {
+          drive.autoXDriveController.setSetpoint(targetPose.getX());
+          drive.autoYDriveController.setSetpoint(targetPose.getY());
+          drive.autoTurnController.setSetpoint(targetPose.getRotation().getRadians());
+          drive.runVelocity(
+              ChassisSpeeds.fromFieldRelativeSpeeds(
+                  new ChassisSpeeds(
+                      drive.autoXDriveController.calculate(drive.getPose().getX()),
+                      drive.autoYDriveController.calculate(drive.getPose().getY()),
+                      drive.autoTurnController.calculate(
+                          drive.getPose().getRotation().getRadians())),
+                  drive.getPose().getRotation()));
+        }
+
+        @Override
+        public boolean isFinished() {
+
+          boolean canceled = driverController.leftStick().getAsBoolean();
+          if (canceled) {
+            DriveCommands.canceled = true;
+            System.out.println("Finishing!");
+          }
+          return (drive.autoXDriveController.atSetpoint()
+                  && drive.autoYDriveController.atSetpoint()
+                  && drive.autoTurnController.atSetpoint())
+              || canceled;
+        }
+
+        @Override
+        public void end(boolean interrupted) {
+          System.out.println("done");
+        }
+      };
+    }
+  }
+
+  /**
+   * Util function to flip the pose of the alliance based on the alliance
+   *
+   * @param pose Pose to flip
+   * @return Flipped Pose
+   */
+  public static Pose2d allianceFlip(Pose2d pose) {
+    return (isFlipped) ? FlippingUtil.flipFieldPose(pose) : pose;
+  }
 
   private static class WheelRadiusCharacterizationState {
     double[] positions = new double[4];
     Rotation2d lastAngle = new Rotation2d();
     double gyroDelta = 0.0;
+  }
+
+  /** Abstract class for destinations to path to. */
+  public abstract static class PathDestination {
+    /**
+     * Gets the pose the robot should path to for reaching a certain destination.
+     *
+     * @return The pose the robot needs to path to.
+     */
+    public abstract Pose2d getTargetPosition();
+  }
+
+  /** Processor destination. */
+  public static class Processor extends PathDestination {
+    public Processor() {}
+
+    @Override
+    public Pose2d getTargetPosition() {
+      return allianceFlip(new Pose2d(5.980, 0.532, new Rotation2d()));
+    }
+  }
+
+  /**
+   * Coral Station destination. If a direction is specified, the robot goes to the specific coral
+   * station, otherwise it just goes to the closest coral station.
+   */
+  public static class CoralStation extends PathDestination {
+    Drive drive;
+    Direction station;
+    /**
+     * Creates a Coral Station destination based on a specific direction.
+     *
+     * @param drive Drivetrain.
+     * @param station Which Coral Station to path to, relative to the drivers' perspective. If None
+     *     is chosen, the closest station is pathed to.
+     */
+    public CoralStation(Drive drive, Direction station) {
+      this.station = station;
+      this.drive = drive;
+    }
+
+    public CoralStation(Drive drive) {
+      this.drive = drive;
+      this.station = Direction.None;
+    }
+
+    @Override
+    public Pose2d getTargetPosition() {
+      switch (station) {
+        case Left:
+          return allianceFlip(new Pose2d(1.56, 7.36, new Rotation2d(Degrees.of(-54))));
+        case Right:
+          return allianceFlip(new Pose2d(1.623, 0.682, new Rotation2d(Degrees.of(54))));
+        default:
+          return drive
+              .getPose()
+              .nearest(
+                  List.of(
+                      allianceFlip(new Pose2d(1.56, 7.36, new Rotation2d(Degrees.of(-54)))),
+                      allianceFlip(new Pose2d(1.623, 0.682, new Rotation2d(Degrees.of(54))))));
+      }
+    }
+  }
+  /** Reef destination. */
+  public static class Reef extends PathDestination {
+    Direction direction;
+    int tagId;
+    static Pose2d reefRight = new Pose2d(3.06, 3.77 + 0.05 + 0.0127, new Rotation2d());
+    static Pose2d reefLeft = new Pose2d(3.06, 4.175, new Rotation2d());
+    /**
+     * Creates a reef direction based on the currently visible tag.
+     *
+     * @param direction Whether to path to the left branch or the right branch
+     * @param tagId ID of the tag used for pathing.
+     */
+    public Reef(Direction direction, int tagId) {
+      this.direction = direction;
+      this.tagId = tagId;
+    }
+
+    @Override
+    public Pose2d getTargetPosition() {
+      // rotates the left or right pose around the reef based on the tag id
+      Pose2d o = new Pose2d();
+      switch (direction) {
+        case Right:
+          o = reefRight;
+          break;
+        default: // TODO: add level 1
+          o = reefLeft;
+      }
+      Rotation2d rot =
+          VisionConstants.aprilTagLayout.getTagPose(tagId).get().getRotation().toRotation2d();
+      if (!isFlipped) rot = rot.plus(new Rotation2d(Math.PI));
+      return allianceFlip(
+          o.rotateAround(
+              new Translation2d(4.5, 4.03),
+              // new Rotation2d(Math.PI));
+              rot));
+    }
+  }
+
+  public static ArrayList<Pose2d> getReefPoses(Direction direction) {
+    ArrayList<Pose2d> poses = new ArrayList<>();
+    for (int i = 0; i < 6; i++) {
+      Pose2d o = new Pose2d();
+      switch (direction) {
+        case Right:
+          o = Reef.reefRight;
+          break;
+        default:
+          o = Reef.reefLeft;
+      }
+      Rotation2d rot =
+          VisionConstants.aprilTagLayout
+              .getTagPose(i + ((isFlipped) ? 6 : 17))
+              .get()
+              .getRotation()
+              .toRotation2d();
+      if (!isFlipped) rot = rot.plus(new Rotation2d(Math.PI));
+      poses.add(
+          allianceFlip(
+              o.rotateAround(
+                  new Translation2d(4.5, 4.03),
+                  // new Rotation2d(Math.PI));
+                  rot)));
+    }
+    Pose2d[] p = new Pose2d[6];
+    poses.toArray(p);
+    Logger.recordOutput("Reef Poses", poses.toArray(p));
+    return poses;
+  }
+
+  public static Command reefAlign(
+      Drive drive,
+      Direction direction,
+      CommandXboxController controller,
+      LED led,
+      DoubleSupplier elevatorHeight) {
+    return new InstantCommand( // I hate commands so much
+        () -> {
+          System.out.println("reef align starts");
+          ArrayList<Pose2d> poses = DriveCommands.getReefPoses(direction);
+          canceled = false;
+          RobotContainer.doRainbow = false;
+          Command move =
+              pathToDestination(
+                  drive,
+                  () ->
+                      new Reef(
+                          direction,
+                          poses.indexOf(drive.getPose().nearest(poses)) + ((isFlipped) ? 6 : 17)),
+                  controller,
+                  elevatorHeight);
+
+          new SequentialCommandGroup(
+                  led.turnColor(
+                      Color.kOrange), // change to davids commit of wait 3 instead of flash
+                  move,
+                  new InstantCommand(() -> System.out.println(DriveCommands.canceled)),
+                  led.turnGreen(),
+                  new WaitCommand(3.0),
+                  new InstantCommand(() -> RobotContainer.doRainbow = true))
+              .schedule();
+        });
+  }
+
+  public enum Direction {
+    Left,
+    Right,
+    None
   }
 }

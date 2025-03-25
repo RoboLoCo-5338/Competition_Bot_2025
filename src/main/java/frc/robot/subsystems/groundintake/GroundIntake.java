@@ -47,4 +47,8 @@ public class GroundIntake extends SubsystemBase {
   public Command setGroundArmVelocity(DoubleSupplier velocity) {
     return new InstantCommand(() -> io.setArmVelocity(velocity.getAsDouble()), this);
   }
+
+  public Command setIntakeSpeed(double speed) {
+    return new InstantCommand(() -> io.setIntakeSpeed(-1));
+  }
 }

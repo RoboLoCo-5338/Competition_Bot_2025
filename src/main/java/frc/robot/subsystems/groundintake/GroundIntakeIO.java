@@ -39,6 +39,8 @@ public interface GroundIntakeIO {
 
   public default void setIntakeVelocity(double velocityRadPerSec) {}
 
+  public default void setIntakeSpeed(double speed) {}
+
   public default SparkFlexConfig getIntakeConfig() {
     SparkFlexConfig intakeConfig = new SparkFlexConfig();
 

@@ -16,9 +16,13 @@ package frc.robot;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants.DriveMotorArrangement;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants.SteerMotorArrangement;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Threads;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.DriveCommands;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.SimMechanism;
 import org.littletonrobotics.junction.LogFileUtil;
@@ -106,6 +110,7 @@ public class Robot extends LoggedRobot {
   /** This function is called periodically during all modes. */
   @Override
   public void robotPeriodic() {
+    // CommandScheduler.getInstance().schedule(robotContainer.led.setBargeIndicator(null, null));
     // Switch thread to high priority to improve loop timing
     Threads.setCurrentThreadPriority(true, 99);
 
@@ -115,14 +120,16 @@ public class Robot extends LoggedRobot {
     // This must be called from the robot's periodic block in order for anything in
     // the Command-based framework to work.
     CommandScheduler.getInstance().run();
-    robotContainer.periodic();
     // Return to normal thread priority
     Threads.setCurrentThreadPriority(false, 10);
   }
 
   /** This function is called once when the robot is disabled. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    robotContainer.doRainbow = false;
+    robotContainer.led.turnColor(Color.kRed).schedule();
+  }
 
   /** This function is called periodically when disabled. */
   @Override
@@ -131,12 +138,16 @@ public class Robot extends LoggedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+    DriveCommands.isFlipped = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red;
     autonomousCommand = robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
     if (autonomousCommand != null) {
       autonomousCommand.schedule();
     }
+    robotContainer.preEnable = false;
+    // robotContainer.startRainbow().schedule(); probably dont need this
+    ;
   }
 
   /** This function is called periodically during autonomous. */
@@ -153,12 +164,14 @@ public class Robot extends LoggedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
+    robotContainer.preEnable = false;
     robotContainer.teleopInit();
   }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
+    DriveCommands.isFlipped = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red;
     // CommandScheduler.getInstance().schedule(robotContainer.led.setRainbowLED());
     robotContainer.periodic();
   }

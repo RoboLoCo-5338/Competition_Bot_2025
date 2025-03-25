@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Center to Reef"
+            "pathName": "Center to ReefGI"
           }
         },
         {
@@ -19,7 +19,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.0
+            "waitTime": 3.0
           }
         },
         {
@@ -32,6 +32,6 @@
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "GI",
   "choreoAuto": false
 }

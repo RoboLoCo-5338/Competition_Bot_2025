@@ -48,4 +48,12 @@ public interface EndEffectorIO {
   }
 
   public default void setEndEffectorSpeed(double speed) {}
+
+  public default int getLaserCanMeasurement1() {
+    return -1;
+  }
+
+  public default int getLaserCanMeasurement2() {
+    return -1;
+  }
 }
