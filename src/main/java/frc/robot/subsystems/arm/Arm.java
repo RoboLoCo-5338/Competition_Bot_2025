@@ -43,7 +43,8 @@ public class Arm extends SubsystemBase {
    * @return A command that sets the arm to the given position.
    */
   public Command setArmPosition(double position) {
-    return new StartEndCommand(() -> io.setArmPosition(position), () -> io.setArmVelocity(0), this).until(()-> inputs.armPosition==position);
+    return new StartEndCommand(() -> io.setArmPosition(position), () -> io.setArmVelocity(0), this)
+        .until(() -> inputs.armPosition == position);
   }
 
   /**
