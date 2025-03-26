@@ -359,9 +359,12 @@ public class DriveCommands {
                           * targetPose.minus(drive.getPose()).getX()
                       + targetPose.minus(drive.getPose()).getY()
                           * targetPose.minus(drive.getPose()).getY())
-              > 3) {
+              > 3) { // This condition checks if the distance for auto aligning is less than 3. If
+            // it is greater, then something is likely wrong.
             return new InstantCommand();
-            //   PathConstraints constraints =
+
+            //   PathConstraints constraints = //This was for dynamic path generation. If we ever
+            // want it, uncomment this code.
             //       new PathConstraints(
             //           drive.getMaxLinearSpeedMetersPerSec(),
             //           3, // TODO:replace with a constant or smth
@@ -381,16 +384,13 @@ public class DriveCommands {
                 drive.autoXDriveController.setTolerance(0.05);
                 drive.autoYDriveController.setTolerance(0.05);
                 drive.autoTurnController.setTolerance(0.05);
-                // drive.autoXDriveController.setSetpoint(targetPose.getX());
-                // drive.autoYDriveController.setSetpoint(targetPose.getY());
-                // drive.autoTurnController.setSetpoint(targetPose.getRotation().getRadians());
+                drive.autoXDriveController.setSetpoint(targetPose.getX());
+                drive.autoYDriveController.setSetpoint(targetPose.getY());
+                drive.autoTurnController.setSetpoint(targetPose.getRotation().getRadians());
               }
 
               @Override
               public void execute() {
-                drive.autoXDriveController.setSetpoint(targetPose.getX());
-                drive.autoYDriveController.setSetpoint(targetPose.getY());
-                drive.autoTurnController.setSetpoint(targetPose.getRotation().getRadians());
                 drive.runVelocity(
                     ChassisSpeeds.fromFieldRelativeSpeeds(
                         new ChassisSpeeds(
@@ -422,7 +422,11 @@ public class DriveCommands {
             };
           }
         },
-        new HashSet<Subsystem>());
+        new HashSet<Subsystem>() {
+          {
+            add(drive);
+          }
+        });
   }
 
   /**
@@ -585,7 +589,7 @@ public class DriveCommands {
               canceled = false;
               RobotContainer.doRainbow = false;
             }),
-        led.turnColor(Color.kOrange), // change to davids commit of wait 3 instead of flash
+        led.turnColor(Color.kOrange),
         pathToDestination(
             drive,
             () ->
