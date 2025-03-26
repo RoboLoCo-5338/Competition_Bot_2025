@@ -90,7 +90,6 @@ public class DriveCommands {
       DoubleSupplier xSupplier,
       DoubleSupplier ySupplier,
       DoubleSupplier omegaSupplier) {
-    System.out.println("is flipped:" + isFlipped);
 
     return Commands.run(
         () -> {
@@ -397,7 +396,6 @@ public class DriveCommands {
           boolean canceled = driverController.leftStick().getAsBoolean();
           if (canceled) {
             DriveCommands.canceled = true;
-            System.out.println("Finishing!");
           }
           return (drive.autoXDriveController.atSetpoint()
                   && drive.autoYDriveController.atSetpoint()
@@ -407,7 +405,6 @@ public class DriveCommands {
 
         @Override
         public void end(boolean interrupted) {
-          System.out.println("done");
         }
       };
     }
@@ -568,7 +565,6 @@ public class DriveCommands {
       DoubleSupplier elevatorHeight) {
     return new InstantCommand( // I hate commands so much
         () -> {
-          System.out.println("reef align starts");
           ArrayList<Pose2d> poses = DriveCommands.getReefPoses(direction);
           canceled = false;
           RobotContainer.doRainbow = false;
@@ -586,7 +582,6 @@ public class DriveCommands {
                   led.turnColor(
                       Color.kOrange), // change to davids commit of wait 3 instead of flash
                   move,
-                  new InstantCommand(() -> System.out.println(DriveCommands.canceled)),
                   led.turnGreen(),
                   new WaitCommand(3.0),
                   new InstantCommand(() -> RobotContainer.doRainbow = true))

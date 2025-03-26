@@ -350,7 +350,6 @@ public class Drive extends SubsystemBase {
   }
 
   public void disableVision() {
-    System.out.println("Disabling vision");
     useVision = false;
   }
 

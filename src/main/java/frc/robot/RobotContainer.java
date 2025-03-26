@@ -342,7 +342,6 @@ public class RobotContainer {
         .onTrue(
             Commands.runOnce(
                     () -> {
-                      System.out.println("runs");
                       drive.disableVision();
                     })
                 .andThen(
@@ -398,9 +397,7 @@ public class RobotContainer {
   }
 
   public void periodic() {
-    // ButtonBindingsController.periodic();
     Logger.recordOutput("camera pose", Constants.VisionConstants.robotToCamera0);
-    // System.out.println(drive.useVision);
   }
 
   public void teleopInit() {

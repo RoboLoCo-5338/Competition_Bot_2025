@@ -36,7 +36,6 @@ public class LED extends SubsystemBase {
   }
 
   public InstantCommand turnGreen() {
-    System.out.println("command: " + DriveCommands.canceled);
 
     return new InstantCommand(
         () -> {
