@@ -111,8 +111,7 @@ public class Drive extends SubsystemBase {
       new PIDController(2, 0.2, TunerConstants.driveGains.kD);
   public PIDController autoYDriveController =
       new PIDController(2, 0.2, TunerConstants.driveGains.kD);
-  public PIDController autoTurnController =
-      new PIDController(2, 0.2, 0);
+  public PIDController autoTurnController = new PIDController(2, 0.2, 0);
 
   public boolean useVision = true;
 

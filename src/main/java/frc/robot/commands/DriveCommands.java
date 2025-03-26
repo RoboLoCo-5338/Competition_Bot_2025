@@ -319,9 +319,7 @@ public class DriveCommands {
         () -> {
           Translation2d robot = drive.getPose().getTranslation();
           Translation2d reef =
-              (isFlipped)
-                  ? new Translation2d(13.06185, 4.03)
-                  : new Translation2d(4.5, 4.03);
+              (isFlipped) ? new Translation2d(13.06185, 4.03) : new Translation2d(4.5, 4.03);
           Logger.recordOutput("Test/ReefPose", reef);
           Logger.recordOutput(
               "Test/TurnAngle",
@@ -404,8 +402,7 @@ public class DriveCommands {
         }
 
         @Override
-        public void end(boolean interrupted) {
-        }
+        public void end(boolean interrupted) {}
       };
     }
   }
@@ -507,6 +504,9 @@ public class DriveCommands {
     @Override
     public Pose2d getTargetPosition() {
       // rotates the left or right pose around the reef based on the tag id
+      return getReefPose(direction, tagId);
+    }
+    public static Pose2d getReefPose(Direction direction, int tagID){
       Pose2d o = new Pose2d();
       switch (direction) {
         case Right:
@@ -516,45 +516,42 @@ public class DriveCommands {
           o = reefLeft;
       }
       Rotation2d rot =
-          VisionConstants.aprilTagLayout.getTagPose(tagId).get().getRotation().toRotation2d();
+          VisionConstants.aprilTagLayout.getTagPose(tagID).get().getRotation().toRotation2d();
       if (!isFlipped) rot = rot.plus(new Rotation2d(Math.PI));
       return allianceFlip(
           o.rotateAround(
               new Translation2d(4.5, 4.03),
-              // new Rotation2d(Math.PI));
               rot));
     }
-  }
-
-  public static ArrayList<Pose2d> getReefPoses(Direction direction) {
-    ArrayList<Pose2d> poses = new ArrayList<>();
-    for (int i = 0; i < 6; i++) {
-      Pose2d o = new Pose2d();
-      switch (direction) {
-        case Right:
-          o = Reef.reefRight;
-          break;
-        default:
-          o = Reef.reefLeft;
+    public static ArrayList<Pose2d> getReefPoses(Direction direction) {
+      ArrayList<Pose2d> poses = new ArrayList<>();
+      for (int i = 0; i < 6; i++) {
+        Pose2d o = new Pose2d();
+        switch (direction) {
+          case Right:
+            o = Reef.reefRight;
+            break;
+          default:
+            o = Reef.reefLeft;
+        }
+        Rotation2d rot =
+            VisionConstants.aprilTagLayout
+                .getTagPose(i + ((isFlipped) ? 6 : 17))
+                .get()
+                .getRotation()
+                .toRotation2d();
+        if (!isFlipped) rot = rot.plus(new Rotation2d(Math.PI));
+        poses.add(
+            allianceFlip(
+                o.rotateAround(
+                    new Translation2d(4.5, 4.03),
+                    rot)));
       }
-      Rotation2d rot =
-          VisionConstants.aprilTagLayout
-              .getTagPose(i + ((isFlipped) ? 6 : 17))
-              .get()
-              .getRotation()
-              .toRotation2d();
-      if (!isFlipped) rot = rot.plus(new Rotation2d(Math.PI));
-      poses.add(
-          allianceFlip(
-              o.rotateAround(
-                  new Translation2d(4.5, 4.03),
-                  // new Rotation2d(Math.PI));
-                  rot)));
+      Pose2d[] p = new Pose2d[6];
+      poses.toArray(p);
+      Logger.recordOutput("Reef Poses", poses.toArray(p));
+      return poses;
     }
-    Pose2d[] p = new Pose2d[6];
-    poses.toArray(p);
-    Logger.recordOutput("Reef Poses", poses.toArray(p));
-    return poses;
   }
 
   public static Command reefAlign(
@@ -565,7 +562,7 @@ public class DriveCommands {
       DoubleSupplier elevatorHeight) {
     return new InstantCommand( // I hate commands so much
         () -> {
-          ArrayList<Pose2d> poses = DriveCommands.getReefPoses(direction);
+          ArrayList<Pose2d> poses = Reef.getReefPoses(direction);
           canceled = false;
           RobotContainer.doRainbow = false;
           Command move =
