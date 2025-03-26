@@ -397,7 +397,6 @@ public class RobotContainer {
   }
 
   public void periodic() {
-    Logger.recordOutput("camera pose", Constants.VisionConstants.robotToCamera0);
   }
 
   public void teleopInit() {

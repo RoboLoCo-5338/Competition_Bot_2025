@@ -320,10 +320,6 @@ public class DriveCommands {
           Translation2d robot = drive.getPose().getTranslation();
           Translation2d reef =
               (isFlipped) ? new Translation2d(13.06185, 4.03) : new Translation2d(4.5, 4.03);
-          Logger.recordOutput("Test/ReefPose", reef);
-          Logger.recordOutput(
-              "Test/TurnAngle",
-              new Rotation2d(Math.atan2(reef.getY() - robot.getY(), reef.getX() - robot.getX())));
           return new Rotation2d(Math.atan2(reef.getY() - robot.getY(), reef.getX() - robot.getX()));
         });
   }
@@ -549,7 +545,6 @@ public class DriveCommands {
       }
       Pose2d[] p = new Pose2d[6];
       poses.toArray(p);
-      Logger.recordOutput("Reef Poses", poses.toArray(p));
       return poses;
     }
   }
