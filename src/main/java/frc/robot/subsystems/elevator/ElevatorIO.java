@@ -116,7 +116,6 @@ public interface ElevatorIO {
    * @return the configuration used for the Talon FX motor controllers of the elevator subsystem
    */
   public default TalonFXConfiguration getConfiguration(int motorNum) {
-    // TODO change these values
     var config = new TalonFXConfiguration();
     config.Voltage.PeakForwardVoltage = 16;
     config.MotorOutput.NeutralMode = NeutralModeValue.Brake;

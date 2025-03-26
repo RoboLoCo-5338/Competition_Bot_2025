@@ -83,7 +83,6 @@ public interface GroundIntakeIO {
 
     armConfig
         .absoluteEncoder
-        // TODO CHECK THIS
         .inverted(true)
         .positionConversionFactor(1 / GroundIntakeConstants.ArmConstants.GEARING)
         .velocityConversionFactor(1 / GroundIntakeConstants.ArmConstants.GEARING);

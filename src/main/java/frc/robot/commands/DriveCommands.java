@@ -319,7 +319,7 @@ public class DriveCommands {
         () -> {
           Translation2d robot = drive.getPose().getTranslation();
           Translation2d reef =
-              (isFlipped) // TODO: switch to red
+              (isFlipped)
                   ? new Translation2d(13.06185, 4.03)
                   : new Translation2d(4.5, 4.03);
           Logger.recordOutput("Test/ReefPose", reef);
@@ -353,7 +353,7 @@ public class DriveCommands {
       //   PathConstraints constraints =
       //       new PathConstraints(
       //           drive.getMaxLinearSpeedMetersPerSec(),
-      //           3, // TODO:replace with a constant or smth
+      //           3, //needs to be replaced
       //           ANGLE_MAX_VELOCITY,
       //           ANGLE_MAX_ACCELERATION);
       //   return AutoBuilder.pathfindToPose(targetPose, constraints);
@@ -512,7 +512,7 @@ public class DriveCommands {
         case Right:
           o = reefRight;
           break;
-        default: // TODO: add level 1
+        default:
           o = reefLeft;
       }
       Rotation2d rot =

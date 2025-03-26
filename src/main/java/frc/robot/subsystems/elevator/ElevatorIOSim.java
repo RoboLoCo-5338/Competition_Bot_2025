@@ -35,15 +35,10 @@ public class ElevatorIOSim extends SimMechanism implements ElevatorIO {
   LoggedMechanismLigament2d elevator =
       root.append(new LoggedMechanismLigament2d("stage", ElevatorConstants.STARTING_HEIGHT, 90));
 
-  // this is empty, i will work on it later
-  // not if I work on it first
   public ElevatorIOSim() {
     super();
     elevatorMotor1.getConfigurator().apply(getConfiguration(1));
-
-    // TODO does this need to be inverted? idk bro does it?
     elevatorMotor2.getConfigurator().apply(getConfiguration(2));
-    // if it does, uncomment the below line.
     motor2Sim.Orientation = ChassisReference.Clockwise_Positive;
   }
 
