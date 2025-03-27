@@ -328,6 +328,10 @@ public final class Constants {
     Preferences.initDouble(PresetConstants.PREFERENCES_ID+"arml2", 0.543);
     Preferences.initDouble(PresetConstants.PREFERENCES_ID+"arml3", 0.543);
     Preferences.initDouble(PresetConstants.PREFERENCES_ID+"arml4", 0.89);
+    Preferences.initDouble("autoAlignTurnP", 2.0);
+    Preferences.initDouble("autoAlignTurnI", 0.2);
+    Preferences.initDouble("autoAlignDriveP", 2.0);
+    Preferences.initDouble("autoAlignDriveI", 0.2);
   }
 
   public static void reloadPreferences() {
@@ -337,9 +341,16 @@ public final class Constants {
     EndEffectorConstants.reloadConstants();
     GroundIntakeConstants.ArmConstants.reloadConstants();
     GroundIntakeConstants.IntakeConstants.reloadConstants();
+    PresetConstants.reloadConstants();
+    VisionConstants.reloadConstants();
   }
 
   public class VisionConstants {
+
+    public static double autoAligndriveP = Preferences.getDouble("autoAlignDriveP", 2.0);
+    public static double autoAligndriveI = Preferences.getDouble("autoAlignDriveI", 0.2);
+    public static double autoAlignturnP = Preferences.getDouble("autoAlignTurnP", 2.0);
+    public static double autoAlignturnI = Preferences.getDouble("autoAlignTurnI", 0.2);
     public static AprilTagFieldLayout aprilTagLayout =
         AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeAndyMark);
 
@@ -383,5 +394,12 @@ public final class Constants {
     public static double linearStdDevMegatag2Factor = 0.5; // More stable than full 3D solve
     public static double angularStdDevMegatag2Factor =
         Double.POSITIVE_INFINITY; // No rotation data available
+
+    public static void reloadConstants(){
+      autoAligndriveP = Preferences.getDouble("autoAlignDriveP", 2.0);
+      autoAligndriveI = Preferences.getDouble("autoAlignDriveI", 0.2);
+      autoAlignturnP = Preferences.getDouble("autoAlignTurnP", 2.0);
+      autoAlignturnI = Preferences.getDouble("autoAlignTurnI", 0.2);
+    }
   }
 }
