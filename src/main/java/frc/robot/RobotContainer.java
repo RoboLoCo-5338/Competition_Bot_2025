@@ -108,7 +108,7 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     switch (Constants.currentMode) {
-      case REAL -> {
+      case REAL:
         // Real robot, instantiate hardware IO implementations
         drive =
             new Drive(
@@ -134,9 +134,9 @@ public class RobotContainer {
         //  led.setBargeIndicator(drive, elevator);
         ButtonBindingsController =
             new ButtonBindings(drive, led, elevator, groundIntake, endEffector, climb, arm);
-      }
+        break;
 
-      case SIM -> {
+      case SIM:
         // Sim robot, instantiate physics sim IO implementations
         drive =
             new Drive(
@@ -160,9 +160,9 @@ public class RobotContainer {
                     VisionConstants.camera1Name, VisionConstants.robotToCamera1, drive::getPose));
         ButtonBindingsController =
             new ButtonBindings(drive, led, elevator, groundIntake, endEffector, climb, arm);
-      }
+        break;
 
-      default -> {
+      default:
         // Replayed robot, disable IO implementations
         drive =
             new Drive(
