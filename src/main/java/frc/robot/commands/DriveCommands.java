@@ -364,7 +364,7 @@ public class DriveCommands {
           drive.autoXDriveController.setTolerance(0.05);
           drive.autoYDriveController.setTolerance(0.05);
           drive.autoTurnController.setTolerance(0.05);
-          
+
           drive.autoXDriveController.setSetpoint(targetPose.getX());
           drive.autoYDriveController.setSetpoint(targetPose.getY());
           drive.autoTurnController.setSetpoint(targetPose.getRotation().getRadians());
@@ -517,26 +517,7 @@ public class DriveCommands {
     public static ArrayList<Pose2d> getReefPoses(Direction direction) {
       ArrayList<Pose2d> poses = new ArrayList<>();
       for (int i = 0; i < 6; i++) {
-        Pose2d o = new Pose2d();
-        switch (direction) {
-          case Right:
-            o = Reef.reefRight;
-            break;
-          default:
-            o = Reef.reefLeft;
-        }
-        Rotation2d rot =
-            VisionConstants.aprilTagLayout
-                .getTagPose(i + ((isFlipped) ? 6 : 17))
-                .get()
-                .getRotation()
-                .toRotation2d();
-        if (!isFlipped) rot = rot.plus(new Rotation2d(Math.PI));
-        poses.add(
-            allianceFlip(
-                o.rotateAround(
-                    new Translation2d(4.5, 4.03),
-                    rot)));
+        poses.add(getReefPose(direction, i));
       }
       Pose2d[] p = new Pose2d[6];
       poses.toArray(p);
