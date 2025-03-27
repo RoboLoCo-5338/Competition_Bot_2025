@@ -364,16 +364,14 @@ public class DriveCommands {
           drive.autoXDriveController.setTolerance(0.05);
           drive.autoYDriveController.setTolerance(0.05);
           drive.autoTurnController.setTolerance(0.05);
-          // drive.autoXDriveController.setSetpoint(targetPose.getX());
-          // drive.autoYDriveController.setSetpoint(targetPose.getY());
-          // drive.autoTurnController.setSetpoint(targetPose.getRotation().getRadians());
+          
+          drive.autoXDriveController.setSetpoint(targetPose.getX());
+          drive.autoYDriveController.setSetpoint(targetPose.getY());
+          drive.autoTurnController.setSetpoint(targetPose.getRotation().getRadians());
         }
 
         @Override
         public void execute() {
-          drive.autoXDriveController.setSetpoint(targetPose.getX());
-          drive.autoYDriveController.setSetpoint(targetPose.getY());
-          drive.autoTurnController.setSetpoint(targetPose.getRotation().getRadians());
           drive.runVelocity(
               ChassisSpeeds.fromFieldRelativeSpeeds(
                   new ChassisSpeeds(
@@ -396,9 +394,6 @@ public class DriveCommands {
                   && drive.autoTurnController.atSetpoint())
               || canceled;
         }
-
-        @Override
-        public void end(boolean interrupted) {}
       };
     }
   }
