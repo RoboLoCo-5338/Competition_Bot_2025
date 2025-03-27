@@ -29,13 +29,13 @@ public class ClimbIOSim extends SimMechanism implements ClimbIO {
   SingleJointedArmSim physicsSim =
       new SingleJointedArmSim(
           DCMotor.getKrakenX60(1),
-          ClimbConstants.GEARING,
-          ClimbConstants.MOI,
-          ClimbConstants.ARM_LENGTH,
-          ClimbConstants.MIN_ANGLE,
-          ClimbConstants.MAX_ANGLE,
+          ClimbConstants.ClimbSimConstants.GEARING,
+          ClimbConstants.ClimbSimConstants.MOI,
+          ClimbConstants.ClimbSimConstants.ARM_LENGTH,
+          ClimbConstants.ClimbSimConstants.MIN_ANGLE,
+          ClimbConstants.ClimbSimConstants.MAX_ANGLE,
           false,
-          ClimbConstants.STARTING_ANGLE);
+          ClimbConstants.ClimbSimConstants.STARTING_ANGLE);
   // Sim state of the TalonFX.
   TalonFXSimState simMotor = climbMotor.getSimState();
 

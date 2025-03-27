@@ -110,8 +110,6 @@ public interface ArmIO {
         .outputCurrentPeriodMs(20);
 
     // added 3/6
-    // armConfig.softLimit.forwardSoftLimitEnabled(true);
-    // armConfig.softLimit.forwardSoftLimit(0);
     armConfig.softLimit.reverseSoftLimitEnabled(true);
     armConfig.softLimit.reverseSoftLimit(0.485);
 

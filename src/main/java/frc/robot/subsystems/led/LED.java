@@ -17,8 +17,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.DriveCommands;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.drive.DriveConstants;
 
 public class LED extends SubsystemBase {
 
@@ -38,7 +38,7 @@ public class LED extends SubsystemBase {
 
     return new InstantCommand(
         () -> {
-          if (DriveCommands.canceled) {
+          if (DriveConstants.canceled) {
 
             LEDPattern red = LEDPattern.solid(Color.kRed);
             red.applyTo(buffer);
