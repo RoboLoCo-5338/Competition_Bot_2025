@@ -28,7 +28,6 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveCommands.Direction;
 import frc.robot.commands.PresetCommands;
@@ -61,10 +60,10 @@ import frc.robot.subsystems.groundintake.GroundIntakeIOSim;
 import frc.robot.subsystems.groundintake.GroundIntakeIOSpark;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.vision.VisionConstants;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOPhotonVision;
 import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
-import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -396,8 +395,7 @@ public class RobotContainer {
                 }));
   }
 
-  public void periodic() {
-  }
+  public void periodic() {}
 
   public void teleopInit() {
     SmartDashboard.putNumber("Laser Can", endEffector.io.getLaserCanMeasurement1());

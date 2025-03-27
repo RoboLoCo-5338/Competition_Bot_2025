@@ -5,7 +5,6 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
-import frc.robot.Constants.EndEffectorConstants;
 import frc.robot.subsystems.SimMechanism;
 
 public class EndEffectorIOSim extends SimMechanism implements EndEffectorIO {

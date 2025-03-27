@@ -36,10 +36,10 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Constants.VisionConstants;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.led.LED;
+import frc.robot.subsystems.vision.VisionConstants;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -497,7 +497,8 @@ public class DriveCommands {
       // rotates the left or right pose around the reef based on the tag id
       return getReefPose(direction, tagId);
     }
-    public static Pose2d getReefPose(Direction direction, int tagID){
+
+    public static Pose2d getReefPose(Direction direction, int targetTagId) {
       Pose2d o = new Pose2d();
       switch (direction) {
         case Right:
@@ -507,13 +508,11 @@ public class DriveCommands {
           o = reefLeft;
       }
       Rotation2d rot =
-          VisionConstants.aprilTagLayout.getTagPose(tagID).get().getRotation().toRotation2d();
+          VisionConstants.aprilTagLayout.getTagPose(targetTagId).get().getRotation().toRotation2d();
       if (!isFlipped) rot = rot.plus(new Rotation2d(Math.PI));
-      return allianceFlip(
-          o.rotateAround(
-              new Translation2d(4.5, 4.03),
-              rot));
+      return allianceFlip(o.rotateAround(new Translation2d(4.5, 4.03), rot));
     }
+
     public static ArrayList<Pose2d> getReefPoses(Direction direction) {
       ArrayList<Pose2d> poses = new ArrayList<>();
       for (int i = 0; i < 6; i++) {

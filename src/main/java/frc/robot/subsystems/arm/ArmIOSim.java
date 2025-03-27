@@ -13,7 +13,6 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
-import frc.robot.Constants.ArmConstants;
 import frc.robot.subsystems.SimMechanism;
 import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d;
