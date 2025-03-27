@@ -409,6 +409,7 @@ public class RobotContainer {
                   elevator.updatePID();
                   endEffector.updatePID();
                   groundIntake.updatePID();
+                    drive.updateAutoAlignConstants();
                 }));
   }
 

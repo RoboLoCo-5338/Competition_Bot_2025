@@ -49,6 +49,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.util.LocalADStarAK;
 import java.util.concurrent.locks.Lock;
@@ -387,5 +388,11 @@ public class Drive extends SubsystemBase {
       new Translation2d(TunerConstants.BackLeft.LocationX, TunerConstants.BackLeft.LocationY),
       new Translation2d(TunerConstants.BackRight.LocationX, TunerConstants.BackRight.LocationY)
     };
+  }
+
+  public void updateAutoAlignConstants(){
+    autoXDriveController.setPID(VisionConstants.autoAligndriveP, VisionConstants.autoAligndriveI, TunerConstants.driveGains.kD);
+    autoYDriveController.setPID(VisionConstants.autoAligndriveP, VisionConstants.autoAligndriveI, TunerConstants.driveGains.kD);
+    autoTurnController.setPID(VisionConstants.autoAlignturnP, VisionConstants.autoAlignturnI, TunerConstants.driveGains.kD);
   }
 }
