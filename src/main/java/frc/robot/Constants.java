@@ -48,20 +48,34 @@ public final class Constants {
   }
 
   public static final class PresetConstants {
-    public static final double elevatorl2 = 10.05; // This was 17 for testing PID
-    public static final double elevatorl3 = 17;
-    public static final double elevatorl4 = 19.40;
-    public static final double elevatorNet = 16.486;
-    public static final double elevatorl3Algae = 0.0;
+    public static final String PREFERENCES_ID = "preset";
+    public static double elevatorl2 = Preferences.getDouble(PREFERENCES_ID + "l2", 10.05); // This was 17 for testing PID
+    public static double elevatorl3 = Preferences.getDouble(PREFERENCES_ID + "l3",17);
+    public static double elevatorl4 = Preferences.getDouble(PREFERENCES_ID + "l4",19.40);
+    public static double elevatorNet = Preferences.getDouble(PREFERENCES_ID, 16.486);
 
-    public static final double arml2 = 0.543;
-    public static final double arml3 = 0.543;
-    public static final double arml4 = 0.89;
-    public static final double armNet = 0.950; // change
+    public static double arml2 = Preferences.getDouble(PREFERENCES_ID +"arml2",  0.543);
+    public static double arml3 = Preferences.getDouble(PREFERENCES_ID+"arml3", 0.543);
+    public static double arml4 =  Preferences.getDouble(PREFERENCES_ID+"arml4", 0.89);
+    public static double armNet = Preferences.getDouble(PREFERENCES_ID+"armnet",  0.950); // change
     public static final double arml3Algae = 0.0;
 
     public static final double elevatorIntake = 0.0;
     public static final double armIntake = 0.0;
+
+    public static void reloadConstants(){
+      elevatorl2 = Preferences.getDouble(PREFERENCES_ID + "l2", 10.05); 
+      elevatorl3 = Preferences.getDouble(PREFERENCES_ID + "l3",17);
+      elevatorl4 = Preferences.getDouble(PREFERENCES_ID + "l4",19.40);
+      elevatorNet = Preferences.getDouble(PREFERENCES_ID, 16.486);
+
+      arml2 = Preferences.getDouble(PREFERENCES_ID +"arml2", 0.543);  
+      arml3 = Preferences.getDouble(PREFERENCES_ID+"arml3", 0.543);
+      arml4 =  Preferences.getDouble(PREFERENCES_ID+"arml4", 0.89);
+      armNet = Preferences.getDouble(PREFERENCES_ID+"armnet",  0.950);
+
+      
+    }
   }
 
   public static final class ArmConstants {
@@ -149,12 +163,6 @@ public final class Constants {
 
     public static final double LASERCAN_TO_ELEVATOR_POSITION = 1.0;
     public static final double ELEVATOR_EPSILON = 1e-2;
-    public static double ELEVATOR_kP_LASERCAN =
-        Preferences.getDouble(PREFERENCES_ID + "kP_LASERCAN", 0.0);
-    public static double ELEVATOR_kI_LASERCAN =
-        Preferences.getDouble(PREFERENCES_ID + "kI_LASERCAN", 0.0);
-    public static double ELEVATOR_kD_LASERCAN =
-        Preferences.getDouble(PREFERENCES_ID + "kD_LASERCAN", 0.0);
     // Sim constants
     public static final double GEARING = 4;
     public static final double CARRIAGE_MASS = Units.lbsToKilograms(17.1910833);
@@ -187,9 +195,6 @@ public final class Constants {
           Preferences.getDouble(PREFERENCES_ID + "kG", 0.2);
       ElevatorVelocityConstants.ELEVATOR_MOTOR_kV =
           Preferences.getDouble(PREFERENCES_ID + "kV", 0.0);
-      ELEVATOR_kP_LASERCAN = Preferences.getDouble(PREFERENCES_ID + "kP_LASERCAN", 0.0);
-      ELEVATOR_kI_LASERCAN = Preferences.getDouble(PREFERENCES_ID + "kI_LASERCAN", 0.0);
-      ELEVATOR_kD_LASERCAN = Preferences.getDouble(PREFERENCES_ID + "kD_LASERCAN", 0.0);
     }
   }
 
@@ -309,9 +314,6 @@ public final class Constants {
           Preferences.initDouble(id + "kV", 0);
           Preferences.initDouble(id + "kFF", 0);
           Preferences.initDouble(id + "kS", 0);
-          Preferences.initDouble(id + "kP_LASERCAN", 0);
-          Preferences.initDouble(id + "kI_LASERCAN", 0);
-          Preferences.initDouble(id + "kD_LASERCAN", 0);
         }
         case "groundIntake", "groundIntakeArm" -> {
           Preferences.initDouble(id + "kV", 0);
@@ -320,6 +322,12 @@ public final class Constants {
         }
       }
     }
+    Preferences.initDouble(PresetConstants.PREFERENCES_ID + "l2", 10.05);
+    Preferences.initDouble(PresetConstants.PREFERENCES_ID + "l3", 17);
+    Preferences.initDouble(PresetConstants.PREFERENCES_ID + "l4", 19.40);
+    Preferences.initDouble(PresetConstants.PREFERENCES_ID+"arml2", 0.543);
+    Preferences.initDouble(PresetConstants.PREFERENCES_ID+"arml3", 0.543);
+    Preferences.initDouble(PresetConstants.PREFERENCES_ID+"arml4", 0.89);
   }
 
   public static void reloadPreferences() {
