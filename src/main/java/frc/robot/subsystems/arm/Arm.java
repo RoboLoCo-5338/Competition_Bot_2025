@@ -62,4 +62,8 @@ public class Arm extends SubsystemBase {
     SmartDashboard.putNumber("Getting in arm.java 2", io.getArmPosition(inputs));
     return () -> io.getArmPosition(inputs);
   }
+
+  public void updatePID() {
+    io.updatePID();
+  }
 }

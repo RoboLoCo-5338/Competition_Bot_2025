@@ -1,5 +1,7 @@
 package frc.robot.subsystems.arm;
 
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -118,6 +120,15 @@ public interface ArmIO {
     armConfig.softLimit.reverseSoftLimit(0.485);
 
     return armConfig;
+  }
+
+  public default void updatePID() {
+    SparkFlexConfig armConfig = new SparkFlexConfig();
+    armConfig.closedLoop.pidf(
+        ArmConstants.ARM_MOTOR_KP, ArmConstants.ARM_MOTOR_KI,
+        ArmConstants.ARM_MOTOR_KD, ArmConstants.ARM_MOTOR_KFF);
+    armMotor.configure(
+        armConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
   }
 
   public default double getArmPosition(ArmIOInputs inputs) {

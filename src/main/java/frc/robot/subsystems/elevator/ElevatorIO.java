@@ -1,6 +1,7 @@
 package frc.robot.subsystems.elevator;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
@@ -150,5 +151,22 @@ public interface ElevatorIO {
     config.CurrentLimits = currentConfig;
     if (motorNum == 2) config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     return config;
+  }
+
+  public default void updatePID() {
+    Slot0Configs pidConfig = new Slot0Configs();
+    pidConfig.kP = ElevatorConstants.ElevatorPositionConstants.ELEVATOR_MOTOR_kP;
+    pidConfig.kI = ElevatorConstants.ElevatorPositionConstants.ELEVATOR_MOTOR_kI;
+    pidConfig.kD = ElevatorConstants.ElevatorPositionConstants.ELEVATOR_MOTOR_kD;
+    pidConfig.kG = ElevatorConstants.ElevatorPositionConstants.ELEVATOR_MOTOR_kG;
+    pidConfig.kV = ElevatorConstants.ElevatorPositionConstants.ELEVATOR_MOTOR_kV;
+
+    pidConfig.kP = ElevatorConstants.ElevatorVelocityConstants.ELEVATOR_MOTOR_kP;
+    pidConfig.kI = ElevatorConstants.ElevatorVelocityConstants.ELEVATOR_MOTOR_kI;
+    pidConfig.kD = ElevatorConstants.ElevatorVelocityConstants.ELEVATOR_MOTOR_kD;
+    pidConfig.kG = ElevatorConstants.ElevatorVelocityConstants.ELEVATOR_MOTOR_kG;
+    pidConfig.kV = ElevatorConstants.ElevatorVelocityConstants.ELEVATOR_MOTOR_kV;
+    elevatorMotor1.getConfigurator().apply(pidConfig);
+    elevatorMotor2.getConfigurator().apply(pidConfig);
   }
 }

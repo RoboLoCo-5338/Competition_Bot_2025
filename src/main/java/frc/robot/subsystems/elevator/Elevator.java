@@ -98,6 +98,10 @@ public class Elevator extends SubsystemBase {
     return io;
   }
 
+  public void updatePID() {
+    io.updatePID();
+  }
+
   public double getElevatorPosition() {
     return inputs.elevator1Position;
   }

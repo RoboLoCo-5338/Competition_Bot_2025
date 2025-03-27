@@ -1,6 +1,7 @@
 package frc.robot.subsystems.endeffector;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -45,6 +46,16 @@ public interface EndEffectorIO {
     currentConfig.StatorCurrentLimit = EndEffectorConstants.EFFECTOR_CURRENT_LIMIT;
     config.CurrentLimits = currentConfig;
     return config;
+  }
+
+  public default void updatePID() {
+    Slot0Configs slot0 = new Slot0Configs();
+    slot0.kP = EndEffectorConstants.EFFECTOR_KP;
+    slot0.kI = EndEffectorConstants.EFFECTOR_KI;
+    slot0.kD = EndEffectorConstants.EFFECTOR_KD;
+    slot0.kG = EndEffectorConstants.EFFECTOR_KG;
+    slot0.kV = EndEffectorConstants.EFFECTOR_KV;
+    endEffectorMotor.getConfigurator().apply(slot0);
   }
 
   public default void setEndEffectorSpeed(double speed) {}

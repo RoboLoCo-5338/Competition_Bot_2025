@@ -45,4 +45,8 @@ public class EndEffector extends SubsystemBase {
   public EndEffectorIO getIO() {
     return io;
   }
+
+  public void updatePID() {
+    io.updatePID();
+  }
 }

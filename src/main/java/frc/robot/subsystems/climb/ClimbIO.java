@@ -1,6 +1,7 @@
 package frc.robot.subsystems.climb;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
@@ -84,5 +85,14 @@ public interface ClimbIO {
 
   public default void disableMotor() {
     climbMotor.stopMotor();
+  }
+
+  public default void updatePID() {
+    Slot0Configs slot0 = new Slot0Configs();
+    slot0.kP = ClimbConstants.CLIMB_kP;
+    slot0.kI = ClimbConstants.CLIMB_kI;
+    slot0.kD = ClimbConstants.CLIMB_kD;
+    slot0.kS = ClimbConstants.CLIMB_kS;
+    climbMotor.getConfigurator().apply(slot0);
   }
 }

@@ -141,6 +141,7 @@ public class ButtonBindings {
             entry("D - x", "Lock to Zero"),
             entry("D - a", "Climb Preset"),
             entry("D - y", "Gyro Reset"),
+            entry("D - b", "Reload PID"),
             entry("D - Right Joystick Button", "Manual Climb Down"),
             entry("D - Left Joystick Button", "Manual Climb Up"),
             entry("D - Left Bumper", "L3 Preset"),
