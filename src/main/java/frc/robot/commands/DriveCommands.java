@@ -90,7 +90,6 @@ public class DriveCommands {
       DoubleSupplier xSupplier,
       DoubleSupplier ySupplier,
       DoubleSupplier omegaSupplier) {
-    System.out.println("is flipped:" + isFlipped);
 
     return Commands.run(
         () -> {
@@ -320,13 +319,7 @@ public class DriveCommands {
         () -> {
           Translation2d robot = drive.getPose().getTranslation();
           Translation2d reef =
-              (isFlipped) // TODO: switch to red
-                  ? new Translation2d(13.06185, 4.03)
-                  : new Translation2d(4.5, 4.03);
-          Logger.recordOutput("Test/ReefPose", reef);
-          Logger.recordOutput(
-              "Test/TurnAngle",
-              new Rotation2d(Math.atan2(reef.getY() - robot.getY(), reef.getX() - robot.getX())));
+              (isFlipped) ? new Translation2d(13.06185, 4.03) : new Translation2d(4.5, 4.03);
           return new Rotation2d(Math.atan2(reef.getY() - robot.getY(), reef.getX() - robot.getX()));
         });
   }
@@ -354,7 +347,7 @@ public class DriveCommands {
       //   PathConstraints constraints =
       //       new PathConstraints(
       //           drive.getMaxLinearSpeedMetersPerSec(),
-      //           3, // TODO:replace with a constant or smth
+      //           3, //needs to be replaced
       //           ANGLE_MAX_VELOCITY,
       //           ANGLE_MAX_ACCELERATION);
       //   return AutoBuilder.pathfindToPose(targetPose, constraints);
@@ -397,7 +390,6 @@ public class DriveCommands {
           boolean canceled = driverController.leftStick().getAsBoolean();
           if (canceled) {
             DriveCommands.canceled = true;
-            System.out.println("Finishing!");
           }
           return (drive.autoXDriveController.atSetpoint()
                   && drive.autoYDriveController.atSetpoint()
@@ -406,9 +398,7 @@ public class DriveCommands {
         }
 
         @Override
-        public void end(boolean interrupted) {
-          System.out.println("done");
-        }
+        public void end(boolean interrupted) {}
       };
     }
   }
@@ -510,54 +500,53 @@ public class DriveCommands {
     @Override
     public Pose2d getTargetPosition() {
       // rotates the left or right pose around the reef based on the tag id
+      return getReefPose(direction, tagId);
+    }
+    public static Pose2d getReefPose(Direction direction, int tagID){
       Pose2d o = new Pose2d();
       switch (direction) {
         case Right:
           o = reefRight;
           break;
-        default: // TODO: add level 1
+        default:
           o = reefLeft;
       }
       Rotation2d rot =
-          VisionConstants.aprilTagLayout.getTagPose(tagId).get().getRotation().toRotation2d();
+          VisionConstants.aprilTagLayout.getTagPose(tagID).get().getRotation().toRotation2d();
       if (!isFlipped) rot = rot.plus(new Rotation2d(Math.PI));
       return allianceFlip(
           o.rotateAround(
               new Translation2d(4.5, 4.03),
-              // new Rotation2d(Math.PI));
               rot));
     }
-  }
-
-  public static ArrayList<Pose2d> getReefPoses(Direction direction) {
-    ArrayList<Pose2d> poses = new ArrayList<>();
-    for (int i = 0; i < 6; i++) {
-      Pose2d o = new Pose2d();
-      switch (direction) {
-        case Right:
-          o = Reef.reefRight;
-          break;
-        default:
-          o = Reef.reefLeft;
+    public static ArrayList<Pose2d> getReefPoses(Direction direction) {
+      ArrayList<Pose2d> poses = new ArrayList<>();
+      for (int i = 0; i < 6; i++) {
+        Pose2d o = new Pose2d();
+        switch (direction) {
+          case Right:
+            o = Reef.reefRight;
+            break;
+          default:
+            o = Reef.reefLeft;
+        }
+        Rotation2d rot =
+            VisionConstants.aprilTagLayout
+                .getTagPose(i + ((isFlipped) ? 6 : 17))
+                .get()
+                .getRotation()
+                .toRotation2d();
+        if (!isFlipped) rot = rot.plus(new Rotation2d(Math.PI));
+        poses.add(
+            allianceFlip(
+                o.rotateAround(
+                    new Translation2d(4.5, 4.03),
+                    rot)));
       }
-      Rotation2d rot =
-          VisionConstants.aprilTagLayout
-              .getTagPose(i + ((isFlipped) ? 6 : 17))
-              .get()
-              .getRotation()
-              .toRotation2d();
-      if (!isFlipped) rot = rot.plus(new Rotation2d(Math.PI));
-      poses.add(
-          allianceFlip(
-              o.rotateAround(
-                  new Translation2d(4.5, 4.03),
-                  // new Rotation2d(Math.PI));
-                  rot)));
+      Pose2d[] p = new Pose2d[6];
+      poses.toArray(p);
+      return poses;
     }
-    Pose2d[] p = new Pose2d[6];
-    poses.toArray(p);
-    Logger.recordOutput("Reef Poses", poses.toArray(p));
-    return poses;
   }
 
   public static Command reefAlign(
@@ -568,8 +557,7 @@ public class DriveCommands {
       DoubleSupplier elevatorHeight) {
     return new InstantCommand( // I hate commands so much
         () -> {
-          System.out.println("reef align starts");
-          ArrayList<Pose2d> poses = DriveCommands.getReefPoses(direction);
+          ArrayList<Pose2d> poses = Reef.getReefPoses(direction);
           canceled = false;
           RobotContainer.doRainbow = false;
           Command move =
@@ -586,7 +574,6 @@ public class DriveCommands {
                   led.turnColor(
                       Color.kOrange), // change to davids commit of wait 3 instead of flash
                   move,
-                  new InstantCommand(() -> System.out.println(DriveCommands.canceled)),
                   led.turnGreen(),
                   new WaitCommand(3.0),
                   new InstantCommand(() -> RobotContainer.doRainbow = true))

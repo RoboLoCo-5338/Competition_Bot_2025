@@ -78,20 +78,16 @@ public class PresetCommands {
   }
 
   public static Command moveEndEffectorLaserCan(EndEffector endEffector) {
-    System.out.println("Moving end effector");
     if (endEffector.getIO().getLaserCanMeasurement1() == -1
         || endEffector.getIO().getLaserCanMeasurement2() == -1) {
-      System.out.println("At least one LaserCAN measurement is broken");
       return new InstantCommand();
     }
     return new SequentialCommandGroup(
-        new InstantCommand(() -> System.out.println("0")),
         new RepeatCommand(endEffector.setEndEffectorVelocity(60))
             .until(
                 () ->
                     (endEffector.getIO().getLaserCanMeasurement1() < 100
                         && endEffector.getIO().getLaserCanMeasurement2() < 100)),
-        new InstantCommand(() -> System.out.println("1")),
         // new RepeatCommand(endEffector.setEndEffectorVelocity(60))
         //     .until(
         //         () ->
@@ -102,7 +98,6 @@ public class PresetCommands {
         //         () ->
         //             (endEffector.getIO().getLaserCanMeasurement1() < 100
         //                 && endEffector.getIO().getLaserCanMeasurement2() < 100)),
-        endEffector.setEndEffectorVelocity(0.0),
-        new InstantCommand(() -> System.out.println("2")));
+        endEffector.setEndEffectorVelocity(0.0));
   }
 }

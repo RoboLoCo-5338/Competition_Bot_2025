@@ -70,7 +70,6 @@ public class Drive extends SubsystemBase {
               Math.hypot(TunerConstants.BackRight.LocationX, TunerConstants.BackRight.LocationY)));
 
   // PathPlanner config constants
-  // TODO: change these constants
   private static final double ROBOT_MASS_KG = 50.088;
   private static final double ROBOT_MOI = 6.883;
   private static final double WHEEL_COF = 0.975;
@@ -112,8 +111,7 @@ public class Drive extends SubsystemBase {
       new PIDController(2, 0.2, TunerConstants.driveGains.kD);
   public PIDController autoYDriveController =
       new PIDController(2, 0.2, TunerConstants.driveGains.kD);
-  public PIDController autoTurnController =
-      new PIDController(2, 0.2, 0); // TODO: update angle max acceleration
+  public PIDController autoTurnController = new PIDController(2, 0.2, 0);
 
   public boolean useVision = true;
 
@@ -350,7 +348,6 @@ public class Drive extends SubsystemBase {
   }
 
   public void disableVision() {
-    System.out.println("Disabling vision");
     useVision = false;
   }
 

@@ -35,7 +35,6 @@ public class ElevatorIOTalonFX implements ElevatorIO {
   public ElevatorIOTalonFX() {
     elevatorMotor1.getConfigurator().apply(getConfiguration(1));
 
-    // TODO does this need to be inverted? idk bro does it? It does
     elevatorMotor2.getConfigurator().apply(getConfiguration(2));
     elevatorMotor1.setPosition(0);
     elevatorMotor2.setPosition(0);

@@ -76,7 +76,6 @@ public interface ClimbIO {
 
     var currentConfig = new CurrentLimitsConfigs();
     currentConfig.StatorCurrentLimitEnable = true;
-    // TODO change this later
     currentConfig.StatorCurrentLimit = ClimbConstants.CLIMB_MOTOR_CURRENT_LIMIT;
     config.CurrentLimits = currentConfig;
     return config;

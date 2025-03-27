@@ -90,7 +90,6 @@ public interface ArmIO {
         .voltageCompensation(12.0);
     armConfig
         .absoluteEncoder
-        // TODO CHECK THIS
         .inverted(true)
         .positionConversionFactor(1 / ArmConstants.GEARING)
         .velocityConversionFactor(1 / ArmConstants.GEARING);

@@ -99,11 +99,9 @@ public final class Constants {
     public static final double MIN_ANGLE = Units.degreesToRadians(-148.47);
     public static final double MAX_ANGLE = Units.degreesToRadians(-90);
     public static final double STARTING_ANGLE = Units.degreesToRadians(-148.47);
-    // test commits
   }
 
   public static final class ElevatorConstants {
-    // TODO change non sim constants
     public static final int ELEVATOR_MOTOR_ID1 = 42;
     public static final int ELEVATOR_MOTOR_ID2 = 45;
     public static final int ELEVATOR_MOTOR_CURRENT_LIMIT = 40;
@@ -162,7 +160,6 @@ public final class Constants {
 
   public static final class GroundIntakeConstants {
     public static final class ArmConstants {
-      // TODO change this
       public static final int ARM_CANID = 40; // CHANGED FOR TESTING
       public static final int ARM_CURRENT_LIMIT = 60;
       public static final double ARM_KP = 0.01;
@@ -199,7 +196,6 @@ public final class Constants {
   }
 
   public static final class LEDConstants {
-    // TODO change this
     public static final int LED_PWM_PORT = 0;
     public static final int LED_LENGTH = 123;
     public static final int BARGE_RANGE = 1;
