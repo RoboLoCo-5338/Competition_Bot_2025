@@ -14,6 +14,8 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import frc.robot.subsystems.SimMechanism;
+import frc.robot.subsystems.arm.ArmConstants.ArmSimConstants;
+
 import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d;
 
@@ -23,13 +25,13 @@ public class ArmIOSim extends SimMechanism implements ArmIO {
   SingleJointedArmSim armPhysicsSim =
       new SingleJointedArmSim(
           armGearBox,
-          ArmConstants.GEARING,
-          ArmConstants.MOI,
-          ArmConstants.LENGTH,
-          ArmConstants.MIN_ANGLE,
-          ArmConstants.MAX_ANGLE,
+          ArmSimConstants.GEARING,
+          ArmSimConstants.MOI,
+          ArmSimConstants.LENGTH,
+          ArmSimConstants.MIN_ANGLE,
+          ArmSimConstants.MAX_ANGLE,
           false,
-          ArmConstants.STARTING_ANGLE);
+          ArmSimConstants.STARTING_ANGLE);
   SparkFlexSim armSim;
   SparkAbsoluteEncoderSim armEncoderSim;
   LoggedMechanismLigament2d armDrawn;
@@ -46,8 +48,8 @@ public class ArmIOSim extends SimMechanism implements ArmIO {
             .append(
                 new LoggedMechanismLigament2d(
                     "endEffectorArm",
-                    ArmConstants.LENGTH,
-                    Units.radiansToDegrees(ArmConstants.STARTING_ANGLE)));
+                    ArmSimConstants.LENGTH,
+                    Units.radiansToDegrees(ArmSimConstants.STARTING_ANGLE)));
   }
 
   @Override

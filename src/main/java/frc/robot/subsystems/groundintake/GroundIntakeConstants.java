@@ -14,15 +14,17 @@ public final class GroundIntakeConstants {
     public static final double ARM_KS = 0;
     public static final double ARM_KV = 0;
     // Sim stuff
-    public static final double GEARING = 1;
-    public static final double LENGTH = Units.inchesToMeters(18.5);
-    public static final double MOI =
-        SingleJointedArmSim.estimateMOI(
-            GroundIntakeConstants.ArmConstants.LENGTH, Units.lbsToKilograms(4.9));
-    public static final double MIN_ANGLE = Units.degreesToRadians(-106);
-    public static final double MAX_ANGLE = Units.degreesToRadians(0);
-    public static final double STARTING_ANGLE = Units.degreesToRadians(-106);
-    public static final double ARM_BASE_HEIGHT = Units.inchesToMeters(6.25);
+    public static final class ArmSimConstants{
+      public static final double GEARING = 1;
+      public static final double LENGTH = Units.inchesToMeters(18.5);
+      public static final double MOI =
+          SingleJointedArmSim.estimateMOI(
+              ArmSimConstants.LENGTH, Units.lbsToKilograms(4.9));
+      public static final double MIN_ANGLE = Units.degreesToRadians(-106);
+      public static final double MAX_ANGLE = Units.degreesToRadians(0);
+      public static final double STARTING_ANGLE = Units.degreesToRadians(-106);
+      public static final double ARM_BASE_HEIGHT = Units.inchesToMeters(6.25);
+    }
   }
 
   public static final class IntakeConstants {
@@ -35,7 +37,9 @@ public final class GroundIntakeConstants {
     public static final double INTAKE_KS = 0;
     public static final double INTAKE_KV = 0;
     // Sim stuff
-    public static final double MOI = 0.0002341117;
-    public static final double GEARING = 1;
+    public static final class IntakeSimConstants{
+      public static final double MOI = 0.0002341117;
+      public static final double GEARING = 1;
+    }
   }
 }

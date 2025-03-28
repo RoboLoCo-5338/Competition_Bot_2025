@@ -13,12 +13,13 @@ public final class ArmConstants {
   public static final double ARM_MOTOR_KFF = 0.0;
   public static final double ARM_MOTOR_KS = 0.0; // 0.1
   public static final int ARM_MOTOR_CURRENT_LIMIT = 60;
-  // Sim constants
-  public static final double GEARING = 1.0 / 1.125;
-  public static final double LENGTH = Units.inchesToMeters(22.9);
-  public static final double MOI =
-      SingleJointedArmSim.estimateMOI(ArmConstants.LENGTH, Units.lbsToKilograms(5.3754589));
-  public static final double MIN_ANGLE = Units.degreesToRadians(-90);
-  public static final double MAX_ANGLE = Units.degreesToRadians(103);
-  public static final double STARTING_ANGLE = Units.degreesToRadians(-90);
+  public static final class ArmSimConstants{
+    public static final double GEARING = 1.0 / 1.125;
+    public static final double LENGTH = Units.inchesToMeters(22.9);
+    public static final double MOI =
+        SingleJointedArmSim.estimateMOI(ArmSimConstants.LENGTH, Units.lbsToKilograms(5.3754589));
+    public static final double MIN_ANGLE = Units.degreesToRadians(-90);
+    public static final double MAX_ANGLE = Units.degreesToRadians(103);
+    public static final double STARTING_ANGLE = Units.degreesToRadians(-90);
+  }
 }
