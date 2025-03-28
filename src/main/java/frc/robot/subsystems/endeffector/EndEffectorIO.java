@@ -5,7 +5,6 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import frc.robot.Constants.EndEffectorConstants;
 import frc.robot.generated.TunerConstants;
 import org.littletonrobotics.junction.AutoLog;
 
@@ -29,12 +28,8 @@ public interface EndEffectorIO {
   public default void setEndEffectorVelocity(double velocity) {}
 
   public default TalonFXConfiguration getEndEffectorConfiguration() {
-    // TODO change these values
     var config = new TalonFXConfiguration();
     config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-    // TODO requres certain canges - remember
-    // IF NOT CHANGED WILL NOT WORK
-    // mfw i need to do canges 🤯
     config.Slot0.kP = EndEffectorConstants.EFFECTOR_KP;
     config.Slot0.kI = EndEffectorConstants.EFFECTOR_KI;
     config.Slot0.kD = EndEffectorConstants.EFFECTOR_KD;

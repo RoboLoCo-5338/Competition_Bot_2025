@@ -8,7 +8,6 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import frc.robot.Constants.ElevatorConstants;
 import frc.robot.generated.TunerConstants;
 import org.littletonrobotics.junction.AutoLog;
 
@@ -116,7 +115,6 @@ public interface ElevatorIO {
    * @return the configuration used for the Talon FX motor controllers of the elevator subsystem
    */
   public default TalonFXConfiguration getConfiguration(int motorNum) {
-    // TODO change these values
     var config = new TalonFXConfiguration();
     config.Voltage.PeakForwardVoltage = 16;
     config.MotorOutput.NeutralMode = NeutralModeValue.Brake;

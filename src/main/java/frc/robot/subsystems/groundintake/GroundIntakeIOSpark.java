@@ -10,7 +10,6 @@ import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController.ArbFFUnits;
 import edu.wpi.first.math.filter.Debouncer;
-import frc.robot.Constants.GroundIntakeConstants;
 import java.util.function.DoubleSupplier;
 
 public class GroundIntakeIOSpark implements GroundIntakeIO {
