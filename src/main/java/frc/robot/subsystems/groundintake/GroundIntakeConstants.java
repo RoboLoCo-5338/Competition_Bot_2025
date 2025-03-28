@@ -13,8 +13,8 @@ public final class GroundIntakeConstants {
     public static final double ARM_KFF = 0;
     public static final double ARM_KS = 0;
     public static final double ARM_KV = 0;
-    public static final double POSITION_TOLERANCE = 0.05;
-    
+    public static final double POSITION_TOLERANCE = 0.005;
+
     public static final class ArmSimConstants {
       public static final double GEARING = 1;
       public static final double LENGTH = Units.inchesToMeters(18.5);
@@ -36,7 +36,7 @@ public final class GroundIntakeConstants {
     public static final double INTAKE_KFF = 0;
     public static final double INTAKE_KS = 0;
     public static final double INTAKE_KV = 0;
-    
+
     public static final class IntakeSimConstants {
       public static final double MOI = 0.0002341117;
       public static final double GEARING = 1;

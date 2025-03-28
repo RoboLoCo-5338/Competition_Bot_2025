@@ -389,21 +389,23 @@ public class DriveCommands {
               @Override
               public boolean isFinished() {
 
-          boolean canceled = driverController.leftStick().getAsBoolean();
-          if (canceled) {
-            DriveConstants.canceled = true;
+                boolean canceled = driverController.leftStick().getAsBoolean();
+                if (canceled) {
+                  DriveConstants.canceled = true;
+                }
+                return (drive.autoXDriveController.atSetpoint()
+                        && drive.autoYDriveController.atSetpoint()
+                        && drive.autoTurnController.atSetpoint())
+                    || canceled;
+              }
+            };
           }
-          return (drive.autoXDriveController.atSetpoint()
-                  && drive.autoYDriveController.atSetpoint()
-                  && drive.autoTurnController.atSetpoint())
-              || canceled;
-        }
-      };
-    }
-  }, new HashSet<Subsystem>()
-    {{
-      add(drive);
-      }});
+        },
+        new HashSet<Subsystem>() {
+          {
+            add(drive);
+          }
+        });
   }
 
   /**

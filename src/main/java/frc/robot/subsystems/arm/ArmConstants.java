@@ -13,7 +13,7 @@ public final class ArmConstants {
   public static final double ARM_MOTOR_KFF = 0.0;
   public static final double ARM_MOTOR_KS = 0.0; // 0.1
   public static final int ARM_MOTOR_CURRENT_LIMIT = 60;
-  public static final double POSITION_TOLERANCE = 0.05; //%
+  public static final double POSITION_TOLERANCE = 0.005; // %
 
   public static final class ArmSimConstants {
     public static final double GEARING = 1.0 / 1.125;

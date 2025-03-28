@@ -10,8 +10,6 @@ import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
-import frc.robot.subsystems.climb.ClimbConstants;
-
 import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.Logger;
 
@@ -43,7 +41,11 @@ public class GroundIntake extends SubsystemBase {
   }
 
   public Command setGroundArmPosition(double position) {
-    return new StartEndCommand(() -> io.setArmPosition(position), () -> io.setArmVelocity(0), this).until(() -> Math.abs((inputs.armPositionRad-position)/inputs.armPositionRad)<GroundIntakeConstants.ArmConstants.POSITION_TOLERANCE);
+    return new StartEndCommand(() -> io.setArmPosition(position), () -> io.setArmVelocity(0), this)
+        .until(
+            () ->
+                Math.abs((inputs.armPositionRad - position) / inputs.armPositionRad)
+                    < GroundIntakeConstants.ArmConstants.POSITION_TOLERANCE);
   }
 
   public Command setGroundArmVelocity(DoubleSupplier velocity) {
