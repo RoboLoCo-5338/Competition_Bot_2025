@@ -344,8 +344,10 @@ public final class Constants {
     Preferences.initDouble(PresetConstants.PREFERENCES_ID + "arml4", 0.89);
     Preferences.initDouble("autoAlignTurnP", 2.0);
     Preferences.initDouble("autoAlignTurnI", 0.2);
+    Preferences.initDouble("autoAlignTurnD", 0.2);
     Preferences.initDouble("autoAlignDriveP", 2.0);
     Preferences.initDouble("autoAlignDriveI", 0.2);
+    Preferences.initDouble("autoAlignTurnD", 0.2);
   }
 
   public static void reloadPreferences() {
@@ -363,8 +365,10 @@ public final class Constants {
 
     public static double autoAligndriveP = Preferences.getDouble("autoAlignDriveP", 2.0);
     public static double autoAligndriveI = Preferences.getDouble("autoAlignDriveI", 0.2);
+    public static double autoAligndriveD = Preferences.getDouble("autoAlignDriveI", 0.0);
     public static double autoAlignturnP = Preferences.getDouble("autoAlignTurnP", 2.0);
     public static double autoAlignturnI = Preferences.getDouble("autoAlignTurnI", 0.2);
+    public static double autoAlignturnD = Preferences.getDouble("autoAlignDriveI", 0.0);
     public static AprilTagFieldLayout aprilTagLayout =
         AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeAndyMark);
 
@@ -412,8 +416,10 @@ public final class Constants {
     public static void reloadConstants() {
       autoAligndriveP = Preferences.getDouble("autoAlignDriveP", 2.0);
       autoAligndriveI = Preferences.getDouble("autoAlignDriveI", 0.2);
+      autoAligndriveD = Preferences.getDouble("autoAlignTurnD", 0.0);
       autoAlignturnP = Preferences.getDouble("autoAlignTurnP", 2.0);
       autoAlignturnI = Preferences.getDouble("autoAlignTurnI", 0.2);
+      autoAlignturnD = Preferences.getDouble("autoAlignTurnD", 0.0);
     }
   }
 }
