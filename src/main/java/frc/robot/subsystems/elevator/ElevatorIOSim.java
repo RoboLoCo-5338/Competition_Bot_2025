@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import frc.robot.Constants;
 import frc.robot.subsystems.SimMechanism;
+import frc.robot.subsystems.elevator.ElevatorConstants.ElevatorSimConstants;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.mechanism.LoggedMechanism2d;
 import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d;
@@ -18,21 +19,21 @@ public class ElevatorIOSim extends SimMechanism implements ElevatorIO {
   ElevatorSim physicsSim =
       new ElevatorSim(
           DCMotor.getFalcon500(2),
-          ElevatorConstants.GEARING,
-          ElevatorConstants.CARRIAGE_MASS,
-          ElevatorConstants.DRUM_RADIUS,
-          ElevatorConstants.MIN_HEIGHT,
-          ElevatorConstants.MAX_HEIGHT,
+          ElevatorSimConstants.GEARING,
+          ElevatorSimConstants.CARRIAGE_MASS,
+          ElevatorSimConstants.DRUM_RADIUS,
+          ElevatorSimConstants.MIN_HEIGHT,
+          ElevatorSimConstants.MAX_HEIGHT,
           false,
-          ElevatorConstants.STARTING_HEIGHT);
+          ElevatorSimConstants.STARTING_HEIGHT);
 
   @AutoLogOutput(key = "Elevator/Mechanism")
   LoggedMechanism2d elevatorDrawn =
-      new LoggedMechanism2d(Constants.ROBOT_LENGTH, ElevatorConstants.MAX_HEIGHT);
+      new LoggedMechanism2d(Constants.ROBOT_LENGTH, ElevatorSimConstants.MAX_HEIGHT);
 
   LoggedMechanismRoot2d root = elevatorDrawn.getRoot("elevator", 0, Constants.FLOOR_TO_MECHANISM);
   LoggedMechanismLigament2d elevator =
-      root.append(new LoggedMechanismLigament2d("stage", ElevatorConstants.STARTING_HEIGHT, 90));
+      root.append(new LoggedMechanismLigament2d("stage", ElevatorSimConstants.STARTING_HEIGHT, 90));
 
   public ElevatorIOSim() {
     super();
@@ -63,13 +64,13 @@ public class ElevatorIOSim extends SimMechanism implements ElevatorIO {
     physicsSim.update(0.02);
 
     motor1Sim.setRawRotorPosition(
-        physicsSim.getPositionMeters() / ElevatorConstants.METERS_PER_ROTATION);
+        physicsSim.getPositionMeters() / ElevatorSimConstants.METERS_PER_ROTATION);
     motor2Sim.setRawRotorPosition(
-        physicsSim.getPositionMeters() / ElevatorConstants.METERS_PER_ROTATION);
+        physicsSim.getPositionMeters() / ElevatorSimConstants.METERS_PER_ROTATION);
     motor1Sim.setRotorVelocity(
-        physicsSim.getVelocityMetersPerSecond() / ElevatorConstants.METERS_PER_ROTATION);
+        physicsSim.getVelocityMetersPerSecond() / ElevatorSimConstants.METERS_PER_ROTATION);
     motor2Sim.setRotorVelocity(
-        physicsSim.getVelocityMetersPerSecond() / ElevatorConstants.METERS_PER_ROTATION);
+        physicsSim.getVelocityMetersPerSecond() / ElevatorSimConstants.METERS_PER_ROTATION);
 
     elevator.setLength(physicsSim.getPositionMeters());
   }
@@ -77,17 +78,17 @@ public class ElevatorIOSim extends SimMechanism implements ElevatorIO {
   @Override
   public void setElevatorVelocity(double velocity) {
     elevatorMotor1.setControl(
-        elevator1VelocityRequest.withVelocity(velocity / ElevatorConstants.METERS_PER_ROTATION));
+        elevator1VelocityRequest.withVelocity(velocity / ElevatorSimConstants.METERS_PER_ROTATION));
     elevatorMotor2.setControl(
-        elevator2VelocityRequest.withVelocity(velocity / ElevatorConstants.METERS_PER_ROTATION));
+        elevator2VelocityRequest.withVelocity(velocity / ElevatorSimConstants.METERS_PER_ROTATION));
   }
 
   @Override
   public void setElevatorPosition(double position) {
     elevatorMotor1.setControl(
-        elevator1PositionRequest.withPosition(position / ElevatorConstants.METERS_PER_ROTATION));
+        elevator1PositionRequest.withPosition(position / ElevatorSimConstants.METERS_PER_ROTATION));
     elevatorMotor2.setControl(
-        elevator2PositionRequest.withPosition(position / ElevatorConstants.METERS_PER_ROTATION));
+        elevator2PositionRequest.withPosition(position / ElevatorSimConstants.METERS_PER_ROTATION));
   }
 
   @Override

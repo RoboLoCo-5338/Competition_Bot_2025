@@ -80,7 +80,8 @@ public class GroundIntakeIOSim extends SimMechanism implements GroundIntakeIO {
                 new LoggedMechanismLigament2d(
                     "arm",
                     GroundIntakeConstants.ArmConstants.ArmSimConstants.LENGTH,
-                    Units.radiansToDegrees(GroundIntakeConstants.ArmConstants.ArmSimConstants.STARTING_ANGLE)));
+                    Units.radiansToDegrees(
+                        GroundIntakeConstants.ArmConstants.ArmSimConstants.STARTING_ANGLE)));
   }
 
   @Override

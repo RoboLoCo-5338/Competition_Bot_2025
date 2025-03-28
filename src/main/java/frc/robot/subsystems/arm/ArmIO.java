@@ -6,6 +6,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
+import frc.robot.subsystems.arm.ArmConstants.ArmSimConstants;
 import org.littletonrobotics.junction.AutoLog;
 
 public interface ArmIO {
@@ -90,8 +91,8 @@ public interface ArmIO {
     armConfig
         .absoluteEncoder
         .inverted(true)
-        .positionConversionFactor(1 / ArmConstants.GEARING)
-        .velocityConversionFactor(1 / ArmConstants.GEARING);
+        .positionConversionFactor(1 / ArmSimConstants.GEARING)
+        .velocityConversionFactor(1 / ArmSimConstants.GEARING);
     armConfig
         .closedLoop
         .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)

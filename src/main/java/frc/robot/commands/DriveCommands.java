@@ -130,7 +130,8 @@ public class DriveCommands {
             DriveConstants.ANGLE_KP,
             0.0,
             DriveConstants.ANGLE_KD,
-            new TrapezoidProfile.Constraints(DriveConstants.ANGLE_MAX_VELOCITY, DriveConstants.ANGLE_MAX_ACCELERATION));
+            new TrapezoidProfile.Constraints(
+                DriveConstants.ANGLE_MAX_VELOCITY, DriveConstants.ANGLE_MAX_ACCELERATION));
     angleController.enableContinuousInput(-Math.PI, Math.PI);
 
     // Construct command
@@ -355,9 +356,9 @@ public class DriveCommands {
           drive.autoYDriveController.reset();
           drive.autoTurnController.reset();
 
-          drive.autoXDriveController.setTolerance(0.05);
-          drive.autoYDriveController.setTolerance(0.05);
-          drive.autoTurnController.setTolerance(0.05);
+          drive.autoXDriveController.setTolerance(DriveConstants.AUTO_ALIGN_X_TOLERANCE);
+          drive.autoYDriveController.setTolerance(DriveConstants.AUTO_ALIGN_Y_TOLERANCE);
+          drive.autoTurnController.setTolerance(DriveConstants.AUTO_ALIGN_ANGULAR_TOLERANCE);
 
           drive.autoXDriveController.setSetpoint(targetPose.getX());
           drive.autoYDriveController.setSetpoint(targetPose.getY());

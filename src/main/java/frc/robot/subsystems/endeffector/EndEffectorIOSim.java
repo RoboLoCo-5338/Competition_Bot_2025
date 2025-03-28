@@ -13,7 +13,9 @@ public class EndEffectorIOSim extends SimMechanism implements EndEffectorIO {
   FlywheelSim physicsSim =
       new FlywheelSim(
           LinearSystemId.createFlywheelSystem(
-              DCMotor.getKrakenX60(1), EndEffectorSimConstants.MOI, EndEffectorSimConstants.GEARING),
+              DCMotor.getKrakenX60(1),
+              EndEffectorSimConstants.MOI,
+              EndEffectorSimConstants.GEARING),
           DCMotor.getKrakenX60(1));
 
   public EndEffectorIOSim() {

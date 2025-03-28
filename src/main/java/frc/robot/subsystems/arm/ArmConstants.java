@@ -13,7 +13,8 @@ public final class ArmConstants {
   public static final double ARM_MOTOR_KFF = 0.0;
   public static final double ARM_MOTOR_KS = 0.0; // 0.1
   public static final int ARM_MOTOR_CURRENT_LIMIT = 60;
-  public static final class ArmSimConstants{
+
+  public static final class ArmSimConstants {
     public static final double GEARING = 1.0 / 1.125;
     public static final double LENGTH = Units.inchesToMeters(22.9);
     public static final double MOI =

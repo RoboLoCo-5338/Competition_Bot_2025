@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import frc.robot.subsystems.SimMechanism;
 import frc.robot.subsystems.arm.ArmConstants.ArmSimConstants;
-
 import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d;
 
