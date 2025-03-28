@@ -53,6 +53,7 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.util.LocalADStarAK;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -140,7 +141,7 @@ public class Drive extends SubsystemBase {
         this::getPose,
         this::setPose,
         this::getChassisSpeeds,
-        this::runVelocity,
+        this::runVelocityNoCap,
         new PPHolonomicDriveController(
             new PIDConstants(5.0, 0.0, 0.0), new PIDConstants(5.0, 0.0, 0.0)),
         PP_CONFIG,
@@ -230,12 +231,30 @@ public class Drive extends SubsystemBase {
   }
 
   /**
+   * Get the percent of full acceleration to run motors at as a function of the elevator height
+   *
+   * @param height the height returned by elevator getposition
+   */
+  public double elevatorAccelCurve(double height) {
+    // gotta figure out the best curve for this at some point
+    return -1;
+  }
+
+  /**
    * Runs the drive at the desired velocity.
    *
    * @param speeds Speeds in meters/sec
+   * @param elevatorPos function pointer or supplier or whatever that gets the elevator height
    */
-  public void runVelocity(ChassisSpeeds speeds) {
+  public void runVelocity(ChassisSpeeds speeds, DoubleSupplier elevatorPos) {
     // Calculate module setpoints
+
+    double elevatorHeight = elevatorPos.getAsDouble();
+
+    double accelRotsPerSec = -1; // need to find this value
+
+    double cappedAccelRotsPerSec = accelRotsPerSec * elevatorAccelCurve(elevatorHeight);
+
     ChassisSpeeds discreteSpeeds = ChassisSpeeds.discretize(speeds, 0.02);
     SwerveModuleState[] setpointStates = kinematics.toSwerveModuleStates(discreteSpeeds);
     SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, TunerConstants.kSpeedAt12Volts);
@@ -246,7 +265,34 @@ public class Drive extends SubsystemBase {
 
     // Send setpoints to modules
     for (int i = 0; i < 4; i++) {
-      modules[i].runSetpoint(setpointStates[i]);
+      modules[i].runSetpoint(setpointStates[i], cappedAccelRotsPerSec);
+    }
+
+    // Log optimized setpoints (runSetpoint mutates each state)
+    Logger.recordOutput("SwerveStates/SetpointsOptimized", setpointStates);
+  }
+
+  /**
+   * Runs the drive at the desired velocity.
+   *
+   * @param speeds Speeds in meters/sec
+   */
+  public void runVelocityNoCap(ChassisSpeeds speeds) {
+    // Calculate module setpoints
+
+    double accelRotsPerSec = -1; // need to find this value
+
+    ChassisSpeeds discreteSpeeds = ChassisSpeeds.discretize(speeds, 0.02);
+    SwerveModuleState[] setpointStates = kinematics.toSwerveModuleStates(discreteSpeeds);
+    SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, TunerConstants.kSpeedAt12Volts);
+
+    // Log unoptimized setpoints and setpoint speeds
+    Logger.recordOutput("SwerveStates/Setpoints", setpointStates);
+    Logger.recordOutput("SwerveChassisSpeeds/Setpoints", discreteSpeeds);
+
+    // Send setpoints to modules
+    for (int i = 0; i < 4; i++) {
+      modules[i].runSetpoint(setpointStates[i], accelRotsPerSec);
     }
 
     // Log optimized setpoints (runSetpoint mutates each state)
@@ -261,21 +307,21 @@ public class Drive extends SubsystemBase {
   }
 
   /** Stops the drive. */
-  public void stop() {
-    runVelocity(new ChassisSpeeds());
+  public void stop(DoubleSupplier elevatorPos) {
+    runVelocity(new ChassisSpeeds(), elevatorPos);
   }
 
   /**
    * Stops the drive and turns the modules to an X arrangement to resist movement. The modules will
    * return to their normal orientations the next time a nonzero velocity is requested.
    */
-  public void stopWithX() {
+  public void stopWithX(DoubleSupplier elevatorPos) {
     Rotation2d[] headings = new Rotation2d[4];
     for (int i = 0; i < 4; i++) {
       headings[i] = getModuleTranslations()[i].getAngle();
     }
     kinematics.resetHeadings(headings);
-    stop();
+    stop(elevatorPos);
   }
 
   /** Returns a command to run a quasistatic test in the specified direction. */

@@ -89,7 +89,8 @@ public class DriveCommands {
       Drive drive,
       DoubleSupplier xSupplier,
       DoubleSupplier ySupplier,
-      DoubleSupplier omegaSupplier) {
+      DoubleSupplier omegaSupplier,
+      DoubleSupplier elevatorPos) {
     System.out.println("is flipped:" + isFlipped);
 
     return Commands.run(
@@ -116,7 +117,8 @@ public class DriveCommands {
                   speeds,
                   isFlipped
                       ? drive.getRotation().plus(new Rotation2d(Math.PI))
-                      : drive.getRotation()));
+                      : drive.getRotation()),
+              elevatorPos);
         },
         drive);
   }
@@ -130,7 +132,8 @@ public class DriveCommands {
       Drive drive,
       DoubleSupplier xSupplier,
       DoubleSupplier ySupplier,
-      Supplier<Rotation2d> rotationSupplier) {
+      Supplier<Rotation2d> rotationSupplier,
+      DoubleSupplier elevatorPos) {
 
     // Create PID controller
     ProfiledPIDController angleController =
@@ -164,7 +167,8 @@ public class DriveCommands {
                       speeds,
                       isFlipped
                           ? drive.getRotation().plus(new Rotation2d(Math.PI))
-                          : drive.getRotation()));
+                          : drive.getRotation()),
+                  elevatorPos);
             },
             drive)
 
@@ -253,7 +257,7 @@ public class DriveCommands {
             Commands.run(
                 () -> {
                   double speed = limiter.calculate(WHEEL_RADIUS_MAX_VELOCITY);
-                  drive.runVelocity(new ChassisSpeeds(0.0, 0.0, speed));
+                  drive.runVelocityNoCap(new ChassisSpeeds(0.0, 0.0, speed));
                 },
                 drive)),
 
@@ -312,7 +316,7 @@ public class DriveCommands {
    * @return Command to strafe around the reef center
    */
   public static Command reefStrafe(
-      Drive drive, DoubleSupplier xSupplier, DoubleSupplier ySupplier) {
+      Drive drive, DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier elevatorPos) {
     return joystickDriveAtAngle(
         drive,
         xSupplier,
@@ -328,7 +332,8 @@ public class DriveCommands {
               "Test/TurnAngle",
               new Rotation2d(Math.atan2(reef.getY() - robot.getY(), reef.getX() - robot.getX())));
           return new Rotation2d(Math.atan2(reef.getY() - robot.getY(), reef.getX() - robot.getX()));
-        });
+        },
+        elevatorPos);
   }
 
   /**
@@ -381,7 +386,7 @@ public class DriveCommands {
           drive.autoXDriveController.setSetpoint(targetPose.getX());
           drive.autoYDriveController.setSetpoint(targetPose.getY());
           drive.autoTurnController.setSetpoint(targetPose.getRotation().getRadians());
-          drive.runVelocity(
+          drive.runVelocityNoCap(
               ChassisSpeeds.fromFieldRelativeSpeeds(
                   new ChassisSpeeds(
                       drive.autoXDriveController.calculate(drive.getPose().getX()),

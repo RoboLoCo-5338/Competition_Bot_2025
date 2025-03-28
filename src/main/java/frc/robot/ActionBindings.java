@@ -57,7 +57,8 @@ public class ActionBindings {
         this.drive,
         () -> -driveController.getLeftY(),
         () -> -driveController.getLeftX(),
-        () -> new Rotation2d());
+        () -> new Rotation2d(),
+        () -> elevator.getElevatorPosition());
   }
 
   public Command climbPreset() {

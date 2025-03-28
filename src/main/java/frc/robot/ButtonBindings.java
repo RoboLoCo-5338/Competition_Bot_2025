@@ -227,7 +227,9 @@ public class ButtonBindings {
             drive,
             () -> -driveController.getLeftY(),
             () -> -driveController.getLeftX(),
-            () -> -driveController.getRightX() * Math.abs(driveController.getRightX())));
+            () -> -driveController.getRightX() * Math.abs(driveController.getRightX()),
+            () -> this.actionBindings.elevator.getElevatorPosition())
+        );
     // elevator.setDefaultCommand(elevator.setElevatorVelocity(operatorController.getLeftY()));
     // handles translation and rotation driving (i think!?)
   }
