@@ -36,10 +36,11 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Constants.VisionConstants;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.drive.DriveConstants;
 import frc.robot.subsystems.led.LED;
+import frc.robot.subsystems.vision.VisionConstants;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -50,16 +51,6 @@ import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
 public class DriveCommands {
-  private static final double DEADBAND = 0.06;
-  public static boolean canceled = false;
-  private static final double ANGLE_KP = 5.0;
-  private static final double ANGLE_KD = 0.4;
-  private static final double ANGLE_MAX_VELOCITY = 8.0;
-  private static final double ANGLE_MAX_ACCELERATION = 20.0;
-  private static final double FF_START_DELAY = 2.0; // Secs
-  private static final double FF_RAMP_RATE = 0.1; // Volts/Sec
-  private static final double WHEEL_RADIUS_MAX_VELOCITY = 0.25; // Rad/Sec
-  private static final double WHEEL_RADIUS_RAMP_RATE = 0.05; // Rad/Sec^2
 
   public static boolean isFlipped =
       DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red;
@@ -70,7 +61,7 @@ public class DriveCommands {
 
   private static Translation2d getLinearVelocityFromJoysticks(double x, double y) {
     // Apply deadband
-    double linearMagnitude = MathUtil.applyDeadband(Math.hypot(x, y), DEADBAND);
+    double linearMagnitude = MathUtil.applyDeadband(Math.hypot(x, y), DriveConstants.DEADBAND);
     Rotation2d linearDirection = new Rotation2d(Math.atan2(y, x));
 
     // Square magnitude for more precise control
@@ -99,7 +90,9 @@ public class DriveCommands {
                   xSupplier.getAsDouble() * slowMode, ySupplier.getAsDouble() * slowMode);
 
           // Apply rotation deadband
-          double omega = MathUtil.applyDeadband(omegaSupplier.getAsDouble() * slowMode, DEADBAND);
+          double omega =
+              MathUtil.applyDeadband(
+                  omegaSupplier.getAsDouble() * slowMode, DriveConstants.DEADBAND);
 
           // Square rotation value for more precise control
           omega = Math.copySign(omega * omega, omega);
@@ -134,10 +127,11 @@ public class DriveCommands {
     // Create PID controller
     ProfiledPIDController angleController =
         new ProfiledPIDController(
-            ANGLE_KP,
+            DriveConstants.ANGLE_KP,
             0.0,
-            ANGLE_KD,
-            new TrapezoidProfile.Constraints(ANGLE_MAX_VELOCITY, ANGLE_MAX_ACCELERATION));
+            DriveConstants.ANGLE_KD,
+            new TrapezoidProfile.Constraints(
+                DriveConstants.ANGLE_MAX_VELOCITY, DriveConstants.ANGLE_MAX_ACCELERATION));
     angleController.enableContinuousInput(-Math.PI, Math.PI);
 
     // Construct command
@@ -195,7 +189,7 @@ public class DriveCommands {
                   drive.runCharacterization(0.0);
                 },
                 drive)
-            .withTimeout(FF_START_DELAY),
+            .withTimeout(DriveConstants.FF_START_DELAY),
 
         // Start timer
         Commands.runOnce(timer::restart),
@@ -203,7 +197,7 @@ public class DriveCommands {
         // Accelerate and gather data
         Commands.run(
                 () -> {
-                  double voltage = timer.get() * FF_RAMP_RATE;
+                  double voltage = timer.get() * DriveConstants.FF_RAMP_RATE;
                   drive.runCharacterization(voltage);
                   velocitySamples.add(drive.getFFCharacterizationVelocity());
                   voltageSamples.add(voltage);
@@ -236,7 +230,7 @@ public class DriveCommands {
 
   /** Measures the robot's wheel radius by spinning in a circle. */
   public static Command wheelRadiusCharacterization(Drive drive) {
-    SlewRateLimiter limiter = new SlewRateLimiter(WHEEL_RADIUS_RAMP_RATE);
+    SlewRateLimiter limiter = new SlewRateLimiter(DriveConstants.WHEEL_RADIUS_RAMP_RATE);
     WheelRadiusCharacterizationState state = new WheelRadiusCharacterizationState();
 
     return Commands.parallel(
@@ -251,7 +245,7 @@ public class DriveCommands {
             // Turn in place, accelerating up to full speed
             Commands.run(
                 () -> {
-                  double speed = limiter.calculate(WHEEL_RADIUS_MAX_VELOCITY);
+                  double speed = limiter.calculate(DriveConstants.WHEEL_RADIUS_MAX_VELOCITY);
                   drive.runVelocity(new ChassisSpeeds(0.0, 0.0, speed));
                 },
                 drive)),
@@ -285,7 +279,8 @@ public class DriveCommands {
                       for (int i = 0; i < 4; i++) {
                         wheelDelta += Math.abs(positions[i] - state.positions[i]) / 4.0;
                       }
-                      double wheelRadius = (state.gyroDelta * Drive.DRIVE_BASE_RADIUS) / wheelDelta;
+                      double wheelRadius =
+                          (state.gyroDelta * DriveConstants.DRIVE_BASE_RADIUS) / wheelDelta;
 
                       NumberFormat formatter = new DecimalFormat("#0.000");
                       System.out.println(
@@ -361,19 +356,17 @@ public class DriveCommands {
           drive.autoYDriveController.reset();
           drive.autoTurnController.reset();
 
-          drive.autoXDriveController.setTolerance(0.05);
-          drive.autoYDriveController.setTolerance(0.05);
-          drive.autoTurnController.setTolerance(0.05);
-          // drive.autoXDriveController.setSetpoint(targetPose.getX());
-          // drive.autoYDriveController.setSetpoint(targetPose.getY());
-          // drive.autoTurnController.setSetpoint(targetPose.getRotation().getRadians());
+          drive.autoXDriveController.setTolerance(DriveConstants.AUTO_ALIGN_X_TOLERANCE);
+          drive.autoYDriveController.setTolerance(DriveConstants.AUTO_ALIGN_Y_TOLERANCE);
+          drive.autoTurnController.setTolerance(DriveConstants.AUTO_ALIGN_ANGULAR_TOLERANCE);
+
+          drive.autoXDriveController.setSetpoint(targetPose.getX());
+          drive.autoYDriveController.setSetpoint(targetPose.getY());
+          drive.autoTurnController.setSetpoint(targetPose.getRotation().getRadians());
         }
 
         @Override
         public void execute() {
-          drive.autoXDriveController.setSetpoint(targetPose.getX());
-          drive.autoYDriveController.setSetpoint(targetPose.getY());
-          drive.autoTurnController.setSetpoint(targetPose.getRotation().getRadians());
           drive.runVelocity(
               ChassisSpeeds.fromFieldRelativeSpeeds(
                   new ChassisSpeeds(
@@ -389,16 +382,13 @@ public class DriveCommands {
 
           boolean canceled = driverController.leftStick().getAsBoolean();
           if (canceled) {
-            DriveCommands.canceled = true;
+            DriveConstants.canceled = true;
           }
           return (drive.autoXDriveController.atSetpoint()
                   && drive.autoYDriveController.atSetpoint()
                   && drive.autoTurnController.atSetpoint())
               || canceled;
         }
-
-        @Override
-        public void end(boolean interrupted) {}
       };
     }
   }
@@ -502,7 +492,8 @@ public class DriveCommands {
       // rotates the left or right pose around the reef based on the tag id
       return getReefPose(direction, tagId);
     }
-    public static Pose2d getReefPose(Direction direction, int tagID){
+
+    public static Pose2d getReefPose(Direction direction, int targetTagId) {
       Pose2d o = new Pose2d();
       switch (direction) {
         case Right:
@@ -512,36 +503,15 @@ public class DriveCommands {
           o = reefLeft;
       }
       Rotation2d rot =
-          VisionConstants.aprilTagLayout.getTagPose(tagID).get().getRotation().toRotation2d();
+          VisionConstants.aprilTagLayout.getTagPose(targetTagId).get().getRotation().toRotation2d();
       if (!isFlipped) rot = rot.plus(new Rotation2d(Math.PI));
-      return allianceFlip(
-          o.rotateAround(
-              new Translation2d(4.5, 4.03),
-              rot));
+      return allianceFlip(o.rotateAround(new Translation2d(4.5, 4.03), rot));
     }
+
     public static ArrayList<Pose2d> getReefPoses(Direction direction) {
       ArrayList<Pose2d> poses = new ArrayList<>();
       for (int i = 0; i < 6; i++) {
-        Pose2d o = new Pose2d();
-        switch (direction) {
-          case Right:
-            o = Reef.reefRight;
-            break;
-          default:
-            o = Reef.reefLeft;
-        }
-        Rotation2d rot =
-            VisionConstants.aprilTagLayout
-                .getTagPose(i + ((isFlipped) ? 6 : 17))
-                .get()
-                .getRotation()
-                .toRotation2d();
-        if (!isFlipped) rot = rot.plus(new Rotation2d(Math.PI));
-        poses.add(
-            allianceFlip(
-                o.rotateAround(
-                    new Translation2d(4.5, 4.03),
-                    rot)));
+        poses.add(getReefPose(direction, i));
       }
       Pose2d[] p = new Pose2d[6];
       poses.toArray(p);
@@ -558,7 +528,7 @@ public class DriveCommands {
     return new InstantCommand( // I hate commands so much
         () -> {
           ArrayList<Pose2d> poses = Reef.getReefPoses(direction);
-          canceled = false;
+          DriveConstants.canceled = false;
           RobotContainer.doRainbow = false;
           Command move =
               pathToDestination(

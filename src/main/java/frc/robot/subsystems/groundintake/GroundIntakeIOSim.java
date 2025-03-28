@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import frc.robot.Constants;
-import frc.robot.Constants.GroundIntakeConstants;
 import frc.robot.subsystems.SimMechanism;
 import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.AutoLogOutput;
@@ -31,20 +30,20 @@ public class GroundIntakeIOSim extends SimMechanism implements GroundIntakeIO {
   SingleJointedArmSim armPhysicsSim =
       new SingleJointedArmSim(
           armGearBox,
-          GroundIntakeConstants.ArmConstants.GEARING,
-          GroundIntakeConstants.ArmConstants.MOI + 1,
-          GroundIntakeConstants.ArmConstants.LENGTH,
-          GroundIntakeConstants.ArmConstants.MIN_ANGLE,
-          GroundIntakeConstants.ArmConstants.MAX_ANGLE,
+          GroundIntakeConstants.ArmConstants.ArmSimConstants.GEARING,
+          GroundIntakeConstants.ArmConstants.ArmSimConstants.MOI + 1,
+          GroundIntakeConstants.ArmConstants.ArmSimConstants.LENGTH,
+          GroundIntakeConstants.ArmConstants.ArmSimConstants.MIN_ANGLE,
+          GroundIntakeConstants.ArmConstants.ArmSimConstants.MAX_ANGLE,
           false,
-          GroundIntakeConstants.ArmConstants.STARTING_ANGLE);
+          GroundIntakeConstants.ArmConstants.ArmSimConstants.STARTING_ANGLE);
 
   @AutoLogOutput(key = "GroundIntakeArm/Mechanism")
   LoggedMechanism2d armDrawn =
       new LoggedMechanism2d(
           Units.inchesToMeters(16.5 * 2),
-          GroundIntakeConstants.ArmConstants.ARM_BASE_HEIGHT
-              + GroundIntakeConstants.ArmConstants.LENGTH
+          GroundIntakeConstants.ArmConstants.ArmSimConstants.ARM_BASE_HEIGHT
+              + GroundIntakeConstants.ArmConstants.ArmSimConstants.LENGTH
               + Constants.FLOOR_TO_MECHANISM); // Someone please improve this naming scheme
 
   LoggedMechanismRoot2d root = armDrawn.getRoot("root", 0, Constants.FLOOR_TO_MECHANISM);
@@ -57,8 +56,8 @@ public class GroundIntakeIOSim extends SimMechanism implements GroundIntakeIO {
       new FlywheelSim(
           LinearSystemId.createFlywheelSystem(
               intakeGearBox,
-              GroundIntakeConstants.IntakeConstants.MOI,
-              GroundIntakeConstants.IntakeConstants.GEARING),
+              GroundIntakeConstants.IntakeConstants.IntakeSimConstants.MOI,
+              GroundIntakeConstants.IntakeConstants.IntakeSimConstants.GEARING),
           armGearBox);
 
   public GroundIntakeIOSim() {
@@ -75,13 +74,14 @@ public class GroundIntakeIOSim extends SimMechanism implements GroundIntakeIO {
     movingArm =
         root.append(
                 new LoggedMechanismLigament2d(
-                    "base", GroundIntakeConstants.ArmConstants.ARM_BASE_HEIGHT, 90))
+                    "base", GroundIntakeConstants.ArmConstants.ArmSimConstants.ARM_BASE_HEIGHT, 90))
             .append(new LoggedMechanismLigament2d("rotator", 0, -90))
             .append(
                 new LoggedMechanismLigament2d(
                     "arm",
-                    GroundIntakeConstants.ArmConstants.LENGTH,
-                    Units.radiansToDegrees(GroundIntakeConstants.ArmConstants.STARTING_ANGLE)));
+                    GroundIntakeConstants.ArmConstants.ArmSimConstants.LENGTH,
+                    Units.radiansToDegrees(
+                        GroundIntakeConstants.ArmConstants.ArmSimConstants.STARTING_ANGLE)));
   }
 
   @Override

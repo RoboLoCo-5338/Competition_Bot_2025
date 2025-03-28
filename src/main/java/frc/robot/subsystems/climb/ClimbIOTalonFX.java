@@ -12,8 +12,8 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
-import frc.robot.Constants.ClimbConstants;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.climb.ClimbConstants.ClimbSimConstants;
 
 public class ClimbIOTalonFX implements ClimbIO {
 
@@ -62,13 +62,13 @@ public class ClimbIOTalonFX implements ClimbIO {
   public void setClimbVelocity(double velocity) {
     climbMotor.setControl(
         climbVelocityRequest.withVelocity(
-            Units.radiansToRotations(velocity * ClimbConstants.GEARING)));
+            Units.radiansToRotations(velocity * ClimbSimConstants.GEARING)));
   }
 
   @Override
   public void setClimbPosition(double position) {
     climbMotor.setControl(
         climbPositionRequest.withPosition(
-            Units.radiansToRotations(position * ClimbConstants.GEARING)));
+            Units.radiansToRotations(position * ClimbSimConstants.GEARING)));
   }
 }

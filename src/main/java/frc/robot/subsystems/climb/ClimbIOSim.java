@@ -10,8 +10,8 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import frc.robot.Constants;
-import frc.robot.Constants.ClimbConstants;
 import frc.robot.subsystems.SimMechanism;
+import frc.robot.subsystems.climb.ClimbConstants.ClimbSimConstants;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.mechanism.LoggedMechanism2d;
 import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d;
@@ -30,13 +30,13 @@ public class ClimbIOSim extends SimMechanism implements ClimbIO {
   SingleJointedArmSim physicsSim =
       new SingleJointedArmSim(
           DCMotor.getKrakenX60(1),
-          ClimbConstants.GEARING,
-          ClimbConstants.MOI,
-          ClimbConstants.ARM_LENGTH,
-          ClimbConstants.MIN_ANGLE,
-          ClimbConstants.MAX_ANGLE,
+          ClimbConstants.ClimbSimConstants.GEARING,
+          ClimbConstants.ClimbSimConstants.MOI,
+          ClimbConstants.ClimbSimConstants.ARM_LENGTH,
+          ClimbConstants.ClimbSimConstants.MIN_ANGLE,
+          ClimbConstants.ClimbSimConstants.MAX_ANGLE,
           false,
-          ClimbConstants.STARTING_ANGLE);
+          ClimbConstants.ClimbSimConstants.STARTING_ANGLE);
   // Sim state of the TalonFX.
   TalonFXSimState simMotor = climbMotor.getSimState();
 
@@ -45,13 +45,13 @@ public class ClimbIOSim extends SimMechanism implements ClimbIO {
     // configures base motor
     climbMotor.getConfigurator().apply(getConfiguration());
     m_climbArm =
-        root.append(new LoggedMechanismLigament2d("base", ClimbConstants.BASE_HEIGHT, 90))
+        root.append(new LoggedMechanismLigament2d("base", ClimbSimConstants.BASE_HEIGHT, 90))
             .append(new LoggedMechanismLigament2d("rotator", 0, -90))
             .append(
                 new LoggedMechanismLigament2d(
                     "arm",
-                    ClimbConstants.ARM_LENGTH,
-                    Units.radiansToDegrees(ClimbConstants.STARTING_ANGLE)));
+                    ClimbSimConstants.ARM_LENGTH,
+                    Units.radiansToDegrees(ClimbSimConstants.STARTING_ANGLE)));
   }
 
   @Override
@@ -71,23 +71,23 @@ public class ClimbIOSim extends SimMechanism implements ClimbIO {
 
     m_climbArm.setAngle(new Rotation2d(inputs.climbPosition));
 
-    simMotor.setRawRotorPosition(Radians.of(physicsSim.getAngleRads() * ClimbConstants.GEARING));
+    simMotor.setRawRotorPosition(Radians.of(physicsSim.getAngleRads() * ClimbSimConstants.GEARING));
     simMotor.setRotorVelocity(
-        RadiansPerSecond.of(physicsSim.getVelocityRadPerSec() * ClimbConstants.GEARING));
+        RadiansPerSecond.of(physicsSim.getVelocityRadPerSec() * ClimbSimConstants.GEARING));
   }
 
   @Override
   public void setClimbVelocity(double velocity) {
     climbMotor.setControl(
         climbVelocityRequest.withVelocity(
-            Units.radiansToRotations(velocity * ClimbConstants.GEARING)));
+            Units.radiansToRotations(velocity * ClimbSimConstants.GEARING)));
   }
 
   @Override
   public void setClimbPosition(double position) {
     climbMotor.setControl(
         climbPositionRequest.withPosition(
-            Units.radiansToRotations(position * ClimbConstants.GEARING)));
+            Units.radiansToRotations(position * ClimbSimConstants.GEARING)));
   }
 
   @Override
