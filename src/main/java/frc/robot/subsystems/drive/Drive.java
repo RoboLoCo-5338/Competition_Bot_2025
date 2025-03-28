@@ -391,8 +391,8 @@ public class Drive extends SubsystemBase {
   }
 
   public void updateAutoAlignConstants(){
-    autoXDriveController.setPID(VisionConstants.autoAligndriveP, VisionConstants.autoAligndriveI, TunerConstants.driveGains.kD);
-    autoYDriveController.setPID(VisionConstants.autoAligndriveP, VisionConstants.autoAligndriveI, TunerConstants.driveGains.kD);
-    autoTurnController.setPID(VisionConstants.autoAlignturnP, VisionConstants.autoAlignturnI, TunerConstants.driveGains.kD);
+    autoXDriveController.setPID(VisionConstants.autoAligndriveP, VisionConstants.autoAligndriveI, VisionConstants.autoAligndriveD);
+    autoYDriveController.setPID(VisionConstants.autoAligndriveP, VisionConstants.autoAligndriveI, VisionConstants.autoAligndriveD);
+    autoTurnController.setPID(VisionConstants.autoAlignturnP, VisionConstants.autoAlignturnI, VisionConstants.autoAlignturnD);
   }
 }
