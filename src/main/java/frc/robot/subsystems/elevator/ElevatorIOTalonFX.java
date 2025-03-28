@@ -2,9 +2,6 @@ package frc.robot.subsystems.elevator;
 
 import static frc.robot.util.PhoenixUtil.tryUntilOk;
 
-import au.grapplerobotics.ConfigurationFailedException;
-import au.grapplerobotics.LaserCan;
-import au.grapplerobotics.interfaces.LaserCanInterface.Measurement;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.ParentDevice;
@@ -28,8 +25,6 @@ public class ElevatorIOTalonFX implements ElevatorIO {
 
   private final Debouncer elevator1ConnectedDebounce = new Debouncer(0.5);
   private final Debouncer elevator2ConnectedDebounce = new Debouncer(0.5);
-
-  private final LaserCan lc;
 
   public ElevatorIOTalonFX() {
     elevatorMotor1.getConfigurator().apply(getConfiguration(1));
@@ -63,16 +58,6 @@ public class ElevatorIOTalonFX implements ElevatorIO {
                 elevator2AppliedVolts,
                 elevator2Current));
     ParentDevice.optimizeBusUtilizationForAll(elevatorMotor1, elevatorMotor2);
-
-    lc = new LaserCan(ElevatorConstants.LASERCAN_ID);
-    try {
-      lc.setRangingMode(LaserCan.RangingMode.SHORT);
-      // lc.setRegionOfInterest(new LaserCan.RegionOfInterest(8, 8, 16, 16));
-      // lc.setTimingBudget(LaserCan.TimingBudget.TIMING_BUDGET_33MS);
-    } catch (ConfigurationFailedException e) {
-
-      System.out.println("Configuration failed! " + e);
-    }
   }
 
   @Override
@@ -117,15 +102,5 @@ public class ElevatorIOTalonFX implements ElevatorIO {
         ElevatorConstants.ElevatorVelocityConstants.ELEVATOR_FEEDFORWARD;
     elevatorMotor1.setControl(elevator1VelocityRequest.withVelocity(velocity).withSlot(1));
     elevatorMotor2.setControl(elevator2VelocityRequest.withVelocity(velocity).withSlot(1));
-  }
-
-  @Override
-  public int getLaserCanMeasurement() {
-    Measurement m = lc.getMeasurement();
-    if (m != null && m.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
-      return m.distance_mm;
-    } else {
-      return -1;
-    }
   }
 }

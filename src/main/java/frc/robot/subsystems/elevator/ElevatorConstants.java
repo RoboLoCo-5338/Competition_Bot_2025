@@ -6,6 +6,11 @@ public final class ElevatorConstants {
   public static final int ELEVATOR_MOTOR_ID1 = 42;
   public static final int ELEVATOR_MOTOR_ID2 = 45;
   public static final int ELEVATOR_MOTOR_CURRENT_LIMIT = 40;
+  public static final double LASERCAN_TO_ELEVATOR_POSITION = 1.0;
+  public static final double ELEVATOR_EPSILON = 1e-2;
+  public static final double ELEVATOR_kP_LASERCAN = 0.0;
+  public static final double ELEVATOR_kI_LASERCAN = 0.0;
+  public static final double ELEVATOR_kD_LASERCAN = 0.0;
 
   public static final class ElevatorPositionConstants {
     public static final double ELEVATOR_FEEDFORWARD = 0.0;
@@ -24,12 +29,6 @@ public final class ElevatorConstants {
     public static final double ELEVATOR_MOTOR_kG = 0.6; // 0.5
     public static final double ELEVATOR_MOTOR_kV = 0.0;
   }
-
-  public static final double LASERCAN_TO_ELEVATOR_POSITION = 1.0;
-  public static final double ELEVATOR_EPSILON = 1e-2;
-  public static final double ELEVATOR_kP_LASERCAN = 0.0;
-  public static final double ELEVATOR_kI_LASERCAN = 0.0;
-  public static final double ELEVATOR_kD_LASERCAN = 0.0;
 
   public static final class ElevatorSimConstants {
     public static final double GEARING = 4;
