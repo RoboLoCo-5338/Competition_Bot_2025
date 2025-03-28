@@ -10,7 +10,8 @@ public final class ClimbConstants {
   public static final double CLIMB_kI = 0.2;
   public static final double CLIMB_kD = 0.0;
   public static final double CLIMB_kS = 0.0;
-  // Sim Constants
+  public static final double POSITION_TOLERANCE = 0.05;
+  
   public static final class ClimbSimConstants {
     public static final double GEARING = 100; // Update this pls don't worry bro I did
     public static final double BASE_HEIGHT = Units.inchesToMeters(6.25);

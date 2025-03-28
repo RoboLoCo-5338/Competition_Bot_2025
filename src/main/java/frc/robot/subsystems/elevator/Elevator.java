@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
+import frc.robot.subsystems.climb.ClimbConstants;
+
 import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.Logger;
 
@@ -48,7 +50,7 @@ public class Elevator extends SubsystemBase {
    */
   public Command setElevatorPosition(double position) {
     return new StartEndCommand(
-        () -> io.setElevatorPosition(position), () -> io.setElevatorVelocity(0), this);
+        () -> io.setElevatorPosition(position), () -> io.setElevatorVelocity(0), this).until(() -> Math.abs((inputs.elevator1Position-position)/inputs.elevator1Position)<ElevatorConstants.POSITION_TOLERANCE && Math.abs((inputs.elevator1Position-position)/inputs.elevator1Position)<ElevatorConstants.POSITION_TOLERANCE);
   }
 
   /**
