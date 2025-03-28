@@ -31,7 +31,7 @@ public class PresetCommands {
     return new SequentialCommandGroup(
         arm.setArmPosition(0.610),
         new WaitCommand(0.3),
-        elevator.setElevatorPosition(0.05),
+        elevator.setElevatorPosition(1.0),
         arm.setArmPosition(0.580));
   }
 

@@ -86,13 +86,13 @@ public class EndEffectorIOTalonFX implements EndEffectorIO {
   @Override
   public int getLaserCanMeasurement1() {
     Measurement m1 = LcEffector1.getMeasurement();
-    if (m1 != null && m1.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
+    if (m1 == null) {
+      return -1;
+    }
+    if (m1.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
       return m1.distance_mm;
     } else {
       System.out.println("lasercan 1 status: " + m1.status);
-      if (m1.status == LaserCan.LASERCAN_STATUS_WEAK_SIGNAL) {
-        return 200;
-      }
       return -1;
     }
   }
@@ -100,7 +100,10 @@ public class EndEffectorIOTalonFX implements EndEffectorIO {
   @Override
   public int getLaserCanMeasurement2() {
     Measurement m2 = LcEffector2.getMeasurement();
-    if (m2 != null && m2.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
+    if (m2 == null) {
+      return -1;
+    }
+    if (m2.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
       return m2.distance_mm;
     } else {
       System.out.println("lasercan 2 status: " + m2.status);

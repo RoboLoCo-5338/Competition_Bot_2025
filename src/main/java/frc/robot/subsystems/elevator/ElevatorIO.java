@@ -2,6 +2,7 @@ package frc.robot.subsystems.elevator;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.Slot1Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
@@ -155,18 +156,23 @@ public interface ElevatorIO {
 
   public default void updatePID() {
     Slot0Configs pidConfig = new Slot0Configs();
+    Slot1Configs pidVelocityConfig = new Slot1Configs();
     pidConfig.kP = ElevatorConstants.ElevatorPositionConstants.ELEVATOR_MOTOR_kP;
     pidConfig.kI = ElevatorConstants.ElevatorPositionConstants.ELEVATOR_MOTOR_kI;
     pidConfig.kD = ElevatorConstants.ElevatorPositionConstants.ELEVATOR_MOTOR_kD;
     pidConfig.kG = ElevatorConstants.ElevatorPositionConstants.ELEVATOR_MOTOR_kG;
     pidConfig.kV = ElevatorConstants.ElevatorPositionConstants.ELEVATOR_MOTOR_kV;
 
-    pidConfig.kP = ElevatorConstants.ElevatorVelocityConstants.ELEVATOR_MOTOR_kP;
-    pidConfig.kI = ElevatorConstants.ElevatorVelocityConstants.ELEVATOR_MOTOR_kI;
-    pidConfig.kD = ElevatorConstants.ElevatorVelocityConstants.ELEVATOR_MOTOR_kD;
-    pidConfig.kG = ElevatorConstants.ElevatorVelocityConstants.ELEVATOR_MOTOR_kG;
-    pidConfig.kV = ElevatorConstants.ElevatorVelocityConstants.ELEVATOR_MOTOR_kV;
+    pidVelocityConfig.kP = ElevatorConstants.ElevatorVelocityConstants.ELEVATOR_MOTOR_kP;
+    pidVelocityConfig.kI = ElevatorConstants.ElevatorVelocityConstants.ELEVATOR_MOTOR_kI;
+    pidVelocityConfig.kD = ElevatorConstants.ElevatorVelocityConstants.ELEVATOR_MOTOR_kD;
+    pidVelocityConfig.kG = ElevatorConstants.ElevatorVelocityConstants.ELEVATOR_MOTOR_kG;
+    pidVelocityConfig.kV = ElevatorConstants.ElevatorVelocityConstants.ELEVATOR_MOTOR_kV;
     elevatorMotor1.getConfigurator().apply(pidConfig);
+    elevatorMotor1.getConfigurator().apply(pidVelocityConfig);
     elevatorMotor2.getConfigurator().apply(pidConfig);
+    elevatorMotor2.getConfigurator().apply(pidVelocityConfig);
   }
+
+  public default void setElevatorEncoder(double position) {}
 }

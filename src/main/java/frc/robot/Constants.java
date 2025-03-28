@@ -49,32 +49,31 @@ public final class Constants {
 
   public static final class PresetConstants {
     public static final String PREFERENCES_ID = "preset";
-    public static double elevatorl2 = Preferences.getDouble(PREFERENCES_ID + "l2", 10.05); // This was 17 for testing PID
-    public static double elevatorl3 = Preferences.getDouble(PREFERENCES_ID + "l3",17);
-    public static double elevatorl4 = Preferences.getDouble(PREFERENCES_ID + "l4",19.40);
+    public static double elevatorl2 =
+        Preferences.getDouble(PREFERENCES_ID + "l2", 10.05); // This was 17 for testing PID
+    public static double elevatorl3 = Preferences.getDouble(PREFERENCES_ID + "l3", 17);
+    public static double elevatorl4 = Preferences.getDouble(PREFERENCES_ID + "l4", 19.40);
     public static double elevatorNet = Preferences.getDouble(PREFERENCES_ID, 16.486);
 
-    public static double arml2 = Preferences.getDouble(PREFERENCES_ID +"arml2",  0.543);
-    public static double arml3 = Preferences.getDouble(PREFERENCES_ID+"arml3", 0.543);
-    public static double arml4 =  Preferences.getDouble(PREFERENCES_ID+"arml4", 0.89);
-    public static double armNet = Preferences.getDouble(PREFERENCES_ID+"armnet",  0.950); // change
+    public static double arml2 = Preferences.getDouble(PREFERENCES_ID + "arml2", 0.543);
+    public static double arml3 = Preferences.getDouble(PREFERENCES_ID + "arml3", 0.543);
+    public static double arml4 = Preferences.getDouble(PREFERENCES_ID + "arml4", 0.89);
+    public static double armNet = Preferences.getDouble(PREFERENCES_ID + "armnet", 0.950); // change
     public static final double arml3Algae = 0.0;
 
     public static final double elevatorIntake = 0.0;
     public static final double armIntake = 0.0;
 
-    public static void reloadConstants(){
-      elevatorl2 = Preferences.getDouble(PREFERENCES_ID + "l2", 10.05); 
-      elevatorl3 = Preferences.getDouble(PREFERENCES_ID + "l3",17);
-      elevatorl4 = Preferences.getDouble(PREFERENCES_ID + "l4",19.40);
+    public static void reloadConstants() {
+      elevatorl2 = Preferences.getDouble(PREFERENCES_ID + "l2", 10.05);
+      elevatorl3 = Preferences.getDouble(PREFERENCES_ID + "l3", 17);
+      elevatorl4 = Preferences.getDouble(PREFERENCES_ID + "l4", 19.40);
       elevatorNet = Preferences.getDouble(PREFERENCES_ID, 16.486);
 
-      arml2 = Preferences.getDouble(PREFERENCES_ID +"arml2", 0.543);  
-      arml3 = Preferences.getDouble(PREFERENCES_ID+"arml3", 0.543);
-      arml4 =  Preferences.getDouble(PREFERENCES_ID+"arml4", 0.89);
-      armNet = Preferences.getDouble(PREFERENCES_ID+"armnet",  0.950);
-
-      
+      arml2 = Preferences.getDouble(PREFERENCES_ID + "arml2", 0.543);
+      arml3 = Preferences.getDouble(PREFERENCES_ID + "arml3", 0.543);
+      arml4 = Preferences.getDouble(PREFERENCES_ID + "arml4", 0.89);
+      armNet = Preferences.getDouble(PREFERENCES_ID + "armnet", 0.950);
     }
   }
 
@@ -129,6 +128,7 @@ public final class Constants {
 
     public static void reloadConstants() {
       CLIMB_kP = Preferences.getDouble(PREFERENCES_ID + "kP", 0.5);
+      System.out.println(CLIMB_kP);
       CLIMB_kI = Preferences.getDouble(PREFERENCES_ID + "kI", 0.2);
       CLIMB_kD = Preferences.getDouble(PREFERENCES_ID + "kD", 0.0);
       CLIMB_kS = Preferences.getDouble(PREFERENCES_ID + "kS", 0.0);
@@ -154,11 +154,16 @@ public final class Constants {
 
     public static final class ElevatorVelocityConstants {
       public static final double ELEVATOR_FEEDFORWARD = 0.0;
-      public static double ELEVATOR_MOTOR_kP = Preferences.getDouble(PREFERENCES_ID + "kV", 0.15);
-      public static double ELEVATOR_MOTOR_kI = Preferences.getDouble(PREFERENCES_ID + "kI", 0.025);
-      public static double ELEVATOR_MOTOR_kD = Preferences.getDouble(PREFERENCES_ID + "kD", 0.0);
-      public static double ELEVATOR_MOTOR_kG = Preferences.getDouble(PREFERENCES_ID + "kG", 0.2);
-      public static double ELEVATOR_MOTOR_kV = Preferences.getDouble(PREFERENCES_ID + "kV", 0.0);
+      public static double ELEVATOR_MOTOR_kP =
+          Preferences.getDouble(PREFERENCES_ID + "velocity" + "kV", 0.15);
+      public static double ELEVATOR_MOTOR_kI =
+          Preferences.getDouble(PREFERENCES_ID + "velocity" + "kI", 0.025);
+      public static double ELEVATOR_MOTOR_kD =
+          Preferences.getDouble(PREFERENCES_ID + "velocity" + "kD", 0.0);
+      public static double ELEVATOR_MOTOR_kG =
+          Preferences.getDouble(PREFERENCES_ID + "velocity" + "kG", 0.2);
+      public static double ELEVATOR_MOTOR_kV =
+          Preferences.getDouble(PREFERENCES_ID + "velocity" + "kV", 0.0);
     }
 
     public static final double LASERCAN_TO_ELEVATOR_POSITION = 1.0;
@@ -186,15 +191,17 @@ public final class Constants {
           Preferences.getDouble(PREFERENCES_ID + "kV", 0.0);
 
       ElevatorVelocityConstants.ELEVATOR_MOTOR_kP =
-          Preferences.getDouble(PREFERENCES_ID + "kP", 0.15);
+          Preferences.getDouble(PREFERENCES_ID + "velocity" + "kP", 0.15);
       ElevatorVelocityConstants.ELEVATOR_MOTOR_kI =
-          Preferences.getDouble(PREFERENCES_ID + "kI", 0.025);
+          Preferences.getDouble(PREFERENCES_ID + "velocity" + "kI", 0.025);
       ElevatorVelocityConstants.ELEVATOR_MOTOR_kD =
-          Preferences.getDouble(PREFERENCES_ID + "kD", 0.0);
+          Preferences.getDouble(PREFERENCES_ID + "velocity" + "kD", 0.0);
       ElevatorVelocityConstants.ELEVATOR_MOTOR_kG =
-          Preferences.getDouble(PREFERENCES_ID + "kG", 0.2);
+          Preferences.getDouble(PREFERENCES_ID + "velocity" + "kG", 0.2);
       ElevatorVelocityConstants.ELEVATOR_MOTOR_kV =
-          Preferences.getDouble(PREFERENCES_ID + "kV", 0.0);
+          Preferences.getDouble(PREFERENCES_ID + "velocity" + "kV", 0.0);
+
+      System.out.println("Elevator position kp: " + ElevatorPositionConstants.ELEVATOR_MOTOR_kP);
     }
   }
 
@@ -294,7 +301,13 @@ public final class Constants {
 
   public static void initPreferences() {
     String[] subsystemIdentifiers = {
-      "arm", "climb", "elevator", "endEffector", "groundIntakeArm", "groundIntake"
+      "arm",
+      "climb",
+      "elevator",
+      "elevatorvelocity",
+      "endEffector",
+      "groundIntakeArm",
+      "groundIntake"
     };
     for (String id : subsystemIdentifiers) {
       Preferences.initDouble(id + "kP", 0);
@@ -310,10 +323,11 @@ public final class Constants {
         case "climb" -> {
           Preferences.initDouble(id + "kS", 0);
         }
-        case "elevator" -> {
+        case "elevator", "elevatorvelocity" -> {
           Preferences.initDouble(id + "kV", 0);
-          Preferences.initDouble(id + "kFF", 0);
-          Preferences.initDouble(id + "kS", 0);
+          // Preferences.initDouble(id + "kFF", 0);
+          // Preferences.initDouble(id + "kS", 0);
+          Preferences.initDouble(id + "kG", 0);
         }
         case "groundIntake", "groundIntakeArm" -> {
           Preferences.initDouble(id + "kV", 0);
@@ -325,9 +339,9 @@ public final class Constants {
     Preferences.initDouble(PresetConstants.PREFERENCES_ID + "l2", 10.05);
     Preferences.initDouble(PresetConstants.PREFERENCES_ID + "l3", 17);
     Preferences.initDouble(PresetConstants.PREFERENCES_ID + "l4", 19.40);
-    Preferences.initDouble(PresetConstants.PREFERENCES_ID+"arml2", 0.543);
-    Preferences.initDouble(PresetConstants.PREFERENCES_ID+"arml3", 0.543);
-    Preferences.initDouble(PresetConstants.PREFERENCES_ID+"arml4", 0.89);
+    Preferences.initDouble(PresetConstants.PREFERENCES_ID + "arml2", 0.543);
+    Preferences.initDouble(PresetConstants.PREFERENCES_ID + "arml3", 0.543);
+    Preferences.initDouble(PresetConstants.PREFERENCES_ID + "arml4", 0.89);
     Preferences.initDouble("autoAlignTurnP", 2.0);
     Preferences.initDouble("autoAlignTurnI", 0.2);
     Preferences.initDouble("autoAlignDriveP", 2.0);
@@ -395,7 +409,7 @@ public final class Constants {
     public static double angularStdDevMegatag2Factor =
         Double.POSITIVE_INFINITY; // No rotation data available
 
-    public static void reloadConstants(){
+    public static void reloadConstants() {
       autoAligndriveP = Preferences.getDouble("autoAlignDriveP", 2.0);
       autoAligndriveI = Preferences.getDouble("autoAlignDriveI", 0.2);
       autoAlignturnP = Preferences.getDouble("autoAlignTurnP", 2.0);

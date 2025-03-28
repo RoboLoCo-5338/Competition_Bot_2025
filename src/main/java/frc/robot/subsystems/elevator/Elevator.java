@@ -68,10 +68,10 @@ public class Elevator extends SubsystemBase {
     error = position - curPosition;
     integral += error;
     double derivative = error - prevError;
-    double output =0.0;
-        // ElevatorConstants.ELEVATOR_kP_LASERCAN * error
-        //     + ElevatorConstants.ELEVATOR_kI_LASERCAN * integral
-        //     + ElevatorConstants.ELEVATOR_kD_LASERCAN * derivative;
+    double output = 0.0;
+    // ElevatorConstants.ELEVATOR_kP_LASERCAN * error
+    //     + ElevatorConstants.ELEVATOR_kI_LASERCAN * integral
+    //     + ElevatorConstants.ELEVATOR_kD_LASERCAN * derivative;
 
     io.setElevatorVelocity(output);
   }
@@ -104,5 +104,9 @@ public class Elevator extends SubsystemBase {
 
   public double getElevatorPosition() {
     return inputs.elevator1Position;
+  }
+
+  public Command setElevatorEncoder(DoubleSupplier position) {
+    return new InstantCommand(() -> io.setElevatorEncoder(position.getAsDouble()));
   }
 }

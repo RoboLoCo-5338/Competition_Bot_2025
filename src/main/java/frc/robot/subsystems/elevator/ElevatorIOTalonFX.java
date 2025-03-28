@@ -112,6 +112,12 @@ public class ElevatorIOTalonFX implements ElevatorIO {
   }
 
   @Override
+  public void setElevatorEncoder(double position) {
+    elevatorMotor1.setPosition(position);
+    elevatorMotor2.setPosition(position);
+  }
+
+  @Override
   public void setElevatorVelocity(double velocity) {
     elevator1VelocityRequest.FeedForward =
         ElevatorConstants.ElevatorVelocityConstants.ELEVATOR_FEEDFORWARD;

@@ -307,25 +307,25 @@ public class RobotContainer {
         .onTrue(PresetCommands.netShoot(arm, endEffector))
         .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
 
-    operatorController
-        .povUp()
-        .whileTrue(groundIntake.setGroundArmVelocity(() -> -10.0))
-        .onFalse(groundIntake.setGroundArmVelocity(() -> 0.0));
+    // operatorController
+    //     .povUp()
+    //     .whileTrue(groundIntake.setGroundArmVelocity(() -> -10.0))
+    //     .onFalse(groundIntake.setGroundArmVelocity(() -> 0.0));
 
-    operatorController
-        .povDown()
-        .whileTrue(groundIntake.setGroundArmVelocity(() -> 10.0))
-        .onFalse(groundIntake.setGroundArmVelocity(() -> 0.0));
+    // operatorController
+    //     .povDown()
+    //     .whileTrue(groundIntake.setGroundArmVelocity(() -> 10.0))
+    //     .onFalse(groundIntake.setGroundArmVelocity(() -> 0.0));
 
-    operatorController
-        .povRight()
-        .whileTrue(groundIntake.setGroundIntakeVelocity(-3600.0))
-        .onFalse(groundIntake.setGroundIntakeVelocity(0.0));
+    // operatorController
+    //     .povRight()
+    //     .whileTrue(groundIntake.setGroundIntakeVelocity(-3600.0))
+    //     .onFalse(groundIntake.setGroundIntakeVelocity(0.0));
 
-    operatorController
-        .povLeft()
-        .whileTrue(groundIntake.setGroundIntakeVelocity(3600.0))
-        .onFalse(groundIntake.setGroundIntakeVelocity(0.0));
+    // operatorController
+    //     .povLeft()
+    //     .whileTrue(groundIntake.setGroundIntakeVelocity(3600.0))
+    //     .onFalse(groundIntake.setGroundIntakeVelocity(0.0));
 
     driverController
         .rightBumper()
@@ -336,10 +336,11 @@ public class RobotContainer {
         .whileTrue(endEffector.setEndEffectorVelocity(-60))
         .onFalse(endEffector.setEndEffectorVelocity(0));
 
-    driverController
-        .x()
-        .onTrue(groundIntake.setIntakeSpeed(-1))
-        .onFalse(groundIntake.setGroundIntakeVelocity(0));
+    // driverController
+    //     .x()
+    //     .onTrue(groundIntake.setIntakeSpeed(-1))
+    //     .onFalse(groundIntake.setGroundIntakeVelocity(0));
+
     driverController
         .b()
         .onTrue(
@@ -398,8 +399,8 @@ public class RobotContainer {
                 () -> {
                   DriveCommands.slowMode = 1;
                 }));
-    driverController
-        .y()
+    operatorController
+        .povLeft()
         .onTrue(
             Commands.runOnce(
                 () -> {
@@ -409,8 +410,10 @@ public class RobotContainer {
                   elevator.updatePID();
                   endEffector.updatePID();
                   groundIntake.updatePID();
-                    drive.updateAutoAlignConstants();
+                  drive.updateAutoAlignConstants();
                 }));
+
+    operatorController.povRight().onTrue(elevator.setElevatorEncoder(() -> 0.0));
   }
 
   public void periodic() {
