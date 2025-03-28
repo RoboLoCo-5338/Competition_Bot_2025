@@ -400,10 +400,10 @@ public class DriveCommands {
         }
       };
     }
-  }, new HashSet<Subsystem>() {
-    {
+  }, new HashSet<Subsystem>()
+    {{
       add(drive);
-    });
+      }});
   }
 
   /**
@@ -550,12 +550,11 @@ public class DriveCommands {
             () ->
                 new Reef(
                     direction,
-                    DriveCommands.getReefPoses(direction)
-                            .indexOf(drive.getPose().nearest(DriveCommands.getReefPoses(direction)))
+                    Reef.getReefPoses(direction)
+                            .indexOf(drive.getPose().nearest(Reef.getReefPoses(direction)))
                         + ((isFlipped) ? 6 : 17)),
             controller,
             elevatorHeight),
-        new InstantCommand(() -> System.out.println(DriveCommands.canceled)),
         new ScheduleCommand(
             led.turnGreen(),
             new WaitCommand(3.0),
