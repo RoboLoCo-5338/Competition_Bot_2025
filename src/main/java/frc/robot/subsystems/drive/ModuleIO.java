@@ -25,7 +25,6 @@ public interface ModuleIO {
     public double driveAppliedVolts = 0.0;
     public double driveCurrentAmps = 0.0;
     public double driveTemperature = 0.0;
-    public byte[] driveFirmwareVersion = new byte[4];
 
     public boolean turnConnected = false;
     public boolean turnEncoderConnected = false;
@@ -35,7 +34,6 @@ public interface ModuleIO {
     public double turnAppliedVolts = 0.0;
     public double turnCurrentAmps = 0.0;
     public double turnTemperature = 0.0;
-    public byte[] turnFirmwareVersion = new byte[4];
 
     public double[] odometryTimestamps = new double[] {};
     public double[] odometryDrivePositionsRad = new double[] {};
