@@ -4,6 +4,7 @@ import static frc.robot.util.PhoenixUtil.tryUntilOk;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.controls.StrictFollower;
 import com.ctre.phoenix6.hardware.ParentDevice;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.util.Units;
@@ -67,6 +68,7 @@ public class ElevatorIOTalonFX implements ElevatorIO {
                 elevator2AppliedVolts,
                 elevator2Current));
     ParentDevice.optimizeBusUtilizationForAll(elevatorMotor1, elevatorMotor2);
+    elevatorMotor2.setControl(new StrictFollower(ElevatorConstants.ELEVATOR_MOTOR_ID1));
   }
 
   @Override
@@ -95,23 +97,20 @@ public class ElevatorIOTalonFX implements ElevatorIO {
   }
 
   @Override
-  public void setElevatorPosition(double position) {
+  public void setElevatorPosition(double position, int slot) {
     // elevator1PositionRequest.FeedForward =
     //     ElevatorConstants.ElevatorPositionConstants.ELEVATOR_FEEDFORWARD;
     // elevator2PositionRequest.FeedForward =
     //     ElevatorConstants.ElevatorPositionConstants.ELEVATOR_FEEDFORWARD;
 
-    elevatorMotor1.setControl(elevator1PositionRequest.withPosition(position).withSlot(0));
-    elevatorMotor2.setControl(elevator2PositionRequest.withPosition(position).withSlot(0));
+    elevatorMotor1.setControl(elevator1PositionRequest.withPosition(position).withSlot(slot));
+    System.out.println(slot);
   }
 
   @Override
   public void setElevatorVelocity(double velocity) {
     elevator1VelocityRequest.FeedForward =
         ElevatorConstants.ElevatorVelocityConstants.ELEVATOR_FEEDFORWARD;
-    elevator2VelocityRequest.FeedForward =
-        ElevatorConstants.ElevatorVelocityConstants.ELEVATOR_FEEDFORWARD;
     elevatorMotor1.setControl(elevator1VelocityRequest.withVelocity(velocity).withSlot(1));
-    elevatorMotor2.setControl(elevator2VelocityRequest.withVelocity(velocity).withSlot(1));
   }
 }
