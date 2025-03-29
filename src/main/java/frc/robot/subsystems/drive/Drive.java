@@ -16,6 +16,9 @@ package frc.robot.subsystems.drive;
 import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.CANBus;
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;
@@ -438,5 +441,19 @@ public class Drive extends SubsystemBase {
         PP_CONFIG,
         () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
         this);
+  }
+
+  public void updateDriveModuleConstants(
+      SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration>
+          _constants) {
+    for (int i = 0; i < 4; i++) {
+      modules[i].updateModuleConstants(_constants);
+    }
+  }
+
+  public void reconfigureDriveModuleMotors() {
+    for (int i = 0; i < 4; i++) {
+      modules[i].reconfigureModuleMotors();
+    }
   }
 }

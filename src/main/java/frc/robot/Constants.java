@@ -117,13 +117,13 @@ public final class Constants {
     public static final double STARTING_ANGLE = Units.degreesToRadians(-90);
 
     public static void reloadConstants() {
-      ARM_MOTOR_KP = Preferences.getDouble(PREFERENCES_ID + "kP", 3.5);
+      ARM_MOTOR_KP = Preferences.getDouble(PREFERENCES_ID + "kP", 0.0);
       ARM_MOTOR_KI = Preferences.getDouble(PREFERENCES_ID + "kI", 0.0);
       ARM_MOTOR_KD = Preferences.getDouble(PREFERENCES_ID + "kD", 0.0);
       ARM_MOTOR_KG = Preferences.getDouble(PREFERENCES_ID + "kG", 0.0);
       ARM_MOTOR_KV = Preferences.getDouble(PREFERENCES_ID + "kV", 0.0);
       ARM_MOTOR_KFF = Preferences.getDouble(PREFERENCES_ID + "kFF", 0.0);
-      ARM_MOTOR_KS = Preferences.getDouble(PREFERENCES_ID + "kS", 0.1);
+      ARM_MOTOR_KS = Preferences.getDouble(PREFERENCES_ID + "kS", 0.);
     }
   }
 
