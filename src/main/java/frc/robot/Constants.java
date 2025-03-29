@@ -47,6 +47,23 @@ public final class Constants {
     REPLAY
   }
 
+  public static final class DriveConstants{
+    public static double pathPlannerDriveP = Preferences.getDouble("pathPlannerDriveP", 2.0);
+    public static double pathPlannerDriveI = Preferences.getDouble("pathPlannerDriveI", 0.2);
+    public static double pathPlannerDriveD = Preferences.getDouble("pathPlannerDriveD", 0.0);
+    public static double pathPlannerTurnP = Preferences.getDouble("pathPlannerTurnP", 2.0);
+    public static double pathPlannerTurnI = Preferences.getDouble("pathPlannerTurnI", 0.2);
+    public static double pathPlannerTurnD = Preferences.getDouble("pathPlannerTurnD", 0.0);
+    public static void reloadConstants() {
+      pathPlannerDriveP = Preferences.getDouble("pathPlannerDriveP", 2.0);
+      pathPlannerDriveI = Preferences.getDouble("pathPlannerDriveI", 0.2);
+      pathPlannerDriveD = Preferences.getDouble("pathPlannerDriveD", 0.0);
+      pathPlannerTurnP = Preferences.getDouble("pathPlannerTurnP", 2.0);
+      pathPlannerTurnI = Preferences.getDouble("pathPlannerTurnI", 0.2);
+      pathPlannerTurnD = Preferences.getDouble("pathPlannerTurnD", 0.0);
+    }
+  }
+
   public static final class PresetConstants {
     public static final String PREFERENCES_ID = "preset";
     public static double elevatorl2 =
@@ -128,7 +145,6 @@ public final class Constants {
 
     public static void reloadConstants() {
       CLIMB_kP = Preferences.getDouble(PREFERENCES_ID + "kP", 0.5);
-      System.out.println(CLIMB_kP);
       CLIMB_kI = Preferences.getDouble(PREFERENCES_ID + "kI", 0.2);
       CLIMB_kD = Preferences.getDouble(PREFERENCES_ID + "kD", 0.0);
       CLIMB_kS = Preferences.getDouble(PREFERENCES_ID + "kS", 0.0);
@@ -307,7 +323,9 @@ public final class Constants {
       "elevatorvelocity",
       "endEffector",
       "groundIntakeArm",
-      "groundIntake"
+      "groundIntake",
+      "pathPlannerDrive",
+      "pathPlannerTurn"
     };
     for (String id : subsystemIdentifiers) {
       Preferences.initDouble(id + "kP", 0);
@@ -359,6 +377,7 @@ public final class Constants {
     GroundIntakeConstants.IntakeConstants.reloadConstants();
     PresetConstants.reloadConstants();
     VisionConstants.reloadConstants();
+    DriveConstants.reloadConstants();
   }
 
   public class VisionConstants {

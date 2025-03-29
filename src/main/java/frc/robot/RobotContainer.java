@@ -410,7 +410,7 @@ public class RobotContainer {
                   elevator.updatePID();
                   endEffector.updatePID();
                   groundIntake.updatePID();
-                  drive.updateAutoAlignConstants();
+                  drive.updateAutoConstants();
                 }));
 
     operatorController.povRight().onTrue(elevator.setElevatorEncoder(() -> 0.0));

@@ -48,6 +48,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.Mode;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.generated.TunerConstants;
@@ -110,11 +111,11 @@ public class Drive extends SubsystemBase {
       new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, new Pose2d());
   // public TrapezoidProfile.Constraints autoConstraints = new Constraints(4.8, 4);
   public PIDController autoXDriveController =
-      new PIDController(2, 0.2, TunerConstants.driveGains.kD);
+      new PIDController(VisionConstants.autoAligndriveD, VisionConstants.autoAligndriveI, VisionConstants.autoAligndriveD);
   public PIDController autoYDriveController =
-      new PIDController(2, 0.2, TunerConstants.driveGains.kD);
+  new PIDController(VisionConstants.autoAligndriveD, VisionConstants.autoAligndriveI, VisionConstants.autoAligndriveD);
   public PIDController autoTurnController =
-      new PIDController(2, 0.2, 0); // TODO: update angle max acceleration
+  new PIDController(VisionConstants.autoAlignturnP, VisionConstants.autoAlignturnI, VisionConstants.autoAlignturnD);
 
   public boolean useVision = true;
 
@@ -143,7 +144,7 @@ public class Drive extends SubsystemBase {
         this::getChassisSpeeds,
         this::runVelocity,
         new PPHolonomicDriveController(
-            new PIDConstants(5.0, 0.0, 0.0), new PIDConstants(5.0, 0.0, 0.0)),
+            new PIDConstants(DriveConstants.pathPlannerDriveP, DriveConstants.pathPlannerDriveI, DriveConstants.pathPlannerDriveD), new PIDConstants(DriveConstants.pathPlannerTurnP, DriveConstants.pathPlannerTurnI, DriveConstants.pathPlannerTurnD)),
         PP_CONFIG,
         () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
         this);
@@ -390,9 +391,20 @@ public class Drive extends SubsystemBase {
     };
   }
 
-  public void updateAutoAlignConstants(){
+  public void updateAutoConstants(){
     autoXDriveController.setPID(VisionConstants.autoAligndriveP, VisionConstants.autoAligndriveI, VisionConstants.autoAligndriveD);
     autoYDriveController.setPID(VisionConstants.autoAligndriveP, VisionConstants.autoAligndriveI, VisionConstants.autoAligndriveD);
     autoTurnController.setPID(VisionConstants.autoAlignturnP, VisionConstants.autoAlignturnI, VisionConstants.autoAlignturnD);
+        // Configure AutoBuilder for PathPlanner
+        AutoBuilder.configure(
+          this::getPose,
+          this::setPose,
+          this::getChassisSpeeds,
+          this::runVelocity,
+          new PPHolonomicDriveController(
+              new PIDConstants(DriveConstants.pathPlannerDriveP, DriveConstants.pathPlannerDriveI, DriveConstants.pathPlannerDriveD), new PIDConstants(DriveConstants.pathPlannerTurnP, DriveConstants.pathPlannerTurnI, DriveConstants.pathPlannerTurnD)),
+          PP_CONFIG,
+          () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
+          this);
   }
 }
