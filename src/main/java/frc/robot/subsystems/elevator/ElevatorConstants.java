@@ -14,19 +14,28 @@ public final class ElevatorConstants {
 
   public static final class ElevatorPositionConstants {
     public static final double ELEVATOR_FEEDFORWARD = 0.0;
-    public static final double ELEVATOR_MOTOR_kP = 0.28; // 0.3
-    public static final double ELEVATOR_MOTOR_kI = 0.02;
-    public static final double ELEVATOR_MOTOR_kD = 0.00;
+    public static final double ELEVATOR_MOTOR_kP = 0.8; // 0.3
+    public static final double ELEVATOR_MOTOR_kI = 0.0;
+    public static final double ELEVATOR_MOTOR_kD = 0.4;
     public static final double ELEVATOR_MOTOR_kG = 0.5; // 0.5
     public static final double ELEVATOR_MOTOR_kV = 0.0;
   }
 
   public static final class ElevatorVelocityConstants {
     public static final double ELEVATOR_FEEDFORWARD = 0.0;
-    public static final double ELEVATOR_MOTOR_kP = 0.15; // 0.15
-    public static final double ELEVATOR_MOTOR_kI = 0.03; // 0.03
+    public static final double ELEVATOR_MOTOR_kP = 0.4; // 0.15
+    public static final double ELEVATOR_MOTOR_kI = 0.00; // 0.03
     public static final double ELEVATOR_MOTOR_kD = 0.00;
-    public static final double ELEVATOR_MOTOR_kG = 0.6; // 0.5
+    public static final double ELEVATOR_MOTOR_kG = 0.5; // 0.5
+    public static final double ELEVATOR_MOTOR_kV = 0.0;
+  }
+
+  public static class ElevatorStowPresetConstants{
+    public static final double ELEVATOR_FEEDFORWARD = 0.0;
+    public static final double ELEVATOR_MOTOR_kP = 0.28; // 0.3
+    public static final double ELEVATOR_MOTOR_kI = 0.02;
+    public static final double ELEVATOR_MOTOR_kD = 0.00;
+    public static final double ELEVATOR_MOTOR_kG = 0.5; // 0.5
     public static final double ELEVATOR_MOTOR_kV = 0.0;
   }
 

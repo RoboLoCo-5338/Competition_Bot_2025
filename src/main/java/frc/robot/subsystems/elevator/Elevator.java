@@ -46,8 +46,8 @@ public class Elevator extends SubsystemBase {
    * @param position The desired position for the elevator.
    * @return A command that sets the elevator's position.
    */
-  public Command setElevatorPosition(double position) {
-    return new RunCommand(() -> io.setElevatorPosition(position), this);
+  public Command setElevatorPosition(double position, int slot) {
+    return new RunCommand(() -> io.setElevatorPosition(position,slot), this);
   }
 
   /**
