@@ -111,11 +111,20 @@ public class Drive extends SubsystemBase {
       new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, new Pose2d());
   // public TrapezoidProfile.Constraints autoConstraints = new Constraints(4.8, 4);
   public PIDController autoXDriveController =
-      new PIDController(VisionConstants.autoAligndriveD, VisionConstants.autoAligndriveI, VisionConstants.autoAligndriveD);
+      new PIDController(
+          VisionConstants.autoAligndriveD,
+          VisionConstants.autoAligndriveI,
+          VisionConstants.autoAligndriveD);
   public PIDController autoYDriveController =
-  new PIDController(VisionConstants.autoAligndriveD, VisionConstants.autoAligndriveI, VisionConstants.autoAligndriveD);
+      new PIDController(
+          VisionConstants.autoAligndriveD,
+          VisionConstants.autoAligndriveI,
+          VisionConstants.autoAligndriveD);
   public PIDController autoTurnController =
-  new PIDController(VisionConstants.autoAlignturnP, VisionConstants.autoAlignturnI, VisionConstants.autoAlignturnD);
+      new PIDController(
+          VisionConstants.autoAlignturnP,
+          VisionConstants.autoAlignturnI,
+          VisionConstants.autoAlignturnD);
 
   public boolean useVision = true;
 
@@ -144,7 +153,14 @@ public class Drive extends SubsystemBase {
         this::getChassisSpeeds,
         this::runVelocity,
         new PPHolonomicDriveController(
-            new PIDConstants(DriveConstants.pathPlannerDriveP, DriveConstants.pathPlannerDriveI, DriveConstants.pathPlannerDriveD), new PIDConstants(DriveConstants.pathPlannerTurnP, DriveConstants.pathPlannerTurnI, DriveConstants.pathPlannerTurnD)),
+            new PIDConstants(
+                DriveConstants.pathPlannerDriveP,
+                DriveConstants.pathPlannerDriveI,
+                DriveConstants.pathPlannerDriveD),
+            new PIDConstants(
+                DriveConstants.pathPlannerTurnP,
+                DriveConstants.pathPlannerTurnI,
+                DriveConstants.pathPlannerTurnD)),
         PP_CONFIG,
         () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
         this);
@@ -391,20 +407,36 @@ public class Drive extends SubsystemBase {
     };
   }
 
-  public void updateAutoConstants(){
-    autoXDriveController.setPID(VisionConstants.autoAligndriveP, VisionConstants.autoAligndriveI, VisionConstants.autoAligndriveD);
-    autoYDriveController.setPID(VisionConstants.autoAligndriveP, VisionConstants.autoAligndriveI, VisionConstants.autoAligndriveD);
-    autoTurnController.setPID(VisionConstants.autoAlignturnP, VisionConstants.autoAlignturnI, VisionConstants.autoAlignturnD);
-        // Configure AutoBuilder for PathPlanner
-        AutoBuilder.configure(
-          this::getPose,
-          this::setPose,
-          this::getChassisSpeeds,
-          this::runVelocity,
-          new PPHolonomicDriveController(
-              new PIDConstants(DriveConstants.pathPlannerDriveP, DriveConstants.pathPlannerDriveI, DriveConstants.pathPlannerDriveD), new PIDConstants(DriveConstants.pathPlannerTurnP, DriveConstants.pathPlannerTurnI, DriveConstants.pathPlannerTurnD)),
-          PP_CONFIG,
-          () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
-          this);
+  public void updateAutoConstants() {
+    autoXDriveController.setPID(
+        VisionConstants.autoAligndriveP,
+        VisionConstants.autoAligndriveI,
+        VisionConstants.autoAligndriveD);
+    autoYDriveController.setPID(
+        VisionConstants.autoAligndriveP,
+        VisionConstants.autoAligndriveI,
+        VisionConstants.autoAligndriveD);
+    autoTurnController.setPID(
+        VisionConstants.autoAlignturnP,
+        VisionConstants.autoAlignturnI,
+        VisionConstants.autoAlignturnD);
+    // Configure AutoBuilder for PathPlanner
+    AutoBuilder.configure(
+        this::getPose,
+        this::setPose,
+        this::getChassisSpeeds,
+        this::runVelocity,
+        new PPHolonomicDriveController(
+            new PIDConstants(
+                DriveConstants.pathPlannerDriveP,
+                DriveConstants.pathPlannerDriveI,
+                DriveConstants.pathPlannerDriveD),
+            new PIDConstants(
+                DriveConstants.pathPlannerTurnP,
+                DriveConstants.pathPlannerTurnI,
+                DriveConstants.pathPlannerTurnD)),
+        PP_CONFIG,
+        () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
+        this);
   }
 }

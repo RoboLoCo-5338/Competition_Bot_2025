@@ -35,7 +35,12 @@ public class TunerConstants {
   // When using closed-loop control, the drive motor uses the control
   // output type specified by SwerveModuleConstants.DriveMotorClosedLoopOutput
   public static Slot0Configs driveGains =
-      new Slot0Configs().withKP(Preferences.getDouble("drivekP", 0)).withKI(Preferences.getDouble("drivekI", 0)).withKD(Preferences.getDouble("drivekD", 0)).withKS(Preferences.getDouble("drivekS", 0)).withKV(Preferences.getDouble("drivekV", 0));
+      new Slot0Configs()
+          .withKP(Preferences.getDouble("drivekP", 0))
+          .withKI(Preferences.getDouble("drivekI", 0))
+          .withKD(Preferences.getDouble("drivekD", 0))
+          .withKS(Preferences.getDouble("drivekS", 0))
+          .withKV(Preferences.getDouble("drivekV", 0));
 
   // The closed-loop output type to use for the steer motors;
   // This affects the PID/FF gains for the steer motors
@@ -317,37 +322,42 @@ public class TunerConstants {
     }
   }
 
-  public static void initTunerPreferences(){
+  public static void initTunerPreferences() {
     String[] keys = {"drive", "steer"};
-    for(String k: keys){
-        Preferences.initDouble(k + "kP", 0.0);
-        Preferences.initDouble(k + "kI", 0.0);
-        Preferences.initDouble(k + "kD", 0.0);
-        Preferences.initDouble(k + "kS", 0.0);
-        Preferences.initDouble(k + "kV", 0.0);
+    for (String k : keys) {
+      Preferences.initDouble(k + "kP", 0.0);
+      Preferences.initDouble(k + "kI", 0.0);
+      Preferences.initDouble(k + "kD", 0.0);
+      Preferences.initDouble(k + "kS", 0.0);
+      Preferences.initDouble(k + "kV", 0.0);
     }
     Preferences.initDouble("steerkA", 0.0);
   }
 
-  public static void updatePID(){
+  public static void updatePID() {
     steerGains =
-    new Slot0Configs()
-        .withKP(Preferences.getDouble("steerkP", 0)) // 100
-        .withKI(Preferences.getDouble("steerkI", 0))
-        .withKD(Preferences.getDouble("steerkD", 0))
-        .withKS(Preferences.getDouble("steerkS", 0))
-        .withKV(Preferences.getDouble("steerkV", 0))
-        .withKA(Preferences.getDouble("steerkA", 0))
-        .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
+        new Slot0Configs()
+            .withKP(Preferences.getDouble("steerkP", 0)) // 100
+            .withKI(Preferences.getDouble("steerkI", 0))
+            .withKD(Preferences.getDouble("steerkD", 0))
+            .withKS(Preferences.getDouble("steerkS", 0))
+            .withKV(Preferences.getDouble("steerkV", 0))
+            .withKA(Preferences.getDouble("steerkA", 0))
+            .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
 
     driveGains =
-    new Slot0Configs().withKP(Preferences.getDouble("drivekP", 0)).withKI(Preferences.getDouble("drivekI", 0)).withKD(Preferences.getDouble("drivekD", 0)).withKS(Preferences.getDouble("drivekS", 0)).withKV(Preferences.getDouble("drivekV", 0));
-    
-    ConstantCreator = ConstantCreator.withSteerMotorGains(steerGains).withDriveMotorGains(driveGains);
-    FrontLeft=FrontLeft.withSteerMotorGains(steerGains).withDriveMotorGains(driveGains);
-    FrontRight=FrontRight.withSteerMotorGains(steerGains).withDriveMotorGains(driveGains);
-    BackLeft=BackLeft.withSteerMotorGains(steerGains).withDriveMotorGains(driveGains);
-    BackRight=BackRight.withSteerMotorGains(steerGains).withDriveMotorGains(driveGains);
-  }
+        new Slot0Configs()
+            .withKP(Preferences.getDouble("drivekP", 0))
+            .withKI(Preferences.getDouble("drivekI", 0))
+            .withKD(Preferences.getDouble("drivekD", 0))
+            .withKS(Preferences.getDouble("drivekS", 0))
+            .withKV(Preferences.getDouble("drivekV", 0));
 
+    ConstantCreator =
+        ConstantCreator.withSteerMotorGains(steerGains).withDriveMotorGains(driveGains);
+    FrontLeft = FrontLeft.withSteerMotorGains(steerGains).withDriveMotorGains(driveGains);
+    FrontRight = FrontRight.withSteerMotorGains(steerGains).withDriveMotorGains(driveGains);
+    BackLeft = BackLeft.withSteerMotorGains(steerGains).withDriveMotorGains(driveGains);
+    BackRight = BackRight.withSteerMotorGains(steerGains).withDriveMotorGains(driveGains);
+  }
 }

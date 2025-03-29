@@ -47,13 +47,14 @@ public final class Constants {
     REPLAY
   }
 
-  public static final class DriveConstants{
+  public static final class DriveConstants {
     public static double pathPlannerDriveP = Preferences.getDouble("pathPlannerDriveP", 2.0);
     public static double pathPlannerDriveI = Preferences.getDouble("pathPlannerDriveI", 0.2);
     public static double pathPlannerDriveD = Preferences.getDouble("pathPlannerDriveD", 0.0);
     public static double pathPlannerTurnP = Preferences.getDouble("pathPlannerTurnP", 2.0);
     public static double pathPlannerTurnI = Preferences.getDouble("pathPlannerTurnI", 0.2);
     public static double pathPlannerTurnD = Preferences.getDouble("pathPlannerTurnD", 0.0);
+
     public static void reloadConstants() {
       pathPlannerDriveP = Preferences.getDouble("pathPlannerDriveP", 2.0);
       pathPlannerDriveI = Preferences.getDouble("pathPlannerDriveI", 0.2);

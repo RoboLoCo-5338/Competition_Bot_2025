@@ -5,11 +5,15 @@ import static frc.robot.util.SparkUtil.sparkStickyFault;
 import static frc.robot.util.SparkUtil.tryUntilOk;
 
 import com.revrobotics.AbsoluteEncoder;
+import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.SparkClosedLoopController.ArbFFUnits;
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants.ArmConstants;
 import java.util.function.DoubleSupplier;
 
 public class ArmIOSpark implements ArmIO {
@@ -17,10 +21,14 @@ public class ArmIOSpark implements ArmIO {
   private final AbsoluteEncoder armEncoder;
 
   private final Debouncer armConnectedDebouncer = new Debouncer(0.5);
+  ArmFeedforward feedforward;
 
   public ArmIOSpark() {
     armEncoder = armMotor.getAbsoluteEncoder();
 
+    feedforward =
+        new ArmFeedforward(
+            ArmConstants.ARM_MOTOR_KS, ArmConstants.ARM_MOTOR_KG, ArmConstants.ARM_MOTOR_KV);
     tryUntilOk(
         armMotor,
         5,
@@ -53,17 +61,19 @@ public class ArmIOSpark implements ArmIO {
 
   @Override
   public void setArmVelocity(double velocityRadPerSec) {
-    // double ffvolts =
-    //     ArmConstants.ARM_MOTOR_KS * Math.signum(velocityRadPerSec)
-    //         + ArmConstants.ARM_MOTOR_KV * velocityRadPerSec;
-    // // armMotor.set(velocityRadPerSec);
-    // armClosedLoopController.setReference(
-    //     velocityRadPerSec,
-    //     ControlType.kVelocity,
-    //     ClosedLoopSlot.kSlot0,
-    //     ffvolts,
-    //     ArbFFUnits.kVoltage);
-    armMotor.set(velocityRadPerSec);
+    double ffvolts =
+        ArmConstants.ARM_MOTOR_KS * Math.signum(velocityRadPerSec)
+            + ArmConstants.ARM_MOTOR_KV * velocityRadPerSec;
+    // talk about this at the meeting, i'm not sure how we want to implement this
+    ffvolts = feedforward.calculate(armEncoder.getPosition(), velocityRadPerSec);
+    // armMotor.set(velocityRadPerSec);
+    armClosedLoopController.setReference(
+        velocityRadPerSec,
+        ControlType.kVelocity,
+        ClosedLoopSlot.kSlot0,
+        ffvolts,
+        ArbFFUnits.kVoltage);
+    // armMotor.set(velocityRadPerSec);
   }
 
   @Override

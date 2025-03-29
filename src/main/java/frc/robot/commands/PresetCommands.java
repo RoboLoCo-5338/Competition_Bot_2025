@@ -85,7 +85,6 @@ public class PresetCommands {
       return new InstantCommand();
     }
     return new SequentialCommandGroup(
-
         new RepeatCommand(endEffector.setEndEffectorVelocity(60))
             .onlyWhile(
                 () ->
@@ -101,7 +100,6 @@ public class PresetCommands {
         //         () ->
         //             (endEffector.getIO().getLaserCanMeasurement1() < 100
         //                 && endEffector.getIO().getLaserCanMeasurement2() < 100)),
-        endEffector.setEndEffectorVelocity(0.0)
-      );
+        endEffector.setEndEffectorVelocity(0.0));
   }
 }
