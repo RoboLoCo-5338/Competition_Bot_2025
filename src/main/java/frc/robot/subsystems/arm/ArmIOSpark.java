@@ -10,6 +10,7 @@ import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import java.nio.ByteBuffer;
 import java.util.function.DoubleSupplier;
 
 public class ArmIOSpark implements ArmIO {
@@ -41,7 +42,11 @@ public class ArmIOSpark implements ArmIO {
         new DoubleSupplier[] {armMotor::getAppliedOutput, armMotor::getBusVoltage},
         (values) -> inputs.armAppliedVolts = values[0] * values[1]);
     ifOk(armMotor, armMotor::getOutputCurrent, (value) -> inputs.armCurrent = value);
-
+    ifOk(armMotor, armMotor::getMotorTemperature, (value) -> inputs.armTemperature = value);
+    ifOk(
+        armMotor,
+        armMotor::getFirmwareVersion,
+        (value) -> inputs.armFirmwareVersion = ByteBuffer.allocate(4).putInt((int) value).array());
     inputs.armConnected = armConnectedDebouncer.calculate(!sparkStickyFault);
   }
 
