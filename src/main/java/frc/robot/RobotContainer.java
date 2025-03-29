@@ -363,29 +363,29 @@ public class RobotContainer {
     //     .whileTrue(
     //         DriveCommands.reefStrafe(
     //             drive, () -> driverController.getLeftY(), () -> driverController.getLeftX()));
-    // driverController
-    //     .povLeft()
-    //     .and(() -> drive.useVision)
-    //     .onTrue(
-    //         DriveCommands.reefAlign(
-    //             drive,
-    //             Direction.Left,
-    //             driverController,
-    //             led,
-    //             () -> elevator.getElevatorPosition()));
-    // driverController
-    //     .povRight()
-    //     .and(
-    //         () -> {
-    //           return drive.useVision;
-    //         })
-    //     .onTrue(
-    //         DriveCommands.reefAlign(
-    //             drive,
-    //             Direction.Right,
-    //             driverController,
-    //             led,
-    //             () -> elevator.getElevatorPosition()));
+    driverController
+        .povLeft()
+        .and(() -> drive.useVision)
+        .onTrue(
+            DriveCommands.reefAlign(
+                drive,
+                Direction.Left,
+                driverController,
+                led,
+                () -> elevator.getElevatorPosition()));
+    driverController
+        .povRight()
+        .and(
+            () -> {
+              return drive.useVision;
+            })
+        .onTrue(
+            DriveCommands.reefAlign(
+                drive,
+                Direction.Right,
+                driverController,
+                led,
+                () -> elevator.getElevatorPosition()));
 
     driverController
         .rightTrigger()
@@ -411,22 +411,22 @@ public class RobotContainer {
                   endEffector.updatePID();
                   groundIntake.updatePID();
                   drive.updateAutoConstants();
-                  TunerConstants.updatePID();
-                  drive.updateDriveModuleConstants(TunerConstants.BackLeft);
-                  drive.reconfigureDriveModuleMotors();
+                  //   TunerConstants.updatePID();
+                  //   drive.updateDriveModuleConstants(TunerConstants.BackLeft);
+                  //   drive.reconfigureDriveModuleMotors();
                 }));
 
     operatorController.povRight().onTrue(elevator.setElevatorEncoder(() -> 0.0));
 
-    driverController
-        .povLeft()
-        .onTrue(DriveCommands.joystickDrive(drive, () -> 0, () -> 1, () -> 0))
-        .onFalse(drive.getDefaultCommand());
+    // driverController
+    //     .povLeft()
+    //     .onTrue(DriveCommands.joystickDrive(drive, () -> 0, () -> 1, () -> 0))
+    //     .onFalse(drive.getDefaultCommand());
 
-    driverController
-        .povRight()
-        .onTrue(DriveCommands.joystickDrive(drive, () -> 0, () -> -1, () -> 0))
-        .onFalse(drive.getDefaultCommand());
+    // driverController
+    //     .povRight()
+    //     .onTrue(DriveCommands.joystickDrive(drive, () -> 0, () -> -1, () -> 0))
+    //     .onFalse(drive.getDefaultCommand());
 
     driverController
         .povUp()
