@@ -38,6 +38,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "GI",
+  "folder": null,
   "choreoAuto": false
 }

@@ -143,7 +143,14 @@ public class Robot extends LoggedRobot {
   public void autonomousInit() {
     DriveCommands.isFlipped = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red;
     autonomousCommand = robotContainer.getAutonomousCommand();
-
+    Constants.reloadPreferences();
+    robotContainer.arm.updatePID();
+    robotContainer.climb.updatePID();
+    robotContainer.elevator.updatePID();
+    robotContainer.endEffector.updatePID();
+    robotContainer.groundIntake.updatePID();
+    robotContainer.drive.updateAutoConstants();
+    TunerConstants.updatePID();
     // schedule the autonomous command (example)
     if (autonomousCommand != null) {
       autonomousCommand.schedule();
