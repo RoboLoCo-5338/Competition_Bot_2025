@@ -8,7 +8,6 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import frc.robot.Constants.ElevatorConstants;
 import frc.robot.generated.TunerConstants;
 import org.littletonrobotics.junction.AutoLog;
 
@@ -32,12 +31,14 @@ public interface ElevatorIO {
     public double elevator1AppliedVolts = 0.0;
     public double elevator1CurrentAmps = 0.0;
     public boolean elevator1Connected = false;
+    public double elevator1Temperature = 0.0;
 
     public double elevator2Position = 0.0;
     public double elevator2Velocity = 0.0;
     public double elevator2AppliedVolts = 0.0;
     public double elevator2CurrentAmps = 0.0;
     public boolean elevator2Connected = false;
+    public double elevator2Temperature = 0.0;
   }
 
   /**
@@ -116,7 +117,6 @@ public interface ElevatorIO {
    * @return the configuration used for the Talon FX motor controllers of the elevator subsystem
    */
   public default TalonFXConfiguration getConfiguration(int motorNum) {
-    // TODO change these values
     var config = new TalonFXConfiguration();
     config.Voltage.PeakForwardVoltage = 16;
     config.MotorOutput.NeutralMode = NeutralModeValue.Brake;

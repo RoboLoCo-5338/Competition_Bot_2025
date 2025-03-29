@@ -11,14 +11,17 @@ import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
+import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
-import frc.robot.Constants.EndEffectorConstants;
+import frc.robot.subsystems.endeffector.EndEffectorConstants.EndEffectorSimConstants;
 
 public class EndEffectorIOTalonFX implements EndEffectorIO {
 
   private final StatusSignal<AngularVelocity> endEffectorVelocity;
   private final StatusSignal<Voltage> endEffectorAppliedVolts;
   private final StatusSignal<Current> endEffectorCurrent;
+  private final StatusSignal<Temperature> endEffectorTemperature;
+  private final StatusSignal<Integer> endEffectorVersion;
 
   private final Debouncer effectorDebouncer = new Debouncer(0.5);
 
@@ -30,6 +33,8 @@ public class EndEffectorIOTalonFX implements EndEffectorIO {
     endEffectorVelocity = endEffectorMotor.getVelocity();
     endEffectorAppliedVolts = endEffectorMotor.getMotorVoltage();
     endEffectorCurrent = endEffectorMotor.getStatorCurrent();
+    endEffectorTemperature = endEffectorMotor.getDeviceTemp();
+    endEffectorVersion = endEffectorMotor.getVersion();
 
     endEffectorMotor.getConfigurator().apply(getEndEffectorConfiguration());
 
@@ -70,12 +75,13 @@ public class EndEffectorIOTalonFX implements EndEffectorIO {
     inputs.endEffectorVelocity = Units.rotationsToRadians(endEffectorVelocity.getValueAsDouble());
     inputs.endEffectorAppliedVolts = endEffectorAppliedVolts.getValueAsDouble();
     inputs.endEffectorCurrentAmps = endEffectorCurrent.getValueAsDouble();
+    inputs.endEffectorTemperature = endEffectorTemperature.getValueAsDouble();
   }
 
   @Override
   public void setEndEffectorVelocity(double velocity) {
     endEffectorMotor.setControl(
-        endEffectorVelocityRequest.withVelocity(velocity * EndEffectorConstants.GEARING));
+        endEffectorVelocityRequest.withVelocity(velocity * EndEffectorSimConstants.GEARING));
   }
 
   @Override
@@ -89,7 +95,6 @@ public class EndEffectorIOTalonFX implements EndEffectorIO {
     if (m1 != null && m1.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
       return m1.distance_mm;
     } else {
-      System.out.println("lasercan 1 status: " + m1.status);
       if (m1.status == LaserCan.LASERCAN_STATUS_WEAK_SIGNAL) {
         return 200;
       }
@@ -103,7 +108,6 @@ public class EndEffectorIOTalonFX implements EndEffectorIO {
     if (m2 != null && m2.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
       return m2.distance_mm;
     } else {
-      System.out.println("lasercan 2 status: " + m2.status);
       if (m2.status == LaserCan.LASERCAN_STATUS_WEAK_SIGNAL) {
         return 200;
       }

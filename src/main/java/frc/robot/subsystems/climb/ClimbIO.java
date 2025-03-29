@@ -6,7 +6,6 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import frc.robot.Constants.ClimbConstants;
 import frc.robot.generated.TunerConstants;
 import org.littletonrobotics.junction.AutoLog;
 
@@ -24,6 +23,7 @@ public interface ClimbIO {
     public double climbAppliedVolts = 0.0;
     public double climbCurrentAmps = 0.0;
     public boolean climbConnected = false;
+    public double climbTemperature = 0.0;
   }
 
   /**
@@ -76,7 +76,6 @@ public interface ClimbIO {
 
     var currentConfig = new CurrentLimitsConfigs();
     currentConfig.StatorCurrentLimitEnable = true;
-    // TODO change this later
     currentConfig.StatorCurrentLimit = ClimbConstants.CLIMB_MOTOR_CURRENT_LIMIT;
     config.CurrentLimits = currentConfig;
     return config;

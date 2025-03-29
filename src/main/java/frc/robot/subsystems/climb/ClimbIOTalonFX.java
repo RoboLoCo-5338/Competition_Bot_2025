@@ -11,9 +11,10 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
+import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
-import frc.robot.Constants.ClimbConstants;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.climb.ClimbConstants.ClimbSimConstants;
 
 public class ClimbIOTalonFX implements ClimbIO {
 
@@ -23,6 +24,7 @@ public class ClimbIOTalonFX implements ClimbIO {
   private final StatusSignal<AngularVelocity> climbVelocity;
   private final StatusSignal<Voltage> climbAppliedVolts;
   private final StatusSignal<Current> climbCurrent;
+  private final StatusSignal<Temperature> climbTemperature;
 
   private final Debouncer climbConnected = new Debouncer(0.5);
 
@@ -35,6 +37,7 @@ public class ClimbIOTalonFX implements ClimbIO {
     climbVelocity = climbMotor.getVelocity();
     climbAppliedVolts = climbMotor.getMotorVoltage();
     climbCurrent = climbMotor.getStatorCurrent();
+    climbTemperature = climbMotor.getDeviceTemp();
 
     tryUntilOk(
         5,
@@ -56,19 +59,20 @@ public class ClimbIOTalonFX implements ClimbIO {
     inputs.climbCurrentAmps = climbCurrent.getValueAsDouble();
     inputs.climbPosition = Units.rotationsToRadians(climbPosition.getValueAsDouble());
     inputs.climbVelocityRadPerSec = Units.rotationsToRadians(climbPosition.getValueAsDouble());
+    inputs.climbTemperature = climbTemperature.getValueAsDouble();
   }
 
   @Override
   public void setClimbVelocity(double velocity) {
     climbMotor.setControl(
         climbVelocityRequest.withVelocity(
-            Units.radiansToRotations(velocity * ClimbConstants.GEARING)));
+            Units.radiansToRotations(velocity * ClimbSimConstants.GEARING)));
   }
 
   @Override
   public void setClimbPosition(double position) {
     climbMotor.setControl(
         climbPositionRequest.withPosition(
-            Units.radiansToRotations(position * ClimbConstants.GEARING)));
+            Units.radiansToRotations(position * ClimbSimConstants.GEARING)));
   }
 }

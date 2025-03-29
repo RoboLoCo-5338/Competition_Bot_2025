@@ -2,9 +2,6 @@ package frc.robot.subsystems.elevator;
 
 import static frc.robot.util.PhoenixUtil.tryUntilOk;
 
-import au.grapplerobotics.ConfigurationFailedException;
-import au.grapplerobotics.LaserCan;
-import au.grapplerobotics.interfaces.LaserCanInterface.Measurement;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.ParentDevice;
@@ -13,8 +10,8 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
+import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
-import frc.robot.Constants.ElevatorConstants;
 
 public class ElevatorIOTalonFX implements ElevatorIO {
 
@@ -26,16 +23,17 @@ public class ElevatorIOTalonFX implements ElevatorIO {
   private final StatusSignal<AngularVelocity> elevator2Velocity;
   private final StatusSignal<Voltage> elevator2AppliedVolts;
   private final StatusSignal<Current> elevator2Current;
+  private final StatusSignal<Temperature> elevator1Temperature;
+  private final StatusSignal<Temperature> elevator2Temperature;
+  private final StatusSignal<Integer> elevator1Version;
+  private final StatusSignal<Integer> elevator2Version;
 
   private final Debouncer elevator1ConnectedDebounce = new Debouncer(0.5);
   private final Debouncer elevator2ConnectedDebounce = new Debouncer(0.5);
 
-  private final LaserCan lc;
-
   public ElevatorIOTalonFX() {
     elevatorMotor1.getConfigurator().apply(getConfiguration(1));
 
-    // TODO does this need to be inverted? idk bro does it? It does
     elevatorMotor2.getConfigurator().apply(getConfiguration(2));
     elevatorMotor1.setPosition(0);
     elevatorMotor2.setPosition(0);
@@ -45,11 +43,15 @@ public class ElevatorIOTalonFX implements ElevatorIO {
     elevator1Velocity = elevatorMotor1.getVelocity();
     elevator1AppliedVolts = elevatorMotor1.getMotorVoltage();
     elevator1Current = elevatorMotor1.getStatorCurrent();
+    elevator1Temperature = elevatorMotor1.getDeviceTemp();
+    elevator1Version = elevatorMotor1.getVersion();
 
     elevator2Position = elevatorMotor2.getPosition();
     elevator2Velocity = elevatorMotor2.getVelocity();
     elevator2AppliedVolts = elevatorMotor2.getMotorVoltage();
     elevator2Current = elevatorMotor2.getStatorCurrent();
+    elevator2Temperature = elevatorMotor2.getDeviceTemp();
+    elevator2Version = elevatorMotor2.getVersion();
 
     tryUntilOk(
         5,
@@ -65,16 +67,6 @@ public class ElevatorIOTalonFX implements ElevatorIO {
                 elevator2AppliedVolts,
                 elevator2Current));
     ParentDevice.optimizeBusUtilizationForAll(elevatorMotor1, elevatorMotor2);
-
-    lc = new LaserCan(ElevatorConstants.LASERCAN_ID);
-    try {
-      lc.setRangingMode(LaserCan.RangingMode.SHORT);
-      // lc.setRegionOfInterest(new LaserCan.RegionOfInterest(8, 8, 16, 16));
-      // lc.setTimingBudget(LaserCan.TimingBudget.TIMING_BUDGET_33MS);
-    } catch (ConfigurationFailedException e) {
-
-      System.out.println("Configuration failed! " + e);
-    }
   }
 
   @Override
@@ -92,12 +84,14 @@ public class ElevatorIOTalonFX implements ElevatorIO {
     inputs.elevator1Velocity = Units.rotationsToRadians(elevator1Velocity.getValueAsDouble());
     inputs.elevator1AppliedVolts = elevator1AppliedVolts.getValueAsDouble();
     inputs.elevator1CurrentAmps = elevator1Current.getValueAsDouble();
+    inputs.elevator1Temperature = elevator1Temperature.getValueAsDouble();
 
     inputs.elevator2Connected = elevator2ConnectedDebounce.calculate(motor2Status.isOK());
     inputs.elevator2Position = elevator2Position.getValueAsDouble();
     inputs.elevator2Velocity = Units.rotationsToRadians(elevator2Velocity.getValueAsDouble());
     inputs.elevator2AppliedVolts = elevator2AppliedVolts.getValueAsDouble();
     inputs.elevator2CurrentAmps = elevator2Current.getValueAsDouble();
+    inputs.elevator2Temperature = elevator2Temperature.getValueAsDouble();
   }
 
   @Override
@@ -119,15 +113,5 @@ public class ElevatorIOTalonFX implements ElevatorIO {
         ElevatorConstants.ElevatorVelocityConstants.ELEVATOR_FEEDFORWARD;
     elevatorMotor1.setControl(elevator1VelocityRequest.withVelocity(velocity).withSlot(1));
     elevatorMotor2.setControl(elevator2VelocityRequest.withVelocity(velocity).withSlot(1));
-  }
-
-  @Override
-  public int getLaserCanMeasurement() {
-    Measurement m = lc.getMeasurement();
-    if (m != null && m.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
-      return m.distance_mm;
-    } else {
-      return -1;
-    }
   }
 }

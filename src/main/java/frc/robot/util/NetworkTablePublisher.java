@@ -37,7 +37,6 @@ public class NetworkTablePublisher {
           try {
             publisher.set(getObject.call());
           } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
           }
         });

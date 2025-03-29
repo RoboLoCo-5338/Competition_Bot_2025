@@ -42,7 +42,10 @@ public class Climb extends SubsystemBase {
   public Command setClimbPosition(double position) {
     return new StartEndCommand(
             () -> climbIO.setClimbPosition(position), () -> climbIO.setClimbPosition(0), this)
-        .until(() -> inputs.climbPosition == position);
+        .until(
+            () ->
+                Math.abs((inputs.climbPosition - position) / inputs.climbPosition)
+                    < ClimbConstants.POSITION_TOLERANCE);
   }
 
   /**

@@ -28,7 +28,6 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveCommands.Direction;
 import frc.robot.commands.PresetCommands;
@@ -55,16 +54,12 @@ import frc.robot.subsystems.endeffector.EndEffector;
 import frc.robot.subsystems.endeffector.EndEffectorIO;
 import frc.robot.subsystems.endeffector.EndEffectorIOSim;
 import frc.robot.subsystems.endeffector.EndEffectorIOTalonFX;
-import frc.robot.subsystems.groundintake.GroundIntake;
-import frc.robot.subsystems.groundintake.GroundIntakeIO;
-import frc.robot.subsystems.groundintake.GroundIntakeIOSim;
-import frc.robot.subsystems.groundintake.GroundIntakeIOSpark;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.vision.VisionConstants;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOPhotonVision;
 import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
-import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -81,29 +76,22 @@ public class RobotContainer {
   public final LED led;
   public static boolean doRainbow = true;
   public static boolean preEnable = true;
+
   private final Elevator elevator;
 
-  private final GroundIntake groundIntake;
-
   private final EndEffector endEffector;
-
-  private final ButtonBindings ButtonBindingsController;
 
   private final Climb climb;
 
   private final Arm arm;
 
+  // Controllers
   public CommandXboxController driverController = new CommandXboxController(0);
 
   public CommandXboxController operatorController = new CommandXboxController(1);
 
-  // Controller
-
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
-
-  // Vision Target
-  private int visionTargetID = -1;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -124,7 +112,6 @@ public class RobotContainer {
                     VisionConstants.camera0Name, VisionConstants.robotToCamera0));
         // new VisionIOPhotonVision(
         //     VisionConstants.camera1Name, VisionConstants.robotToCamera1));
-        groundIntake = new GroundIntake(new GroundIntakeIOSpark());
         endEffector = new EndEffector(new EndEffectorIOTalonFX());
         elevator = new Elevator(new ElevatorIOTalonFX());
         climb = new Climb(new ClimbIOTalonFX());
@@ -132,8 +119,6 @@ public class RobotContainer {
         led = new LED();
 
         //  led.setBargeIndicator(drive, elevator);
-        ButtonBindingsController =
-            new ButtonBindings(drive, led, elevator, groundIntake, endEffector, climb, arm);
 
         break;
 
@@ -147,7 +132,6 @@ public class RobotContainer {
                 new ModuleIOSim(TunerConstants.BackLeft),
                 new ModuleIOSim(TunerConstants.BackRight));
         led = new LED();
-        groundIntake = new GroundIntake(new GroundIntakeIOSim());
         endEffector = new EndEffector(new EndEffectorIOSim());
         elevator = new Elevator(new ElevatorIOSim());
         climb = new Climb(new ClimbIOSim());
@@ -159,8 +143,6 @@ public class RobotContainer {
                     VisionConstants.camera0Name, VisionConstants.robotToCamera0, drive::getPose),
                 new VisionIOPhotonVisionSim(
                     VisionConstants.camera1Name, VisionConstants.robotToCamera1, drive::getPose));
-        ButtonBindingsController =
-            new ButtonBindings(drive, led, elevator, groundIntake, endEffector, climb, arm);
         break;
 
       default:
@@ -174,20 +156,15 @@ public class RobotContainer {
                 new ModuleIO() {});
 
         led = new LED();
-        groundIntake = new GroundIntake(new GroundIntakeIO() {});
         endEffector = new EndEffector(new EndEffectorIO() {});
         elevator = new Elevator(new ElevatorIO() {});
         climb = new Climb(new ClimbIO() {});
         arm = new Arm(new ArmIO() {});
-        ButtonBindingsController =
-            new ButtonBindings(drive, led, elevator, groundIntake, endEffector, climb, arm);
         vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
         break;
     }
 
     // Set up commands for auto
-    NamedCommands.registerCommand("GroundI Outake", groundIntake.setGroundIntakeVelocity(-3600));
-    NamedCommands.registerCommand("GroundI Stop", groundIntake.setGroundIntakeVelocity(0));
     NamedCommands.registerCommand("L4 Preset", PresetCommands.presetL4(elevator, endEffector, arm));
     NamedCommands.registerCommand("L2 Preset", PresetCommands.presetL2(elevator, endEffector, arm));
 
@@ -263,6 +240,13 @@ public class RobotContainer {
   private void configureButtonBindings() {
     // Default command, normal field-relative drive
 
+    drive.setDefaultCommand(
+        DriveCommands.joystickDrive(
+            drive,
+            () -> -driverController.getLeftY(),
+            () -> -driverController.getLeftX(),
+            () -> -driverController.getRightX() * Math.abs(driverController.getRightX())));
+
     elevator.setDefaultCommand(
         elevator.setElevatorVelocity(() -> deadband(-operatorController.getLeftY()) * 25));
 
@@ -308,26 +292,6 @@ public class RobotContainer {
         .onTrue(PresetCommands.netShoot(arm, endEffector))
         .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
 
-    operatorController
-        .povUp()
-        .whileTrue(groundIntake.setGroundArmVelocity(() -> -10.0))
-        .onFalse(groundIntake.setGroundArmVelocity(() -> 0.0));
-
-    operatorController
-        .povDown()
-        .whileTrue(groundIntake.setGroundArmVelocity(() -> 10.0))
-        .onFalse(groundIntake.setGroundArmVelocity(() -> 0.0));
-
-    operatorController
-        .povRight()
-        .whileTrue(groundIntake.setGroundIntakeVelocity(-3600.0))
-        .onFalse(groundIntake.setGroundIntakeVelocity(0.0));
-
-    operatorController
-        .povLeft()
-        .whileTrue(groundIntake.setGroundIntakeVelocity(3600.0))
-        .onFalse(groundIntake.setGroundIntakeVelocity(0.0));
-
     driverController
         .rightBumper()
         .whileTrue(endEffector.setEndEffectorVelocity(60))
@@ -336,17 +300,11 @@ public class RobotContainer {
         .leftTrigger()
         .whileTrue(endEffector.setEndEffectorVelocity(-60))
         .onFalse(endEffector.setEndEffectorVelocity(0));
-
-    driverController
-        .x()
-        .onTrue(groundIntake.setIntakeSpeed(-1))
-        .onFalse(groundIntake.setGroundIntakeVelocity(0));
     driverController
         .b()
         .onTrue(
             Commands.runOnce(
                     () -> {
-                      System.out.println("runs");
                       drive.disableVision();
                     })
                 .andThen(
@@ -401,11 +359,7 @@ public class RobotContainer {
                 }));
   }
 
-  public void periodic() {
-    // ButtonBindingsController.periodic();
-    Logger.recordOutput("camera pose", Constants.VisionConstants.robotToCamera0);
-    // System.out.println(drive.useVision);
-  }
+  public void periodic() {}
 
   public void teleopInit() {
     SmartDashboard.putNumber("Laser Can", endEffector.io.getLaserCanMeasurement1());
@@ -424,9 +378,5 @@ public class RobotContainer {
 
   public RunCommand startRainbow() {
     return led.goRainbow();
-  }
-
-  public void setVisionTarget(int id) {
-    visionTargetID = id;
   }
 }
