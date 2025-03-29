@@ -363,29 +363,29 @@ public class RobotContainer {
     //     .whileTrue(
     //         DriveCommands.reefStrafe(
     //             drive, () -> driverController.getLeftY(), () -> driverController.getLeftX()));
-    driverController
-        .povLeft()
-        .and(() -> drive.useVision)
-        .onTrue(
-            DriveCommands.reefAlign(
-                drive,
-                Direction.Left,
-                driverController,
-                led,
-                () -> elevator.getElevatorPosition()));
-    driverController
-        .povRight()
-        .and(
-            () -> {
-              return drive.useVision;
-            })
-        .onTrue(
-            DriveCommands.reefAlign(
-                drive,
-                Direction.Right,
-                driverController,
-                led,
-                () -> elevator.getElevatorPosition()));
+    // driverController
+    //     .povLeft()
+    //     .and(() -> drive.useVision)
+    //     .onTrue(
+    //         DriveCommands.reefAlign(
+    //             drive,
+    //             Direction.Left,
+    //             driverController,
+    //             led,
+    //             () -> elevator.getElevatorPosition()));
+    // driverController
+    //     .povRight()
+    //     .and(
+    //         () -> {
+    //           return drive.useVision;
+    //         })
+    //     .onTrue(
+    //         DriveCommands.reefAlign(
+    //             drive,
+    //             Direction.Right,
+    //             driverController,
+    //             led,
+    //             () -> elevator.getElevatorPosition()));
 
     driverController
         .rightTrigger()
@@ -411,9 +411,32 @@ public class RobotContainer {
                   endEffector.updatePID();
                   groundIntake.updatePID();
                   drive.updateAutoConstants();
+                  TunerConstants.updatePID();
+                  drive.updateDriveModuleConstants(TunerConstants.BackLeft);
+                  drive.reconfigureDriveModuleMotors();
                 }));
 
     operatorController.povRight().onTrue(elevator.setElevatorEncoder(() -> 0.0));
+
+    driverController
+        .povLeft()
+        .onTrue(DriveCommands.joystickDrive(drive, () -> 0, () -> 1, () -> 0))
+        .onFalse(drive.getDefaultCommand());
+
+    driverController
+        .povRight()
+        .onTrue(DriveCommands.joystickDrive(drive, () -> 0, () -> -1, () -> 0))
+        .onFalse(drive.getDefaultCommand());
+
+    driverController
+        .povUp()
+        .onTrue(DriveCommands.joystickDrive(drive, () -> 1, () -> 0, () -> 0))
+        .onFalse(drive.getDefaultCommand());
+
+    driverController
+        .povDown()
+        .onTrue(DriveCommands.joystickDrive(drive, () -> -1, () -> 0, () -> 0))
+        .onFalse(drive.getDefaultCommand());
   }
 
   public void periodic() {

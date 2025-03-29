@@ -88,6 +88,28 @@ public class Module {
     io.setTurnPosition(state.angle);
   }
 
+  public void runSetpointWithConstants(SwerveModuleState state, SwerveModuleConstants _constants) {
+    // Optimize velocity setpoint
+    state.optimize(getAngle());
+    state.cosineScale(inputs.turnPosition);
+
+    // Apply setpoints
+    // io.setDriveVelocity(state.speedMetersPerSecond / constants.WheelRadius);
+    io.setDriveVelocityWithConstants(
+        state.speedMetersPerSecond / constants.WheelRadius, _constants);
+    io.setTurnPosition(state.angle);
+  }
+
+  public void updateModuleConstants(
+      SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration>
+          _constants) {
+    io.updateConstants(_constants);
+  }
+
+  public void reconfigureModuleMotors() {
+    io.reconfigureMotors();
+  }
+
   /** Runs the module with the specified output while controlling to zero degrees. */
   public void runCharacterization(double output) {
     io.setDriveOpenLoop(output);

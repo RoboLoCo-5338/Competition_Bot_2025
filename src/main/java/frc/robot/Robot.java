@@ -103,6 +103,7 @@ public class Robot extends LoggedRobot {
     }
 
     Constants.initPreferences();
+    TunerConstants.initTunerPreferences();
 
     // Instantiate our RobotContainer. This will perform all our button bindings,
     // and put our autonomous chooser on the dashboard.

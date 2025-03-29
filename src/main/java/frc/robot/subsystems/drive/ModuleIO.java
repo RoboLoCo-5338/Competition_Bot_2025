@@ -13,6 +13,9 @@
 
 package frc.robot.subsystems.drive;
 
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import edu.wpi.first.math.geometry.Rotation2d;
 import org.littletonrobotics.junction.AutoLog;
 
@@ -51,6 +54,17 @@ public interface ModuleIO {
 
   /** Run the drive motor at the specified velocity. */
   public default void setDriveVelocity(double velocityRadPerSec) {}
+
+  public default void setDriveVelocityWithConstants(
+      double velocityRadPerSec,
+      SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration>
+          _constants) {}
+
+  public default void updateConstants(
+      SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration>
+          _constants) {}
+
+  public default void reconfigureMotors() {}
 
   /** Run the turn motor to the specified rotation. */
   public default void setTurnPosition(Rotation2d rotation) {}

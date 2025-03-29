@@ -50,7 +50,7 @@ import java.util.Queue;
  * <p>Device configuration and other behaviors not exposed by TunerConstants can be customized here.
  */
 public class ModuleIOTalonFX implements ModuleIO {
-  private final SwerveModuleConstants<
+  private /*final*/ SwerveModuleConstants<
           TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration>
       constants;
 
@@ -260,6 +260,17 @@ public class ModuleIOTalonFX implements ModuleIO {
   }
 
   @Override
+  public void setDriveVelocityWithConstants(
+      double velocityRadPerSec, SwerveModuleConstants _constants) {
+    double velocityRotPerSec = Units.radiansToRotations(velocityRadPerSec);
+    driveTalon.setControl(
+        switch (_constants.DriveMotorClosedLoopOutput) {
+          case Voltage -> velocityVoltageRequest.withVelocity(velocityRotPerSec);
+          case TorqueCurrentFOC -> velocityTorqueCurrentRequest.withVelocity(velocityRotPerSec);
+        });
+  }
+
+  @Override
   public void setTurnPosition(Rotation2d rotation) {
     turnTalon.setControl(
         switch (constants.SteerMotorClosedLoopOutput) {
@@ -267,5 +278,57 @@ public class ModuleIOTalonFX implements ModuleIO {
           case TorqueCurrentFOC -> positionTorqueCurrentRequest.withPosition(
               rotation.getRotations());
         });
+  }
+
+  @Override
+  public void updateConstants(
+      SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration>
+          _constants) {
+    this.constants = _constants;
+  }
+
+  @Override
+  public void reconfigureMotors() {
+    // Configure drive motor
+    var driveConfig = constants.DriveMotorInitialConfigs;
+    driveConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+    driveConfig.Slot0 = constants.DriveMotorGains;
+    driveConfig.Feedback.SensorToMechanismRatio = constants.DriveMotorGearRatio;
+    driveConfig.TorqueCurrent.PeakForwardTorqueCurrent = constants.SlipCurrent;
+    driveConfig.TorqueCurrent.PeakReverseTorqueCurrent = -constants.SlipCurrent;
+    driveConfig.CurrentLimits.StatorCurrentLimit = constants.SlipCurrent;
+    driveConfig.CurrentLimits.StatorCurrentLimitEnable = true;
+    driveConfig.MotorOutput.Inverted =
+        constants.DriveMotorInverted
+            ? InvertedValue.Clockwise_Positive
+            : InvertedValue.CounterClockwise_Positive;
+    tryUntilOk(5, () -> driveTalon.getConfigurator().apply(driveConfig, 0.25));
+    tryUntilOk(5, () -> driveTalon.setPosition(0.0, 0.25));
+
+    // Configure turn motor
+    var turnConfig = constants.SteerMotorInitialConfigs;
+    turnConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+    turnConfig.Slot0 = constants.SteerMotorGains;
+    turnConfig.Feedback.FeedbackRemoteSensorID = constants.EncoderId;
+    turnConfig.Feedback.FeedbackSensorSource =
+        switch (constants.FeedbackSource) {
+          case RemoteCANcoder -> FeedbackSensorSourceValue.RemoteCANcoder;
+          case FusedCANcoder -> FeedbackSensorSourceValue.FusedCANcoder;
+          case SyncCANcoder -> FeedbackSensorSourceValue.SyncCANcoder;
+          default -> throw new RuntimeException(
+              "You are using an unsupported swerve configuration, which this template does not support without manual customization. The 2025 release of Phoenix supports some swerve configurations which were not available during 2025 beta testing, preventing any development and support from the AdvantageKit developers.");
+        };
+    turnConfig.Feedback.RotorToSensorRatio = constants.SteerMotorGearRatio;
+    turnConfig.MotionMagic.MotionMagicCruiseVelocity = 100.0 / constants.SteerMotorGearRatio;
+    turnConfig.MotionMagic.MotionMagicAcceleration =
+        turnConfig.MotionMagic.MotionMagicCruiseVelocity / 0.100;
+    turnConfig.MotionMagic.MotionMagicExpo_kV = 0.12 * constants.SteerMotorGearRatio;
+    turnConfig.MotionMagic.MotionMagicExpo_kA = 0.1;
+    turnConfig.ClosedLoopGeneral.ContinuousWrap = true;
+    turnConfig.MotorOutput.Inverted =
+        constants.SteerMotorInverted
+            ? InvertedValue.Clockwise_Positive
+            : InvertedValue.CounterClockwise_Positive;
+    tryUntilOk(5, () -> turnTalon.getConfigurator().apply(turnConfig, 0.25));
   }
 }
