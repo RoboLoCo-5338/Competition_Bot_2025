@@ -526,7 +526,7 @@ public class DriveCommands {
     public static ArrayList<Pose2d> getReefPoses(Direction direction) {
       ArrayList<Pose2d> poses = new ArrayList<>();
       for (int i = 0; i < 6; i++) {
-        poses.add(getReefPose(direction, i));
+        poses.add(getReefPose(direction, i + (isFlipped ? 6 : 17)));
       }
       Pose2d[] p = new Pose2d[6];
       poses.toArray(p);
