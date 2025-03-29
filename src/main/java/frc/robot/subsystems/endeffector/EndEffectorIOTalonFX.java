@@ -14,7 +14,6 @@ import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 import frc.robot.subsystems.endeffector.EndEffectorConstants.EndEffectorSimConstants;
-import java.nio.ByteBuffer;
 
 public class EndEffectorIOTalonFX implements EndEffectorIO {
 
@@ -77,8 +76,6 @@ public class EndEffectorIOTalonFX implements EndEffectorIO {
     inputs.endEffectorAppliedVolts = endEffectorAppliedVolts.getValueAsDouble();
     inputs.endEffectorCurrentAmps = endEffectorCurrent.getValueAsDouble();
     inputs.endEffectorTemperature = endEffectorTemperature.getValueAsDouble();
-    inputs.endEffectorFirmwareVersion =
-        ByteBuffer.allocate(4).putInt(endEffectorVersion.getValue()).array();
   }
 
   @Override
