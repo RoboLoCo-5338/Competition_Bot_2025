@@ -7,158 +7,23 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Right to Reef"
+            "pathName": "Right to Reef1"
           }
         },
         {
-          "type": "deadline",
+          "type": "parallel",
           "data": {
             "commands": [
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 1.5
-                }
-              },
               {
                 "type": "named",
                 "data": {
                   "name": "L4 Preset"
                 }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Stop Preset"
-          }
-        },
-        {
-          "type": "deadline",
-          "data": {
-            "commands": [
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 1.0
-                }
               },
               {
-                "type": "named",
+                "type": "path",
                 "data": {
-                  "name": "Align Left"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Endeffector Out L4"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Endeffector Stop"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Right Move Back 0"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "StowPreset"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Stow2"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Stop Preset"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Right Reef to Source 1"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "IntakeLaserCAN"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Right Source to Reef 1"
-          }
-        },
-        {
-          "type": "deadline",
-          "data": {
-            "commands": [
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.6
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "L4 Preset"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Stop Preset"
-          }
-        },
-        {
-          "type": "deadline",
-          "data": {
-            "commands": [
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 1.0
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Align Right"
+                  "pathName": "Right Move to Reef 1"
                 }
               }
             ]
@@ -186,6 +51,73 @@
           "type": "path",
           "data": {
             "pathName": "Right Move Back 1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StowPreset"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Right Reef to Source 1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeLaserCAN"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Right Source to Reef 1"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "L4 Preset"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Right Move Towards Reef 2"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Endeffector Out L4"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Endeffector Stop"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Right Move Back 2"
           }
         }
       ]
