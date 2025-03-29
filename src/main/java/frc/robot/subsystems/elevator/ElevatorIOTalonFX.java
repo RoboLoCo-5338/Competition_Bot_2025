@@ -104,6 +104,7 @@ public class ElevatorIOTalonFX implements ElevatorIO {
     //     ElevatorConstants.ElevatorPositionConstants.ELEVATOR_FEEDFORWARD;
 
     elevatorMotor1.setControl(elevator1PositionRequest.withPosition(position).withSlot(slot));
+    System.out.println(slot);
   }
 
   @Override

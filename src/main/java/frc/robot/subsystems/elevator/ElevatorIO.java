@@ -81,7 +81,6 @@ public interface ElevatorIO {
    */
   public default void setElevatorPosition(double position, int slot) {}
 
-
   /**
    * Gets the current measurement from the laser can sensor.
    *
