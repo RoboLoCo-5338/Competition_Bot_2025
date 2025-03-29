@@ -67,6 +67,7 @@ public final class Constants {
 
   public static final class PresetConstants {
     public static final String PREFERENCES_ID = "preset";
+    public static double MECHTECH_SHOT_OFFSET = 0.3;
     public static double elevatorl2 =
         Preferences.getDouble(PREFERENCES_ID + "l2", 10.05); // This was 17 for testing PID
     public static double elevatorl3 = Preferences.getDouble(PREFERENCES_ID + "l3", 17);

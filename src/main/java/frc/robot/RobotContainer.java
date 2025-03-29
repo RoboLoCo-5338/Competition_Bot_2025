@@ -243,6 +243,10 @@ public class RobotContainer {
         .whileTrue(new InstantCommand(() -> RobotContainer.doRainbow = false))
         .onTrue(led.sendBargeIndicator(operatorController))
         .whileTrue(led.turnColor(Color.kDarkBlue));
+
+    
+    PresetCommands.shootMechTech(Constants.PresetConstants.MECHTECH_SHOT_OFFSET, drive, operatorController)
+        .whileTrue(PresetCommands.initMechTechShot(elevator, endEffector, arm));
   }
 
   public static double deadband(double controllerAxis) {
@@ -271,12 +275,12 @@ public class RobotContainer {
 
     operatorController
         .leftTrigger()
-        .whileTrue(endEffector.setEndEffectorVelocity(100))
+        .whileTrue(endEffector.setEndEffectorVelocity(100)) // this intakes in
         .onFalse(endEffector.setEndEffectorVelocity(0));
 
     operatorController
         .rightTrigger()
-        .whileTrue(endEffector.setEndEffectorVelocity(-100))
+        .whileTrue(endEffector.setEndEffectorVelocity(-100)) // this outtakes
         .onFalse(endEffector.setEndEffectorVelocity(0));
 
     operatorController.leftStick().onTrue(PresetCommands.moveEndEffectorLaserCan(endEffector));
@@ -304,7 +308,7 @@ public class RobotContainer {
 
     operatorController
         .leftBumper()
-        .onTrue(PresetCommands.netShoot(arm, endEffector))
+        .onTrue(PresetCommands.prefireMechTech(elevator, endEffector, arm))
         .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
 
     // operatorController
