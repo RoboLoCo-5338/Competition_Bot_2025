@@ -31,12 +31,16 @@ public interface ElevatorIO {
     public double elevator1AppliedVolts = 0.0;
     public double elevator1CurrentAmps = 0.0;
     public boolean elevator1Connected = false;
+    public double elevator1Temperature = 0.0;
+    public byte[] elevator1FirmwareVersion = new byte[4];
 
     public double elevator2Position = 0.0;
     public double elevator2Velocity = 0.0;
     public double elevator2AppliedVolts = 0.0;
     public double elevator2CurrentAmps = 0.0;
     public boolean elevator2Connected = false;
+    public double elevator2Temperature = 0.0;
+    public byte[] elevator2FirmwareVersion = new byte[4];
   }
 
   /**

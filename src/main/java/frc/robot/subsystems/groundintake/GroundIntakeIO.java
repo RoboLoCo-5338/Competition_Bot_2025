@@ -23,11 +23,15 @@ public interface GroundIntakeIO {
     public double armVelocityRadPerSec = 0.0;
     public double armAppliedVolts = 0.0;
     public double armCurrentAmps = 0.0;
+    public double armTemperature = 0.0;
+    public byte[] armFirmwareVersion = new byte[4];
 
     public boolean intakeMotorConnected = false;
     public double intakeVelocityRadPerSec = 0.0;
     public double intakeAppliedVolts = 0.0;
     public double intakeCurrentAmps = 0.0;
+    public double intakeTemperature = 0.0;
+    public byte[] intakeFirmwareVersion = new byte[4];
   }
 
   public default void updateInputs(GroundIntakeIOInputs inputs) {}

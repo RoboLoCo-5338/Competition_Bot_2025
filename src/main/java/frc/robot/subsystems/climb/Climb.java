@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
@@ -39,7 +40,12 @@ public class Climb extends SubsystemBase {
    * @return An InstantCommand that sets the climb motor to the specified position.
    */
   public Command setClimbPosition(double position) {
-    return new InstantCommand(() -> climbIO.setClimbPosition(position), this);
+    return new StartEndCommand(
+            () -> climbIO.setClimbPosition(position), () -> climbIO.setClimbPosition(0), this)
+        .until(
+            () ->
+                Math.abs((inputs.climbPosition - position) / inputs.climbPosition)
+                    < ClimbConstants.POSITION_TOLERANCE);
   }
 
   /**

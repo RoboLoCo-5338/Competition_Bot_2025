@@ -32,8 +32,11 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.RobotContainer;
@@ -44,6 +47,7 @@ import frc.robot.subsystems.vision.VisionConstants;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.DoubleSupplier;
@@ -331,66 +335,77 @@ public class DriveCommands {
       Supplier<PathDestination> destination,
       CommandXboxController driverController,
       DoubleSupplier elevatorHeight) {
-    Pose2d targetPose = destination.get().getTargetPosition();
-    Logger.recordOutput("Path to Destination", targetPose);
-    if (Math.sqrt(
-            targetPose.minus(drive.getPose()).getX() * targetPose.minus(drive.getPose()).getX()
-                + targetPose.minus(drive.getPose()).getY()
-                    * targetPose.minus(drive.getPose()).getY())
-        > 3) {
-      return new InstantCommand();
-      //   PathConstraints constraints =
-      //       new PathConstraints(
-      //           drive.getMaxLinearSpeedMetersPerSec(),
-      //           3, //needs to be replaced
-      //           ANGLE_MAX_VELOCITY,
-      //           ANGLE_MAX_ACCELERATION);
-      //   return AutoBuilder.pathfindToPose(targetPose, constraints);
-    } else {
+    return new DeferredCommand(
+        () -> {
+          Pose2d targetPose = destination.get().getTargetPosition();
+          Logger.recordOutput("Path to Destination", targetPose);
+          if (Math.sqrt(
+                  targetPose.minus(drive.getPose()).getX()
+                          * targetPose.minus(drive.getPose()).getX()
+                      + targetPose.minus(drive.getPose()).getY()
+                          * targetPose.minus(drive.getPose()).getY())
+              > 3) { // This condition checks if the distance for auto aligning is less than 3. If
+            // it is greater, then something is likely wrong.
+            return new InstantCommand();
 
-      return new Command() {
+            //   PathConstraints constraints = //This was for dynamic path generation. If we ever
+            // want it, uncomment this code.
+            //       new PathConstraints(
+            //           drive.getMaxLinearSpeedMetersPerSec(),
+            //           3, // TODO:replace with a constant or smth
+            //           ANGLE_MAX_VELOCITY,
+            //           ANGLE_MAX_ACCELERATION);
+            //   return AutoBuilder.pathfindToPose(targetPose, constraints);
+          } else {
 
-        @Override
-        public void initialize() {
-          drive.autoXDriveController.reset();
-          drive.autoYDriveController.reset();
-          drive.autoTurnController.reset();
+            return new Command() {
 
-          drive.autoXDriveController.setTolerance(DriveConstants.AUTO_ALIGN_X_TOLERANCE);
-          drive.autoYDriveController.setTolerance(DriveConstants.AUTO_ALIGN_Y_TOLERANCE);
-          drive.autoTurnController.setTolerance(DriveConstants.AUTO_ALIGN_ANGULAR_TOLERANCE);
+              @Override
+              public void initialize() {
+                drive.autoXDriveController.reset();
+                drive.autoYDriveController.reset();
+                drive.autoTurnController.reset();
 
-          drive.autoXDriveController.setSetpoint(targetPose.getX());
-          drive.autoYDriveController.setSetpoint(targetPose.getY());
-          drive.autoTurnController.setSetpoint(targetPose.getRotation().getRadians());
-        }
+                drive.autoXDriveController.setTolerance(0.05);
+                drive.autoYDriveController.setTolerance(0.05);
+                drive.autoTurnController.setTolerance(0.05);
+                drive.autoXDriveController.setSetpoint(targetPose.getX());
+                drive.autoYDriveController.setSetpoint(targetPose.getY());
+                drive.autoTurnController.setSetpoint(targetPose.getRotation().getRadians());
+              }
 
-        @Override
-        public void execute() {
-          drive.runVelocity(
-              ChassisSpeeds.fromFieldRelativeSpeeds(
-                  new ChassisSpeeds(
-                      drive.autoXDriveController.calculate(drive.getPose().getX()),
-                      drive.autoYDriveController.calculate(drive.getPose().getY()),
-                      drive.autoTurnController.calculate(
-                          drive.getPose().getRotation().getRadians())),
-                  drive.getPose().getRotation()));
-        }
+              @Override
+              public void execute() {
+                drive.runVelocity(
+                    ChassisSpeeds.fromFieldRelativeSpeeds(
+                        new ChassisSpeeds(
+                            drive.autoXDriveController.calculate(drive.getPose().getX()),
+                            drive.autoYDriveController.calculate(drive.getPose().getY()),
+                            drive.autoTurnController.calculate(
+                                drive.getPose().getRotation().getRadians())),
+                        drive.getPose().getRotation()));
+              }
 
-        @Override
-        public boolean isFinished() {
+              @Override
+              public boolean isFinished() {
 
-          boolean canceled = driverController.leftStick().getAsBoolean();
-          if (canceled) {
-            DriveConstants.canceled = true;
+                boolean canceled = driverController.leftStick().getAsBoolean();
+                if (canceled) {
+                  DriveConstants.canceled = true;
+                }
+                return (drive.autoXDriveController.atSetpoint()
+                        && drive.autoYDriveController.atSetpoint()
+                        && drive.autoTurnController.atSetpoint())
+                    || canceled;
+              }
+            };
           }
-          return (drive.autoXDriveController.atSetpoint()
-                  && drive.autoYDriveController.atSetpoint()
-                  && drive.autoTurnController.atSetpoint())
-              || canceled;
-        }
-      };
-    }
+        },
+        new HashSet<Subsystem>() {
+          {
+            add(drive);
+          }
+        });
   }
 
   /**
@@ -511,7 +526,7 @@ public class DriveCommands {
     public static ArrayList<Pose2d> getReefPoses(Direction direction) {
       ArrayList<Pose2d> poses = new ArrayList<>();
       for (int i = 0; i < 6; i++) {
-        poses.add(getReefPose(direction, i));
+        poses.add(getReefPose(direction, i + (isFlipped ? 6 : 17)));
       }
       Pose2d[] p = new Pose2d[6];
       poses.toArray(p);
@@ -525,30 +540,27 @@ public class DriveCommands {
       CommandXboxController controller,
       LED led,
       DoubleSupplier elevatorHeight) {
-    return new InstantCommand( // I hate commands so much
-        () -> {
-          ArrayList<Pose2d> poses = Reef.getReefPoses(direction);
-          DriveConstants.canceled = false;
-          RobotContainer.doRainbow = false;
-          Command move =
-              pathToDestination(
-                  drive,
-                  () ->
-                      new Reef(
-                          direction,
-                          poses.indexOf(drive.getPose().nearest(poses)) + ((isFlipped) ? 6 : 17)),
-                  controller,
-                  elevatorHeight);
-
-          new SequentialCommandGroup(
-                  led.turnColor(
-                      Color.kOrange), // change to davids commit of wait 3 instead of flash
-                  move,
-                  led.turnGreen(),
-                  new WaitCommand(3.0),
-                  new InstantCommand(() -> RobotContainer.doRainbow = true))
-              .schedule();
-        });
+    return new SequentialCommandGroup(
+        new InstantCommand(
+            () -> {
+              DriveConstants.canceled = false;
+              RobotContainer.doRainbow = false;
+            }),
+        led.turnColor(Color.kOrange),
+        pathToDestination(
+            drive,
+            () ->
+                new Reef(
+                    direction,
+                    Reef.getReefPoses(direction)
+                            .indexOf(drive.getPose().nearest(Reef.getReefPoses(direction)))
+                        + ((isFlipped) ? 6 : 17)),
+            controller,
+            elevatorHeight),
+        new ScheduleCommand(
+            led.turnGreen(),
+            new WaitCommand(3.0),
+            new InstantCommand(() -> RobotContainer.doRainbow = true)));
   }
 
   public enum Direction {
