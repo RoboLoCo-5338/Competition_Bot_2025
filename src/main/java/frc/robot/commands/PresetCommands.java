@@ -58,7 +58,6 @@ public class PresetCommands {
 
   public static Command presetL4(Elevator elevator, EndEffector endEffector, Arm arm) {
     return new SequentialCommandGroup(
-        endEffectorSet(endEffector, arm),
         new ParallelCommandGroup(
             arm.setArmPosition(PresetConstants.arml4),
             elevator.setElevatorPosition(PresetConstants.elevatorl4)));
