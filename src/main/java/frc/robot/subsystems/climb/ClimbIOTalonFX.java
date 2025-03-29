@@ -15,7 +15,6 @@ import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.climb.ClimbConstants.ClimbSimConstants;
-import java.nio.ByteBuffer;
 
 public class ClimbIOTalonFX implements ClimbIO {
 
@@ -26,7 +25,6 @@ public class ClimbIOTalonFX implements ClimbIO {
   private final StatusSignal<Voltage> climbAppliedVolts;
   private final StatusSignal<Current> climbCurrent;
   private final StatusSignal<Temperature> climbTemperature;
-  private final StatusSignal<Integer> climbFirmwareVersion;
 
   private final Debouncer climbConnected = new Debouncer(0.5);
 
@@ -40,7 +38,6 @@ public class ClimbIOTalonFX implements ClimbIO {
     climbAppliedVolts = climbMotor.getMotorVoltage();
     climbCurrent = climbMotor.getStatorCurrent();
     climbTemperature = climbMotor.getDeviceTemp();
-    climbFirmwareVersion = climbMotor.getVersion();
 
     tryUntilOk(
         5,
@@ -63,8 +60,6 @@ public class ClimbIOTalonFX implements ClimbIO {
     inputs.climbPosition = Units.rotationsToRadians(climbPosition.getValueAsDouble());
     inputs.climbVelocityRadPerSec = Units.rotationsToRadians(climbPosition.getValueAsDouble());
     inputs.climbTemperature = climbTemperature.getValueAsDouble();
-    inputs.climbFirmwareVersion =
-        ByteBuffer.allocate(4).putInt(climbFirmwareVersion.getValue()).array();
   }
 
   @Override

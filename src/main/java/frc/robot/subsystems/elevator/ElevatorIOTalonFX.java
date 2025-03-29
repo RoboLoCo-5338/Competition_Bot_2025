@@ -13,7 +13,6 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
-import java.nio.ByteBuffer;
 
 public class ElevatorIOTalonFX implements ElevatorIO {
 
@@ -88,8 +87,6 @@ public class ElevatorIOTalonFX implements ElevatorIO {
     inputs.elevator1AppliedVolts = elevator1AppliedVolts.getValueAsDouble();
     inputs.elevator1CurrentAmps = elevator1Current.getValueAsDouble();
     inputs.elevator1Temperature = elevator1Temperature.getValueAsDouble();
-    inputs.elevator1FirmwareVersion =
-        ByteBuffer.allocate(4).putInt(elevator1Version.getValue()).array();
 
     inputs.elevator2Connected = elevator2ConnectedDebounce.calculate(motor2Status.isOK());
     inputs.elevator2Position = elevator2Position.getValueAsDouble();
@@ -97,8 +94,6 @@ public class ElevatorIOTalonFX implements ElevatorIO {
     inputs.elevator2AppliedVolts = elevator2AppliedVolts.getValueAsDouble();
     inputs.elevator2CurrentAmps = elevator2Current.getValueAsDouble();
     inputs.elevator2Temperature = elevator2Temperature.getValueAsDouble();
-    inputs.elevator2FirmwareVersion =
-        ByteBuffer.allocate(4).putInt(elevator2Version.getValue()).array();
   }
 
   @Override
