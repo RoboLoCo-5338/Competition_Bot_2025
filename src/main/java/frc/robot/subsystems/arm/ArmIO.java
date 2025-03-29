@@ -21,6 +21,8 @@ public interface ArmIO {
     public double armAppliedVolts = 0.0;
     public double armCurrent = 0.0;
     public boolean armConnected = false;
+    public double armTemperature = 0.0;
+    public byte[] armFirmwareVersion = new byte[4];
   }
 
   /**
