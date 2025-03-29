@@ -81,17 +81,17 @@ public class RobotContainer {
   public final LED led;
   public static boolean doRainbow = true;
   public static boolean preEnable = true;
-  private final Elevator elevator;
+  public final Elevator elevator;
 
-  private final GroundIntake groundIntake;
+  public final GroundIntake groundIntake;
 
-  private final EndEffector endEffector;
+  public final EndEffector endEffector;
 
-  private final ButtonBindings ButtonBindingsController;
+  public final ButtonBindings ButtonBindingsController;
 
-  private final Climb climb;
+  public final Climb climb;
 
-  private final Arm arm;
+  public final Arm arm;
 
   public CommandXboxController driverController = new CommandXboxController(0);
 
