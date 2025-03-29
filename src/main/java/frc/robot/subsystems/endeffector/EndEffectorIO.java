@@ -22,7 +22,6 @@ public interface EndEffectorIO {
     public double endEffectorDistance1 = -1;
     public double endEffectorDistance2 = -1;
     public double endEffectorTemperature = 0.0;
-    public byte[] endEffectorFirmwareVersion = new byte[4];
   }
 
   public default void updateInputs(EndEffectorIOInputs inputs) {}
