@@ -441,7 +441,6 @@ public class Drive extends SubsystemBase {
         PP_CONFIG,
         () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
         this);
-    
   }
 
   public void updateDriveModuleConstants(

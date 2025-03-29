@@ -20,27 +20,40 @@ import edu.wpi.first.wpilibj.Preferences;
 public class TunerConstants {
   // Both sets of gains need to be tuned to your individual robot.
 
-  // The steer motor uses any SwerveModule.SteerRequestType control request with
-  // the
-  // output type specified by SwerveModuleConstants.SteerMotorClosedLoopOutput
+  //   // The steer motor uses any SwerveModule.SteerRequestType control request with
+  //   // the
+  //   // output type specified by SwerveModuleConstants.SteerMotorClosedLoopOutput
+  //   public static Slot0Configs steerGains =
+  //       new Slot0Configs()
+  //           .withKP(Preferences.getDouble("steerkP", 0)) // 100
+  //           .withKI(Preferences.getDouble("steerkI", 0))
+  //           .withKD(Preferences.getDouble("steerkD", 0))
+  //           .withKS(Preferences.getDouble("steerkS", 0))
+  //           .withKV(Preferences.getDouble("steerkV", 0))
+  //           .withKA(Preferences.getDouble("steerkA", 0))
+  //           .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
+
   public static Slot0Configs steerGains =
       new Slot0Configs()
-          .withKP(Preferences.getDouble("steerkP", 0)) // 100
-          .withKI(Preferences.getDouble("steerkI", 0))
-          .withKD(Preferences.getDouble("steerkD", 0))
-          .withKS(Preferences.getDouble("steerkS", 0))
-          .withKV(Preferences.getDouble("steerkV", 0))
-          .withKA(Preferences.getDouble("steerkA", 0))
+          .withKP(50) // 100
+          .withKI(0.1)
+          .withKD(0.45)
+          .withKS(0)
+          .withKV(0)
+          .withKA(0)
           .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
   // When using closed-loop control, the drive motor uses the control
   // output type specified by SwerveModuleConstants.DriveMotorClosedLoopOutput
+  //   public static Slot0Configs driveGains =
+  //       new Slot0Configs()
+  //           .withKP(Preferences.getDouble("drivekP", 0))
+  //           .withKI(Preferences.getDouble("drivekI", 0))
+  //           .withKD(Preferences.getDouble("drivekD", 0))
+  //           .withKS(Preferences.getDouble("drivekS", 0))
+  //           .withKV(Preferences.getDouble("drivekV", 0));
+
   public static Slot0Configs driveGains =
-      new Slot0Configs()
-          .withKP(Preferences.getDouble("drivekP", 0))
-          .withKI(Preferences.getDouble("drivekI", 0))
-          .withKD(Preferences.getDouble("drivekD", 0))
-          .withKS(Preferences.getDouble("drivekS", 0))
-          .withKV(Preferences.getDouble("drivekV", 0));
+      new Slot0Configs().withKP(1.4).withKI(0.0).withKD(0.01).withKS(0.15).withKV(0.76);
 
   // The closed-loop output type to use for the steer motors;
   // This affects the PID/FF gains for the steer motors
