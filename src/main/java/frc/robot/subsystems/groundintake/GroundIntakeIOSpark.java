@@ -10,6 +10,8 @@ import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController.ArbFFUnits;
 import edu.wpi.first.math.filter.Debouncer;
+
+import java.nio.ByteBuffer;
 import java.util.function.DoubleSupplier;
 
 public class GroundIntakeIOSpark implements GroundIntakeIO {
@@ -53,6 +55,8 @@ public class GroundIntakeIOSpark implements GroundIntakeIO {
         new DoubleSupplier[] {armMotor::getAppliedOutput, armMotor::getBusVoltage},
         (values) -> inputs.armAppliedVolts = values[0] * values[1]);
     ifOk(armMotor, armMotor::getOutputCurrent, (value) -> inputs.armCurrentAmps = value);
+    ifOk(armMotor, armMotor::getMotorTemperature, (value) -> inputs.armTemperature = value);
+    ifOk(armMotor, armMotor::getFirmwareVersion, (value) -> inputs.armFirmwareVersion = ByteBuffer.allocate(4).putInt((int) value).array());
 
     inputs.armMotorConnected = armConnectedDebounce.calculate(!sparkStickyFault);
 
@@ -63,6 +67,8 @@ public class GroundIntakeIOSpark implements GroundIntakeIO {
         new DoubleSupplier[] {intakeMotor::getAppliedOutput, intakeMotor::getBusVoltage},
         (values) -> inputs.intakeAppliedVolts = values[0] * values[1]);
     ifOk(intakeMotor, intakeMotor::getOutputCurrent, (value) -> inputs.intakeCurrentAmps = value);
+    ifOk(intakeMotor, intakeMotor::getMotorTemperature, (value) -> inputs.intakeTemperature = value);
+    ifOk(intakeMotor, intakeMotor::getFirmwareVersion, (value) -> inputs.intakeFirmwareVersion = ByteBuffer.allocate(4).putInt((int) value).array());
 
     inputs.intakeMotorConnected = intakeConnectedDebounce.calculate(!sparkStickyFault);
   }
