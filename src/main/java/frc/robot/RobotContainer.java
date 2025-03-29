@@ -278,20 +278,16 @@ public class RobotContainer {
     operatorController.leftStick().onTrue(PresetCommands.moveEndEffectorLaserCan(endEffector));
     operatorController
         .a()
-        .whileTrue(PresetCommands.stowElevator(elevator, endEffector, arm))
-        .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
+        .whileTrue(PresetCommands.stowElevator(elevator, endEffector, arm));
     operatorController
         .b()
-        .whileTrue(PresetCommands.presetL2(elevator, endEffector, arm))
-        .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
+        .whileTrue(PresetCommands.presetL2(elevator, endEffector, arm));
     operatorController
         .x()
-        .whileTrue(PresetCommands.presetL3(elevator, endEffector, arm))
-        .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
+        .whileTrue(PresetCommands.presetL3(elevator, endEffector, arm));
     operatorController
         .y()
-        .whileTrue(PresetCommands.presetL4(elevator, endEffector, arm))
-        .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
+        .whileTrue(PresetCommands.presetL4(elevator, endEffector, arm));
 
     operatorController
         .rightBumper()
@@ -300,8 +296,7 @@ public class RobotContainer {
 
     operatorController
         .leftBumper()
-        .onTrue(PresetCommands.netShoot(arm, endEffector))
-        .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
+        .whileTrue(PresetCommands.netShoot(arm, endEffector));
 
     operatorController
         .povUp()
@@ -360,7 +355,7 @@ public class RobotContainer {
     driverController
         .povLeft()
         .and(() -> drive.useVision)
-        .onTrue(
+        .whileTrue(
             DriveCommands.reefAlign(
                 drive,
                 Direction.Left,
@@ -373,7 +368,7 @@ public class RobotContainer {
             () -> {
               return drive.useVision;
             })
-        .onTrue(
+        .whileTrue(
             DriveCommands.reefAlign(
                 drive,
                 Direction.Right,
