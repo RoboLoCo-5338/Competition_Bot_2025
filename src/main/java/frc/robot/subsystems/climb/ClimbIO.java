@@ -24,7 +24,6 @@ public interface ClimbIO {
     public double climbCurrentAmps = 0.0;
     public boolean climbConnected = false;
     public double climbTemperature = 0.0;
-    public byte[] climbFirmwareVersion = new byte[4];
   }
 
   /**
