@@ -28,6 +28,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -367,9 +368,9 @@ public class DriveCommands {
           drive.autoYDriveController.reset();
           drive.autoTurnController.reset();
 
-          drive.autoXDriveController.setTolerance(0.05);
-          drive.autoYDriveController.setTolerance(0.05);
-          drive.autoTurnController.setTolerance(0.05);
+          drive.autoXDriveController.setTolerance(Preferences.getDouble("driveTolerance", 0.05));
+          drive.autoYDriveController.setTolerance(Preferences.getDouble("driveTolerance", 0.05));
+          drive.autoTurnController.setTolerance(Preferences.getDouble("turnTolerance", 0.05));
           // drive.autoXDriveController.setSetpoint(targetPose.getX());
           // drive.autoYDriveController.setSetpoint(targetPose.getY());
           // drive.autoTurnController.setSetpoint(targetPose.getRotation().getRadians());
@@ -565,6 +566,8 @@ public class DriveCommands {
       CommandXboxController controller,
       LED led,
       DoubleSupplier elevatorHeight) {
+    Preferences.initDouble("driveTolerance", 0.05);
+    Preferences.initDouble("turnTolerance", 0.05);
     return new InstantCommand( // I hate commands so much
         () -> {
           System.out.println("reef align starts");
