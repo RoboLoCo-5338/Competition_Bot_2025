@@ -48,20 +48,20 @@ public final class Constants {
   }
 
   public static final class DriveConstants {
-    public static double pathPlannerDriveP = Preferences.getDouble("pathPlannerDriveP", 2.0);
-    public static double pathPlannerDriveI = Preferences.getDouble("pathPlannerDriveI", 0.2);
-    public static double pathPlannerDriveD = Preferences.getDouble("pathPlannerDriveD", 0.0);
-    public static double pathPlannerTurnP = Preferences.getDouble("pathPlannerTurnP", 2.0);
-    public static double pathPlannerTurnI = Preferences.getDouble("pathPlannerTurnI", 0.2);
-    public static double pathPlannerTurnD = Preferences.getDouble("pathPlannerTurnD", 0.0);
+    public static double pathPlannerDriveP = Preferences.getDouble("pathPlannerDrivekP", 0.0);
+    public static double pathPlannerDriveI = Preferences.getDouble("pathPlannerDrivekI", 0.0);
+    public static double pathPlannerDriveD = Preferences.getDouble("pathPlannerDrivekD", 0.0);
+    public static double pathPlannerTurnP = Preferences.getDouble("pathPlannerTurnkP", 0.0);
+    public static double pathPlannerTurnI = Preferences.getDouble("pathPlannerTurnkI", 0.0);
+    public static double pathPlannerTurnD = Preferences.getDouble("pathPlannerTurnkD", 0.0);
 
     public static void reloadConstants() {
-      pathPlannerDriveP = Preferences.getDouble("pathPlannerDriveP", 2.0);
-      pathPlannerDriveI = Preferences.getDouble("pathPlannerDriveI", 0.2);
-      pathPlannerDriveD = Preferences.getDouble("pathPlannerDriveD", 0.0);
-      pathPlannerTurnP = Preferences.getDouble("pathPlannerTurnP", 2.0);
-      pathPlannerTurnI = Preferences.getDouble("pathPlannerTurnI", 0.2);
-      pathPlannerTurnD = Preferences.getDouble("pathPlannerTurnD", 0.0);
+      pathPlannerDriveP = Preferences.getDouble("pathPlannerDrivekP", 0.0);
+      pathPlannerDriveI = Preferences.getDouble("pathPlannerDrivekI", 0.0);
+      pathPlannerDriveD = Preferences.getDouble("pathPlannerDrivekD", 0.0);
+      pathPlannerTurnP = Preferences.getDouble("pathPlannerTurnkP", 0.0);
+      pathPlannerTurnI = Preferences.getDouble("pathPlannerTurnkI", 0.0);
+      pathPlannerTurnD = Preferences.getDouble("pathPlannerTurnkD", 0.0);
     }
   }
 
@@ -225,8 +225,6 @@ public final class Constants {
           Preferences.getDouble(PREFERENCES_ID + "velocity" + "kG", 0.2);
       ElevatorVelocityConstants.ELEVATOR_MOTOR_kV =
           Preferences.getDouble(PREFERENCES_ID + "velocity" + "kV", 0.0);
-
-      System.out.println("Elevator position kp: " + ElevatorPositionConstants.ELEVATOR_MOTOR_kP);
     }
   }
 
