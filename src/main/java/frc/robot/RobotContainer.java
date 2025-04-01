@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.commands.AutoNamedCommands;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveCommands.Direction;
 import frc.robot.commands.PresetCommands;
@@ -164,13 +165,22 @@ public class RobotContainer {
         break;
     }
 
-    // Set up commands for auto
+    // Set up presets for auto
     NamedCommands.registerCommand("L4 Preset", PresetCommands.presetL4(elevator, endEffector, arm));
     NamedCommands.registerCommand("L2 Preset", PresetCommands.presetL2(elevator, endEffector, arm));
+    NamedCommands.registerCommand(
+        "Stop Preset", PresetCommands.stopAll(elevator, endEffector, arm));
+    NamedCommands.registerCommand("StowPreset", PresetCommands.stowElevator(elevator, endEffector, arm));
 
+    // set up endeffector wheels for auto
     NamedCommands.registerCommand("Endeffector Out", endEffector.setEndEffectorVelocity(100));
     NamedCommands.registerCommand("Endeffector Out L4", endEffector.setEndEffectorVelocity(-100));
     NamedCommands.registerCommand("Endeffector Stop", endEffector.setEndEffectorVelocity(0));
+    NamedCommands.registerCommand("OutakeLaserCan", AutoNamedCommands.laserCanOutake(endEffector));
+    NamedCommands.registerCommand(
+        "IntakeLaserCAN", AutoNamedCommands.moveEndEffectorLaserCan(endEffector));
+
+    // Auto Align Commands for auto
     NamedCommands.registerCommand(
         "Align Left",
         DriveCommands.reefAlign(
@@ -179,12 +189,6 @@ public class RobotContainer {
         "Align Right",
         DriveCommands.reefAlign(
             drive, Direction.Right, driverController, led, () -> elevator.getElevatorPosition()));
-    NamedCommands.registerCommand(
-        "IntakeLaserCAN", PresetCommands.moveEndEffectorLaserCan(endEffector));
-    NamedCommands.registerCommand(
-        "Stop Preset", PresetCommands.stopAll(elevator, endEffector, arm));
-    NamedCommands.registerCommand("StowPreset", PresetCommands.fullIn(elevator, endEffector, arm));
-    NamedCommands.registerCommand("Stow2", arm.setArmPosition(0.54));
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -264,28 +268,18 @@ public class RobotContainer {
         .whileTrue(endEffector.setEndEffectorVelocity(-100))
         .onFalse(endEffector.setEndEffectorVelocity(0));
 
-    operatorController.leftStick().onTrue(PresetCommands.moveEndEffectorLaserCan(endEffector));
-    operatorController
-        .a()
-        .whileTrue(PresetCommands.stowElevator(elevator, endEffector, arm));
-    operatorController
-        .b()
-        .whileTrue(PresetCommands.presetL2(elevator, endEffector, arm));
-    operatorController
-        .x()
-        .whileTrue(PresetCommands.presetL3(elevator, endEffector, arm));
-    operatorController
-        .y()
-        .whileTrue(PresetCommands.presetL4(elevator, endEffector, arm));
+    operatorController.leftStick().onTrue(AutoNamedCommands.moveEndEffectorLaserCan(endEffector));
+    operatorController.a().whileTrue(PresetCommands.stowElevator(elevator, endEffector, arm));
+    operatorController.b().whileTrue(PresetCommands.presetL2(elevator, endEffector, arm));
+    operatorController.x().whileTrue(PresetCommands.presetL3(elevator, endEffector, arm));
+    operatorController.y().whileTrue(PresetCommands.presetL4(elevator, endEffector, arm));
 
     operatorController
         .rightBumper()
         .onTrue(endEffector.setEndEffectorSpeed(-1))
         .onFalse(endEffector.setEndEffectorVelocity(0));
 
-    operatorController
-        .leftBumper()
-        .whileTrue(PresetCommands.netShoot(arm, endEffector));
+    operatorController.leftBumper().whileTrue(PresetCommands.netShoot(arm, endEffector));
 
     driverController
         .rightBumper()

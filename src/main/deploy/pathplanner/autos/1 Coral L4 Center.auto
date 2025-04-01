@@ -36,21 +36,33 @@
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
-          }
-        },
-        {
           "type": "named",
           "data": {
             "name": "Stop Preset"
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Endeffector Out L4"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Endeffector Stop"
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "Move Back 1"
+            "pathName": "Move Back 1 Center"
           }
         }
       ]

@@ -46,6 +46,12 @@
           "data": {
             "name": "Endeffector Stop"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "MoveBack1 Left"
+          }
         }
       ]
     }

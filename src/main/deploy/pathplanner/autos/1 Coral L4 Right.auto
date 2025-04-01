@@ -52,12 +52,6 @@
           "data": {
             "pathName": "Right Move Back 1"
           }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "StowPreset"
-          }
         }
       ]
     }

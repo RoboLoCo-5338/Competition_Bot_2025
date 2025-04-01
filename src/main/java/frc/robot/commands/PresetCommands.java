@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -19,7 +20,6 @@ public class PresetCommands {
     SmartDashboard.putNumber("arm position", arm.getArmPosition().getAsDouble());
     if (arm.getArmPosition().getAsDouble() > 0.61) {
       SmartDashboard.putString("preset2", "we are inside don't do anything case");
-
       return arm.setArmVelocity(() -> 0);
     } else {
       SmartDashboard.putString("preset2", "we are inside do anything case");
@@ -31,13 +31,11 @@ public class PresetCommands {
     return new SequentialCommandGroup(
         arm.setArmPosition(0.610),
         new WaitCommand(0.3),
-        elevator.setElevatorPosition(0.05, 2),
+        new ParallelRaceGroup(
+          elevator.setElevatorPosition(0.05, 2),
+          new WaitCommand(0.2)
+        ),
         arm.setArmPosition(0.580));
-  }
-
-  public static Command fullIn(Elevator elevator, EndEffector endEffector, Arm arm) {
-    return new SequentialCommandGroup(
-        arm.setArmPosition(0.61), new WaitCommand(0.3), elevator.setElevatorPosition(0.05, 2));
   }
 
   public static Command presetL2(Elevator elevator, EndEffector endEffector, Arm arm) {
@@ -75,29 +73,5 @@ public class PresetCommands {
     return new ParallelCommandGroup(
         arm.setArmPosition(Constants.PresetConstants.armNet),
         new SequentialCommandGroup(new WaitCommand(0.8), endEffector.setEndEffectorSpeed(-1)));
-  }
-
-  public static Command moveEndEffectorLaserCan(EndEffector endEffector) {
-    if (endEffector.getIO().getLaserCanMeasurement1() == -1
-        || endEffector.getIO().getLaserCanMeasurement2() == -1) {
-      return new InstantCommand();
-    }
-    return new SequentialCommandGroup(
-        new RepeatCommand(endEffector.setEndEffectorVelocity(60))
-            .until(
-                () ->
-                    (endEffector.getIO().getLaserCanMeasurement1() < 100
-                        && endEffector.getIO().getLaserCanMeasurement2() < 100)),
-        // new RepeatCommand(endEffector.setEndEffectorVelocity(60))
-        //     .until(
-        //         () ->
-        //             (endEffector.getIO().getLaserCanMeasurement2() < 100
-        //                 && endEffector.getIO().getLaserCanMeasurement1() > 90)),
-        // new RepeatCommand(endEffector.setEndEffectorVelocity(60))
-        //     .until(
-        //         () ->
-        //             (endEffector.getIO().getLaserCanMeasurement1() < 100
-        //                 && endEffector.getIO().getLaserCanMeasurement2() < 100)),
-        endEffector.setEndEffectorVelocity(0.0));
   }
 }
