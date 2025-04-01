@@ -84,7 +84,7 @@ public class ElevatorIOSim extends SimMechanism implements ElevatorIO {
   }
 
   @Override
-  public void setElevatorPosition(double position) {
+  public void setElevatorPosition(double position, int slot) {
     elevatorMotor1.setControl(
         elevator1PositionRequest.withPosition(position / ElevatorSimConstants.METERS_PER_ROTATION));
     elevatorMotor2.setControl(

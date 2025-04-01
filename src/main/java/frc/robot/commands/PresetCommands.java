@@ -31,13 +31,13 @@ public class PresetCommands {
     return new SequentialCommandGroup(
         arm.setArmPosition(0.610),
         new WaitCommand(0.3),
-        elevator.setElevatorPosition(0.05),
+        elevator.setElevatorPosition(0.05, 2),
         arm.setArmPosition(0.580));
   }
 
   public static Command fullIn(Elevator elevator, EndEffector endEffector, Arm arm) {
     return new SequentialCommandGroup(
-        arm.setArmPosition(0.61), new WaitCommand(0.3), elevator.setElevatorPosition(0.05));
+        arm.setArmPosition(0.61), new WaitCommand(0.3), elevator.setElevatorPosition(0.05, 2));
   }
 
   public static Command presetL2(Elevator elevator, EndEffector endEffector, Arm arm) {
@@ -46,14 +46,14 @@ public class PresetCommands {
     return new SequentialCommandGroup(
         endEffectorSet(endEffector, arm),
         new WaitCommand(0.3),
-        elevator.setElevatorPosition(PresetConstants.elevatorl2));
+        elevator.setElevatorPosition(PresetConstants.elevatorl2, 0));
   }
 
   public static Command presetL3(Elevator elevator, EndEffector endEffector, Arm arm) {
     return new SequentialCommandGroup(
         endEffectorSet(endEffector, arm),
         new WaitCommand(0.3),
-        elevator.setElevatorPosition(PresetConstants.elevatorl3));
+        elevator.setElevatorPosition(PresetConstants.elevatorl3, 0));
   }
 
   public static Command presetL4(Elevator elevator, EndEffector endEffector, Arm arm) {
@@ -61,7 +61,7 @@ public class PresetCommands {
         endEffectorSet(endEffector, arm),
         new ParallelCommandGroup(
             arm.setArmPosition(PresetConstants.arml4),
-            elevator.setElevatorPosition(PresetConstants.elevatorl4)));
+            elevator.setElevatorPosition(PresetConstants.elevatorl4, 0)));
   }
 
   public static Command stopAll(Elevator elevator, EndEffector endEffector, Arm arm) {
