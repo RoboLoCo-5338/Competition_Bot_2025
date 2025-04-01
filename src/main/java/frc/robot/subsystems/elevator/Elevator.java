@@ -46,9 +46,9 @@ public class Elevator extends SubsystemBase {
    * @param position The desired position for the elevator.
    * @return A command that sets the elevator's position.
    */
-  public Command setElevatorPosition(double position) {
+  public Command setElevatorPosition(double position, int slot) {
     return new StartEndCommand(
-            () -> io.setElevatorPosition(position), () -> io.setElevatorVelocity(0), this)
+            () -> io.setElevatorPosition(position, slot), () -> io.setElevatorVelocity(0), this)
         .until(
             () ->
                 Math.abs((inputs.elevator1Position - position) / inputs.elevator1Position)

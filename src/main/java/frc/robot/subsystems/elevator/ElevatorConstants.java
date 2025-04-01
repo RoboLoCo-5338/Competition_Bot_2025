@@ -31,6 +31,15 @@ public final class ElevatorConstants {
     public static final double ELEVATOR_MOTOR_kV = 0.0;
   }
 
+  public static class ElevatorStowPresetConstants {
+    public static final double ELEVATOR_FEEDFORWARD = 0.0;
+    public static final double ELEVATOR_MOTOR_kP = 0.28; // 0.3
+    public static final double ELEVATOR_MOTOR_kI = 0.02;
+    public static final double ELEVATOR_MOTOR_kD = 0.00;
+    public static final double ELEVATOR_MOTOR_kG = 0.5; // 0.5
+    public static final double ELEVATOR_MOTOR_kV = 0.0;
+  }
+
   public static final class ElevatorSimConstants {
     public static final double GEARING = 4;
     public static final double CARRIAGE_MASS = Units.lbsToKilograms(17.1910833);

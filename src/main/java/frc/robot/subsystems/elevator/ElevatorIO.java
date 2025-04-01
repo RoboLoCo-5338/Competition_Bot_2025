@@ -79,7 +79,7 @@ public interface ElevatorIO {
    *
    * @param position The target position in meters for the elevator motors.
    */
-  public default void setElevatorPosition(double position) {}
+  public default void setElevatorPosition(double position, int slot) {}
 
   /**
    * Gets the current measurement from the laser can sensor.
@@ -138,10 +138,17 @@ public interface ElevatorIO {
     config.Slot1.kG = ElevatorConstants.ElevatorVelocityConstants.ELEVATOR_MOTOR_kG;
     config.Slot1.kV = ElevatorConstants.ElevatorVelocityConstants.ELEVATOR_MOTOR_kV;
 
+    config.Slot2.GravityType = GravityTypeValue.Elevator_Static;
+    config.Slot2.kP = ElevatorConstants.ElevatorStowPresetConstants.ELEVATOR_MOTOR_kP;
+    config.Slot2.kI = ElevatorConstants.ElevatorStowPresetConstants.ELEVATOR_MOTOR_kI;
+    config.Slot2.kD = ElevatorConstants.ElevatorStowPresetConstants.ELEVATOR_MOTOR_kD;
+    config.Slot2.kG = ElevatorConstants.ElevatorStowPresetConstants.ELEVATOR_MOTOR_kG;
+    config.Slot2.kV = ElevatorConstants.ElevatorStowPresetConstants.ELEVATOR_MOTOR_kV;
+
     config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
     config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 22.7;
     config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
-    config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = 0;
+    config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = 0.1;
 
     var currentConfig = new CurrentLimitsConfigs();
     currentConfig.StatorCurrentLimitEnable = true;
