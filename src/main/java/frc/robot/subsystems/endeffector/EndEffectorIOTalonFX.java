@@ -11,6 +11,7 @@ import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
+import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 import frc.robot.subsystems.endeffector.EndEffectorConstants.EndEffectorSimConstants;
 
@@ -19,6 +20,8 @@ public class EndEffectorIOTalonFX implements EndEffectorIO {
   private final StatusSignal<AngularVelocity> endEffectorVelocity;
   private final StatusSignal<Voltage> endEffectorAppliedVolts;
   private final StatusSignal<Current> endEffectorCurrent;
+  private final StatusSignal<Temperature> endEffectorTemperature;
+  private final StatusSignal<Integer> endEffectorVersion;
 
   private final Debouncer effectorDebouncer = new Debouncer(0.5);
 
@@ -30,6 +33,8 @@ public class EndEffectorIOTalonFX implements EndEffectorIO {
     endEffectorVelocity = endEffectorMotor.getVelocity();
     endEffectorAppliedVolts = endEffectorMotor.getMotorVoltage();
     endEffectorCurrent = endEffectorMotor.getStatorCurrent();
+    endEffectorTemperature = endEffectorMotor.getDeviceTemp();
+    endEffectorVersion = endEffectorMotor.getVersion();
 
     endEffectorMotor.getConfigurator().apply(getEndEffectorConfiguration());
 
@@ -70,6 +75,7 @@ public class EndEffectorIOTalonFX implements EndEffectorIO {
     inputs.endEffectorVelocity = Units.rotationsToRadians(endEffectorVelocity.getValueAsDouble());
     inputs.endEffectorAppliedVolts = endEffectorAppliedVolts.getValueAsDouble();
     inputs.endEffectorCurrentAmps = endEffectorCurrent.getValueAsDouble();
+    inputs.endEffectorTemperature = endEffectorTemperature.getValueAsDouble();
   }
 
   @Override

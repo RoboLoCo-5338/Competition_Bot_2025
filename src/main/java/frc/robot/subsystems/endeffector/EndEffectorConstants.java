@@ -12,7 +12,7 @@ public final class EndEffectorConstants {
   public static final double EFFECTOR_KG = 0.05;
   public static final int LASERCAN_1ID = 51;
   public static final int LASERCAN_2ID = 52;
-  // Sim Constants
+
   public static final class EndEffectorSimConstants {
     public static final double MOI = 0.0002048478;
     public static final double GEARING = 1;

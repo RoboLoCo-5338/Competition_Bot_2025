@@ -36,9 +36,9 @@ public class DriveConstants {
   public static final double FF_RAMP_RATE = 0.1; // Volts/Sec
   public static final double WHEEL_RADIUS_MAX_VELOCITY = 0.25; // Rad/Sec
   public static final double WHEEL_RADIUS_RAMP_RATE = 0.05; // Rad/Sec^2
-  public static final double AUTO_ALIGN_X_TOLERANCE = 0.05;
-  public static final double AUTO_ALIGN_Y_TOLERANCE = 0.05;
-  public static final double AUTO_ALIGN_ANGULAR_TOLERANCE = 0.05;
+  public static final double AUTO_ALIGN_X_TOLERANCE = 0.005;
+  public static final double AUTO_ALIGN_Y_TOLERANCE = 0.005;
+  public static final double AUTO_ALIGN_ANGULAR_TOLERANCE = 0.005;
 
   public final class DriveSimConstants {
     public static final double DRIVE_KP = 0.05;

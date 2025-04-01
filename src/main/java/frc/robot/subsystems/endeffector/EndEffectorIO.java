@@ -21,6 +21,7 @@ public interface EndEffectorIO {
     public boolean endEffectorConnected = false;
     public double endEffectorDistance1 = -1;
     public double endEffectorDistance2 = -1;
+    public double endEffectorTemperature = 0.0;
   }
 
   public default void updateInputs(EndEffectorIOInputs inputs) {}

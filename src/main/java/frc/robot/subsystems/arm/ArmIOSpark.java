@@ -41,6 +41,7 @@ public class ArmIOSpark implements ArmIO {
         new DoubleSupplier[] {armMotor::getAppliedOutput, armMotor::getBusVoltage},
         (values) -> inputs.armAppliedVolts = values[0] * values[1]);
     ifOk(armMotor, armMotor::getOutputCurrent, (value) -> inputs.armCurrent = value);
+    ifOk(armMotor, armMotor::getMotorTemperature, (value) -> inputs.armTemperature = value);
 
     inputs.armConnected = armConnectedDebouncer.calculate(!sparkStickyFault);
   }

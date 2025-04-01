@@ -23,6 +23,7 @@ public interface ClimbIO {
     public double climbAppliedVolts = 0.0;
     public double climbCurrentAmps = 0.0;
     public boolean climbConnected = false;
+    public double climbTemperature = 0.0;
   }
 
   /**

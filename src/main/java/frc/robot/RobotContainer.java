@@ -54,10 +54,6 @@ import frc.robot.subsystems.endeffector.EndEffector;
 import frc.robot.subsystems.endeffector.EndEffectorIO;
 import frc.robot.subsystems.endeffector.EndEffectorIOSim;
 import frc.robot.subsystems.endeffector.EndEffectorIOTalonFX;
-import frc.robot.subsystems.groundintake.GroundIntake;
-import frc.robot.subsystems.groundintake.GroundIntakeIO;
-import frc.robot.subsystems.groundintake.GroundIntakeIOSim;
-import frc.robot.subsystems.groundintake.GroundIntakeIOSpark;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionConstants;
@@ -82,8 +78,6 @@ public class RobotContainer {
   public static boolean preEnable = true;
 
   private final Elevator elevator;
-
-  private final GroundIntake groundIntake;
 
   private final EndEffector endEffector;
 
@@ -118,7 +112,6 @@ public class RobotContainer {
                     VisionConstants.camera0Name, VisionConstants.robotToCamera0));
         // new VisionIOPhotonVision(
         //     VisionConstants.camera1Name, VisionConstants.robotToCamera1));
-        groundIntake = new GroundIntake(new GroundIntakeIOSpark());
         endEffector = new EndEffector(new EndEffectorIOTalonFX());
         elevator = new Elevator(new ElevatorIOTalonFX());
         climb = new Climb(new ClimbIOTalonFX());
@@ -139,7 +132,6 @@ public class RobotContainer {
                 new ModuleIOSim(TunerConstants.BackLeft),
                 new ModuleIOSim(TunerConstants.BackRight));
         led = new LED();
-        groundIntake = new GroundIntake(new GroundIntakeIOSim());
         endEffector = new EndEffector(new EndEffectorIOSim());
         elevator = new Elevator(new ElevatorIOSim());
         climb = new Climb(new ClimbIOSim());
@@ -164,7 +156,6 @@ public class RobotContainer {
                 new ModuleIO() {});
 
         led = new LED();
-        groundIntake = new GroundIntake(new GroundIntakeIO() {});
         endEffector = new EndEffector(new EndEffectorIO() {});
         elevator = new Elevator(new ElevatorIO() {});
         climb = new Climb(new ClimbIO() {});
@@ -174,8 +165,6 @@ public class RobotContainer {
     }
 
     // Set up commands for auto
-    NamedCommands.registerCommand("GroundI Outake", groundIntake.setGroundIntakeVelocity(-3600));
-    NamedCommands.registerCommand("GroundI Stop", groundIntake.setGroundIntakeVelocity(0));
     NamedCommands.registerCommand("L4 Preset", PresetCommands.presetL4(elevator, endEffector, arm));
     NamedCommands.registerCommand("L2 Preset", PresetCommands.presetL2(elevator, endEffector, arm));
 
@@ -278,20 +267,16 @@ public class RobotContainer {
     operatorController.leftStick().onTrue(PresetCommands.moveEndEffectorLaserCan(endEffector));
     operatorController
         .a()
-        .whileTrue(PresetCommands.stowElevator(elevator, endEffector, arm))
-        .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
+        .whileTrue(PresetCommands.stowElevator(elevator, endEffector, arm));
     operatorController
         .b()
-        .whileTrue(PresetCommands.presetL2(elevator, endEffector, arm))
-        .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
+        .whileTrue(PresetCommands.presetL2(elevator, endEffector, arm));
     operatorController
         .x()
-        .whileTrue(PresetCommands.presetL3(elevator, endEffector, arm))
-        .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
+        .whileTrue(PresetCommands.presetL3(elevator, endEffector, arm));
     operatorController
         .y()
-        .whileTrue(PresetCommands.presetL4(elevator, endEffector, arm))
-        .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
+        .whileTrue(PresetCommands.presetL4(elevator, endEffector, arm));
 
     operatorController
         .rightBumper()
@@ -300,28 +285,7 @@ public class RobotContainer {
 
     operatorController
         .leftBumper()
-        .onTrue(PresetCommands.netShoot(arm, endEffector))
-        .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
-
-    operatorController
-        .povUp()
-        .whileTrue(groundIntake.setGroundArmVelocity(() -> -10.0))
-        .onFalse(groundIntake.setGroundArmVelocity(() -> 0.0));
-
-    operatorController
-        .povDown()
-        .whileTrue(groundIntake.setGroundArmVelocity(() -> 10.0))
-        .onFalse(groundIntake.setGroundArmVelocity(() -> 0.0));
-
-    operatorController
-        .povRight()
-        .whileTrue(groundIntake.setGroundIntakeVelocity(-3600.0))
-        .onFalse(groundIntake.setGroundIntakeVelocity(0.0));
-
-    operatorController
-        .povLeft()
-        .whileTrue(groundIntake.setGroundIntakeVelocity(3600.0))
-        .onFalse(groundIntake.setGroundIntakeVelocity(0.0));
+        .whileTrue(PresetCommands.netShoot(arm, endEffector));
 
     driverController
         .rightBumper()
@@ -331,11 +295,6 @@ public class RobotContainer {
         .leftTrigger()
         .whileTrue(endEffector.setEndEffectorVelocity(-60))
         .onFalse(endEffector.setEndEffectorVelocity(0));
-
-    driverController
-        .x()
-        .onTrue(groundIntake.setIntakeSpeed(-1))
-        .onFalse(groundIntake.setGroundIntakeVelocity(0));
     driverController
         .b()
         .onTrue(
@@ -360,7 +319,7 @@ public class RobotContainer {
     driverController
         .povLeft()
         .and(() -> drive.useVision)
-        .onTrue(
+        .whileTrue(
             DriveCommands.reefAlign(
                 drive,
                 Direction.Left,
@@ -373,7 +332,7 @@ public class RobotContainer {
             () -> {
               return drive.useVision;
             })
-        .onTrue(
+        .whileTrue(
             DriveCommands.reefAlign(
                 drive,
                 Direction.Right,
