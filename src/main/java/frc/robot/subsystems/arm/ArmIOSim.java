@@ -85,8 +85,7 @@ public class ArmIOSim extends SimMechanism implements ArmIO {
   @Override
   public void setArmVelocity(double velocityRadPerSec) {
     double ffvolts =
-        ArmConstants.kS* Math.signum(velocityRadPerSec)
-            + ArmConstants.kV * velocityRadPerSec;
+        ArmConstants.kS * Math.signum(velocityRadPerSec) + ArmConstants.kV * velocityRadPerSec;
     armClosedLoopController.setReference(
         Units.radiansToRotations(velocityRadPerSec),
         ControlType.kVelocity,
