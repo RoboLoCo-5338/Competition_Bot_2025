@@ -376,7 +376,7 @@ public final class Constants {
     Preferences.initDouble("autoAlignTurnD", 0.2);
     Preferences.initDouble("autoAlignDriveP", 2.0);
     Preferences.initDouble("autoAlignDriveI", 0.2);
-    Preferences.initDouble("autoAlignTurnD", 0.2);
+    Preferences.initDouble("autoAlignDriveD", 0.2);
     Preferences.initDouble("armvelocitykG", 0);
   }
 
