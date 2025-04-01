@@ -102,7 +102,7 @@ public final class Constants {
     public static double positionkP = Preferences.getDouble(PREFERENCES_ID + "kP", 3.5);
     public static double positionkI = Preferences.getDouble(PREFERENCES_ID + "kI", 0.0);
     public static double positionkD = Preferences.getDouble(PREFERENCES_ID + "kD", 0.0);
-   
+
     public static double kG = Preferences.getDouble(PREFERENCES_ID + "kG", 0.0);
     public static double kV = Preferences.getDouble(PREFERENCES_ID + "kV", 0.0);
     public static double kS = Preferences.getDouble(PREFERENCES_ID + "kS", 0.1);
@@ -129,9 +129,8 @@ public final class Constants {
 
       velocitykP = Preferences.getDouble(PREFERENCES_ID + "velocity" + "kP", 0.0);
       velocitykI = Preferences.getDouble(PREFERENCES_ID + "velocity" + "kI", 0.0);
-      velocitykD = Preferences.getDouble(PREFERENCES_ID + "velocity"  + "kD", 0.0);
+      velocitykD = Preferences.getDouble(PREFERENCES_ID + "velocity" + "kD", 0.0);
       kG = Preferences.getDouble(PREFERENCES_ID + "velocity" + "kG", 0.0);
-  
     }
   }
 

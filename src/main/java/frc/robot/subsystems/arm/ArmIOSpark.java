@@ -10,7 +10,6 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController.ArbFFUnits;
-
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -27,9 +26,7 @@ public class ArmIOSpark implements ArmIO {
   public ArmIOSpark() {
     armEncoder = armMotor.getAbsoluteEncoder();
 
-    feedforward =
-        new ArmFeedforward(
-            ArmConstants.kS, ArmConstants.kG, ArmConstants.kV);
+    feedforward = new ArmFeedforward(ArmConstants.kS, ArmConstants.kG, ArmConstants.kV);
     tryUntilOk(
         armMotor,
         5,
@@ -62,15 +59,15 @@ public class ArmIOSpark implements ArmIO {
 
   @Override
   public void setArmVelocity(double velocityRadPerSec) {
-    //guys idk what this offset is, we need to measure it
-    double ffvolts =  feedforward.calculate(armEncoder.getPosition()-0.34, velocityRadPerSec);
+    // guys idk what this offset is, we need to measure it
+    double ffvolts = feedforward.calculate(armEncoder.getPosition() - 0.34, velocityRadPerSec);
     armClosedLoopController.setReference(
         velocityRadPerSec,
         ControlType.kVelocity,
         ClosedLoopSlot.kSlot1,
         ffvolts,
         ArbFFUnits.kVoltage);
-   // armMotor.set(velocityRadPerSec);
+    // armMotor.set(velocityRadPerSec);
   }
 
   @Override

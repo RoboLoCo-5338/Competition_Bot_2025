@@ -99,7 +99,6 @@ public class DriveCommands {
       DoubleSupplier xSupplier,
       DoubleSupplier ySupplier,
       DoubleSupplier omegaSupplier) {
-    System.out.println("is flipped:" + isFlipped);
 
     return Commands.run(
         () -> {
