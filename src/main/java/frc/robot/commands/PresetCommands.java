@@ -15,16 +15,8 @@ import frc.robot.subsystems.endeffector.EndEffector;
 
 public class PresetCommands {
 
-  public static Command endEffectorSet(EndEffector endEffector, Arm arm) {
-    SmartDashboard.putNumber("arm position", arm.getArmPosition().getAsDouble());
-    if (arm.getArmPosition().getAsDouble() > 0.61) {
-      SmartDashboard.putString("preset2", "we are inside don't do anything case");
-
-      return arm.setArmVelocity(() -> 0);
-    } else {
-      SmartDashboard.putString("preset2", "we are inside do anything case");
-      return arm.setArmPosition(0.610);
-    }
+  public static Command endEffectorSet(EndEffector endEffector, Arm arm, double position) {
+    return arm.setArmPosition(position).onlyIf(() -> !(arm.getArmPosition().getAsDouble()>position));
   }
 
   public static Command stowElevator(Elevator elevator, EndEffector endEffector, Arm arm) {
@@ -44,21 +36,21 @@ public class PresetCommands {
 
     SmartDashboard.putString("preset2", "inside preset functoin");
     return new SequentialCommandGroup(
-        endEffectorSet(endEffector, arm),
+        endEffectorSet(endEffector, arm, 0.61),
         new WaitCommand(0.3),
         elevator.setElevatorPosition(PresetConstants.elevatorl2, 0));
   }
 
   public static Command presetL3(Elevator elevator, EndEffector endEffector, Arm arm) {
     return new SequentialCommandGroup(
-        endEffectorSet(endEffector, arm),
+        endEffectorSet(endEffector, arm, 0.61),
         new WaitCommand(0.3),
         elevator.setElevatorPosition(PresetConstants.elevatorl3, 0));
   }
 
   public static Command presetL4(Elevator elevator, EndEffector endEffector, Arm arm) {
     return new SequentialCommandGroup(
-        endEffectorSet(endEffector, arm),
+        endEffectorSet(endEffector, arm, 0.61),
         new ParallelCommandGroup(
             arm.setArmPosition(PresetConstants.arml4),
             elevator.setElevatorPosition(PresetConstants.elevatorl4, 0)));
