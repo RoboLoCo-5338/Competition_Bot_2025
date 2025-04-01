@@ -2,6 +2,7 @@ package frc.robot.subsystems.arm;
 
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -100,9 +101,11 @@ public interface ArmIO {
         .closedLoop
         .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
         .positionWrappingEnabled(false)
-        .pidf(
-            ArmConstants.ARM_MOTOR_KP, ArmConstants.ARM_MOTOR_KI,
-            ArmConstants.ARM_MOTOR_KD, ArmConstants.ARM_MOTOR_KFF);
+        .pid(
+            ArmConstants.positionkP, ArmConstants.positionkI,
+            ArmConstants.positionkD, ClosedLoopSlot.kSlot0)
+        .pid(ArmConstants.velocitykP, ArmConstants.velocitykI, ArmConstants.velocitykD,ClosedLoopSlot.kSlot1);
+        
     armConfig
         .signals
         .absoluteEncoderPositionAlwaysOn(true)
@@ -124,9 +127,14 @@ public interface ArmIO {
 
   public default void updatePID() {
     SparkFlexConfig armConfig = new SparkFlexConfig();
-    armConfig.closedLoop.pidf(
-        ArmConstants.ARM_MOTOR_KP, ArmConstants.ARM_MOTOR_KI,
-        ArmConstants.ARM_MOTOR_KD, ArmConstants.ARM_MOTOR_KFF);
+    armConfig
+        .closedLoop
+        .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
+        .positionWrappingEnabled(false)
+        .pid(
+            ArmConstants.positionkP, ArmConstants.positionkI,
+            ArmConstants.positionkD, ClosedLoopSlot.kSlot0)
+        .pid(ArmConstants.velocitykP, ArmConstants.velocitykI, ArmConstants.velocitykD,ClosedLoopSlot.kSlot1);
     armMotor.configure(
         armConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
   }
