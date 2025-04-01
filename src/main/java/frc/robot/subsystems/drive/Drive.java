@@ -237,7 +237,7 @@ public class Drive extends SubsystemBase {
    */
   public double elevatorAccelCurve(double height) {
     // gotta figure out the best curve for this at some point
-    return -1;
+    return 1-(Math.pow(height, 2)/Math.pow(22.7, 2));
   }
 
   /**
@@ -251,7 +251,7 @@ public class Drive extends SubsystemBase {
 
     double elevatorHeight = elevatorPos.getAsDouble();
 
-    double accelRotsPerSec = -1; // need to find this value
+    double accelRotsPerSec = 1800;
 
     double cappedAccelRotsPerSec = accelRotsPerSec * elevatorAccelCurve(elevatorHeight);
 
