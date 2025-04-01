@@ -5,9 +5,9 @@ import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 
 public final class ArmConstants {
   public static final int ARM_MOTOR_ID = 44;
-  public static final double ARM_MOTOR_KP = 5; // 3.5
+  public static final double ARM_MOTOR_KP = 2.5; // 3.5
   public static final double ARM_MOTOR_KI = 0.00; // 0.01
-  public static final double ARM_MOTOR_KD = 0.0;
+  public static final double ARM_MOTOR_KD = 0.25;
   public static final double ARM_MOTOR_KG = 0.0;
   public static final double ARM_MOTOR_KV = 0.00;
   public static final double ARM_MOTOR_KFF = 0.0;
