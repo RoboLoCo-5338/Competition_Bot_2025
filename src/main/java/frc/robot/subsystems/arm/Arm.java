@@ -46,7 +46,7 @@ public class Arm extends SubsystemBase {
     return new StartEndCommand(() -> io.setArmPosition(position), () -> io.setArmVelocity(0), this)
         .until(
             () ->
-                Math.abs((inputs.armPosition - position) / inputs.armPosition)
+                Math.abs((inputs.armPosition - position))
                     < ArmConstants.POSITION_TOLERANCE);
   }
 

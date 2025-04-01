@@ -51,10 +51,7 @@ public class Elevator extends SubsystemBase {
             () -> io.setElevatorPosition(position, slot), () -> io.setElevatorVelocity(0), this)
         .until(
             () ->
-                Math.abs((inputs.elevator1Position - position) / inputs.elevator1Position)
-                        < ElevatorConstants.POSITION_TOLERANCE
-                    && Math.abs((inputs.elevator1Position - position) / inputs.elevator1Position)
-                        < ElevatorConstants.POSITION_TOLERANCE);
+                Math.abs(position- inputs.elevator1Position) < ElevatorConstants.POSITION_TOLERANCE);
   }
 
   /**
