@@ -366,8 +366,8 @@ public class DriveCommands {
                 drive.autoYDriveController.reset();
                 drive.autoTurnController.reset();
 
-                drive.autoXDriveController.setTolerance(0.05);
-                drive.autoYDriveController.setTolerance(0.05);
+                drive.autoXDriveController.setTolerance(0.01);
+                drive.autoYDriveController.setTolerance(0.01);
                 drive.autoTurnController.setTolerance(0.05);
                 drive.autoXDriveController.setSetpoint(targetPose.getX());
                 drive.autoYDriveController.setSetpoint(targetPose.getY());

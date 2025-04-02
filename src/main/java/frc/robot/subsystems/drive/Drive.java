@@ -90,11 +90,9 @@ public class Drive extends SubsystemBase {
   private SwerveDrivePoseEstimator poseEstimator =
       new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, new Pose2d());
   // public TrapezoidProfile.Constraints autoConstraints = new Constraints(4.8, 4);
-  public PIDController autoXDriveController =
-      new PIDController(2, 0.2, TunerConstants.driveGains.kD);
-  public PIDController autoYDriveController =
-      new PIDController(2, 0.2, TunerConstants.driveGains.kD);
-  public PIDController autoTurnController = new PIDController(2, 0.2, 0);
+  public PIDController autoXDriveController = new PIDController(3, 0, 0);
+  public PIDController autoYDriveController = new PIDController(3, 0, 0);
+  public PIDController autoTurnController = new PIDController(6, 0, 0);
 
   public boolean useVision = true;
 
@@ -123,7 +121,7 @@ public class Drive extends SubsystemBase {
         this::getChassisSpeeds,
         this::runVelocity,
         new PPHolonomicDriveController(
-            new PIDConstants(5.0, 0.0, 0.0), new PIDConstants(5.0, 0.0, 0.0)),
+            new PIDConstants(3.0, 0.0, 0.0), new PIDConstants(6.0, 0.0, 0.0)),
         PP_CONFIG,
         () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
         this);

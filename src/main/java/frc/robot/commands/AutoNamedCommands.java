@@ -17,10 +17,10 @@ public class AutoNamedCommands {
     return new SequentialCommandGroup(
         new InstantCommand(() -> System.out.println("0")),
         new RepeatCommand(endEffector.setEndEffectorVelocity(60))
-            .onlyWhile(
+            .until(
                 () ->
-                    (endEffector.getIO().getLaserCanMeasurement1() > 100
-                        && endEffector.getIO().getLaserCanMeasurement2() > 100)),
+                    (endEffector.getIO().getLaserCanMeasurement1() < 100
+                        && endEffector.getIO().getLaserCanMeasurement2() < 100)),
         new InstantCommand(() -> System.out.println("1")),
         endEffector.setEndEffectorVelocity(0.0),
         new InstantCommand(() -> System.out.println("2")));
@@ -28,16 +28,16 @@ public class AutoNamedCommands {
 
   public static Command laserCanOutake(EndEffector endEffector) {
     if (endEffector.getIO().getLaserCanMeasurement1() == -1
-    || endEffector.getIO().getLaserCanMeasurement2() == -1) {
-    System.out.println("At least one LaserCAN measurement is broken");
-    return new InstantCommand();
-  } 
+        || endEffector.getIO().getLaserCanMeasurement2() == -1) {
+      System.out.println("At least one LaserCAN measurement is broken");
+      return new InstantCommand();
+    }
     return new SequentialCommandGroup(
         new RepeatCommand(endEffector.setEndEffectorVelocity(60))
-            .onlyWhile(
-                () -> (endEffector.getIO().getLaserCanMeasurement1() > 100
-                && endEffector.getIO().getLaserCanMeasurement2() < 100)),
-        endEffector.setEndEffectorVelocity(0)
-  );
-}
+            .until(
+                () ->
+                    (endEffector.getIO().getLaserCanMeasurement1() > 100
+                        && endEffector.getIO().getLaserCanMeasurement2() > 100)),
+        endEffector.setEndEffectorVelocity(0));
+  }
 }

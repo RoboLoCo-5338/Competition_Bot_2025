@@ -1,0 +1,49 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "2m turn 90"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeLaserCAN"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "L4 Preset"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stop Preset"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "OutakeLaserCan"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StowPreset"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

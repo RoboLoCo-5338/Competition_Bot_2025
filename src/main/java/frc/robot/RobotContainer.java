@@ -170,7 +170,8 @@ public class RobotContainer {
     NamedCommands.registerCommand("L2 Preset", PresetCommands.presetL2(elevator, endEffector, arm));
     NamedCommands.registerCommand(
         "Stop Preset", PresetCommands.stopAll(elevator, endEffector, arm));
-    NamedCommands.registerCommand("StowPreset", PresetCommands.stowElevator(elevator, endEffector, arm));
+    NamedCommands.registerCommand(
+        "StowPreset", PresetCommands.stowElevator(elevator, endEffector, arm));
 
     // set up endeffector wheels for auto
     NamedCommands.registerCommand("Endeffector Out", endEffector.setEndEffectorVelocity(100));

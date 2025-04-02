@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.185,
-        "y": 2.385
+        "x": 5.444488636363636,
+        "y": 2.1254119318181814
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.209007025696542,
-        "y": 2.6338446557939417
+        "x": 5.468495662060179,
+        "y": 2.3742565876121238
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Right to Reef 1"
     },
     {
       "anchor": {
@@ -29,7 +29,21 @@
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 3.0,
+        "maxAcceleration": 1.5,
+        "maxAngularVelocity": 250.0,
+        "maxAngularAcceleration": 325.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {

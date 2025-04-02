@@ -17,7 +17,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "L4 Preset"
+                  "name": "L2 Preset"
                 }
               },
               {
@@ -32,7 +32,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Endeffector Out L4"
+            "name": "Endeffector Out"
           }
         },
         {
@@ -60,12 +60,6 @@
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 2.0
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "Right Reef to Source 1"
@@ -90,7 +84,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "L4 Preset"
+                  "name": "L2 Preset"
                 }
               },
               {
@@ -105,7 +99,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Endeffector Out L4"
+            "name": "Endeffector Out"
           }
         },
         {
@@ -130,6 +124,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "L4",
+  "folder": "L2",
   "choreoAuto": false
 }

@@ -2,10 +2,8 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
-import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
@@ -30,28 +28,23 @@ public class PresetCommands {
   public static Command stowElevator(Elevator elevator, EndEffector endEffector, Arm arm) {
     return new SequentialCommandGroup(
         arm.setArmPosition(0.610),
-        new WaitCommand(0.3),
-        new ParallelRaceGroup(
-          elevator.setElevatorPosition(0.05, 2),
-          new WaitCommand(0.2)
-        ),
-        arm.setArmPosition(0.580));
+        new ParallelRaceGroup(elevator.setElevatorPosition(0.15, 2), new WaitCommand(2)));
   }
 
   public static Command presetL2(Elevator elevator, EndEffector endEffector, Arm arm) {
 
     SmartDashboard.putString("preset2", "inside preset functoin");
     return new SequentialCommandGroup(
-        endEffectorSet(endEffector, arm),
-        new WaitCommand(0.3),
-        elevator.setElevatorPosition(PresetConstants.elevatorl2, 0));
+        // endEffectorSet(endEffector, arm),
+        // new WaitCommand(0.3),
+        arm.setArmPosition(0.610), elevator.setElevatorPosition(PresetConstants.elevatorl2, 0));
   }
 
   public static Command presetL3(Elevator elevator, EndEffector endEffector, Arm arm) {
     return new SequentialCommandGroup(
-        endEffectorSet(endEffector, arm),
-        new WaitCommand(0.3),
-        elevator.setElevatorPosition(PresetConstants.elevatorl3, 0));
+        // endEffectorSet(endEffector, arm),
+        // new WaitCommand(0.3),
+        arm.setArmPosition(0.610), elevator.setElevatorPosition(PresetConstants.elevatorl3, 0));
   }
 
   public static Command presetL4(Elevator elevator, EndEffector endEffector, Arm arm) {

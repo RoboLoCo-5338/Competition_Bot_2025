@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 5.185,
-        "y": 2.385
+        "x": 5.444488636363636,
+        "y": 2.1254119318181814
       },
       "prevControl": {
-        "x": 5.928363879828319,
-        "y": 2.134804313918917
+        "x": 6.187852516191955,
+        "y": 1.8752162457370987
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Right to Reef 1"
     }
   ],
   "rotationTargets": [],
