@@ -14,9 +14,7 @@ public class EndEffectorIOSim extends SimMechanism implements EndEffectorIO {
   FlywheelSim physicsSim =
       new FlywheelSim(
           LinearSystemId.createFlywheelSystem(
-              DCMotor.getKrakenX60(1),
-              EndEffectorSimConstants.MOI,
-              EndEffectorSimConstants.GEARING),
+              DCMotor.getKrakenX60(1), EndEffectorSimConstants.MOI, EndEffectorConstants.GEARING),
           DCMotor.getKrakenX60(1));
 
   public EndEffectorIOSim() {
@@ -39,22 +37,22 @@ public class EndEffectorIOSim extends SimMechanism implements EndEffectorIO {
     simMotor.addRotorPosition(
         Units.radiansToRotations(physicsSim.getAngularVelocityRadPerSec())
             * 0.02
-            * EndEffectorSimConstants.GEARING);
+            * EndEffectorConstants.GEARING);
     simMotor.setRotorVelocity(
         Units.radiansToRotations(physicsSim.getAngularVelocityRadPerSec())
-            * EndEffectorSimConstants.GEARING);
+            * EndEffectorConstants.GEARING);
   }
 
   @Override
   public void setEndEffectorVelocity(double velocity) {
     endEffectorMotor.setControl(
-        endEffectorVelocityRequest.withVelocity(velocity * EndEffectorSimConstants.GEARING));
+        endEffectorVelocityRequest.withVelocity(velocity * EndEffectorConstants.GEARING));
   }
 
   @Override
   public void setEndEffectorSpeed(double speed) {
     System.out.println(speed);
-    endEffectorMotor.set(speed * EndEffectorSimConstants.GEARING);
+    endEffectorMotor.set(speed * EndEffectorConstants.GEARING);
   }
 
   @Override

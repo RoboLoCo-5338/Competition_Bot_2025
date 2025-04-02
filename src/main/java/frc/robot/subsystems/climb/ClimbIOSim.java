@@ -30,7 +30,7 @@ public class ClimbIOSim extends SimMechanism implements ClimbIO {
   SingleJointedArmSim physicsSim =
       new SingleJointedArmSim(
           DCMotor.getKrakenX60(1),
-          ClimbConstants.ClimbSimConstants.GEARING,
+          ClimbConstants.GEARING,
           ClimbConstants.ClimbSimConstants.MOI,
           ClimbConstants.ClimbSimConstants.ARM_LENGTH,
           ClimbConstants.ClimbSimConstants.MIN_ANGLE,
@@ -71,23 +71,23 @@ public class ClimbIOSim extends SimMechanism implements ClimbIO {
 
     m_climbArm.setAngle(new Rotation2d(inputs.climbPosition));
 
-    simMotor.setRawRotorPosition(Radians.of(physicsSim.getAngleRads() * ClimbSimConstants.GEARING));
+    simMotor.setRawRotorPosition(Radians.of(physicsSim.getAngleRads() * ClimbConstants.GEARING));
     simMotor.setRotorVelocity(
-        RadiansPerSecond.of(physicsSim.getVelocityRadPerSec() * ClimbSimConstants.GEARING));
+        RadiansPerSecond.of(physicsSim.getVelocityRadPerSec() * ClimbConstants.GEARING));
   }
 
   @Override
   public void setClimbVelocity(double velocity) {
     climbMotor.setControl(
         climbVelocityRequest.withVelocity(
-            Units.radiansToRotations(velocity * ClimbSimConstants.GEARING)));
+            Units.radiansToRotations(velocity * ClimbConstants.GEARING)));
   }
 
   @Override
   public void setClimbPosition(double position) {
     climbMotor.setControl(
         climbPositionRequest.withPosition(
-            Units.radiansToRotations(position * ClimbSimConstants.GEARING)));
+            Units.radiansToRotations(position * ClimbConstants.GEARING)));
   }
 
   @Override

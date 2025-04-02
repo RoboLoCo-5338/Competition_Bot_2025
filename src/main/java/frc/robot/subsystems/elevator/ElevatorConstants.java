@@ -12,6 +12,7 @@ public final class ElevatorConstants {
   public static final double ELEVATOR_kI_LASERCAN = 0.0;
   public static final double ELEVATOR_kD_LASERCAN = 0.0;
   public static final double POSITION_TOLERANCE = 0.005;
+  public static final double GEARING = 4;
 
   public static final class ElevatorPositionConstants {
     public static final double ELEVATOR_FEEDFORWARD = 0.0;
@@ -41,13 +42,12 @@ public final class ElevatorConstants {
   }
 
   public static final class ElevatorSimConstants {
-    public static final double GEARING = 4;
     public static final double CARRIAGE_MASS = Units.lbsToKilograms(17.1910833);
     public static final double DRUM_RADIUS = Units.inchesToMeters(1.44);
     public static final double MIN_HEIGHT = Units.inchesToMeters(1);
     public static final double MAX_HEIGHT = Units.inchesToMeters(53);
     public static final double STARTING_HEIGHT = Units.inchesToMeters(1);
     public static final double METERS_PER_ROTATION =
-        2 * ElevatorSimConstants.DRUM_RADIUS * Math.PI / ElevatorSimConstants.GEARING;
+        2 * ElevatorSimConstants.DRUM_RADIUS * Math.PI / GEARING;
   }
 }

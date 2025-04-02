@@ -24,7 +24,7 @@ public class ArmIOSim extends SimMechanism implements ArmIO {
   SingleJointedArmSim armPhysicsSim =
       new SingleJointedArmSim(
           armGearBox,
-          ArmSimConstants.GEARING,
+          ArmConstants.GEARING,
           ArmSimConstants.MOI,
           ArmSimConstants.LENGTH,
           ArmSimConstants.MIN_ANGLE,
@@ -43,7 +43,7 @@ public class ArmIOSim extends SimMechanism implements ArmIO {
     armEncoderSim = new SparkAbsoluteEncoderSim(armMotor);
     armDrawn =
         endEffector
-            .append(new LoggedMechanismLigament2d("rotator", 0, -90))
+            .append(new LoggedMechanismLigament2d("rotator", 0, 90))
             .append(
                 new LoggedMechanismLigament2d(
                     "endEffectorArm",

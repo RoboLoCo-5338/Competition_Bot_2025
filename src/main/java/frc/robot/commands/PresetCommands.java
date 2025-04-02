@@ -11,6 +11,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.PresetConstants;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.elevator.Elevator;
+import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.endeffector.EndEffector;
 
 public class PresetCommands {
@@ -31,13 +32,15 @@ public class PresetCommands {
     return new SequentialCommandGroup(
         arm.setArmPosition(0.610),
         new WaitCommand(0.3),
-        elevator.setElevatorPosition(0.05, 2),
+        elevator.setElevatorPosition(0.05 * ElevatorConstants.GEARING, 2),
         arm.setArmPosition(0.580));
   }
 
   public static Command fullIn(Elevator elevator, EndEffector endEffector, Arm arm) {
     return new SequentialCommandGroup(
-        arm.setArmPosition(0.61), new WaitCommand(0.3), elevator.setElevatorPosition(0.05, 2));
+        arm.setArmPosition(0.61),
+        new WaitCommand(0.3),
+        elevator.setElevatorPosition(0.05 * ElevatorConstants.GEARING, 2));
   }
 
   public static Command presetL2(Elevator elevator, EndEffector endEffector, Arm arm) {

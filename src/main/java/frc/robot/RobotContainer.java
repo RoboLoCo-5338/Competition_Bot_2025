@@ -47,6 +47,7 @@ import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.elevator.Elevator;
+import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorIO;
 import frc.robot.subsystems.elevator.ElevatorIOSim;
 import frc.robot.subsystems.elevator.ElevatorIOTalonFX;
@@ -248,7 +249,8 @@ public class RobotContainer {
             () -> -driverController.getRightX() * Math.abs(driverController.getRightX())));
 
     elevator.setDefaultCommand(
-        elevator.setElevatorVelocity(() -> deadband(-operatorController.getLeftY()) * 25));
+        elevator.setElevatorVelocity(
+            () -> deadband(-operatorController.getLeftY()) * 25 * ElevatorConstants.GEARING));
 
     arm.setDefaultCommand(
         arm.setArmVelocity(
@@ -265,27 +267,17 @@ public class RobotContainer {
         .onFalse(endEffector.setEndEffectorVelocity(0));
 
     operatorController.leftStick().onTrue(PresetCommands.moveEndEffectorLaserCan(endEffector));
-    operatorController
-        .a()
-        .whileTrue(PresetCommands.stowElevator(elevator, endEffector, arm));
-    operatorController
-        .b()
-        .whileTrue(PresetCommands.presetL2(elevator, endEffector, arm));
-    operatorController
-        .x()
-        .whileTrue(PresetCommands.presetL3(elevator, endEffector, arm));
-    operatorController
-        .y()
-        .whileTrue(PresetCommands.presetL4(elevator, endEffector, arm));
+    operatorController.a().whileTrue(PresetCommands.stowElevator(elevator, endEffector, arm));
+    operatorController.b().whileTrue(PresetCommands.presetL2(elevator, endEffector, arm));
+    operatorController.x().whileTrue(PresetCommands.presetL3(elevator, endEffector, arm));
+    operatorController.y().whileTrue(PresetCommands.presetL4(elevator, endEffector, arm));
 
     operatorController
         .rightBumper()
         .onTrue(endEffector.setEndEffectorSpeed(-1))
         .onFalse(endEffector.setEndEffectorVelocity(0));
 
-    operatorController
-        .leftBumper()
-        .whileTrue(PresetCommands.netShoot(arm, endEffector));
+    operatorController.leftBumper().whileTrue(PresetCommands.netShoot(arm, endEffector));
 
     driverController
         .rightBumper()

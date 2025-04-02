@@ -1,5 +1,6 @@
 package frc.robot.subsystems.elevator;
 
+import com.ctre.phoenix6.controls.StrictFollower;
 import com.ctre.phoenix6.sim.ChassisReference;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -19,7 +20,7 @@ public class ElevatorIOSim extends SimMechanism implements ElevatorIO {
   ElevatorSim physicsSim =
       new ElevatorSim(
           DCMotor.getFalcon500(2),
-          ElevatorSimConstants.GEARING,
+          ElevatorConstants.GEARING,
           ElevatorSimConstants.CARRIAGE_MASS,
           ElevatorSimConstants.DRUM_RADIUS,
           ElevatorSimConstants.MIN_HEIGHT,
@@ -31,7 +32,8 @@ public class ElevatorIOSim extends SimMechanism implements ElevatorIO {
   LoggedMechanism2d elevatorDrawn =
       new LoggedMechanism2d(Constants.ROBOT_LENGTH, ElevatorSimConstants.MAX_HEIGHT);
 
-  LoggedMechanismRoot2d root = elevatorDrawn.getRoot("elevator", 0, Constants.FLOOR_TO_MECHANISM);
+  LoggedMechanismRoot2d root =
+      elevatorDrawn.getRoot("elevator", Constants.ROBOT_LENGTH, Constants.FLOOR_TO_MECHANISM);
   LoggedMechanismLigament2d elevator =
       root.append(new LoggedMechanismLigament2d("stage", ElevatorSimConstants.STARTING_HEIGHT, 90));
 
@@ -40,6 +42,7 @@ public class ElevatorIOSim extends SimMechanism implements ElevatorIO {
     elevatorMotor1.getConfigurator().apply(getConfiguration(1));
     elevatorMotor2.getConfigurator().apply(getConfiguration(2));
     motor2Sim.Orientation = ChassisReference.Clockwise_Positive;
+    elevatorMotor2.setControl(new StrictFollower(elevatorMotor1.getDeviceID()));
   }
 
   @Override
@@ -79,16 +82,12 @@ public class ElevatorIOSim extends SimMechanism implements ElevatorIO {
   public void setElevatorVelocity(double velocity) {
     elevatorMotor1.setControl(
         elevator1VelocityRequest.withVelocity(velocity / ElevatorSimConstants.METERS_PER_ROTATION));
-    elevatorMotor2.setControl(
-        elevator2VelocityRequest.withVelocity(velocity / ElevatorSimConstants.METERS_PER_ROTATION));
   }
 
   @Override
   public void setElevatorPosition(double position, int slot) {
     elevatorMotor1.setControl(
         elevator1PositionRequest.withPosition(position / ElevatorSimConstants.METERS_PER_ROTATION));
-    elevatorMotor2.setControl(
-        elevator2PositionRequest.withPosition(position / ElevatorSimConstants.METERS_PER_ROTATION));
   }
 
   @Override

@@ -11,9 +11,9 @@ public final class ClimbConstants {
   public static final double CLIMB_kD = 0.0;
   public static final double CLIMB_kS = 0.0;
   public static final double POSITION_TOLERANCE = 0.005;
+  public static final double GEARING = 100; // Update this pls don't worry bro I did
 
   public static final class ClimbSimConstants {
-    public static final double GEARING = 100; // Update this pls don't worry bro I did
     public static final double BASE_HEIGHT = Units.inchesToMeters(6.25);
     public static final double ARM_LENGTH = Units.inchesToMeters(12.1);
     public static final double MOI =
