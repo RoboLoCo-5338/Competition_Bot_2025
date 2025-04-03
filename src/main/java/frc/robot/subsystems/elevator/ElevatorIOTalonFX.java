@@ -69,7 +69,6 @@ public class ElevatorIOTalonFX implements ElevatorIO {
                 elevator2Current));
     ParentDevice.optimizeBusUtilizationForAll(elevatorMotor1, elevatorMotor2);
     elevatorMotor2.setControl(new StrictFollower(elevatorMotor1.getDeviceID()));
-
   }
 
   @Override
@@ -103,7 +102,6 @@ public class ElevatorIOTalonFX implements ElevatorIO {
     //     ElevatorConstants.ElevatorPositionConstants.ELEVATOR_FEEDFORWARD;
     // elevator2PositionRequest.FeedForward =
     //     ElevatorConstants.ElevatorPositionConstants.ELEVATOR_FEEDFORWARD;
-
 
     elevatorMotor1.setControl(elevator1PositionRequest.withPosition(position).withSlot(slot));
     System.out.println(slot);
