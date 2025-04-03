@@ -104,9 +104,9 @@ public final class Constants {
 
     public static double kG = Preferences.getDouble(PREFERENCES_ID + "kG", 0.0);
     public static double kV = Preferences.getDouble(PREFERENCES_ID + "kV", 0.0);
-    public static double kS = Preferences.getDouble(PREFERENCES_ID + "kS", 0.1);
+    public static double kS = Preferences.getDouble(PREFERENCES_ID + "kS", 0.0);
 
-    public static double velocitykP = Preferences.getDouble(PREFERENCES_ID + "kP", 3.5);
+    public static double velocitykP = Preferences.getDouble(PREFERENCES_ID + "kP", 0.0);
     public static double velocitykI = Preferences.getDouble(PREFERENCES_ID + "kI", 0.0);
     public static double velocitykD = Preferences.getDouble(PREFERENCES_ID + "kD", 0.0);
     public static double velocitykG = Preferences.getDouble(PREFERENCES_ID + "kG", 0.0);

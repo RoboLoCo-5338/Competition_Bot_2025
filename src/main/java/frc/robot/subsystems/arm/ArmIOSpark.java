@@ -60,7 +60,7 @@ public class ArmIOSpark implements ArmIO {
   @Override
   public void setArmVelocity(double velocityRadPerSec) {
     // guys idk what this offset is, we need to measure it
-    double ffvolts = feedforward.calculate(armEncoder.getPosition() - 0.34, velocityRadPerSec);
+    double ffvolts = feedforward.calculate((armEncoder.getPosition() - 0.34)*Math.PI, velocityRadPerSec);
     armClosedLoopController.setReference(
         velocityRadPerSec,
         ControlType.kVelocity,
