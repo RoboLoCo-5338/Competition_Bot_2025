@@ -76,7 +76,7 @@ public class RobotContainer {
   public static boolean autoAlignDebounce = true;
   public static boolean doRainbow = true;
   public static boolean preEnable = true;
-  
+
   private final Elevator elevator;
 
   private final EndEffector endEffector;

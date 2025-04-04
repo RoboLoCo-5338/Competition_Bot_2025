@@ -28,19 +28,15 @@ public class PresetCommands {
         arm.setArmPosition(0.5));
   }
 
-  public static Command fullIn(Elevator elevator, EndEffector endEffector, Arm arm) {
-    return new SequentialCommandGroup(
-        arm.setArmPosition(0.427), new WaitCommand(0.3), elevator.setElevatorPosition(0.05, 2));
-  }
-
   public static Command presetL2(Elevator elevator, EndEffector endEffector, Arm arm) {
-
     SmartDashboard.putString("preset2", "inside preset functoin");
-    return new SequentialCommandGroup(elevator.setElevatorPosition(PresetConstants.elevatorl2, 0));
+    return new SequentialCommandGroup(
+      endEffectorSet(endEffector, arm, 0.54), elevator.setElevatorPosition(PresetConstants.elevatorl2, 0));
   }
 
   public static Command presetL3(Elevator elevator, EndEffector endEffector, Arm arm) {
-    return new SequentialCommandGroup(elevator.setElevatorPosition(PresetConstants.elevatorl3, 0));
+    return new SequentialCommandGroup(
+      endEffectorSet(endEffector, arm, 0), elevator.setElevatorPosition(PresetConstants.elevatorl3, 0));
   }
 
   public static Command presetL4(Elevator elevator, EndEffector endEffector, Arm arm) {
