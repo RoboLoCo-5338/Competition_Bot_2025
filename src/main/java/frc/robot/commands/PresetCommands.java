@@ -17,7 +17,8 @@ import frc.robot.subsystems.endeffector.EndEffector;
 public class PresetCommands {
 
   public static Command endEffectorSet(EndEffector endEffector, Arm arm, double position) {
-    return arm.setArmPosition(position).onlyIf(() -> !(arm.getArmPosition().getAsDouble()>position));
+    return arm.setArmPosition(position)
+        .onlyIf(() -> !(arm.getArmPosition().getAsDouble() > position));
   }
 
   public static Command stowElevator(Elevator elevator, EndEffector endEffector, Arm arm) {

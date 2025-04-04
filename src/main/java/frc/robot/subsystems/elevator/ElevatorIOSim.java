@@ -25,7 +25,7 @@ public class ElevatorIOSim extends SimMechanism implements ElevatorIO {
           ElevatorSimConstants.DRUM_RADIUS,
           ElevatorSimConstants.MIN_HEIGHT,
           ElevatorSimConstants.MAX_HEIGHT,
-          false,
+          true,
           ElevatorSimConstants.STARTING_HEIGHT);
 
   @AutoLogOutput(key = "Elevator/Mechanism")

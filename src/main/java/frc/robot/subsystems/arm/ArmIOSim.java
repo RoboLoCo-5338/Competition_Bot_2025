@@ -13,6 +13,8 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import frc.robot.subsystems.SimMechanism;
 import frc.robot.subsystems.arm.ArmConstants.ArmSimConstants;
 import java.util.function.DoubleSupplier;
@@ -29,7 +31,7 @@ public class ArmIOSim extends SimMechanism implements ArmIO {
           ArmSimConstants.LENGTH,
           ArmSimConstants.MIN_ANGLE,
           ArmSimConstants.MAX_ANGLE,
-          false,
+          true,
           ArmSimConstants.STARTING_ANGLE);
   SparkFlexSim armSim;
   SparkAbsoluteEncoderSim armEncoderSim;
@@ -43,12 +45,15 @@ public class ArmIOSim extends SimMechanism implements ArmIO {
     armEncoderSim = new SparkAbsoluteEncoderSim(armMotor);
     armDrawn =
         endEffector
-            .append(new LoggedMechanismLigament2d("rotator", 0, 90))
+            .append(new LoggedMechanismLigament2d(null, ArmSimConstants.LENGTH, 0))
+            .append(new LoggedMechanismLigament2d("rotator", 0, -90))
             .append(
                 new LoggedMechanismLigament2d(
                     "endEffectorArm",
                     ArmSimConstants.LENGTH,
-                    Units.radiansToDegrees(ArmSimConstants.STARTING_ANGLE)));
+                    Units.radiansToDegrees(ArmSimConstants.STARTING_ANGLE),
+                    10,
+                    new Color8Bit(Color.kRed)));
   }
 
   @Override
