@@ -31,12 +31,14 @@ public class PresetCommands {
   public static Command presetL2(Elevator elevator, EndEffector endEffector, Arm arm) {
     SmartDashboard.putString("preset2", "inside preset functoin");
     return new SequentialCommandGroup(
-      endEffectorSet(endEffector, arm, 0.54), elevator.setElevatorPosition(PresetConstants.elevatorl2, 0));
+        endEffectorSet(endEffector, arm, 0.54),
+        elevator.setElevatorPosition(PresetConstants.elevatorl2, 0));
   }
 
   public static Command presetL3(Elevator elevator, EndEffector endEffector, Arm arm) {
     return new SequentialCommandGroup(
-      endEffectorSet(endEffector, arm, 0), elevator.setElevatorPosition(PresetConstants.elevatorl3, 0));
+        endEffectorSet(endEffector, arm, 0),
+        elevator.setElevatorPosition(PresetConstants.elevatorl3, 0));
   }
 
   public static Command presetL4(Elevator elevator, EndEffector endEffector, Arm arm) {
