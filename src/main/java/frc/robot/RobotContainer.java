@@ -255,9 +255,9 @@ public class RobotContainer {
     arm.setDefaultCommand(
         arm.setArmVelocity(
             () ->
-                5 * Math.PI
-                    * -operatorController.getRightY()
-                    * Math.abs(operatorController.getRightY())));
+                3
+                    * Math.PI
+                    * -operatorController.getRightY()));
 
     operatorController
         .leftTrigger()
