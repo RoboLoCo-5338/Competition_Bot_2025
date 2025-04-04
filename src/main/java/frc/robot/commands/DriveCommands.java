@@ -391,15 +391,17 @@ public class DriveCommands {
 
                 boolean canceled = false;
                 System.out.println(direction);
-                if (direction == Direction.Left) {
-                  System.out.println("canceling ocmmand");
-                  canceled = !driverController.povLeft().getAsBoolean();
-                } else if (direction == Direction.Right) {
-                  canceled = !driverController.povRight().getAsBoolean();
-                } else if (direction == Direction.None) {
-                  canceled =
-                      !driverController.povLeft().getAsBoolean()
-                          || !driverController.povRight().getAsBoolean();
+                if(DriverStation.isTeleop()){
+                  if (direction == Direction.Left) {
+                    System.out.println("canceling ocmmand");
+                    canceled = !driverController.povLeft().getAsBoolean();
+                  } else if (direction == Direction.Right) {
+                    canceled = !driverController.povRight().getAsBoolean();
+                  } else if (direction == Direction.None) {
+                    canceled =
+                        !driverController.povLeft().getAsBoolean()
+                            || !driverController.povRight().getAsBoolean();
+                  }
                 }
                 if (canceled) {
                   DriveConstants.canceled = true;
