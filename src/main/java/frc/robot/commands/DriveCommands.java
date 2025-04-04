@@ -413,6 +413,11 @@ public class DriveCommands {
                         && drive.autoTurnController.atSetpoint())
                     || canceled;
               }
+
+              @Override
+              public void end(boolean interrupted) {
+                drive.runVelocity(new ChassisSpeeds(0, 0, 0));
+              }
             };
           }
         },
