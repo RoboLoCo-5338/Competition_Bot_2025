@@ -244,8 +244,8 @@ public class RobotContainer {
         .onTrue(led.sendBargeIndicator(operatorController))
         .whileTrue(led.turnColor(Color.kDarkBlue));
 
-    
-    PresetCommands.shootMechTech(Constants.PresetConstants.MECHTECH_SHOT_OFFSET, drive, operatorController)
+    PresetCommands.shootMechTech(
+            Constants.PresetConstants.MECHTECH_SHOT_OFFSET, drive, operatorController)
         .whileTrue(PresetCommands.initMechTechShot(elevator, endEffector, arm));
   }
 

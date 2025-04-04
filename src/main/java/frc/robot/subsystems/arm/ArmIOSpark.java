@@ -60,6 +60,8 @@ public class ArmIOSpark implements ArmIO {
   @Override
   public void setArmVelocity(double velocityRadPerSec) {
     // guys idk what this offset is, we need to measure it
+    // TODO wtf is this why do we just have random numbers in our code
+    // ROHIT WHY
     double ffvolts = feedforward.calculate(armEncoder.getPosition() - 0.34, velocityRadPerSec);
     armClosedLoopController.setReference(
         velocityRadPerSec,
@@ -72,7 +74,7 @@ public class ArmIOSpark implements ArmIO {
 
   @Override
   public double getArmPosition(ArmIOInputs inputs) {
-    SmartDashboard.putNumber("Arm Positoin in method", inputs.armPosition);
+    SmartDashboard.putNumber("Arm Position in method", inputs.armPosition);
     return inputs.armPosition;
   }
 }

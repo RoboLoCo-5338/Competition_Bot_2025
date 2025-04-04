@@ -89,7 +89,8 @@ public class PresetCommands {
   }
 
   // 8.79m in x direction is where the barge is
-  public static Trigger shootMechTech(double offset, Drive drive, CommandXboxController controller) {
+  public static Trigger shootMechTech(
+      double offset, Drive drive, CommandXboxController controller) {
     // trigger to figure out when to shoot
     return new Trigger(
         () -> {
@@ -107,7 +108,7 @@ public class PresetCommands {
           double delx = (x_speed * t_net) + offset;
 
           if (Math.abs(x_distance - delx) < 0.4 && controller.leftBumper().getAsBoolean()) {
-        
+
             return true;
           }
 
