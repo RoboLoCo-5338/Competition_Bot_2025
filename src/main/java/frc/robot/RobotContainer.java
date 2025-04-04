@@ -76,7 +76,7 @@ public class RobotContainer {
   public static boolean autoAlignDebounce = true;
   public static boolean doRainbow = true;
   public static boolean preEnable = true;
-
+  
   private final Elevator elevator;
 
   private final EndEffector endEffector;
@@ -247,7 +247,7 @@ public class RobotContainer {
             drive,
             () -> -driverController.getLeftY(),
             () -> -driverController.getLeftX(),
-            () -> -driverController.getRightX() * Math.abs(driverController.getRightX())));
+            () -> -driverController.getRightX()));
 
     elevator.setDefaultCommand(
         elevator.setElevatorVelocity(() -> deadband(-operatorController.getLeftY()) * 25));
