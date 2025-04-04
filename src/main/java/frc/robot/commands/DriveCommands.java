@@ -42,9 +42,9 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.drive.DriveConstants;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.endeffector.EndEffector;
-import frc.robot.subsystems.drive.DriveConstants;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.vision.VisionConstants;
 import java.text.DecimalFormat;
@@ -585,8 +585,12 @@ public class DriveCommands {
         reefAlign(drive, direction, controller, led, elevatorHeight),
         PresetCommands.stopAll(elevator, endEffector, arm),
         ((level == Level.L4)
-            ? endEffector.setEndEffectorVelocity(-100)
-            : endEffector.setEndEffectorVelocity(100)).until(() -> endEffector.getIO().getLaserCanMeasurement1() > 100 && endEffector.getIO().getLaserCanMeasurement2()>100));
+                ? endEffector.setEndEffectorVelocity(-100)
+                : endEffector.setEndEffectorVelocity(100))
+            .until(
+                () ->
+                    endEffector.getIO().getLaserCanMeasurement1() > 100
+                        && endEffector.getIO().getLaserCanMeasurement2() > 100));
   }
 
   public enum Direction {
