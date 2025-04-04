@@ -45,10 +45,10 @@ public final class Constants {
     public static final double elevatorNet = 16.486;
     public static final double elevatorl3Algae = 0.0;
 
-    public static final double arml2 = 0.543;
-    public static final double arml3 = 0.543;
-    public static final double arml4 = 0.89;
-    public static final double armNet = 0.950; // change
+    // public static final double arml2 = 0.543;
+    // public static final double arml3 = 0.543;
+    public static final double arml4 = 0.78;
+    public static final double armNet = 0.950 - 0.188; // change
     public static final double arml3Algae = 0.0;
 
     public static final double elevatorIntake = 0.0;
