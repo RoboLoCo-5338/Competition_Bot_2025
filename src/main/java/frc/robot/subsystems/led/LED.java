@@ -35,21 +35,22 @@ public class LED extends SubsystemBase {
   }
 
   public InstantCommand flashGreen() {
-    return new InstantCommand(() -> {
-      new SequentialCommandGroup(
-        turnGreen(),
-        new WaitCommand(0.3),
-        turnOff(),
-        new WaitCommand(0.3),
-        turnGreen(),
-        new WaitCommand(0.3),
-        turnOff(),
-        new WaitCommand(0.3),
-        turnGreen()
-       
-        ).schedule();
-    });
+    return new InstantCommand(
+        () -> {
+          new SequentialCommandGroup(
+                  turnGreen(),
+                  new WaitCommand(0.3),
+                  turnOff(),
+                  new WaitCommand(0.3),
+                  turnGreen(),
+                  new WaitCommand(0.3),
+                  turnOff(),
+                  new WaitCommand(0.3),
+                  turnGreen())
+              .schedule();
+        });
   }
+
   public InstantCommand turnGreen() {
 
     return new InstantCommand(

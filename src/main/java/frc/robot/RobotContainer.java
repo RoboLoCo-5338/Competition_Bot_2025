@@ -214,8 +214,6 @@ public class RobotContainer {
 
     // LED Stuff
 
-   
-
     led.isCloseToBarge(drive)
         .and(() -> !RobotContainer.preEnable)
         .whileTrue(new InstantCommand(() -> RobotContainer.doRainbow = false))
@@ -235,7 +233,7 @@ public class RobotContainer {
       return (1 / (1 - 0.2)) * (controllerAxis + (Math.signum(controllerAxis) * 0.2));
     }
   }
-  
+
   /**
    * Use this method to define your button->command mappings. Buttons can be created by
    * instantiating a {@link GenericHID} or one of its subclasses ({@link
@@ -311,9 +309,10 @@ public class RobotContainer {
     //     .whileTrue(
     //         DriveCommands.reefStrafe(
     //             drive, () -> driverController.getLeftY(), () -> driverController.getLeftX()));
+
     driverController
         .povLeft()
-        .and(() -> drive.useVision && RobotContainer.autoAlignDebounce)
+        .and(() -> drive.useVision)
         .whileTrue(
             DriveCommands.reefAlign(
                 drive,
@@ -341,7 +340,7 @@ public class RobotContainer {
         .povRight()
         .and(
             () -> {
-              return drive.useVision && RobotContainer.autoAlignDebounce;
+              return drive.useVision;
             })
         .whileTrue(
             DriveCommands.reefAlign(
@@ -368,6 +367,7 @@ public class RobotContainer {
   public void ledInit() {
     new Trigger(() -> RobotContainer.doRainbow).whileTrue(startRainbow());
   }
+
   public void periodic() {}
 
   public void teleopInit() {

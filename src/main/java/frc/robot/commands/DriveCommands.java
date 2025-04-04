@@ -35,7 +35,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -395,7 +394,9 @@ public class DriveCommands {
               public boolean isFinished() {
 
                 boolean canceled = false;
+                System.out.println(direction);
                 if (direction == Direction.Left) {
+                  System.out.println("canceling ocmmand");
                   canceled = !driverController.povLeft().getAsBoolean();
                 } else if (direction == Direction.Right) {
                   canceled = !driverController.povRight().getAsBoolean();
@@ -578,11 +579,17 @@ public class DriveCommands {
             controller,
             elevatorHeight,
             direction),
-        new InstantCommand(() -> System.out.println(DriveConstants.canceled)),
-        new ScheduleCommand(
-            led.turnGreen(),
-            new WaitCommand(3.0),
-            new InstantCommand(() -> RobotContainer.doRainbow = true)));
+        new InstantCommand(
+            () -> {
+              new SequentialCommandGroup(
+                      new InstantCommand(() -> System.out.println("we are running!")),
+                      led.flashGreen(),
+                      new WaitCommand(1.5),
+                      new InstantCommand(() -> RobotContainer.autoAlignDebounce = true),
+                      new WaitCommand(1.5),
+                      new InstantCommand(() -> RobotContainer.doRainbow = true))
+                  .schedule();
+            }));
   }
 
   public static Command reefScore(
