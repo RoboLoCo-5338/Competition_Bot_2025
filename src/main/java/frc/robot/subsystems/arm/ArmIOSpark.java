@@ -12,6 +12,7 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController.*;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.function.DoubleSupplier;
 
@@ -64,10 +65,11 @@ public class ArmIOSpark implements ArmIO {
   @Override
   public void setArmVelocity(double velocityRadPerSec) {
 
-    double ffvolts = feedforward.calculate(velocityRadPerSec, velocityRadPerSec);
+    double ffvolts =
+        feedforward.calculate((armEncoder.getPosition() - 0.705) * 2 * Math.PI, velocityRadPerSec);
 
     armClosedLoopController.setReference(
-        velocityRadPerSec,
+        Units.radiansPerSecondToRotationsPerMinute(velocityRadPerSec),
         ControlType.kVelocity,
         ClosedLoopSlot.kSlot1,
         ffvolts,
