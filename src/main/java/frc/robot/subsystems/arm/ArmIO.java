@@ -1,5 +1,6 @@
 package frc.robot.subsystems.arm;
 
+import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -97,9 +98,12 @@ public interface ArmIO {
         .closedLoop
         .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
         .positionWrappingEnabled(false)
-        .pidf(
-            ArmConstants.ARM_MOTOR_KP, ArmConstants.ARM_MOTOR_KI,
-            ArmConstants.ARM_MOTOR_KD, ArmConstants.ARM_MOTOR_KFF);
+        .pid(
+            ArmConstants.ARM_MOTOR_POSITION_KP, ArmConstants.ARM_MOTOR_POSITION_KI,
+            ArmConstants.ARM_MOTOR_POSITION_KD, ClosedLoopSlot.kSlot0)
+        .pid(
+            ArmConstants.ARM_MOTOR_VELOCITY_KP, ArmConstants.ARM_MOTOR_VELOCITY_KI,
+            ArmConstants.ARM_MOTOR_VELOCITY_KD, ClosedLoopSlot.kSlot1);
     armConfig
         .signals
         .absoluteEncoderPositionAlwaysOn(true)
