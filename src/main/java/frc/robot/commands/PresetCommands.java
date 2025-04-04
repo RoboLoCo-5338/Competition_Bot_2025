@@ -37,19 +37,17 @@ public class PresetCommands {
 
     SmartDashboard.putString("preset2", "inside preset functoin");
     return new SequentialCommandGroup(
-      arm.setArmPosition(0.51),
         elevator.setElevatorPosition(PresetConstants.elevatorl2, 0));
   }
 
   public static Command presetL3(Elevator elevator, EndEffector endEffector, Arm arm) {
     return new SequentialCommandGroup(
-      arm.setArmPosition(0.51),
         elevator.setElevatorPosition(PresetConstants.elevatorl3, 0));
   }
 
   public static Command presetL4(Elevator elevator, EndEffector endEffector, Arm arm) {
     return new SequentialCommandGroup(
-      arm.setArmPosition(0.51),
+        arm.setArmPosition(0.51),
         new ParallelCommandGroup(
             arm.setArmPosition(PresetConstants.arml4),
             elevator.setElevatorPosition(PresetConstants.elevatorl4, 0)));
