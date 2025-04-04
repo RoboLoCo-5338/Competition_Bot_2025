@@ -16,6 +16,7 @@ package frc.robot.commands;
 import static edu.wpi.first.units.Units.Degrees;
 
 import com.pathplanner.lib.util.FlippingUtil;
+import frc.robot.subsystems.drive.DriveConstants;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -34,7 +35,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -394,7 +394,9 @@ public class DriveCommands {
               public boolean isFinished() {
 
                 boolean canceled = false;
+                System.out.println(direction);
                 if (direction == Direction.Left) {
+                  System.out.println("canceling ocmmand");
                   canceled = !driverController.povLeft().getAsBoolean();
                 } else if (direction == Direction.Right) {
                   canceled = !driverController.povRight().getAsBoolean();
@@ -410,6 +412,11 @@ public class DriveCommands {
                         && drive.autoYDriveController.atSetpoint()
                         && drive.autoTurnController.atSetpoint())
                     || canceled;
+              }
+
+              @Override
+              public void end(boolean interrupted) {
+                drive.runVelocity(new ChassisSpeeds(0, 0, 0));
               }
             };
           }
@@ -560,12 +567,12 @@ public class DriveCommands {
     return new SequentialCommandGroup(
         new InstantCommand(
             () -> {
+              System.out.println("reef align starts");
+             
               DriveConstants.canceled = false;
               RobotContainer.doRainbow = false;
-              RobotContainer.autoAlignDebounce = false;
             }),
-        led.turnColor(Color.kOrange),
-        
+        led.turnColor(Color.kOrange), // change to davids commit of wait 3 instead of flash
         pathToDestination(
             drive,
             () ->
@@ -577,17 +584,44 @@ public class DriveCommands {
             controller,
             elevatorHeight,
             direction),
-        new ScheduleCommand(
-            led.flashGreen(),
-            
-            new WaitCommand(1.5),
-            new InstantCommand(() -> RobotContainer.autoAlignDebounce = true),
-            new WaitCommand(1.5),
-            new InstantCommand(() -> RobotContainer.doRainbow = true)
-            
-            )
-            
-            );
+        new InstantCommand(
+            () -> {
+              new SequentialCommandGroup(
+                      new InstantCommand(() -> System.out.println("we are running!")),
+                      led.flashGreen(),
+                      new WaitCommand(1.5),
+                      new InstantCommand(() -> RobotContainer.autoAlignDebounce = true),
+                      new WaitCommand(1.5),
+                      new InstantCommand(() -> RobotContainer.doRainbow = true))
+                  .schedule();
+            }));
+  }
+
+  public static Command reefScore(
+      Drive drive,
+      Direction direction,
+      Level level,
+      CommandXboxController controller,
+      LED led,
+      DoubleSupplier elevatorHeight,
+      Elevator elevator,
+      Arm arm,
+      EndEffector endEffector) {
+    return new SequentialCommandGroup(
+        (level == Level.L4)
+            ? PresetCommands.presetL4(elevator, endEffector, arm)
+            : (level == Level.L3)
+                ? PresetCommands.presetL3(elevator, endEffector, arm)
+                : PresetCommands.presetL2(elevator, endEffector, arm),
+        reefAlign(drive, direction, controller, led, elevatorHeight),
+        PresetCommands.stopAll(elevator, endEffector, arm),
+        ((level == Level.L4)
+                ? endEffector.setEndEffectorVelocity(-100)
+                : endEffector.setEndEffectorVelocity(100))
+            .until(
+                () ->
+                    endEffector.getIO().getLaserCanMeasurement1() > 100
+                        && endEffector.getIO().getLaserCanMeasurement2() > 100));
   }
 
   public static Command reefScore(

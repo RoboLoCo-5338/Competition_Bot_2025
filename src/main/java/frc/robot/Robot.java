@@ -19,7 +19,6 @@ import com.ctre.phoenix6.swerve.SwerveModuleConstants.SteerMotorArrangement;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Threads;
-import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -43,6 +42,7 @@ public class Robot extends LoggedRobot {
   private Command autonomousCommand;
   private RobotContainer robotContainer;
   private boolean disabled = true;
+
   public Robot() {
     // Record metadata
     Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
@@ -130,8 +130,6 @@ public class Robot extends LoggedRobot {
   public void disabledInit() {
     disabled = true;
     robotContainer.doRainbow = false;
-    
-  
   }
 
   /** This function is called periodically when disabled. */
@@ -153,7 +151,7 @@ public class Robot extends LoggedRobot {
     disabled = false;
     robotContainer.preEnable = false;
     robotContainer.ledInit();
-  
+
     ;
   }
 
@@ -176,7 +174,6 @@ public class Robot extends LoggedRobot {
     robotContainer.teleopInit();
     robotContainer.ledInit();
   }
-
 
   /** This function is called periodically during operator control. */
   @Override
