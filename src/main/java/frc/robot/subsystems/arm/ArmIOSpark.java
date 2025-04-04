@@ -10,8 +10,11 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController.ArbFFUnits;
+import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
+import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.ArmConstants;
 import java.util.function.DoubleSupplier;
@@ -21,7 +24,7 @@ public class ArmIOSpark implements ArmIO {
   private final AbsoluteEncoder armEncoder;
 
   private final Debouncer armConnectedDebouncer = new Debouncer(0.5);
-  ArmFeedforward feedforward;
+  public ArmFeedforward feedforward;
 
   public ArmIOSpark() {
     armEncoder = armMotor.getAbsoluteEncoder();
@@ -41,7 +44,10 @@ public class ArmIOSpark implements ArmIO {
     // SmartDashboard.putNumber("ArmPosition Before", inputs.armPosition);
     ifOk(armMotor, armEncoder::getPosition, (value) -> inputs.armPosition = value);
     // SmartDashboard.putNumber("ArmPosition After", inputs.armPosition);
-    ifOk(armMotor, armEncoder::getVelocity, (value) -> inputs.armVelocity = value);
+    ifOk(
+        armMotor,
+        () -> Units.rotationsPerMinuteToRadiansPerSecond(armEncoder.getVelocity() * 2),
+        (value) -> inputs.armVelocity = value);
     ifOk(
         armMotor,
         new DoubleSupplier[] {armMotor::getAppliedOutput, armMotor::getBusVoltage},
@@ -60,9 +66,11 @@ public class ArmIOSpark implements ArmIO {
   @Override
   public void setArmVelocity(double velocityRadPerSec) {
     // guys idk what this offset is, we need to measure it
-    double ffvolts = feedforward.calculate((armEncoder.getPosition() - 0.34)*Math.PI, velocityRadPerSec);
+    double ffvolts =
+        feedforward.calculate((armEncoder.getPosition() - 0.705) * 2 * Math.PI, velocityRadPerSec);
+    SmartDashboard.putNumber("ffvolts", ffvolts);
     armClosedLoopController.setReference(
-        velocityRadPerSec,
+        Units.radiansPerSecondToRotationsPerMinute(velocityRadPerSec),
         ControlType.kVelocity,
         ClosedLoopSlot.kSlot1,
         ffvolts,
@@ -74,5 +82,25 @@ public class ArmIOSpark implements ArmIO {
   public double getArmPosition(ArmIOInputs inputs) {
     SmartDashboard.putNumber("Arm Positoin in method", inputs.armPosition);
     return inputs.armPosition;
+  }
+
+  @Override
+  public void updatePID() {
+    SparkFlexConfig armConfig = new SparkFlexConfig();
+    armConfig
+        .closedLoop
+        .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
+        .positionWrappingEnabled(false)
+        .pid(
+            ArmConstants.positionkP, ArmConstants.positionkI,
+            ArmConstants.positionkD, ClosedLoopSlot.kSlot0)
+        .pid(
+            ArmConstants.velocitykP,
+            ArmConstants.velocitykI,
+            ArmConstants.velocitykD,
+            ClosedLoopSlot.kSlot1);
+    feedforward = new ArmFeedforward(ArmConstants.kS, ArmConstants.kG, ArmConstants.kV);
+    armMotor.configure(
+        armConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
   }
 }

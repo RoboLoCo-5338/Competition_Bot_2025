@@ -54,7 +54,12 @@ public class Arm extends SubsystemBase {
    * @return A command that sets the arm to the given velocity.
    */
   public Command setArmVelocity(DoubleSupplier velocity) {
-    return new InstantCommand(() -> io.setArmVelocity(velocity.getAsDouble()), this);
+    return new InstantCommand(
+        () -> {
+          io.setArmVelocity(velocity.getAsDouble());
+          SmartDashboard.putNumber("Arm Velocity", velocity.getAsDouble());
+        },
+        this);
   }
 
   public DoubleSupplier getArmPosition() {
