@@ -75,7 +75,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Right Move Back 0"
+            "pathName": "Right Move Back 1"
           }
         },
         {
@@ -185,7 +185,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Right Move Back 1"
+            "pathName": "Right Move Back 2"
           }
         }
       ]

@@ -5,6 +5,12 @@
     "data": {
       "commands": [
         {
+          "type": "wait",
+          "data": {
+            "waitTime": 5.0
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Left to Reef"
@@ -15,15 +21,28 @@
           "data": {
             "commands": [
               {
-                "type": "wait",
+                "type": "parallel",
                 "data": {
-                  "waitTime": 2.0
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "L2 Preset"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Align Left"
+                      }
+                    }
+                  ]
                 }
               },
               {
-                "type": "named",
+                "type": "wait",
                 "data": {
-                  "name": "L4 Preset"
+                  "waitTime": 3.0
                 }
               }
             ]
@@ -32,38 +51,13 @@
         {
           "type": "named",
           "data": {
-            "name": "Stop Preset"
-          }
-        },
-        {
-          "type": "deadline",
-          "data": {
-            "commands": [
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 2.0
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Align Left"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Endeffector Out"
+            "name": "Endeffector Out L4"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.5
+            "waitTime": 2.0
           }
         },
         {
