@@ -575,7 +575,8 @@ public class DriveCommands {
             elevatorHeight,
             direction),
         new ScheduleCommand(
-            led.turnGreen(),
+            led.flashGreen(),
+            
             new WaitCommand(1.5),
             new InstantCommand(() -> RobotContainer.autoAlignDebounce = true),
             new WaitCommand(1.5),

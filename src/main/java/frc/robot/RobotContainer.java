@@ -72,7 +72,6 @@ public class RobotContainer {
   // Subsystems
   public final Drive drive;
   public final Vision vision;
-//   public static long lastAutoAlignTime = 0;
   public final LED led;
   public static boolean autoAlignDebounce = true;
   public static boolean doRainbow = true;
@@ -214,7 +213,8 @@ public class RobotContainer {
     configureButtonBindings();
 
     // LED Stuff
-    new Trigger(() -> RobotContainer.doRainbow).whileTrue(startRainbow());
+
+   
 
     led.isCloseToBarge(drive)
         .and(() -> !RobotContainer.preEnable)
@@ -349,6 +349,9 @@ public class RobotContainer {
                 }));
   }
 
+  public void ledInit() {
+    new Trigger(() -> RobotContainer.doRainbow).whileTrue(startRainbow());
+  }
   public void periodic() {}
 
   public void teleopInit() {
