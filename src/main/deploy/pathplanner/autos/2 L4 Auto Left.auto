@@ -75,7 +75,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left Reef Move Back 0"
+            "pathName": "Left Move Back 1"
           }
         },
         {
@@ -179,7 +179,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left Reef Move Back 1"
+            "pathName": "Left Reef Move Back 2"
           }
         }
       ]
