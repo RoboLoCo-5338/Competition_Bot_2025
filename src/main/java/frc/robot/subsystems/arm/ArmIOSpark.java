@@ -69,6 +69,7 @@ public class ArmIOSpark implements ArmIO {
     double ffvolts =
         feedforward.calculate((armEncoder.getPosition() - 0.705) * 2 * Math.PI, velocityRadPerSec);
     SmartDashboard.putNumber("ffvolts", ffvolts);
+    SmartDashboard.putNumber("adjusted arm position", (armEncoder.getPosition() - 0.705));
     armClosedLoopController.setReference(
         Units.radiansPerSecondToRotationsPerMinute(velocityRadPerSec),
         ControlType.kVelocity,

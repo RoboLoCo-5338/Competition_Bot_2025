@@ -96,7 +96,7 @@ public interface ArmIO {
         // TODO CHECK THIS
         .inverted(true)
         .positionConversionFactor(1 / ArmConstants.GEARING)
-        .velocityConversionFactor(1.0 / ArmConstants.GEARING);
+        .velocityConversionFactor(1.0 / ArmConstants.GEARING * 2);
     armConfig
         .closedLoop
         .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
@@ -124,7 +124,7 @@ public interface ArmIO {
     // armConfig.softLimit.forwardSoftLimitEnabled(true);
     // armConfig.softLimit.forwardSoftLimit(0);
     armConfig.softLimit.reverseSoftLimitEnabled(true);
-    armConfig.softLimit.reverseSoftLimit(0.485);
+    armConfig.softLimit.reverseSoftLimit(0.425);
 
     return armConfig;
   }

@@ -171,6 +171,14 @@ public class Robot extends LoggedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
+    Constants.reloadPreferences();
+    robotContainer.arm.updatePID();
+    robotContainer.climb.updatePID();
+    robotContainer.elevator.updatePID();
+    robotContainer.endEffector.updatePID();
+    robotContainer.groundIntake.updatePID();
+    robotContainer.drive.updateAutoConstants();
+    TunerConstants.updatePID();
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
