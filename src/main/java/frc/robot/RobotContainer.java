@@ -248,7 +248,7 @@ public class RobotContainer {
             drive,
             () -> -driverController.getLeftY(),
             () -> -driverController.getLeftX(),
-            () -> -driverController.getRightX() * Math.pow(Math.abs(driverController.getRightX()),2)));
+            () -> -driverController.getRightX()));
 
     elevator.setDefaultCommand(
         elevator.setElevatorVelocity(() -> deadband(-operatorController.getLeftY()) * 25));
