@@ -176,6 +176,10 @@ public class RobotContainer {
         DriveCommands.reefAlign(
             drive, Direction.Left, driverController, led, () -> elevator.getElevatorPosition()));
     NamedCommands.registerCommand(
+        "Align Center",
+        DriveCommands.reefAlign(
+            drive, Direction.None, driverController, led, () -> elevator.getElevatorPosition()));
+    NamedCommands.registerCommand(
         "Align Right",
         DriveCommands.reefAlign(
             drive, Direction.Right, driverController, led, () -> elevator.getElevatorPosition()));
@@ -265,27 +269,17 @@ public class RobotContainer {
         .onFalse(endEffector.setEndEffectorVelocity(0));
 
     operatorController.leftStick().onTrue(PresetCommands.moveEndEffectorLaserCan(endEffector));
-    operatorController
-        .a()
-        .whileTrue(PresetCommands.stowElevator(elevator, endEffector, arm));
-    operatorController
-        .b()
-        .whileTrue(PresetCommands.presetL2(elevator, endEffector, arm));
-    operatorController
-        .x()
-        .whileTrue(PresetCommands.presetL3(elevator, endEffector, arm));
-    operatorController
-        .y()
-        .whileTrue(PresetCommands.presetL4(elevator, endEffector, arm));
+    operatorController.a().whileTrue(PresetCommands.stowElevator(elevator, endEffector, arm));
+    operatorController.b().whileTrue(PresetCommands.presetL2(elevator, endEffector, arm));
+    operatorController.x().whileTrue(PresetCommands.presetL3(elevator, endEffector, arm));
+    operatorController.y().whileTrue(PresetCommands.presetL4(elevator, endEffector, arm));
 
     operatorController
         .rightBumper()
         .onTrue(endEffector.setEndEffectorSpeed(-1))
         .onFalse(endEffector.setEndEffectorVelocity(0));
 
-    operatorController
-        .leftBumper()
-        .whileTrue(PresetCommands.netShoot(arm, endEffector));
+    operatorController.leftBumper().whileTrue(PresetCommands.netShoot(arm, endEffector));
 
     driverController
         .rightBumper()

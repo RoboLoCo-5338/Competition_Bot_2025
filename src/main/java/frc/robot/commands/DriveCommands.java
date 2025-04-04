@@ -334,7 +334,8 @@ public class DriveCommands {
       Drive drive,
       Supplier<PathDestination> destination,
       CommandXboxController driverController,
-      DoubleSupplier elevatorHeight) {
+      DoubleSupplier elevatorHeight,
+      Direction direction) {
     return new DeferredCommand(
         () -> {
           Pose2d targetPose = destination.get().getTargetPosition();
@@ -389,7 +390,16 @@ public class DriveCommands {
               @Override
               public boolean isFinished() {
 
-                boolean canceled = driverController.leftStick().getAsBoolean();
+                boolean canceled = false;
+                if (direction == Direction.Left) {
+                  canceled = !driverController.povLeft().getAsBoolean();
+                } else if (direction == Direction.Right) {
+                  canceled = !driverController.povRight().getAsBoolean();
+                } else if (direction == Direction.None) {
+                  canceled =
+                      !driverController.povLeft().getAsBoolean()
+                          || !driverController.povRight().getAsBoolean();
+                }
                 if (canceled) {
                   DriveConstants.canceled = true;
                 }
@@ -491,6 +501,7 @@ public class DriveCommands {
     int tagId;
     static Pose2d reefRight = new Pose2d(3.06, 3.77 + 0.05 + 0.0127, new Rotation2d());
     static Pose2d reefLeft = new Pose2d(3.06, 4.175, new Rotation2d());
+    static Pose2d reefCenter = new Pose2d(3.06, 3.8327, new Rotation2d());
     /**
      * Creates a reef direction based on the currently visible tag.
      *
@@ -514,8 +525,11 @@ public class DriveCommands {
         case Right:
           o = reefRight;
           break;
-        default:
+        case Left:
           o = reefLeft;
+          break;
+        default:
+          o = reefCenter;
       }
       Rotation2d rot =
           VisionConstants.aprilTagLayout.getTagPose(targetTagId).get().getRotation().toRotation2d();
@@ -556,7 +570,8 @@ public class DriveCommands {
                             .indexOf(drive.getPose().nearest(Reef.getReefPoses(direction)))
                         + ((isFlipped) ? 6 : 17)),
             controller,
-            elevatorHeight),
+            elevatorHeight,
+            direction),
         new ScheduleCommand(
             led.turnGreen(),
             new WaitCommand(3.0),
