@@ -30,6 +30,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -42,6 +43,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -77,6 +79,8 @@ public class Drive extends SubsystemBase {
   private final SysIdRoutine sysId;
   private final Alert gyroDisconnectedAlert =
       new Alert("Disconnected gyro, using kinematics as fallback.", AlertType.kError);
+  private PIDController antiTipPitchController = new PIDController(DriveConstants.PITCH_TIP_P, DriveConstants.PITCH_TIP_I, DriveConstants.PITCH_TIP_D);
+  private PIDController antiTipRollController = new PIDController(DriveConstants.ROLL_TIP_P, DriveConstants.ROLL_TIP_I, DriveConstants.ROLL_TIP_D);
 
   private SwerveDriveKinematics kinematics = new SwerveDriveKinematics(getModuleTranslations());
   private Rotation2d rawGyroRotation = new Rotation2d();
@@ -149,6 +153,15 @@ public class Drive extends SubsystemBase {
             new SysIdRoutine.Mechanism(
                 (voltage) -> runCharacterization(voltage.in(Volts)), null, this));
     autoTurnController.enableContinuousInput(-Math.PI, Math.PI);
+    antiTipRollController.setSetpoint(0);
+    antiTipPitchController.setSetpoint(0);
+    Preferences.initDouble("rollP", DriveConstants.ROLL_TIP_P);
+    Preferences.initDouble("rollI", DriveConstants.ROLL_TIP_I);
+    Preferences.initDouble("rollD", DriveConstants.ROLL_TIP_D);
+
+    Preferences.initDouble("pitchP", DriveConstants.PITCH_TIP_P);
+    Preferences.initDouble("pitchI", DriveConstants.PITCH_TIP_I);
+    Preferences.initDouble("pitchD", DriveConstants.PITCH_TIP_D);
   }
 
   @Override
@@ -208,6 +221,14 @@ public class Drive extends SubsystemBase {
 
     // Update gyro alert
     gyroDisconnectedAlert.set(!gyroInputs.connected && Constants.currentMode != Mode.SIM);
+
+    antiTipRollController.setP(Preferences.getDouble("rollP", DriveConstants.ROLL_TIP_P));
+    antiTipRollController.setI(Preferences.getDouble("rollI", DriveConstants.ROLL_TIP_I));
+    antiTipRollController.setD(Preferences.getDouble("rollD", DriveConstants.ROLL_TIP_D));
+
+    antiTipPitchController.setP(Preferences.getDouble("pitchP", DriveConstants.PITCH_TIP_P));
+    antiTipPitchController.setI(Preferences.getDouble("pitchI", DriveConstants.PITCH_TIP_I));
+    antiTipPitchController.setD(Preferences.getDouble("pitchD", DriveConstants.PITCH_TIP_D));
   }
 
   /**
@@ -217,10 +238,12 @@ public class Drive extends SubsystemBase {
    */
   public void runVelocity(ChassisSpeeds speeds) {
     // Calculate module setpoints
+    speeds.vyMetersPerSecond += antiTipRollController.calculate(getRotation3d().getX());
+    speeds.vxMetersPerSecond += antiTipPitchController.calculate(getRotation3d().getY());
+    
     ChassisSpeeds discreteSpeeds = ChassisSpeeds.discretize(speeds, 0.02);
     SwerveModuleState[] setpointStates = kinematics.toSwerveModuleStates(discreteSpeeds);
     SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, TunerConstants.kSpeedAt12Volts);
-
     // Log unoptimized setpoints and setpoint speeds
     Logger.recordOutput("SwerveStates/Setpoints", setpointStates);
     Logger.recordOutput("SwerveChassisSpeeds/Setpoints", discreteSpeeds);
@@ -325,6 +348,9 @@ public class Drive extends SubsystemBase {
     return getPose().getRotation();
   }
 
+  public Rotation3d getRotation3d() {
+    return new Rotation3d(getPose().getRotation());
+  }
   /** Resets the current odometry pose. */
   public void setPose(Pose2d pose) {
     poseEstimator.resetPosition(rawGyroRotation, getModulePositions(), pose);

@@ -3,6 +3,7 @@ package frc.robot.subsystems.drive;
 import com.ctre.phoenix6.CANBus;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Preferences;
 import frc.robot.generated.TunerConstants;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -39,6 +40,14 @@ public class DriveConstants {
   public static final double AUTO_ALIGN_X_TOLERANCE = 0.005;
   public static final double AUTO_ALIGN_Y_TOLERANCE = 0.005;
   public static final double AUTO_ALIGN_ANGULAR_TOLERANCE = 0.005;
+
+  public static final double PITCH_TIP_P = 0.5;
+  public static final double PITCH_TIP_I = 0.5;
+  public static final double PITCH_TIP_D = 0.5;
+
+  public static final double ROLL_TIP_P = 0.5;
+  public static final double ROLL_TIP_I = 0.5;
+  public static final double ROLL_TIP_D = 0.5;
 
   public final class DriveSimConstants {
     public static final double DRIVE_KP = 0.05;
