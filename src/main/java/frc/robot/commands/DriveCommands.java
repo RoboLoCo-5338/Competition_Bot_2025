@@ -559,8 +559,10 @@ public class DriveCommands {
             () -> {
               DriveConstants.canceled = false;
               RobotContainer.doRainbow = false;
+              RobotContainer.autoAlignDebounce = false;
             }),
         led.turnColor(Color.kOrange),
+        
         pathToDestination(
             drive,
             () ->
@@ -574,8 +576,14 @@ public class DriveCommands {
             direction),
         new ScheduleCommand(
             led.turnGreen(),
-            new WaitCommand(3.0),
-            new InstantCommand(() -> RobotContainer.doRainbow = true)));
+            new WaitCommand(1.5),
+            new InstantCommand(() -> RobotContainer.autoAlignDebounce = true),
+            new WaitCommand(1.5),
+            new InstantCommand(() -> RobotContainer.doRainbow = true)
+            
+            )
+            
+            );
   }
 
   public enum Direction {
