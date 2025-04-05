@@ -45,6 +45,8 @@ public final class Constants {
     public static final double elevatorNet = 16.486;
     public static final double elevatorl3Algae = 0.0;
 
+    public static double MECHTECH_SHOT_OFFSET = 0.3;
+
     // public static final double arml2 = 0.543;
     // public static final double arml3 = 0.543;
     public static final double arml4 = 0.78;

@@ -76,7 +76,7 @@ public class RobotContainer {
   public static boolean autoAlignDebounce = true;
   public static boolean doRainbow = true;
   public static boolean preEnable = true;
-  
+
   private final Elevator elevator;
 
   private final EndEffector endEffector;
@@ -224,6 +224,10 @@ public class RobotContainer {
         .whileTrue(new InstantCommand(() -> RobotContainer.doRainbow = false))
         .onTrue(led.sendBargeIndicator(operatorController))
         .whileTrue(led.turnColor(Color.kDarkBlue));
+
+    // PresetCommands.shootMechTech(
+    //         Constants.PresetConstants.MECHTECH_SHOT_OFFSET, drive, operatorController.leftBumper())
+    //     .whileTrue(PresetCommands.initMechTechShot(elevator, endEffector, arm));
   }
 
   public static double deadband(double controllerAxis) {

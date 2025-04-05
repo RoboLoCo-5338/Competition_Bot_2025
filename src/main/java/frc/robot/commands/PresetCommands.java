@@ -7,9 +7,11 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Constants.PresetConstants;
 import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.endeffector.EndEffector;
 
@@ -37,22 +39,24 @@ public class PresetCommands {
 
     SmartDashboard.putString("preset2", "inside preset functoin");
     return new SequentialCommandGroup(
-      arm.setArmPosition(0.51),
-        elevator.setElevatorPosition(PresetConstants.elevatorl2, 0));
+        arm.setArmPosition(0.51), elevator.setElevatorPosition(PresetConstants.elevatorl2, 0));
   }
 
   public static Command presetL3(Elevator elevator, EndEffector endEffector, Arm arm) {
     return new SequentialCommandGroup(
-      arm.setArmPosition(0.51),
-        elevator.setElevatorPosition(PresetConstants.elevatorl3, 0));
+        arm.setArmPosition(0.51), elevator.setElevatorPosition(PresetConstants.elevatorl3, 0));
   }
 
   public static Command presetL4(Elevator elevator, EndEffector endEffector, Arm arm) {
     return new SequentialCommandGroup(
-      arm.setArmPosition(0.51),
+        arm.setArmPosition(0.51),
         new ParallelCommandGroup(
             arm.setArmPosition(PresetConstants.arml4),
             elevator.setElevatorPosition(PresetConstants.elevatorl4, 0)));
+  }
+
+  public static Command presetL4Height(Elevator elevator) {
+    return elevator.setElevatorPosition(PresetConstants.elevatorl4, 0);
   }
 
   public static Command stopAll(Elevator elevator, EndEffector endEffector, Arm arm) {
@@ -90,5 +94,46 @@ public class PresetCommands {
         //             (endEffector.getIO().getLaserCanMeasurement1() < 100
         //                 && endEffector.getIO().getLaserCanMeasurement2() < 100)),
         endEffector.setEndEffectorVelocity(0.0));
+  }
+
+  // 8.79m in x direction is where the barge is
+  public static Trigger shootMechTech(double offset, Drive drive, Trigger trigger) {
+    // trigger to figure out when to shoot
+    return new Trigger(
+        () -> {
+          double gravity = 9.81;
+          double ball_apex_height = 0.6094; // 2 feet. 0.6094 meters
+          double x_distance = Math.abs(drive.getPose().getTranslation().getX() - 8.79);
+          double x_speed = Math.abs(drive.getChassisSpeeds().vxMetersPerSecond);
+          double y_speed = Math.sqrt(2 * gravity * ball_apex_height);
+          double y_needed_height = 2.4; // in meters
+          double y_released_height = 2.1463;
+          double del_y = y_needed_height - y_released_height;
+          double t_net =
+              (-y_speed + Math.sqrt(Math.pow(y_speed, 2) + 2 * gravity * del_y)) / -gravity;
+
+          double delx = (x_speed * t_net) + offset;
+
+          if (Math.abs(x_distance - delx) < 0.4 && trigger.getAsBoolean()) {
+
+            return true;
+          }
+
+          return false;
+        });
+  }
+
+  public static SequentialCommandGroup initMechTechShot(
+      Elevator elevator, EndEffector endEffector, Arm arm) {
+    return new SequentialCommandGroup(
+        new InstantCommand(() -> System.out.println("Doing mechtech shot!")),
+        presetL4Height(elevator),
+        netShoot(arm, endEffector));
+  }
+  // public static SequentialCommandGroup doMechTechShot(
+  //     EndEffector endEffector, Drive drive, Elevator elevator, Arm arm) {}
+
+  public static InstantCommand changeDriveSpeedTo(Drive drive, double speed) {
+    return new InstantCommand(() -> DriveCommands.setSpeed(speed));
   }
 }
