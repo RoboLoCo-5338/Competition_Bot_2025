@@ -171,6 +171,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("Endeffector Out", endEffector.setEndEffectorVelocity(100));
     NamedCommands.registerCommand("Endeffector Out L4", endEffector.setEndEffectorVelocity(-100));
     NamedCommands.registerCommand("Endeffector Stop", endEffector.setEndEffectorVelocity(0));
+    NamedCommands.registerCommand("OutakeLaserCan", PresetCommands.outtakeLaserCan(endEffector));
     NamedCommands.registerCommand(
         "Align Left",
         DriveCommands.reefAlign(
@@ -243,12 +244,25 @@ public class RobotContainer {
   private void configureButtonBindings() {
     // Default command, normal field-relative drive
 
+    // drive.setDefaultCommand(
+    //     DriveCommands.joystickDrive(
+    //         drive,
+    //         () -> -driverController.getLeftY(),
+    //         () -> -driverController.getLeftX(),
+    //         () -> -driverController.getRightX() * Math.abs(driverController.getRightX())));
+
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
             drive,
-            () -> -driverController.getLeftY(),
-            () -> -driverController.getLeftX(),
-            () -> -driverController.getRightX() * Math.abs(driverController.getRightX())));
+            () ->
+                -driverController.getLeftY()
+                    * Math.pow(Math.abs(driverController.getLeftY()), 1.2 - 1),
+            () ->
+                -driverController.getLeftX()
+                    * Math.pow(Math.abs(driverController.getLeftX()), 1.2 - 1),
+            () ->
+                -driverController.getRightX()
+                    * Math.pow(Math.abs(driverController.getRightX()), 2.5 - 1)));
 
     elevator.setDefaultCommand(
         elevator.setElevatorVelocity(() -> deadband(-operatorController.getLeftY()) * 25));

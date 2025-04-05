@@ -82,4 +82,28 @@ public class PresetCommands {
         //                 && endEffector.getIO().getLaserCanMeasurement2() < 100)),
         endEffector.setEndEffectorVelocity(0.0));
   }
+
+  public static Command outtakeLaserCan(EndEffector endEffector) {
+    if (endEffector.getIO().getLaserCanMeasurement1() == -1
+        || endEffector.getIO().getLaserCanMeasurement2() == -1) {
+      return new InstantCommand();
+    }
+    return new SequentialCommandGroup(
+        new RepeatCommand(endEffector.setEndEffectorVelocity(-100))
+            .until(
+                () ->
+                    (endEffector.getIO().getLaserCanMeasurement1() > 100
+                        && endEffector.getIO().getLaserCanMeasurement2() > 100)),
+        // new RepeatCommand(endEffector.setEndEffectorVelocity(60))
+        //     .until(
+        //         () ->
+        //             (endEffector.getIO().getLaserCanMeasurement2() < 100
+        //                 && endEffector.getIO().getLaserCanMeasurement1() > 90)),
+        // new RepeatCommand(endEffector.setEndEffectorVelocity(60))
+        //     .until(
+        //         () ->
+        //             (endEffector.getIO().getLaserCanMeasurement1() < 100
+        //                 && endEffector.getIO().getLaserCanMeasurement2() < 100)),
+        endEffector.setEndEffectorVelocity(0.0));
+  }
 }

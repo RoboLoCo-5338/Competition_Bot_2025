@@ -507,9 +507,11 @@ public class DriveCommands {
   public static class Reef extends PathDestination {
     Direction direction;
     int tagId;
-    static Pose2d reefRight = new Pose2d(3.06, 3.77 + 0.05 + 0.0127, new Rotation2d());
-    static Pose2d reefLeft = new Pose2d(3.06, 4.175, new Rotation2d());
-    static Pose2d reefCenter = new Pose2d(3.06, 3.8327, new Rotation2d());
+    static Pose2d reefRight =
+        new Pose2d(3.06 - Units.inchesToMeters(2.5), 3.77 + 0.05 + 0.0127, new Rotation2d());
+    static Pose2d reefLeft = new Pose2d(3.06 - Units.inchesToMeters(2.5), 4.175, new Rotation2d());
+    static Pose2d reefCenter =
+        new Pose2d(3.06 - Units.inchesToMeters(2.5), 3.8327, new Rotation2d());
     /**
      * Creates a reef direction based on the currently visible tag.
      *
