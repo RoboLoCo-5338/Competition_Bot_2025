@@ -264,7 +264,7 @@ public class RobotContainer {
         .leftTrigger()
         .whileTrue(endEffector.setEndEffectorVelocity(100))
         .onFalse(endEffector.setEndEffectorVelocity(0));
-    
+
     operatorController
         .rightTrigger()
         .whileTrue(endEffector.setEndEffectorVelocity(-100))
@@ -317,41 +317,31 @@ public class RobotContainer {
         .povLeft()
         .and(() -> drive.useVision)
         .whileTrue(
-            DriveCommands.reefAlign(
+            DriveCommands.reefScore(
                 drive,
                 Direction.Left,
+                DriveCommands.Level.L2,
                 driverController,
                 led,
-                () -> elevator.getElevatorPosition()));
-
-    // driverController
-    // .povLeft()
-    // .and(() -> drive.useVision)
-    // .whileTrue(
-    //     DriveCommands.reefScore(
-    //         drive,
-    //         Direction.Left,
-    //         DriveCommands.Level.L2,
-    //         driverController,
-    //         led,
-    //         () -> elevator.getElevatorPosition(),
-    //         elevator,
-    //         arm,
-    //         endEffector));
+                () -> elevator.getElevatorPosition(),
+                elevator,
+                arm,
+                endEffector));
 
     driverController
         .povRight()
-        .and(
-            () -> {
-              return drive.useVision;
-            })
+        .and(() -> drive.useVision)
         .whileTrue(
-            DriveCommands.reefAlign(
+            DriveCommands.reefScore(
                 drive,
                 Direction.Right,
+                DriveCommands.Level.L4,
                 driverController,
                 led,
-                () -> elevator.getElevatorPosition()));
+                () -> elevator.getElevatorPosition(),
+                elevator,
+                arm,
+                endEffector));
 
     driverController
         .rightTrigger()
