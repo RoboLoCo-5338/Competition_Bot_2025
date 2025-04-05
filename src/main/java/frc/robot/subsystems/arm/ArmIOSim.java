@@ -27,12 +27,12 @@ public class ArmIOSim extends SimMechanism implements ArmIO {
   SingleJointedArmSim armPhysicsSim =
       new SingleJointedArmSim(
           armGearBox,
-          ArmConstants.GEARING,
+          5,
           ArmSimConstants.MOI,
           ArmSimConstants.LENGTH,
           ArmSimConstants.MIN_ANGLE,
           ArmSimConstants.MAX_ANGLE,
-          true,
+          false,
           ArmSimConstants.STARTING_ANGLE);
   SparkFlexSim armSim;
   SparkAbsoluteEncoderSim armEncoderSim;
@@ -41,7 +41,7 @@ public class ArmIOSim extends SimMechanism implements ArmIO {
   public ArmIOSim(LoggedMechanismLigament2d endEffector) {
     super();
     SparkFlexConfig c = getArmConfig();
-    c.softLimit.reverseSoftLimitEnabled(false);
+    c.softLimit.reverseSoftLimit(-0.256);
     armMotor.configure(c, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     armSim = new SparkFlexSim(armMotor, armGearBox);
     armEncoderSim = new SparkAbsoluteEncoderSim(armMotor);
@@ -88,8 +88,14 @@ public class ArmIOSim extends SimMechanism implements ArmIO {
 
   @Override
   public void setArmPosition(double position) {
+    System.out.println(
+        "from "
+            + Units.radiansToRotations(armPhysicsSim.getAngleRads())
+            + ArmSimConstants.SIM_OFFSET
+            + " to "
+            + (position - ArmSimConstants.SIM_OFFSET));
     armClosedLoopController.setReference(
-        Units.radiansToRotations(position) - ArmSimConstants.SIM_OFFSET, ControlType.kPosition);
+        position - ArmSimConstants.SIM_OFFSET, ControlType.kPosition, ClosedLoopSlot.kSlot0);
   }
 
   @Override

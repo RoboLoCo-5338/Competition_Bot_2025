@@ -59,7 +59,6 @@ public class Arm extends SubsystemBase {
     return new InstantCommand(
         () -> {
           io.setArmVelocity(velocity.getAsDouble());
-          System.out.println(velocity.getAsDouble());
         },
         this);
   }
