@@ -34,6 +34,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -637,21 +638,23 @@ public class DriveCommands {
       Elevator elevator,
       Arm arm,
       EndEffector endEffector) {
-    return new SequentialCommandGroup(
-        (level == Level.L4)
-            ? PresetCommands.presetL4(elevator, endEffector, arm)
-            : (level == Level.L3)
-                ? PresetCommands.presetL3(elevator, endEffector, arm)
-                : PresetCommands.presetL2(elevator, endEffector, arm),
-        reefAlign(drive, direction, controller, led, elevatorHeight),
-        PresetCommands.stopAll(elevator, endEffector, arm),
-        ((level == Level.L4)
+    return new ParallelCommandGroup(
+            (level == Level.L4)
+                ? PresetCommands.presetL4(elevator, endEffector, arm)
+                : (level == Level.L3)
+                    ? PresetCommands.presetL3(elevator, endEffector, arm)
+                    : PresetCommands.presetL2(elevator, endEffector, arm),
+            reefAlign(drive, direction, controller, led, elevatorHeight))
+        .andThen(
+            PresetCommands.stopAll(elevator, endEffector, arm),
+            ((level == Level.L4)
                 ? endEffector.setEndEffectorVelocity(-100)
-                : endEffector.setEndEffectorVelocity(100))
-            .until(
-                () ->
-                    endEffector.getIO().getLaserCanMeasurement1() > 100
-                        && endEffector.getIO().getLaserCanMeasurement2() > 100));
+                : endEffector.setEndEffectorVelocity(100)))
+        .until(
+            () ->
+                endEffector.getIO().getLaserCanMeasurement1() > 100
+                    && endEffector.getIO().getLaserCanMeasurement2() > 100)
+        .andThen(() -> endEffector.setEndEffectorVelocity(0));
   }
 
   public enum Direction {
