@@ -279,6 +279,9 @@ public class RobotContainer {
 
     operatorController.leftBumper().whileTrue(PresetCommands.netShoot(arm, endEffector));
 
+    operatorController.povDown().whileTrue(PresetCommands.moveEndEffectorLaserCan(endEffector));
+    operatorController.povUp().whileTrue(PresetCommands.outtakeLaserCan(endEffector));
+
     driverController
         .rightBumper()
         .whileTrue(endEffector.setEndEffectorVelocity(60))
