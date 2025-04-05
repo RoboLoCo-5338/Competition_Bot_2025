@@ -264,7 +264,7 @@ public class RobotContainer {
         .leftTrigger()
         .whileTrue(endEffector.setEndEffectorVelocity(100))
         .onFalse(endEffector.setEndEffectorVelocity(0));
-    
+
     operatorController
         .rightTrigger()
         .whileTrue(endEffector.setEndEffectorVelocity(-100))
@@ -284,7 +284,7 @@ public class RobotContainer {
     operatorController.leftBumper().whileTrue(PresetCommands.netShoot(arm, endEffector));
 
     operatorController.povDown().whileTrue(PresetCommands.moveEndEffectorLaserCan(endEffector));
-    operatorController.povUp().whileTrue(PresetCommands.outtakeLaserCan(endEffector));  
+    operatorController.povUp().whileTrue(PresetCommands.outtakeLaserCan(endEffector));
 
     driverController
         .rightBumper()

@@ -15,28 +15,15 @@
           "data": {
             "commands": [
               {
-                "type": "deadline",
+                "type": "named",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 1.5
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Align Left"
-                      }
-                    }
-                  ]
+                  "name": "L4 Preset"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "L4 Preset"
+                  "name": "Align Left"
                 }
               }
             ]
