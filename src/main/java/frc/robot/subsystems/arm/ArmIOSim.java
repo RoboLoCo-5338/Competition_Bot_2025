@@ -9,6 +9,7 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController.ArbFFUnits;
+import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotController;
@@ -39,8 +40,9 @@ public class ArmIOSim extends SimMechanism implements ArmIO {
 
   public ArmIOSim(LoggedMechanismLigament2d endEffector) {
     super();
-    armMotor.configure(
-        getArmConfig(), ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    SparkFlexConfig c = getArmConfig();
+    c.softLimit.reverseSoftLimitEnabled(false);
+    armMotor.configure(c, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     armSim = new SparkFlexSim(armMotor, armGearBox);
     armEncoderSim = new SparkAbsoluteEncoderSim(armMotor);
     armDrawn =
@@ -66,8 +68,10 @@ public class ArmIOSim extends SimMechanism implements ArmIO {
         RobotController.getBatteryVoltage(),
         0.02);
     inputs.armConnected = true;
-    inputs.armPosition = Units.radiansToRotations(armPhysicsSim.getAngleRads());
-    inputs.armVelocity = Units.radiansToRotations(armPhysicsSim.getVelocityRadPerSec());
+    inputs.armPosition =
+        Units.radiansToRotations(armPhysicsSim.getAngleRads()) + ArmSimConstants.SIM_OFFSET;
+    inputs.armVelocity =
+        Units.radiansPerSecondToRotationsPerMinute(armPhysicsSim.getVelocityRadPerSec());
     ifOk(
         armMotor,
         new DoubleSupplier[] {armMotor::getAppliedOutput, armMotor::getBusVoltage},
@@ -84,14 +88,14 @@ public class ArmIOSim extends SimMechanism implements ArmIO {
 
   @Override
   public void setArmPosition(double position) {
-    armClosedLoopController.setReference(Units.radiansToRotations(position), ControlType.kPosition);
+    armClosedLoopController.setReference(
+        Units.radiansToRotations(position) - ArmSimConstants.SIM_OFFSET, ControlType.kPosition);
   }
 
   @Override
   public void setArmVelocity(double velocityRadPerSec) {
     double ffvolts =
-        feedforward.calculate((armEncoder.getPosition() - 0.705) * 2 * Math.PI, velocityRadPerSec);
-
+        feedforward.calculate((armEncoder.getPosition()) * 2 * Math.PI, velocityRadPerSec);
     armClosedLoopController.setReference(
         Units.radiansPerSecondToRotationsPerMinute(velocityRadPerSec),
         ControlType.kVelocity,
