@@ -391,7 +391,7 @@ public class DriveCommands {
 
                 boolean canceled = false;
                 System.out.println(direction);
-                if(DriverStation.isTeleop()){
+                if (DriverStation.isTeleop()) {
                   if (direction == Direction.Left) {
                     System.out.println("canceling ocmmand");
                     canceled = !driverController.povLeft().getAsBoolean();

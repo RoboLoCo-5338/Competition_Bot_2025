@@ -171,6 +171,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("Endeffector Out", endEffector.setEndEffectorVelocity(100));
     NamedCommands.registerCommand("Endeffector Out L4", endEffector.setEndEffectorVelocity(-100));
     NamedCommands.registerCommand("Endeffector Stop", endEffector.setEndEffectorVelocity(0));
+    NamedCommands.registerCommand("OuttakeLaserCAN", PresetCommands.outtakeLaserCan(endEffector));
     NamedCommands.registerCommand(
         "Align Left",
         DriveCommands.reefAlign(
