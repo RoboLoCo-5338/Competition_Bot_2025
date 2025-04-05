@@ -28,10 +28,27 @@ public class LED extends SubsystemBase {
   public LED() {
 
     m_led = new AddressableLED(0);
-    buffer = new AddressableLEDBuffer(123);
+    buffer = new AddressableLEDBuffer(300);
     m_led.setLength(buffer.getLength());
     m_led.setData(buffer);
     m_led.start();
+  }
+
+  public InstantCommand flashGreen() {
+    return new InstantCommand(
+        () -> {
+          new SequentialCommandGroup(
+                  turnGreen(),
+                  new WaitCommand(0.3),
+                  turnOff(),
+                  new WaitCommand(0.3),
+                  turnGreen(),
+                  new WaitCommand(0.3),
+                  turnOff(),
+                  new WaitCommand(0.3),
+                  turnGreen())
+              .schedule();
+        });
   }
 
   public InstantCommand turnGreen() {

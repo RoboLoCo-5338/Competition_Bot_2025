@@ -11,7 +11,8 @@ public final class ElevatorConstants {
   public static final double ELEVATOR_kP_LASERCAN = 0.0;
   public static final double ELEVATOR_kI_LASERCAN = 0.0;
   public static final double ELEVATOR_kD_LASERCAN = 0.0;
-  public static final double POSITION_TOLERANCE = 0.005;
+  
+  public static final double POSITION_TOLERANCE = 0.1;
   public static final double GEARING = 4;
 
   public static final class ElevatorPositionConstants {

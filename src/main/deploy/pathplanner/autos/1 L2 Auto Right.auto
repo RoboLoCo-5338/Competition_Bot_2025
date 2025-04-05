@@ -5,6 +5,12 @@
     "data": {
       "commands": [
         {
+          "type": "wait",
+          "data": {
+            "waitTime": 5.0
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Right to Reef"
@@ -15,40 +21,28 @@
           "data": {
             "commands": [
               {
-                "type": "wait",
+                "type": "parallel",
                 "data": {
-                  "waitTime": 2.5
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "L2 Preset"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Align Left"
+                      }
+                    }
+                  ]
                 }
               },
               {
-                "type": "named",
-                "data": {
-                  "name": "L4 Preset"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Stop Preset"
-          }
-        },
-        {
-          "type": "deadline",
-          "data": {
-            "commands": [
-              {
                 "type": "wait",
                 "data": {
-                  "waitTime": 4.0
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Align Left"
+                  "waitTime": 3.0
                 }
               }
             ]
@@ -63,7 +57,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.5
+            "waitTime": 2.0
           }
         },
         {
@@ -75,13 +69,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Right Move Back 0"
+            "pathName": "Right Move Back 1"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "L4",
+  "folder": "L2",
   "choreoAuto": false
 }

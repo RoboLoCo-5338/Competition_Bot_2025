@@ -73,8 +73,8 @@ public class RobotContainer {
   // Subsystems
   public final Drive drive;
   public final Vision vision;
-
   public final LED led;
+  public static boolean autoAlignDebounce = true;
   public static boolean doRainbow = true;
   public static boolean preEnable = true;
 
@@ -177,6 +177,10 @@ public class RobotContainer {
         DriveCommands.reefAlign(
             drive, Direction.Left, driverController, led, () -> elevator.getElevatorPosition()));
     NamedCommands.registerCommand(
+        "Align Center",
+        DriveCommands.reefAlign(
+            drive, Direction.None, driverController, led, () -> elevator.getElevatorPosition()));
+    NamedCommands.registerCommand(
         "Align Right",
         DriveCommands.reefAlign(
             drive, Direction.Right, driverController, led, () -> elevator.getElevatorPosition()));
@@ -184,8 +188,8 @@ public class RobotContainer {
         "IntakeLaserCAN", PresetCommands.moveEndEffectorLaserCan(endEffector));
     NamedCommands.registerCommand(
         "Stop Preset", PresetCommands.stopAll(elevator, endEffector, arm));
-    NamedCommands.registerCommand("StowPreset", PresetCommands.fullIn(elevator, endEffector, arm));
-    NamedCommands.registerCommand("Stow2", arm.setArmPosition(0.54));
+    NamedCommands.registerCommand(
+        "StowPreset", PresetCommands.stowElevator(elevator, endEffector, arm));
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -210,7 +214,6 @@ public class RobotContainer {
     configureButtonBindings();
 
     // LED Stuff
-    new Trigger(() -> RobotContainer.doRainbow).whileTrue(startRainbow());
 
     led.isCloseToBarge(drive)
         .and(() -> !RobotContainer.preEnable)
@@ -252,9 +255,7 @@ public class RobotContainer {
         elevator.setElevatorVelocity(
             () -> deadband(-operatorController.getLeftY()) * 25 * ElevatorConstants.GEARING));
 
-    arm.setDefaultCommand(
-        arm.setArmVelocity(
-            () -> -operatorController.getRightY() * Math.abs(operatorController.getRightY())));
+    arm.setDefaultCommand(arm.setArmVelocity(() -> 2 * Math.PI * -operatorController.getRightY()));
 
     operatorController
         .leftTrigger()
@@ -308,6 +309,7 @@ public class RobotContainer {
     //     .whileTrue(
     //         DriveCommands.reefStrafe(
     //             drive, () -> driverController.getLeftY(), () -> driverController.getLeftX()));
+
     driverController
         .povLeft()
         .and(() -> drive.useVision)
@@ -318,6 +320,22 @@ public class RobotContainer {
                 driverController,
                 led,
                 () -> elevator.getElevatorPosition()));
+
+    // driverController
+    // .povLeft()
+    // .and(() -> drive.useVision)
+    // .whileTrue(
+    //     DriveCommands.reefScore(
+    //         drive,
+    //         Direction.Left,
+    //         DriveCommands.Level.L2,
+    //         driverController,
+    //         led,
+    //         () -> elevator.getElevatorPosition(),
+    //         elevator,
+    //         arm,
+    //         endEffector));
+
     driverController
         .povRight()
         .and(
@@ -344,6 +362,10 @@ public class RobotContainer {
                 () -> {
                   DriveCommands.slowMode = 1;
                 }));
+  }
+
+  public void ledInit() {
+    new Trigger(() -> RobotContainer.doRainbow).whileTrue(startRainbow());
   }
 
   public void periodic() {}
