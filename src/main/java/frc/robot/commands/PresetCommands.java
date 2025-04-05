@@ -25,7 +25,7 @@ public class PresetCommands {
         arm.setArmPosition(0.51),
         new WaitCommand(0.1),
         elevator.setElevatorPosition(0.05, 2),
-        arm.setArmPosition(0.50));
+        arm.setArmPosition(0.425));
   }
 
   public static Command presetL2(Elevator elevator, EndEffector endEffector, Arm arm) {
