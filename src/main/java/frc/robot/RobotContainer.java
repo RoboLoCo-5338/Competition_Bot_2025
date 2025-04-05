@@ -36,10 +36,6 @@ import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmIO;
 import frc.robot.subsystems.arm.ArmIOSim;
 import frc.robot.subsystems.arm.ArmIOSpark;
-import frc.robot.subsystems.climb.Climb;
-import frc.robot.subsystems.climb.ClimbIO;
-import frc.robot.subsystems.climb.ClimbIOSim;
-import frc.robot.subsystems.climb.ClimbIOTalonFX;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -81,8 +77,6 @@ public class RobotContainer {
 
   private final EndEffector endEffector;
 
-  private final Climb climb;
-
   private final Arm arm;
 
   // Controllers
@@ -114,7 +108,6 @@ public class RobotContainer {
         //     VisionConstants.camera1Name, VisionConstants.robotToCamera1));
         endEffector = new EndEffector(new EndEffectorIOTalonFX());
         elevator = new Elevator(new ElevatorIOTalonFX());
-        climb = new Climb(new ClimbIOTalonFX());
         arm = new Arm(new ArmIOSpark());
         led = new LED();
 
@@ -134,7 +127,6 @@ public class RobotContainer {
         led = new LED();
         endEffector = new EndEffector(new EndEffectorIOSim());
         elevator = new Elevator(new ElevatorIOSim());
-        climb = new Climb(new ClimbIOSim());
         arm = new Arm(new ArmIOSim(((ElevatorIOSim) elevator.getIO()).getLigamentEnd()));
         vision =
             new Vision(
@@ -158,7 +150,6 @@ public class RobotContainer {
         led = new LED();
         endEffector = new EndEffector(new EndEffectorIO() {});
         elevator = new Elevator(new ElevatorIO() {});
-        climb = new Climb(new ClimbIO() {});
         arm = new Arm(new ArmIO() {});
         vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
         break;
