@@ -67,13 +67,13 @@ public class ElevatorIOSim extends SimMechanism implements ElevatorIO {
     physicsSim.update(0.02);
 
     motor1Sim.setRawRotorPosition(
-        physicsSim.getPositionMeters() / ElevatorSimConstants.METERS_PER_ROTATION);
+        physicsSim.getPositionMeters() / ElevatorConstants.METERS_PER_ROTATION);
     motor2Sim.setRawRotorPosition(
-        physicsSim.getPositionMeters() / ElevatorSimConstants.METERS_PER_ROTATION);
+        physicsSim.getPositionMeters() / ElevatorConstants.METERS_PER_ROTATION);
     motor1Sim.setRotorVelocity(
-        physicsSim.getVelocityMetersPerSecond() / ElevatorSimConstants.METERS_PER_ROTATION);
+        physicsSim.getVelocityMetersPerSecond() / ElevatorConstants.METERS_PER_ROTATION);
     motor2Sim.setRotorVelocity(
-        physicsSim.getVelocityMetersPerSecond() / ElevatorSimConstants.METERS_PER_ROTATION);
+        physicsSim.getVelocityMetersPerSecond() / ElevatorConstants.METERS_PER_ROTATION);
 
     elevator.setLength(physicsSim.getPositionMeters());
   }
@@ -81,13 +81,13 @@ public class ElevatorIOSim extends SimMechanism implements ElevatorIO {
   @Override
   public void setElevatorVelocity(double velocity) {
     elevatorMotor1.setControl(
-        elevator1VelocityRequest.withVelocity(velocity / ElevatorSimConstants.METERS_PER_ROTATION));
+        elevator1VelocityRequest.withVelocity(velocity / ElevatorConstants.METERS_PER_ROTATION));
   }
 
   @Override
   public void setElevatorPosition(double position, int slot) {
     elevatorMotor1.setControl(
-        elevator1PositionRequest.withPosition(position / ElevatorSimConstants.METERS_PER_ROTATION));
+        elevator1PositionRequest.withPosition(position / ElevatorConstants.METERS_PER_ROTATION));
   }
 
   @Override
