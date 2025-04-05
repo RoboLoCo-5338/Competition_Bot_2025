@@ -12,7 +12,7 @@
         "y": 6.300150131235578
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Left Reef 1"
     },
     {
       "anchor": {
@@ -48,7 +48,7 @@
   "folder": "Left",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -119.77270782572792
+    "rotation": -115.279
   },
   "useDefaultConstraints": true
 }

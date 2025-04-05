@@ -17,15 +17,15 @@
     {
       "anchor": {
         "x": 5.753,
-        "y": 5.77025
+        "y": 5.77
       },
       "prevControl": {
         "x": 5.674551599531203,
-        "y": 5.5328771951889015
+        "y": 5.532627195188901
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Left Reef 1"
     }
   ],
   "rotationTargets": [],
@@ -56,13 +56,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -115.27867281630449
+    "rotation": -115.279
   },
   "reversed": false,
   "folder": "Left",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -119.77270782572792
+    "rotation": -119.77300000000001
   },
   "useDefaultConstraints": true
 }

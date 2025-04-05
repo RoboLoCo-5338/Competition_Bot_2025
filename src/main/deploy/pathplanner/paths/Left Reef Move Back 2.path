@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.422,
-        "y": 5.595
+        "x": 3.4884221311475407,
+        "y": 5.415573770491803
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.2211059992781315,
-        "y": 5.908658602353554
+        "x": 3.287528130425672,
+        "y": 5.729232372845357
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Left Reef 2"
     },
     {
       "anchor": {
-        "x": 3.3052499999999996,
-        "y": 5.7995
+        "x": 3.296618852459016,
+        "y": 5.895081967213115
       },
       "prevControl": {
-        "x": 3.5330163934426224,
-        "y": 5.487819672131146
+        "x": 3.4191841623671557,
+        "y": 5.677188082931978
       },
       "nextControl": null,
       "isLocked": false,
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -54.46232220802567
+    "rotation": -61.113418233089234
   },
   "reversed": false,
   "folder": "Left",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -52.635714672451584
+    "rotation": -62.70042778866725
   },
   "useDefaultConstraints": true
 }

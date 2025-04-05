@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 3.422,
-        "y": 5.59475
+        "x": 3.4884221311475407,
+        "y": 5.415573770491803
       },
       "prevControl": {
-        "x": 2.9797168620119665,
-        "y": 6.042930116518337
+        "x": 3.046138993159507,
+        "y": 5.86375388701014
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Left Reef 2"
     }
   ],
   "rotationTargets": [],
