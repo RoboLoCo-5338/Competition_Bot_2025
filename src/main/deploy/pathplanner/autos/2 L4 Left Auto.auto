@@ -15,41 +15,15 @@
           "data": {
             "commands": [
               {
-                "type": "deadline",
+                "type": "named",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 1.5
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "L4 Preset"
-                      }
-                    }
-                  ]
+                  "name": "L4 Preset"
                 }
               },
               {
-                "type": "deadline",
+                "type": "named",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 2.0
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Align Right"
-                      }
-                    }
-                  ]
+                  "name": "Align Right"
                 }
               }
             ]
@@ -102,41 +76,15 @@
           "data": {
             "commands": [
               {
-                "type": "deadline",
+                "type": "named",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 1.5
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "L4 Preset"
-                      }
-                    }
-                  ]
+                  "name": "L4 Preset"
                 }
               },
               {
-                "type": "deadline",
+                "type": "named",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 2.0
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Align Right"
-                      }
-                    }
-                  ]
+                  "name": "Align Left"
                 }
               }
             ]
