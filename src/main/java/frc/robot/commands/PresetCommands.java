@@ -14,6 +14,7 @@ import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.endeffector.EndEffector;
+import frc.robot.subsystems.led.LED;
 
 public class PresetCommands {
 
@@ -35,20 +36,25 @@ public class PresetCommands {
         arm.setArmPosition(0.427), new WaitCommand(0.3), elevator.setElevatorPosition(0.05, 2));
   }
 
-  public static Command presetL2(Elevator elevator, EndEffector endEffector, Arm arm) {
+  public static Command presetL2(Elevator elevator, EndEffector endEffector, Arm arm, LED led) {
 
     SmartDashboard.putString("preset2", "inside preset functoin");
     return new SequentialCommandGroup(
-        arm.setArmPosition(0.51), elevator.setElevatorPosition(PresetConstants.elevatorl2, 0));
+        led.flashYellow(),
+        arm.setArmPosition(0.51),
+        elevator.setElevatorPosition(PresetConstants.elevatorl2, 0));
   }
 
-  public static Command presetL3(Elevator elevator, EndEffector endEffector, Arm arm) {
+  public static Command presetL3(Elevator elevator, EndEffector endEffector, Arm arm, LED led) {
     return new SequentialCommandGroup(
-        arm.setArmPosition(0.51), elevator.setElevatorPosition(PresetConstants.elevatorl3, 0));
+        led.flashYellow(),
+        arm.setArmPosition(0.51),
+        elevator.setElevatorPosition(PresetConstants.elevatorl3, 0));
   }
 
-  public static Command presetL4(Elevator elevator, EndEffector endEffector, Arm arm) {
+  public static Command presetL4(Elevator elevator, EndEffector endEffector, Arm arm, LED led) {
     return new SequentialCommandGroup(
+        led.flashYellow(),
         arm.setArmPosition(0.51),
         new ParallelCommandGroup(
             arm.setArmPosition(PresetConstants.arml4),

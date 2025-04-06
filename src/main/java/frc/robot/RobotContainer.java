@@ -165,8 +165,10 @@ public class RobotContainer {
     }
 
     // Set up commands for auto
-    NamedCommands.registerCommand("L4 Preset", PresetCommands.presetL4(elevator, endEffector, arm));
-    NamedCommands.registerCommand("L2 Preset", PresetCommands.presetL2(elevator, endEffector, arm));
+    NamedCommands.registerCommand(
+        "L4 Preset", PresetCommands.presetL4(elevator, endEffector, arm, led));
+    NamedCommands.registerCommand(
+        "L2 Preset", PresetCommands.presetL2(elevator, endEffector, arm, led));
 
     NamedCommands.registerCommand("Endeffector Out", endEffector.setEndEffectorVelocity(100));
     NamedCommands.registerCommand("Endeffector Out L4", endEffector.setEndEffectorVelocity(-100));
@@ -275,9 +277,9 @@ public class RobotContainer {
 
     operatorController.leftStick().onTrue(PresetCommands.moveEndEffectorLaserCan(endEffector));
     operatorController.a().whileTrue(PresetCommands.stowElevator(elevator, endEffector, arm));
-    operatorController.b().whileTrue(PresetCommands.presetL2(elevator, endEffector, arm));
-    operatorController.x().whileTrue(PresetCommands.presetL3(elevator, endEffector, arm));
-    operatorController.y().whileTrue(PresetCommands.presetL4(elevator, endEffector, arm));
+    operatorController.b().whileTrue(PresetCommands.presetL2(elevator, endEffector, arm, led));
+    operatorController.x().whileTrue(PresetCommands.presetL3(elevator, endEffector, arm, led));
+    operatorController.y().whileTrue(PresetCommands.presetL4(elevator, endEffector, arm, led));
 
     operatorController
         .rightBumper()

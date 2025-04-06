@@ -83,6 +83,30 @@ public class LED extends SubsystemBase {
         });
   }
 
+  public InstantCommand flashYellow() {
+    return new InstantCommand(
+        () -> {
+          new SequentialCommandGroup(
+                  rainbowSet(false),
+                  turnColor(Color.kYellow),
+                  new WaitCommand(0.15),
+                  turnOff(),
+                  new WaitCommand(0.15),
+                  turnColor(Color.kYellow),
+                  new WaitCommand(0.15),
+                  turnOff(),
+                  new WaitCommand(0.15),
+                  turnColor(Color.kYellow),
+                  new WaitCommand(0.15),
+                  turnOff(),
+                  new WaitCommand(0.15),
+                  turnColor(Color.kYellow),
+                  new WaitCommand(1.5),
+                  rainbowSet(true))
+              .schedule();
+        });
+  }
+
   public InstantCommand turnGreen() {
 
     return new InstantCommand(
