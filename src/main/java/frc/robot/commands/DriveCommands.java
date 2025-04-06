@@ -34,13 +34,17 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.RobotContainer;
+import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.DriveConstants;
+import frc.robot.subsystems.elevator.Elevator;
+import frc.robot.subsystems.endeffector.EndEffector;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.vision.VisionConstants;
 import java.text.DecimalFormat;
@@ -391,15 +395,17 @@ public class DriveCommands {
 
                 boolean canceled = false;
                 System.out.println(direction);
-                if (direction == Direction.Left) {
-                  System.out.println("canceling ocmmand");
-                  canceled = !driverController.povLeft().getAsBoolean();
-                } else if (direction == Direction.Right) {
-                  canceled = !driverController.povRight().getAsBoolean();
-                } else if (direction == Direction.None) {
-                  canceled =
-                      !driverController.povLeft().getAsBoolean()
-                          || !driverController.povRight().getAsBoolean();
+                if (DriverStation.isTeleop()) {
+                  if (direction == Direction.Left) {
+                    System.out.println("canceling ocmmand");
+                    canceled = !driverController.povLeft().getAsBoolean();
+                  } else if (direction == Direction.Right) {
+                    canceled = !driverController.povRight().getAsBoolean();
+                  } else if (direction == Direction.None) {
+                    canceled =
+                        !driverController.povLeft().getAsBoolean()
+                            || !driverController.povRight().getAsBoolean();
+                  }
                 }
                 if (canceled) {
                   DriveConstants.canceled = true;
@@ -505,9 +511,11 @@ public class DriveCommands {
   public static class Reef extends PathDestination {
     Direction direction;
     int tagId;
-    static Pose2d reefRight = new Pose2d(3.06, 3.77 + 0.05 + 0.0127, new Rotation2d());
-    static Pose2d reefLeft = new Pose2d(3.06, 4.175, new Rotation2d());
-    static Pose2d reefCenter = new Pose2d(3.06, 3.8327, new Rotation2d());
+    static Pose2d reefRight =
+        new Pose2d(3.06 - Units.inchesToMeters(2.5), 3.77 + 0.05 + 0.0127, new Rotation2d());
+    static Pose2d reefLeft = new Pose2d(3.06 - Units.inchesToMeters(2.5), 4.175, new Rotation2d());
+    static Pose2d reefCenter =
+        new Pose2d(3.06 - Units.inchesToMeters(2.5), 3.8327, new Rotation2d());
     /**
      * Creates a reef direction based on the currently visible tag.
      *
@@ -620,32 +628,34 @@ public class DriveCommands {
   //                       && endEffector.getIO().getLaserCanMeasurement2() > 100));
   // }
 
-  // public static Command reefScore(
-  //     Drive drive,
-  //     Direction direction,
-  //     Level level,
-  //     CommandXboxController controller,
-  //     LED led,
-  //     DoubleSupplier elevatorHeight,
-  //     Elevator elevator,
-  //     Arm arm,
-  //     EndEffector endEffector) {
-  //   return new SequentialCommandGroup(
-  //       (level == Level.L4)
-  //           ? PresetCommands.presetL4(elevator, endEffector, arm)
-  //           : (level == Level.L3)
-  //               ? PresetCommands.presetL3(elevator, endEffector, arm)
-  //               : PresetCommands.presetL2(elevator, endEffector, arm),
-  //       reefAlign(drive, direction, controller, led, elevatorHeight),
-  //       PresetCommands.stopAll(elevator, endEffector, arm),
-  //       ((level == Level.L4)
-  //               ? endEffector.setEndEffectorVelocity(-100)
-  //               : endEffector.setEndEffectorVelocity(100))
-  //           .until(
-  //               () ->
-  //                   endEffector.getIO().getLaserCanMeasurement1() > 100
-  //                       && endEffector.getIO().getLaserCanMeasurement2() > 100));
-  // }
+  public static Command reefScore(
+      Drive drive,
+      Direction direction,
+      Level level,
+      CommandXboxController controller,
+      LED led,
+      DoubleSupplier elevatorHeight,
+      Elevator elevator,
+      Arm arm,
+      EndEffector endEffector) {
+    return new ParallelCommandGroup(
+            (level == Level.L4)
+                ? PresetCommands.presetL4(elevator, endEffector, arm)
+                : (level == Level.L3)
+                    ? PresetCommands.presetL3(elevator, endEffector, arm)
+                    : PresetCommands.presetL2(elevator, endEffector, arm),
+            reefAlign(drive, direction, controller, led, elevatorHeight))
+        .andThen(
+            PresetCommands.stopAll(elevator, endEffector, arm),
+            ((level == Level.L4)
+                ? endEffector.setEndEffectorVelocity(-100)
+                : endEffector.setEndEffectorVelocity(100)))
+        .until(
+            () ->
+                endEffector.getIO().getLaserCanMeasurement1() > 100
+                    && endEffector.getIO().getLaserCanMeasurement2() > 100)
+        .andThen(() -> endEffector.setEndEffectorVelocity(0));
+  }
 
   public enum Direction {
     Left,

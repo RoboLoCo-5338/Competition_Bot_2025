@@ -22,34 +22,25 @@ public class PresetCommands {
 
   public static Command stowElevator(Elevator elevator, EndEffector endEffector, Arm arm) {
     return new SequentialCommandGroup(
-        arm.setArmPosition(0.54),
-        new WaitCommand(0.3),
+        arm.setArmPosition(0.51),
+        new WaitCommand(0.1),
         elevator.setElevatorPosition(0.05, 2),
-        arm.setArmPosition(0.5));
-  }
-
-  public static Command fullIn(Elevator elevator, EndEffector endEffector, Arm arm) {
-    return new SequentialCommandGroup(
-        arm.setArmPosition(0.427), new WaitCommand(0.3), elevator.setElevatorPosition(0.05, 2));
+        arm.setArmPosition(0.425));
   }
 
   public static Command presetL2(Elevator elevator, EndEffector endEffector, Arm arm) {
-
     SmartDashboard.putString("preset2", "inside preset functoin");
     return new SequentialCommandGroup(
-      arm.setArmPosition(0.51),
-        elevator.setElevatorPosition(PresetConstants.elevatorl2, 0));
+        arm.setArmPosition(0.54), elevator.setElevatorPosition(PresetConstants.elevatorl2, 0));
   }
 
   public static Command presetL3(Elevator elevator, EndEffector endEffector, Arm arm) {
     return new SequentialCommandGroup(
-      arm.setArmPosition(0.51),
-        elevator.setElevatorPosition(PresetConstants.elevatorl3, 0));
+        arm.setArmPosition(0.54), elevator.setElevatorPosition(PresetConstants.elevatorl3, 0));
   }
 
   public static Command presetL4(Elevator elevator, EndEffector endEffector, Arm arm) {
     return new SequentialCommandGroup(
-      arm.setArmPosition(0.51),
         new ParallelCommandGroup(
             arm.setArmPosition(PresetConstants.arml4),
             elevator.setElevatorPosition(PresetConstants.elevatorl4, 0)));
@@ -74,11 +65,26 @@ public class PresetCommands {
       return new InstantCommand();
     }
     return new SequentialCommandGroup(
-        new RepeatCommand(endEffector.setEndEffectorVelocity(60))
+        new RepeatCommand(endEffector.setEndEffectorVelocity(100))
             .until(
                 () ->
                     (endEffector.getIO().getLaserCanMeasurement1() < 100
                         && endEffector.getIO().getLaserCanMeasurement2() < 100)),
+        endEffector.setEndEffectorVelocity(0.0));
+  }
+
+  public static Command outtakeLaserCan(EndEffector endEffector) {
+    if (endEffector.getIO().getLaserCanMeasurement1() == -1
+        || endEffector.getIO().getLaserCanMeasurement2() == -1) {
+      return new InstantCommand();
+    }
+    return new SequentialCommandGroup(
+        new RepeatCommand(endEffector.setEndEffectorVelocity(-100))
+            .until(
+                () ->
+                    (endEffector.getIO().getLaserCanMeasurement1() > 100
+                        && endEffector.getIO().getLaserCanMeasurement2() > 100)),
+        new InstantCommand(() -> System.out.println("Both over 100")),
         // new RepeatCommand(endEffector.setEndEffectorVelocity(60))
         //     .until(
         //         () ->

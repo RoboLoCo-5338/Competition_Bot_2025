@@ -36,10 +36,6 @@ import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmIO;
 import frc.robot.subsystems.arm.ArmIOSim;
 import frc.robot.subsystems.arm.ArmIOSpark;
-import frc.robot.subsystems.climb.Climb;
-import frc.robot.subsystems.climb.ClimbIO;
-import frc.robot.subsystems.climb.ClimbIOSim;
-import frc.robot.subsystems.climb.ClimbIOTalonFX;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -76,12 +72,10 @@ public class RobotContainer {
   public static boolean autoAlignDebounce = true;
   public static boolean doRainbow = true;
   public static boolean preEnable = true;
-  
+
   private final Elevator elevator;
 
   private final EndEffector endEffector;
-
-  private final Climb climb;
 
   private final Arm arm;
 
@@ -114,7 +108,6 @@ public class RobotContainer {
         //     VisionConstants.camera1Name, VisionConstants.robotToCamera1));
         endEffector = new EndEffector(new EndEffectorIOTalonFX());
         elevator = new Elevator(new ElevatorIOTalonFX());
-        climb = new Climb(new ClimbIOTalonFX());
         arm = new Arm(new ArmIOSpark());
         led = new LED();
 
@@ -134,7 +127,6 @@ public class RobotContainer {
         led = new LED();
         endEffector = new EndEffector(new EndEffectorIOSim());
         elevator = new Elevator(new ElevatorIOSim());
-        climb = new Climb(new ClimbIOSim());
         arm = new Arm(new ArmIOSim(((ElevatorIOSim) elevator.getIO()).getLigamentEnd()));
         vision =
             new Vision(
@@ -158,7 +150,6 @@ public class RobotContainer {
         led = new LED();
         endEffector = new EndEffector(new EndEffectorIO() {});
         elevator = new Elevator(new ElevatorIO() {});
-        climb = new Climb(new ClimbIO() {});
         arm = new Arm(new ArmIO() {});
         vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
         break;
@@ -171,6 +162,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("Endeffector Out", endEffector.setEndEffectorVelocity(100));
     NamedCommands.registerCommand("Endeffector Out L4", endEffector.setEndEffectorVelocity(-100));
     NamedCommands.registerCommand("Endeffector Stop", endEffector.setEndEffectorVelocity(0));
+    NamedCommands.registerCommand("OutakeLaserCan", PresetCommands.outtakeLaserCan(endEffector));
     NamedCommands.registerCommand(
         "Align Left",
         DriveCommands.reefAlign(
@@ -187,8 +179,8 @@ public class RobotContainer {
         "IntakeLaserCAN", PresetCommands.moveEndEffectorLaserCan(endEffector));
     NamedCommands.registerCommand(
         "Stop Preset", PresetCommands.stopAll(elevator, endEffector, arm));
-    NamedCommands.registerCommand("StowPreset", PresetCommands.fullIn(elevator, endEffector, arm));
-    NamedCommands.registerCommand("Stow2", arm.setArmPosition(0.54));
+    NamedCommands.registerCommand(
+        "StowPreset", PresetCommands.stowElevator(elevator, endEffector, arm));
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -243,22 +235,30 @@ public class RobotContainer {
   private void configureButtonBindings() {
     // Default command, normal field-relative drive
 
+    // drive.setDefaultCommand(
+    //     DriveCommands.joystickDrive(
+    //         drive,
+    //         () -> -driverController.getLeftY(),
+    //         () -> -driverController.getLeftX(),
+    //         () -> -driverController.getRightX() * Math.abs(driverController.getRightX())));
+
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
             drive,
-            () -> -driverController.getLeftY(),
-            () -> -driverController.getLeftX(),
-            () -> -driverController.getRightX()));
+            () ->
+                -driverController.getLeftY()
+                    * Math.pow(Math.abs(driverController.getLeftY()), 1.2 - 1),
+            () ->
+                -driverController.getLeftX()
+                    * Math.pow(Math.abs(driverController.getLeftX()), 1.2 - 1),
+            () ->
+                -driverController.getRightX()
+                    * Math.pow(Math.abs(driverController.getRightX()), 2.2 - 1)));
 
     elevator.setDefaultCommand(
         elevator.setElevatorVelocity(() -> deadband(-operatorController.getLeftY()) * 25));
 
-    arm.setDefaultCommand(
-        arm.setArmVelocity(
-            () ->
-                Math.PI
-                    * -operatorController.getRightY()
-                    * Math.abs(operatorController.getRightY())));
+    arm.setDefaultCommand(arm.setArmVelocity(() -> 2 * Math.PI * -operatorController.getRightY()));
 
     operatorController
         .leftTrigger()
@@ -271,7 +271,7 @@ public class RobotContainer {
         .onFalse(endEffector.setEndEffectorVelocity(0));
 
     operatorController.leftStick().onTrue(PresetCommands.moveEndEffectorLaserCan(endEffector));
-    operatorController.a().whileTrue(PresetCommands.stowElevator(elevator, endEffector, arm));
+    operatorController.a().onTrue(PresetCommands.stowElevator(elevator, endEffector, arm));
     operatorController.b().whileTrue(PresetCommands.presetL2(elevator, endEffector, arm));
     operatorController.x().whileTrue(PresetCommands.presetL3(elevator, endEffector, arm));
     operatorController.y().whileTrue(PresetCommands.presetL4(elevator, endEffector, arm));
@@ -282,6 +282,9 @@ public class RobotContainer {
         .onFalse(endEffector.setEndEffectorVelocity(0));
 
     operatorController.leftBumper().whileTrue(PresetCommands.netShoot(arm, endEffector));
+    operatorController.povUp().whileTrue(PresetCommands.outtakeLaserCan(endEffector));
+
+    operatorController.povDown().onTrue(PresetCommands.moveEndEffectorLaserCan(endEffector));
 
     driverController
         .rightBumper()
@@ -314,6 +317,21 @@ public class RobotContainer {
     //             drive, () -> driverController.getLeftY(), () -> driverController.getLeftX()));
 
     driverController
+        .leftBumper()
+        .and(() -> drive.useVision)
+        .whileTrue(
+            DriveCommands.reefScore(
+                drive,
+                Direction.Left,
+                DriveCommands.Level.L3,
+                driverController,
+                led,
+                () -> elevator.getElevatorPosition(),
+                elevator,
+                arm,
+                endEffector));
+
+    driverController
         .povLeft()
         .and(() -> drive.useVision)
         .whileTrue(
@@ -323,28 +341,9 @@ public class RobotContainer {
                 driverController,
                 led,
                 () -> elevator.getElevatorPosition()));
-
-    // driverController
-    // .povLeft()
-    // .and(() -> drive.useVision)
-    // .whileTrue(
-    //     DriveCommands.reefScore(
-    //         drive,
-    //         Direction.Left,
-    //         DriveCommands.Level.L2,
-    //         driverController,
-    //         led,
-    //         () -> elevator.getElevatorPosition(),
-    //         elevator,
-    //         arm,
-    //         endEffector));
-
     driverController
         .povRight()
-        .and(
-            () -> {
-              return drive.useVision;
-            })
+        .and(() -> drive.useVision)
         .whileTrue(
             DriveCommands.reefAlign(
                 drive,
