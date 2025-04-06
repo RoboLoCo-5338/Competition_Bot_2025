@@ -386,9 +386,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return new SequentialCommandGroup(
-        PresetCommands.stopAll(elevator, endEffector, arm),
-        autoChooser.get()
-    );
+        PresetCommands.stopAll(elevator, endEffector, arm), autoChooser.get());
   }
 
   public RunCommand startRainbow() {
