@@ -283,7 +283,7 @@ public class RobotContainer {
         .onFalse(endEffector.setEndEffectorVelocity(0));
 
     // operatorController.leftBumper().whileTrue(PresetCommands.netShoot(arm, endEffector));
-    operatorController.povUp().whileTrue(PresetCommands.outtakeLaserCan(endEffector));
+    operatorController.povUp().onTrue(PresetCommands.outtakeLaserCan(endEffector));
 
     operatorController.leftBumper().onTrue(PresetCommands.moveEndEffectorLaserCan(endEffector));
 
