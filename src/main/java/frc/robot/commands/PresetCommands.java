@@ -84,6 +84,7 @@ public class PresetCommands {
                 () ->
                     (endEffector.getIO().getLaserCanMeasurement1() > 100
                         && endEffector.getIO().getLaserCanMeasurement2() > 100)),
+        new InstantCommand(() -> System.out.println("Both over 100")),
         // new RepeatCommand(endEffector.setEndEffectorVelocity(60))
         //     .until(
         //         () ->
