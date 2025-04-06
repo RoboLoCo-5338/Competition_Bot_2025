@@ -215,8 +215,7 @@ public class RobotContainer {
     // LED Stuff
 
     led.isCloseToBarge(drive)
-        .and(() -> !RobotContainer.preEnable)
-        .whileTrue(new InstantCommand(() -> RobotContainer.doRainbow = false))
+        .onTrue(new InstantCommand(() -> RobotContainer.doRainbow = false))
         .whileTrue(led.turnColor(Color.kWhite))
         .onFalse(new InstantCommand(() -> RobotContainer.doRainbow = true));
     // led.isCriticalToBarge(drive)
@@ -225,10 +224,9 @@ public class RobotContainer {
     //     .onTrue(led.sendBargeIndicator(operatorController))
     //     .whileTrue(led.turnColor(Color.kDarkBlue));
 
-    PresetCommands.shootMechTech(
-            Constants.PresetConstants.MECHTECH_SHOT_OFFSET, 0.23, drive)
+    PresetCommands.shootMechTech(Constants.PresetConstants.MECHTECH_SHOT_OFFSET, 0.27, drive)
         .onTrue(led.sendBargeIndicator(driverController));
-        // .whileTrue(PresetCommands.initMechTechShot(elevator, endEffector, arm));
+    // .whileTrue(PresetCommands.initMechTechShot(elevator, endEffector, arm));
   }
 
   public static double deadband(double controllerAxis) {
@@ -286,7 +284,9 @@ public class RobotContainer {
         .onTrue(endEffector.setEndEffectorSpeed(-1))
         .onFalse(endEffector.setEndEffectorVelocity(0));
 
-    operatorController.leftBumper().onTrue(PresetCommands.initMechTechShot(elevator, endEffector, arm));
+    operatorController
+        .leftBumper()
+        .onTrue(PresetCommands.initMechTechShot(elevator, endEffector, arm));
 
     driverController
         .rightBumper()

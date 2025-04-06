@@ -104,10 +104,18 @@ public class PresetCommands {
           double gravity = 9.81;
           double ball_apex_height = 0.6094; // 2 feet. 0.6094 meters
           double x_speed = drive.getChassisSpeeds().vxMetersPerSecond;
-          double x_distance = Math.abs(drive.getPose().getTranslation().getX() + x_speed*reaction_time_seconds - 8.79); // we are going 0.25 seconds into the future for the x_distance calculation to give him reaction time, excluding any changes in velocity
+          double x_distance =
+              Math.abs(
+                  drive.getPose().getTranslation().getX()
+                      + x_speed * reaction_time_seconds
+                      - 8.79); // we are going reaction_time seconds into the future for the
+          // x_distance calculation to give him reaction time, excluding any
+          // changes in velocity
           x_speed = Math.abs(x_speed);
           double y_speed = Math.sqrt(2 * gravity * ball_apex_height);
-          double y_needed_height = 2.4; // in meters
+          double y_needed_height =
+              2.4; // in meters. this is not the needed height of what we need to get to per se, its
+          // just the max height of the ball
           double y_released_height = 2.1463;
           double del_y = y_needed_height - y_released_height;
           double t_net =

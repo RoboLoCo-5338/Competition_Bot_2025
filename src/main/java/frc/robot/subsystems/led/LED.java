@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.DriveConstants;
 
@@ -51,10 +52,18 @@ public class LED extends SubsystemBase {
         });
   }
 
+  public InstantCommand rainbowSet(boolean enabled) {
+    return new InstantCommand(
+        () -> {
+          RobotContainer.doRainbow = enabled;
+        });
+  }
+
   public InstantCommand flashBlue() {
     return new InstantCommand(
         () -> {
           new SequentialCommandGroup(
+                  rainbowSet(false),
                   turnColor(Color.kBlue),
                   new WaitCommand(0.15),
                   turnOff(),
@@ -67,7 +76,9 @@ public class LED extends SubsystemBase {
                   new WaitCommand(0.15),
                   turnOff(),
                   new WaitCommand(0.15),
-                  turnColor(Color.kBlue))
+                  turnColor(Color.kBlue),
+                  new WaitCommand(1.5),
+                  rainbowSet(true))
               .schedule();
         });
   }
@@ -150,7 +161,10 @@ public class LED extends SubsystemBase {
 
   public Trigger isCloseToBarge(Drive drive) {
     return new Trigger(
-        () -> getDistanceFromBarge(drive) < 1.45 && getDistanceFromBarge(drive) > 0.60);
+        () -> {
+          return Math.abs(getDistanceFromBarge(drive)) < 3.00
+              && Math.abs(getDistanceFromBarge(drive)) > 0.60;
+        });
   }
 
   public Trigger isCriticalToBarge(Drive drive) {
@@ -162,12 +176,13 @@ public class LED extends SubsystemBase {
         flashBlue(),
         new InstantCommand(
             () -> {
-              controller.setRumble(RumbleType.kBothRumble, 1.0);
+              System.out.println("bargei indicator");
+              controller.setRumble(RumbleType.kRightRumble, 1.0);
             }),
-        new WaitCommand(0.3),
+        new WaitCommand(1.0),
         new InstantCommand(
             () -> {
-              controller.setRumble(RumbleType.kBothRumble, 0.0);
+              // controller.setRumble(RumbleType.kRightRumble, 0.0);
             }));
   }
   // public Command setBargeIndicator(Drive drive, Elevator elevator) {
