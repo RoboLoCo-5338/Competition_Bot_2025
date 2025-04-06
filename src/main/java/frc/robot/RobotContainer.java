@@ -270,7 +270,7 @@ public class RobotContainer {
         .whileTrue(endEffector.setEndEffectorVelocity(-100))
         .onFalse(endEffector.setEndEffectorVelocity(0));
 
-    operatorController.leftStick().onTrue(PresetCommands.moveEndEffectorLaserCan(endEffector));
+    // operatorController.leftStick().onTrue(PresetCommands.moveEndEffectorLaserCan(endEffector));
     operatorController.a().onTrue(PresetCommands.stowElevator(elevator, endEffector, arm));
     operatorController.b().whileTrue(PresetCommands.presetL2(elevator, endEffector, arm));
     operatorController.x().whileTrue(PresetCommands.presetL3(elevator, endEffector, arm));
@@ -281,10 +281,10 @@ public class RobotContainer {
         .onTrue(endEffector.setEndEffectorSpeed(-1))
         .onFalse(endEffector.setEndEffectorVelocity(0));
 
-    operatorController.leftBumper().whileTrue(PresetCommands.netShoot(arm, endEffector));
+    // operatorController.leftBumper().whileTrue(PresetCommands.netShoot(arm, endEffector));
     operatorController.povUp().whileTrue(PresetCommands.outtakeLaserCan(endEffector));
 
-    operatorController.povDown().onTrue(PresetCommands.moveEndEffectorLaserCan(endEffector));
+    operatorController.leftBumper().onTrue(PresetCommands.moveEndEffectorLaserCan(endEffector));
 
     driverController
         .rightBumper()
