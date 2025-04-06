@@ -51,6 +51,27 @@ public class LED extends SubsystemBase {
         });
   }
 
+  public InstantCommand flashBlue() {
+    return new InstantCommand(
+        () -> {
+          new SequentialCommandGroup(
+                  turnColor(Color.kBlue),
+                  new WaitCommand(0.15),
+                  turnOff(),
+                  new WaitCommand(0.15),
+                  turnColor(Color.kBlue),
+                  new WaitCommand(0.15),
+                  turnOff(),
+                  new WaitCommand(0.15),
+                  turnColor(Color.kBlue),
+                  new WaitCommand(0.15),
+                  turnOff(),
+                  new WaitCommand(0.15),
+                  turnColor(Color.kBlue))
+              .schedule();
+        });
+  }
+
   public InstantCommand turnGreen() {
 
     return new InstantCommand(
@@ -138,11 +159,12 @@ public class LED extends SubsystemBase {
 
   public SequentialCommandGroup sendBargeIndicator(CommandXboxController controller) {
     return new SequentialCommandGroup(
+        flashBlue(),
         new InstantCommand(
             () -> {
               controller.setRumble(RumbleType.kBothRumble, 1.0);
             }),
-        new WaitCommand(0.5),
+        new WaitCommand(0.3),
         new InstantCommand(
             () -> {
               controller.setRumble(RumbleType.kBothRumble, 0.0);

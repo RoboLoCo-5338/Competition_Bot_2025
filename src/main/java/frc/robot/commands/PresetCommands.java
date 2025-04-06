@@ -97,14 +97,15 @@ public class PresetCommands {
   }
 
   // 8.79m in x direction is where the barge is
-  public static Trigger shootMechTech(double offset, Drive drive, Trigger trigger) {
+  public static Trigger shootMechTech(double offset, double reaction_time_seconds, Drive drive) {
     // trigger to figure out when to shoot
     return new Trigger(
         () -> {
           double gravity = 9.81;
           double ball_apex_height = 0.6094; // 2 feet. 0.6094 meters
-          double x_distance = Math.abs(drive.getPose().getTranslation().getX() - 8.79);
-          double x_speed = Math.abs(drive.getChassisSpeeds().vxMetersPerSecond);
+          double x_speed = drive.getChassisSpeeds().vxMetersPerSecond;
+          double x_distance = Math.abs(drive.getPose().getTranslation().getX() + x_speed*reaction_time_seconds - 8.79); // we are going 0.25 seconds into the future for the x_distance calculation to give him reaction time, excluding any changes in velocity
+          x_speed = Math.abs(x_speed);
           double y_speed = Math.sqrt(2 * gravity * ball_apex_height);
           double y_needed_height = 2.4; // in meters
           double y_released_height = 2.1463;
@@ -114,7 +115,7 @@ public class PresetCommands {
 
           double delx = (x_speed * t_net) + offset;
 
-          if (Math.abs(x_distance - delx) < 0.4 && trigger.getAsBoolean()) {
+          if (Math.abs(x_distance - delx) < 0.4) {
 
             return true;
           }
