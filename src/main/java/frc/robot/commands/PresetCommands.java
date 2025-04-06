@@ -65,21 +65,11 @@ public class PresetCommands {
       return new InstantCommand();
     }
     return new SequentialCommandGroup(
-        new RepeatCommand(endEffector.setEndEffectorVelocity(60))
+        new RepeatCommand(endEffector.setEndEffectorVelocity(100))
             .until(
                 () ->
                     (endEffector.getIO().getLaserCanMeasurement1() < 100
                         && endEffector.getIO().getLaserCanMeasurement2() < 100)),
-        // new RepeatCommand(endEffector.setEndEffectorVelocity(60))
-        //     .until(
-        //         () ->
-        //             (endEffector.getIO().getLaserCanMeasurement2() < 100
-        //                 && endEffector.getIO().getLaserCanMeasurement1() > 90)),
-        // new RepeatCommand(endEffector.setEndEffectorVelocity(60))
-        //     .until(
-        //         () ->
-        //             (endEffector.getIO().getLaserCanMeasurement1() < 100
-        //                 && endEffector.getIO().getLaserCanMeasurement2() < 100)),
         endEffector.setEndEffectorVelocity(0.0));
   }
 

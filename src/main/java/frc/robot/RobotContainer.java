@@ -265,6 +265,7 @@ public class RobotContainer {
         .whileTrue(endEffector.setEndEffectorVelocity(100))
         .onFalse(endEffector.setEndEffectorVelocity(0));
 
+
     operatorController
         .rightTrigger()
         .whileTrue(endEffector.setEndEffectorVelocity(-100))
@@ -282,9 +283,11 @@ public class RobotContainer {
         .onFalse(endEffector.setEndEffectorVelocity(0));
 
     operatorController.leftBumper().whileTrue(PresetCommands.netShoot(arm, endEffector));
-
-    operatorController.povDown().whileTrue(PresetCommands.moveEndEffectorLaserCan(endEffector));
     operatorController.povUp().whileTrue(PresetCommands.outtakeLaserCan(endEffector));
+    operatorController
+        .povDown()
+        .whileTrue(PresetCommands.moveEndEffectorLaserCan(endEffector))
+        .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
 
     driverController
         .rightBumper()
@@ -317,6 +320,21 @@ public class RobotContainer {
     //             drive, () -> driverController.getLeftY(), () -> driverController.getLeftX()));
 
     driverController
+        .leftBumper()
+        .and(() -> drive.useVision)
+        .whileTrue(
+            DriveCommands.reefScore(
+                drive,
+                Direction.Left,
+                DriveCommands.Level.L3,
+                driverController,
+                led,
+                () -> elevator.getElevatorPosition(),
+                elevator,
+                arm,
+                endEffector));
+
+    driverController
         .povLeft()
         .and(() -> drive.useVision)
         .whileTrue(
@@ -326,28 +344,9 @@ public class RobotContainer {
                 driverController,
                 led,
                 () -> elevator.getElevatorPosition()));
-
-    // driverController
-    // .povLeft()
-    // .and(() -> drive.useVision)
-    // .whileTrue(
-    //     DriveCommands.reefScore(
-    //         drive,
-    //         Direction.Left,
-    //         DriveCommands.Level.L2,
-    //         driverController,
-    //         led,
-    //         () -> elevator.getElevatorPosition(),
-    //         elevator,
-    //         arm,
-    //         endEffector));
-
     driverController
         .povRight()
-        .and(
-            () -> {
-              return drive.useVision;
-            })
+        .and(() -> drive.useVision)
         .whileTrue(
             DriveCommands.reefAlign(
                 drive,
