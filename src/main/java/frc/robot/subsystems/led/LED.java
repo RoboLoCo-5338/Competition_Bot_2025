@@ -38,15 +38,15 @@ public class LED extends SubsystemBase {
   public Command alignEndFlash(boolean canceled) {
     return new ScheduleCommand(
         new SequentialCommandGroup(
-            turnColor(canceled ? Color.kRed : Color.kGreen),
+            instantTurnColor(canceled ? Color.kRed : Color.kGreen),
             new WaitCommand(0.3),
             turnOff(),
             new WaitCommand(0.3),
-            turnColor(canceled ? Color.kRed : Color.kGreen),
+            instantTurnColor(canceled ? Color.kRed : Color.kGreen),
             new WaitCommand(0.3),
             turnOff(),
             new WaitCommand(0.3),
-            turnColor(canceled ? Color.kRed : Color.kGreen)),
+            instantTurnColor(canceled ? Color.kRed : Color.kGreen)),
         new WaitCommand(0.3));
   }
 
@@ -83,7 +83,7 @@ public class LED extends SubsystemBase {
         this);
   }
 
-  public Command turnColor(Color color) {
+  public Command instantTurnColor(Color color) {
     return new InstantCommand(
         () -> {
           LEDPattern colorPattern = LEDPattern.solid(color);
@@ -91,6 +91,16 @@ public class LED extends SubsystemBase {
           m_led.setData(buffer);
         },
         this);
+  }
+
+  public Command turnColor(Color color){
+    return new RunCommand(
+      () -> {
+        LEDPattern colorPattern = LEDPattern.solid(color);
+        colorPattern.applyTo(buffer);
+        m_led.setData(buffer);
+      },
+      this);
   }
 
   /**
