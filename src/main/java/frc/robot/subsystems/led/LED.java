@@ -38,16 +38,13 @@ public class LED extends SubsystemBase {
   public Command alignEndFlash(boolean canceled) {
     return new ScheduleCommand(
         new SequentialCommandGroup(
-            instantTurnColor(canceled ? Color.kRed : Color.kGreen),
-            new WaitCommand(0.3),
+            turnColor(canceled ? Color.kRed : Color.kGreen).withTimeout(0.3),
             turnOff(),
             new WaitCommand(0.3),
-            instantTurnColor(canceled ? Color.kRed : Color.kGreen),
-            new WaitCommand(0.3),
+            turnColor(canceled ? Color.kRed : Color.kGreen).withTimeout(0.3),
             turnOff(),
             new WaitCommand(0.3),
-            instantTurnColor(canceled ? Color.kRed : Color.kGreen)),
-        new WaitCommand(0.3));
+            turnColor(canceled ? Color.kRed : Color.kGreen)).withTimeout(0.3));
   }
 
   public Command pulseBlue() {
@@ -78,16 +75,6 @@ public class LED extends SubsystemBase {
     return new InstantCommand(
         () -> {
           scrollingRainbow.applyTo(buffer);
-          m_led.setData(buffer);
-        },
-        this);
-  }
-
-  public Command instantTurnColor(Color color) {
-    return new InstantCommand(
-        () -> {
-          LEDPattern colorPattern = LEDPattern.solid(color);
-          colorPattern.applyTo(buffer);
           m_led.setData(buffer);
         },
         this);
