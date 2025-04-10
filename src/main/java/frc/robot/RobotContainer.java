@@ -18,13 +18,14 @@ import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.event.BooleanEvent;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -70,9 +71,6 @@ public class RobotContainer {
   public final Drive drive;
   public final Vision vision;
   public final LED led;
-  public static boolean autoAlignDebounce = true;
-  public static boolean doRainbow = true;
-  public static boolean preEnable = true;
 
   private final Elevator elevator;
 
@@ -111,9 +109,6 @@ public class RobotContainer {
         elevator = new Elevator(new ElevatorIOTalonFX());
         arm = new Arm(new ArmIOSpark());
         led = new LED();
-
-        //  led.setBargeIndicator(drive, elevator);
-
         break;
 
       case SIM:
@@ -165,19 +160,12 @@ public class RobotContainer {
     NamedCommands.registerCommand("Endeffector Stop", endEffector.setEndEffectorVelocity(0));
     NamedCommands.registerCommand("OutakeLaserCan", PresetCommands.outtakeLaserCan(endEffector));
     NamedCommands.registerCommand(
-        "Align Left",
-        DriveCommands.reefAlign(
-            drive, Direction.Left, driverController, led, () -> elevator.getElevatorPosition()));
+        "Align Left", DriveCommands.reefAlign(drive, Direction.Left, driverController, led));
     NamedCommands.registerCommand(
-        "Align Center",
-        DriveCommands.reefAlign(
-            drive, Direction.None, driverController, led, () -> elevator.getElevatorPosition()));
+        "Align Center", DriveCommands.reefAlign(drive, Direction.None, driverController, led));
     NamedCommands.registerCommand(
-        "Align Right",
-        DriveCommands.reefAlign(
-            drive, Direction.Right, driverController, led, () -> elevator.getElevatorPosition()));
-    NamedCommands.registerCommand(
-        "IntakeLaserCAN", PresetCommands.moveEndEffectorLaserCan(endEffector));
+        "Align Right", DriveCommands.reefAlign(drive, Direction.Right, driverController, led));
+    NamedCommands.registerCommand("IntakeLaserCAN", PresetCommands.intakeLaserCan(endEffector));
     NamedCommands.registerCommand(
         "Stop Preset", PresetCommands.stopAll(elevator, endEffector, arm));
     NamedCommands.registerCommand(
@@ -208,15 +196,13 @@ public class RobotContainer {
     // LED Stuff
 
     led.isCloseToBarge(drive)
-        .and(() -> !RobotContainer.preEnable)
-        .whileTrue(new InstantCommand(() -> RobotContainer.doRainbow = false))
-        .whileTrue(led.turnColor(Color.kWhite))
-        .onFalse(new InstantCommand(() -> RobotContainer.doRainbow = true));
+        .and(() -> RobotState.isTeleop())
+        .whileTrue(led.turnColor(Color.kWhite));
     led.isCriticalToBarge(drive)
-        .and(() -> !RobotContainer.preEnable)
-        .whileTrue(new InstantCommand(() -> RobotContainer.doRainbow = false))
+        .and(() -> RobotState.isTeleop())
         .onTrue(led.sendBargeIndicator(operatorController))
         .whileTrue(led.turnColor(Color.kDarkBlue));
+    new Trigger(() -> RobotState.isDisabled()).whileTrue(led.pulseBlue());
   }
 
   public static double deadband(double controllerAxis) {
@@ -236,12 +222,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     // Default command, normal field-relative drive
 
-    // drive.setDefaultCommand(
-    //     DriveCommands.joystickDrive(
-    //         drive,
-    //         () -> -driverController.getLeftY(),
-    //         () -> -driverController.getLeftX(),
-    //         () -> -driverController.getRightX() * Math.abs(driverController.getRightX())));
+    led.setDefaultCommand(led.goRainbow());
 
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
@@ -271,7 +252,6 @@ public class RobotContainer {
         .whileTrue(endEffector.setEndEffectorVelocity(-100))
         .onFalse(endEffector.setEndEffectorVelocity(0));
 
-    // operatorController.leftStick().onTrue(PresetCommands.moveEndEffectorLaserCan(endEffector));
     operatorController.a().onTrue(PresetCommands.stowElevator(elevator, endEffector, arm));
     operatorController.b().whileTrue(PresetCommands.presetL2(elevator, endEffector, arm));
     operatorController.x().whileTrue(PresetCommands.presetL3(elevator, endEffector, arm));
@@ -285,7 +265,7 @@ public class RobotContainer {
     // operatorController.leftBumper().whileTrue(PresetCommands.netShoot(arm, endEffector));
     operatorController.povUp().onTrue(PresetCommands.outtakeLaserCan(endEffector));
 
-    operatorController.leftBumper().onTrue(PresetCommands.moveEndEffectorLaserCan(endEffector));
+    operatorController.leftBumper().onTrue(PresetCommands.intakeLaserCan(endEffector));
 
     driverController
         .rightBumper()
@@ -316,42 +296,34 @@ public class RobotContainer {
     //     .whileTrue(
     //         DriveCommands.reefStrafe(
     //             drive, () -> driverController.getLeftY(), () -> driverController.getLeftX()));
-
+    Command reefScoreLeftL3 = DriveCommands.reefScore(
+        drive,
+        Direction.Left,
+        DriveCommands.Level.L3,
+        driverController,
+        led,
+        elevator,
+        arm,
+        endEffector);
+    Command reefAlignLeft = DriveCommands.reefAlign(drive, Direction.Left, driverController, led);
+    Command reefAlignRight = DriveCommands.reefAlign(drive, Direction.Right, driverController, led);
     driverController
         .leftBumper()
         .and(() -> drive.useVision)
+        .and(() -> !(reefScoreLeftL3.isScheduled() || reefAlignLeft.isScheduled() || reefAlignRight.isScheduled())).debounce(0.5)
         .whileTrue(
-            DriveCommands.reefScore(
-                drive,
-                Direction.Left,
-                DriveCommands.Level.L3,
-                driverController,
-                led,
-                () -> elevator.getElevatorPosition(),
-                elevator,
-                arm,
-                endEffector));
+            reefScoreLeftL3);
 
     driverController
         .povLeft()
         .and(() -> drive.useVision)
-        .whileTrue(
-            DriveCommands.reefAlign(
-                drive,
-                Direction.Left,
-                driverController,
-                led,
-                () -> elevator.getElevatorPosition()));
+        .and(() -> !(reefScoreLeftL3.isScheduled() || reefAlignLeft.isScheduled() || reefAlignRight.isScheduled())).debounce(0.5)
+        .whileTrue(reefAlignLeft);
     driverController
         .povRight()
         .and(() -> drive.useVision)
-        .whileTrue(
-            DriveCommands.reefAlign(
-                drive,
-                Direction.Right,
-                driverController,
-                led,
-                () -> elevator.getElevatorPosition()));
+        .and(() -> !(reefScoreLeftL3.isScheduled() || reefAlignLeft.isScheduled() || reefAlignRight.isScheduled())).debounce(0.5)
+        .whileTrue(reefAlignRight);
 
     driverController
         .rightTrigger()
@@ -365,10 +337,6 @@ public class RobotContainer {
                 () -> {
                   DriveCommands.slowMode = 1;
                 }));
-  }
-
-  public void ledInit() {
-    new Trigger(() -> RobotContainer.doRainbow).whileTrue(startRainbow());
   }
 
   public void periodic() {}
@@ -387,9 +355,5 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     return new SequentialCommandGroup(
         PresetCommands.stopAll(elevator, endEffector, arm), autoChooser.get());
-  }
-
-  public RunCommand startRainbow() {
-    return led.goRainbow();
   }
 }

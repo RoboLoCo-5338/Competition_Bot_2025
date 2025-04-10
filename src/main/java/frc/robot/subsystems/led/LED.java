@@ -10,15 +10,16 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.drive.Drive;
-import frc.robot.subsystems.drive.DriveConstants;
 
 public class LED extends SubsystemBase {
 
@@ -34,43 +35,23 @@ public class LED extends SubsystemBase {
     m_led.start();
   }
 
-  public InstantCommand flashGreen() {
-    return new InstantCommand(
-        () -> {
-          new SequentialCommandGroup(
-                  turnGreen(),
-                  new WaitCommand(0.3),
-                  turnOff(),
-                  new WaitCommand(0.3),
-                  turnGreen(),
-                  new WaitCommand(0.3),
-                  turnOff(),
-                  new WaitCommand(0.3),
-                  turnGreen())
-              .schedule();
-        });
+  public Command alignEndFlash(boolean canceled) {
+    return new ScheduleCommand(
+        new SequentialCommandGroup(
+            turnColor(canceled ? Color.kRed : Color.kGreen),
+            new WaitCommand(0.3),
+            turnOff(),
+            new WaitCommand(0.3),
+            turnColor(canceled ? Color.kRed : Color.kGreen),
+            new WaitCommand(0.3),
+            turnOff(),
+            new WaitCommand(0.3),
+            turnColor(canceled ? Color.kRed : Color.kGreen)),
+        new WaitCommand(0.3));
   }
 
-  public InstantCommand turnGreen() {
-
-    return new InstantCommand(
-        () -> {
-          if (DriveConstants.canceled) {
-
-            LEDPattern red = LEDPattern.solid(Color.kRed);
-            red.applyTo(buffer);
-            m_led.setData(buffer);
-          } else {
-            LEDPattern green = LEDPattern.solid(Color.kGreen);
-            green.applyTo(buffer);
-            m_led.setData(buffer);
-          }
-        });
-  }
-
-  public RunCommand pulseBlue() {
+  public Command pulseBlue() {
     LEDPattern blue = LEDPattern.solid(Color.kBlue);
-
     LEDPattern pulsingBlue = blue.breathe(Seconds.of(5));
     return new RunCommand(
         () -> {
@@ -80,21 +61,21 @@ public class LED extends SubsystemBase {
         this);
   }
 
-  public InstantCommand turnOff() {
-
+  public Command turnOff() {
     return new InstantCommand(
         () -> {
           LEDPattern off = LEDPattern.kOff;
           off.applyTo(buffer);
           m_led.setData(buffer);
-        });
+        },
+        this);
   }
 
-  public RunCommand goRainbow() {
+  public Command goRainbow() {
     LEDPattern rainbow = LEDPattern.rainbow(255, 128);
     LEDPattern scrollingRainbow =
         rainbow.scrollAtAbsoluteSpeed(MetersPerSecond.of(0.3), LEDConstants.LED_SPACING);
-    return new RunCommand(
+    return new InstantCommand(
         () -> {
           scrollingRainbow.applyTo(buffer);
           m_led.setData(buffer);
@@ -102,14 +83,14 @@ public class LED extends SubsystemBase {
         this);
   }
 
-  public InstantCommand turnColor(Color color) {
-
+  public Command turnColor(Color color) {
     return new InstantCommand(
         () -> {
           LEDPattern colorPattern = LEDPattern.solid(color);
           colorPattern.applyTo(buffer);
           m_led.setData(buffer);
-        });
+        },
+        this);
   }
 
   /**
@@ -148,14 +129,4 @@ public class LED extends SubsystemBase {
               controller.setRumble(RumbleType.kBothRumble, 0.0);
             }));
   }
-  // public Command setBargeIndicator(Drive drive, Elevator elevator) {
-  //   return new RunCommand(
-  //       () -> {
-
-  //         LEDPattern.solid(Color.kWhite)
-  //             .applyTo(buffer);
-
-  //         m_led.setData(buffer);
-  //       });
-  // }
 }

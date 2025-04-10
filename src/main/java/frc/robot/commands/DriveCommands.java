@@ -33,13 +33,10 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.RobotContainer;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.DriveConstants;
@@ -337,91 +334,65 @@ public class DriveCommands {
       Drive drive,
       Supplier<PathDestination> destination,
       CommandXboxController driverController,
-      DoubleSupplier elevatorHeight,
-      Direction direction) {
+      Direction direction,
+      LED led) {
     return new DeferredCommand(
         () -> {
           Pose2d targetPose = destination.get().getTargetPosition();
-          Logger.recordOutput("Path to Destination", targetPose);
-          if (Math.sqrt(
-                  targetPose.minus(drive.getPose()).getX()
-                          * targetPose.minus(drive.getPose()).getX()
-                      + targetPose.minus(drive.getPose()).getY()
-                          * targetPose.minus(drive.getPose()).getY())
-              > 3) { // This condition checks if the distance for auto aligning is less than 3. If
-            // it is greater, then something is likely wrong.
-            return new InstantCommand();
+          Logger.recordOutput("Path to Destination", drive.getPose().log(targetPose));
 
-            //   PathConstraints constraints = //This was for dynamic path generation. If we ever
-            // want it, uncomment this code.
-            //       new PathConstraints(
-            //           drive.getMaxLinearSpeedMetersPerSec(),
-            //           3, // TODO:replace with a constant or smth
-            //           ANGLE_MAX_VELOCITY,
-            //           ANGLE_MAX_ACCELERATION);
-            //   return AutoBuilder.pathfindToPose(targetPose, constraints);
-          } else {
+          return new Command() {
 
-            return new Command() {
+            @Override
+            public void initialize() {
+              drive.autoXDriveController.reset();
+              drive.autoYDriveController.reset();
+              drive.autoTurnController.reset();
 
-              @Override
-              public void initialize() {
-                drive.autoXDriveController.reset();
-                drive.autoYDriveController.reset();
-                drive.autoTurnController.reset();
+              drive.autoXDriveController.setTolerance(0.01);
+              drive.autoYDriveController.setTolerance(0.01);
+              drive.autoTurnController.setTolerance(0.025);
+              drive.autoXDriveController.setSetpoint(targetPose.getX());
+              drive.autoYDriveController.setSetpoint(targetPose.getY());
+              drive.autoTurnController.setSetpoint(targetPose.getRotation().getRadians());
+            }
 
-                drive.autoXDriveController.setTolerance(0.01);
-                drive.autoYDriveController.setTolerance(0.01);
-                drive.autoTurnController.setTolerance(0.025);
-                drive.autoXDriveController.setSetpoint(targetPose.getX());
-                drive.autoYDriveController.setSetpoint(targetPose.getY());
-                drive.autoTurnController.setSetpoint(targetPose.getRotation().getRadians());
-              }
+            @Override
+            public void execute() {
+              drive.runVelocity(
+                  ChassisSpeeds.fromFieldRelativeSpeeds(
+                      new ChassisSpeeds(
+                          drive.autoXDriveController.calculate(drive.getPose().getX()),
+                          drive.autoYDriveController.calculate(drive.getPose().getY()),
+                          drive.autoTurnController.calculate(
+                              drive.getPose().getRotation().getRadians())),
+                      drive.getPose().getRotation()));
+            }
 
-              @Override
-              public void execute() {
-                drive.runVelocity(
-                    ChassisSpeeds.fromFieldRelativeSpeeds(
-                        new ChassisSpeeds(
-                            drive.autoXDriveController.calculate(drive.getPose().getX()),
-                            drive.autoYDriveController.calculate(drive.getPose().getY()),
-                            drive.autoTurnController.calculate(
-                                drive.getPose().getRotation().getRadians())),
-                        drive.getPose().getRotation()));
-              }
+            @Override
+            public boolean isFinished() {
+              return (drive.autoXDriveController.atSetpoint()
+                  && drive.autoYDriveController.atSetpoint()
+                  && drive.autoTurnController.atSetpoint());
+            }
 
-              @Override
-              public boolean isFinished() {
-
-                boolean canceled = false;
-                System.out.println(direction);
-                if (DriverStation.isTeleop()) {
-                  if (direction == Direction.Left) {
-                    System.out.println("canceling ocmmand");
-                    canceled = !driverController.povLeft().getAsBoolean();
-                  } else if (direction == Direction.Right) {
-                    canceled = !driverController.povRight().getAsBoolean();
-                  } else if (direction == Direction.None) {
-                    canceled =
-                        !driverController.povLeft().getAsBoolean()
-                            || !driverController.povRight().getAsBoolean();
-                  }
-                }
-                if (canceled) {
-                  DriveConstants.canceled = true;
-                }
-                return (drive.autoXDriveController.atSetpoint()
-                        && drive.autoYDriveController.atSetpoint()
-                        && drive.autoTurnController.atSetpoint())
-                    || canceled;
-              }
-
-              @Override
-              public void end(boolean interrupted) {
-                drive.runVelocity(new ChassisSpeeds(0, 0, 0));
-              }
-            };
-          }
+            @Override
+            public void end(boolean interrupted) {
+              drive.runVelocity(new ChassisSpeeds(0, 0, 0));
+              led.alignEndFlash(
+                      !(drive.autoXDriveController.atSetpoint()
+                          && drive.autoYDriveController.atSetpoint()
+                          && drive.autoTurnController.atSetpoint()))
+                  .schedule();
+            }
+          }.onlyIf(
+              () ->
+                  Math.sqrt(
+                          targetPose.minus(drive.getPose()).getX()
+                                  * targetPose.minus(drive.getPose()).getX()
+                              + targetPose.minus(drive.getPose()).getY()
+                                  * targetPose.minus(drive.getPose()).getY())
+                      < 3);
         },
         new HashSet<Subsystem>() {
           {
@@ -511,11 +482,6 @@ public class DriveCommands {
   public static class Reef extends PathDestination {
     Direction direction;
     int tagId;
-    static Pose2d reefRight =
-        new Pose2d(3.06 - Units.inchesToMeters(2.5), 3.77 + 0.05 + 0.0127, new Rotation2d());
-    static Pose2d reefLeft = new Pose2d(3.06 - Units.inchesToMeters(2.5), 4.175, new Rotation2d());
-    static Pose2d reefCenter =
-        new Pose2d(3.06 - Units.inchesToMeters(2.5), 3.8327, new Rotation2d());
     /**
      * Creates a reef direction based on the currently visible tag.
      *
@@ -534,17 +500,12 @@ public class DriveCommands {
     }
 
     public static Pose2d getReefPose(Direction direction, int targetTagId) {
-      Pose2d o = new Pose2d();
-      switch (direction) {
-        case Right:
-          o = reefRight;
-          break;
-        case Left:
-          o = reefLeft;
-          break;
-        default:
-          o = reefCenter;
-      }
+      Pose2d o =
+          switch (direction) {
+            case Left -> DriveConstants.reefLeft;
+            case Right -> DriveConstants.reefRight;
+            case None -> DriveConstants.reefCenter;
+          };
       Rotation2d rot =
           VisionConstants.aprilTagLayout.getTagPose(targetTagId).get().getRotation().toRotation2d();
       if (!isFlipped) rot = rot.plus(new Rotation2d(Math.PI));
@@ -563,20 +524,9 @@ public class DriveCommands {
   }
 
   public static Command reefAlign(
-      Drive drive,
-      Direction direction,
-      CommandXboxController controller,
-      LED led,
-      DoubleSupplier elevatorHeight) {
+      Drive drive, Direction direction, CommandXboxController controller, LED led) {
     return new SequentialCommandGroup(
-        new InstantCommand(
-            () -> {
-              System.out.println("reef align starts");
-
-              DriveConstants.canceled = false;
-              RobotContainer.doRainbow = false;
-            }),
-        led.turnColor(Color.kOrange), // change to davids commit of wait 3 instead of flash
+        led.turnColor(Color.kOrange),
         pathToDestination(
             drive,
             () ->
@@ -586,47 +536,9 @@ public class DriveCommands {
                             .indexOf(drive.getPose().nearest(Reef.getReefPoses(direction)))
                         + ((isFlipped) ? 6 : 17)),
             controller,
-            elevatorHeight,
-            direction),
-        new InstantCommand(
-            () -> {
-              new SequentialCommandGroup(
-                      new InstantCommand(() -> System.out.println("we are running!")),
-                      led.flashGreen(),
-                      new WaitCommand(1.5),
-                      new InstantCommand(() -> RobotContainer.autoAlignDebounce = true),
-                      new WaitCommand(1.5),
-                      new InstantCommand(() -> RobotContainer.doRainbow = true))
-                  .schedule();
-            }));
+            direction,
+            led));
   }
-
-  // public static Command reefScore(
-  //     Drive drive,
-  //     Direction direction,
-  //     Level level,
-  //     CommandXboxController controller,
-  //     LED led,
-  //     DoubleSupplier elevatorHeight,
-  //     Elevator elevator,
-  //     Arm arm,
-  //     EndEffector endEffector) {
-  //   return new SequentialCommandGroup(
-  //       (level == Level.L4)
-  //           ? PresetCommands.presetL4(elevator, endEffector, arm)
-  //           : (level == Level.L3)
-  //               ? PresetCommands.presetL3(elevator, endEffector, arm)
-  //               : PresetCommands.presetL2(elevator, endEffector, arm),
-  //       reefAlign(drive, direction, controller, led, elevatorHeight),
-  //       PresetCommands.stopAll(elevator, endEffector, arm),
-  //       ((level == Level.L4)
-  //               ? endEffector.setEndEffectorVelocity(-100)
-  //               : endEffector.setEndEffectorVelocity(100))
-  //           .until(
-  //               () ->
-  //                   endEffector.getIO().getLaserCanMeasurement1() > 100
-  //                       && endEffector.getIO().getLaserCanMeasurement2() > 100));
-  // }
 
   public static Command reefScore(
       Drive drive,
@@ -634,7 +546,6 @@ public class DriveCommands {
       Level level,
       CommandXboxController controller,
       LED led,
-      DoubleSupplier elevatorHeight,
       Elevator elevator,
       Arm arm,
       EndEffector endEffector) {
@@ -644,7 +555,7 @@ public class DriveCommands {
                 : (level == Level.L3)
                     ? PresetCommands.presetL3(elevator, endEffector, arm)
                     : PresetCommands.presetL2(elevator, endEffector, arm),
-            reefAlign(drive, direction, controller, led, elevatorHeight))
+            reefAlign(drive, direction, controller, led))
         .andThen(
             PresetCommands.stopAll(elevator, endEffector, arm),
             ((level == Level.L4)

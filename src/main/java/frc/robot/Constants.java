@@ -37,21 +37,4 @@ public final class Constants {
     /** Replaying from a log file. */
     REPLAY
   }
-
-  public static final class PresetConstants {
-    public static final double elevatorl2 = 7.9; // This was 17 for testing PID
-    public static final double elevatorl3 = 14.708;
-    public static final double elevatorl4 = 19.40;
-    public static final double elevatorNet = 16.486;
-    public static final double elevatorl3Algae = 0.0;
-
-    // public static final double arml2 = 0.543;
-    // public static final double arml3 = 0.543;
-    public static final double arml4 = 0.78;
-    public static final double armNet = 0.950 - 0.188; // change
-    public static final double arml3Algae = 0.0;
-
-    public static final double elevatorIntake = 0.0;
-    public static final double armIntake = 0.0;
-  }
 }
