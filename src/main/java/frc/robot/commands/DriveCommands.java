@@ -525,8 +525,8 @@ public class DriveCommands {
 
   public static Command reefAlign(
       Drive drive, Direction direction, CommandXboxController controller, LED led) {
-    return new SequentialCommandGroup(
-        led.instantTurnColor(Color.kOrange),
+    return new ParallelCommandGroup(
+        led.turnColor(Color.kOrange),
         pathToDestination(
             drive,
             () ->
