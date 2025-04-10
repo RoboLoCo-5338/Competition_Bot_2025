@@ -112,6 +112,53 @@ test {
 wpi.sim.addGui().defaultEnabled = false
 wpi.sim.addDriverstation()
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.io.File;
+import java.io.IOException;
+import java.awt.font.TextAttribute;
+import java.awt.Color;
+import java.util.HashMap;
+import java.util.Map;
+
+task addTextToImage {
+    File imageFile = new File("controllerlayout.jpg");
+    BufferedImage image;
+    try {
+        image = ImageIO.read(imageFile);
+    } catch (IOException e) {
+        System.err.println("Error loading image: " + e.getMessage());
+        return; // Exit if image loading fails
+    }
+
+    Graphics2D g2d = image.createGraphics();
+
+    Map<TextAttribute, Object> attributes = new HashMap<>();
+    attributes.put(TextAttribute.BACKGROUND, Color.GRAY); // Set background color to gray
+
+    Font font = new Font("Arial", Font.BOLD, 28).deriveFont(attributes);
+    g2d.setFont(font);
+    g2d.setColor(Color.BLACK);
+
+    String text = "End effector intake";
+    int x = 130; // x-coordinate for text position
+    int y = 119; // y-coordinate for text position
+    g2d.drawString(text, x, y);
+
+    g2d.dispose();
+
+    File output = new File("generated.jpg");
+    try {
+        ImageIO.write(image, "jpg", output);
+    } catch (IOException e) {
+        System.err.println("Error saving image: " + e.getMessage());
+    }
+
+    //LT: (130, 91) to (550, 129)
+}
+
 // Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')
 // in order to make them all available at runtime. Also adding the manifest so WPILib
 // knows where to look for our Robot Class.
