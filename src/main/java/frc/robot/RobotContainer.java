@@ -20,7 +20,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.event.BooleanEvent;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -296,33 +295,50 @@ public class RobotContainer {
     //     .whileTrue(
     //         DriveCommands.reefStrafe(
     //             drive, () -> driverController.getLeftY(), () -> driverController.getLeftX()));
-    Command reefScoreLeftL3 = DriveCommands.reefScore(
-        drive,
-        Direction.Left,
-        DriveCommands.Level.L3,
-        driverController,
-        led,
-        elevator,
-        arm,
-        endEffector);
+    Command reefScoreLeftL3 =
+        DriveCommands.reefScore(
+            drive,
+            Direction.Left,
+            DriveCommands.Level.L3,
+            driverController,
+            led,
+            elevator,
+            arm,
+            endEffector);
     Command reefAlignLeft = DriveCommands.reefAlign(drive, Direction.Left, driverController, led);
     Command reefAlignRight = DriveCommands.reefAlign(drive, Direction.Right, driverController, led);
     driverController
         .leftBumper()
         .and(() -> drive.useVision)
-        .and(() -> !(reefScoreLeftL3.isScheduled() || reefAlignLeft.isScheduled() || reefAlignRight.isScheduled())).debounce(0.5)
-        .whileTrue(
-            reefScoreLeftL3);
-
+        .and(
+            new Trigger(
+                    () ->
+                        !(reefScoreLeftL3.isScheduled()
+                            || reefAlignLeft.isScheduled()
+                            || reefAlignRight.isScheduled()))
+                .debounce(0.5))
+        .whileTrue(reefScoreLeftL3);
     driverController
         .povLeft()
         .and(() -> drive.useVision)
-        .and(() -> !(reefScoreLeftL3.isScheduled() || reefAlignLeft.isScheduled() || reefAlignRight.isScheduled())).debounce(0.5)
+        .and(
+            new Trigger(
+                    () ->
+                        !(reefScoreLeftL3.isScheduled()
+                            || reefAlignLeft.isScheduled()
+                            || reefAlignRight.isScheduled()))
+                .debounce(0.5))
         .whileTrue(reefAlignLeft);
     driverController
         .povRight()
         .and(() -> drive.useVision)
-        .and(() -> !(reefScoreLeftL3.isScheduled() || reefAlignLeft.isScheduled() || reefAlignRight.isScheduled())).debounce(0.5)
+        .and(
+            new Trigger(
+                    () ->
+                        !(reefScoreLeftL3.isScheduled()
+                            || reefAlignLeft.isScheduled()
+                            || reefAlignRight.isScheduled()))
+                .debounce(0.5))
         .whileTrue(reefAlignRight);
 
     driverController
