@@ -1,15 +1,18 @@
 package frc.robot.subsystems.endeffector;
 
-public final class EndEffectorConstants {
+import com.roboloco.tune.IsTunableConstants;
+
+@IsTunableConstants
+public class EndEffectorConstants {
   public static final int EFFECTORID = 43;
-  public static final int EFFECTOR_CURRENT_LIMIT = 20;
-  public static final double EFFECTOR_KP = 0.1;
-  public static final double EFFECTOR_KI = 0.0;
-  public static final double EFFECTOR_KD = 0.0;
-  public static final double EFFECTOR_KS = 0.0;
-  public static final double EFFECTOR_KV = 0.0;
-  public static final double EFFECTOR_KFF = 0.0;
-  public static final double EFFECTOR_KG = 0.05;
+  public static int EFFECTOR_CURRENT_LIMIT = 20;
+  public static double EFFECTOR_KP = 0.1;
+  public static double EFFECTOR_KI = 0.0;
+  public static double EFFECTOR_KD = 0.0;
+  public static double EFFECTOR_KS = 0.0;
+  public static double EFFECTOR_KV = 0.0;
+  public static double EFFECTOR_KFF = 0.0;
+  public static double EFFECTOR_KG = 0.05;
   public static final int LASERCAN_1ID = 51;
   public static final int LASERCAN_2ID = 52;
 
