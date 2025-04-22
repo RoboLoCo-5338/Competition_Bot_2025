@@ -113,4 +113,9 @@ public class ElevatorIOTalonFX implements ElevatorIO {
         ElevatorConstants.ElevatorVelocityConstants.ELEVATOR_FEEDFORWARD;
     elevatorMotor1.setControl(elevator1VelocityRequest.withVelocity(velocity).withSlot(1));
   }
+
+  @Override
+  public void elevatorOpenLoop(Voltage voltage){
+    elevatorMotor1.setVoltage(voltage.magnitude());
+  }
 }
