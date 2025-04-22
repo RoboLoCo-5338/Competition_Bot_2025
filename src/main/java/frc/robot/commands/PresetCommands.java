@@ -48,7 +48,7 @@ public class PresetCommands {
   }
 
   public static Command stopAll(Elevator elevator, EndEffector endEffector, Arm arm) {
-    return new SequentialCommandGroup(
+    return new ParallelCommandGroup(
         elevator.setElevatorVelocity(() -> 0.0),
         endEffector.setEndEffectorVelocity(0),
         arm.setArmVelocity(() -> 0));
