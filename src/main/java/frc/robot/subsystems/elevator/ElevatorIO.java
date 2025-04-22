@@ -20,7 +20,6 @@ public interface ElevatorIO {
   TalonFX elevatorMotor2 =
       new TalonFX(
           ElevatorConstants.ELEVATOR_MOTOR_ID2, TunerConstants.DrivetrainConstants.CANBusName);
-
   final PositionVoltage elevator1PositionRequest = new PositionVoltage(0.0);
   final VelocityVoltage elevator1VelocityRequest = new VelocityVoltage(0);
   final PositionVoltage elevator2PositionRequest = new PositionVoltage(0.0);
