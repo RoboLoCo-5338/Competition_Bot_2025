@@ -130,5 +130,5 @@ public interface ArmIO {
     return 0.0;
   }
 
-  public void armOpenLoop(Voltage voltage);
+  public default void armOpenLoop(Voltage voltage){}
 }
