@@ -11,6 +11,7 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController.ArbFFUnits;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import frc.robot.subsystems.SimMechanism;
@@ -80,6 +81,11 @@ public class ArmIOSim extends SimMechanism implements ArmIO {
   @Override
   public void setArmPosition(double position) {
     armClosedLoopController.setReference(Units.radiansToRotations(position), ControlType.kPosition);
+  }
+
+  @Override
+  public void armOpenLoop(Voltage voltage){
+    armClosedLoopController.setReference(voltage.magnitude(), ControlType.kVoltage);
   }
 
   @Override

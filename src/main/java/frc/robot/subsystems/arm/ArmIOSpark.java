@@ -13,6 +13,7 @@ import com.revrobotics.spark.SparkClosedLoopController.*;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.function.DoubleSupplier;
 
@@ -80,5 +81,10 @@ public class ArmIOSpark implements ArmIO {
   public double getArmPosition(ArmIOInputs inputs) {
     SmartDashboard.putNumber("Arm Positoin in method", inputs.armPosition);
     return inputs.armPosition;
+  }
+
+  @Override
+  public void armOpenLoop(Voltage voltage) {
+    armMotor.setVoltage(voltage);
   }
 }
