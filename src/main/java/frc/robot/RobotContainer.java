@@ -369,7 +369,10 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return new SequentialCommandGroup(
-        PresetCommands.stopAll(elevator, endEffector, arm), autoChooser.get());
+    return autoChooser.get();
+  }
+
+  public Command stopMotors(){
+    return PresetCommands.stopAll(elevator, endEffector, arm);
   }
 }
