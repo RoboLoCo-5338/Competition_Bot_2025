@@ -6,6 +6,9 @@ import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+
+import edu.wpi.first.units.measure.Voltage;
+
 import com.revrobotics.spark.config.SparkFlexConfig;
 import frc.robot.subsystems.arm.ArmConstants.ArmSimConstants;
 import org.littletonrobotics.junction.AutoLog;
@@ -126,4 +129,6 @@ public interface ArmIO {
   public default double getArmPosition(ArmIOInputs inputs) {
     return 0.0;
   }
+
+  public void armOpenLoop(Voltage voltage);
 }

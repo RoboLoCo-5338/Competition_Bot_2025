@@ -7,6 +7,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Mechanism;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
 import java.util.function.DoubleSupplier;
@@ -17,12 +19,14 @@ public class Arm extends SubsystemBase {
   public final ArmIO io;
   public final ArmIOInputsAutoLogged inputs = new ArmIOInputsAutoLogged();
   public double armPosition;
+  private final SysIdRoutine sysIdRoutine;
 
   private final Alert armDisconnectedAlert =
       new Alert("Arm motor disconnected", AlertType.kWarning);
 
   public Arm(ArmIO io) {
     this.io = io;
+    this.sysIdRoutine = new SysIdRoutine(new SysIdRoutine.Config(null, null, null, (state) -> Logger.recordOutput("Arm/SysIdState", state.toString())), new Mechanism(io::armOpenLoop, null, this));
   }
 
   @Override
