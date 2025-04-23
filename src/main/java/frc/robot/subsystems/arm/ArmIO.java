@@ -1,5 +1,6 @@
 package frc.robot.subsystems.arm;
 
+import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -93,14 +94,18 @@ public interface ArmIO {
         .absoluteEncoder
         .inverted(true)
         .positionConversionFactor(1 / ArmSimConstants.GEARING)
-        .velocityConversionFactor(1 / ArmSimConstants.GEARING);
+        .velocityConversionFactor(
+            2.0 / ArmSimConstants.GEARING); // TODO: figure out why we need this to be 2.0
     armConfig
         .closedLoop
         .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
         .positionWrappingEnabled(false)
-        .pidf(
-            ArmConstants.ARM_MOTOR_KP, ArmConstants.ARM_MOTOR_KI,
-            ArmConstants.ARM_MOTOR_KD, ArmConstants.ARM_MOTOR_KFF);
+        .pid(
+            ArmConstants.ARM_MOTOR_POSITION_KP, ArmConstants.ARM_MOTOR_POSITION_KI,
+            ArmConstants.ARM_MOTOR_POSITION_KD, ClosedLoopSlot.kSlot0)
+        .pid(
+            ArmConstants.ARM_MOTOR_VELOCITY_KP, ArmConstants.ARM_MOTOR_VELOCITY_KI,
+            ArmConstants.ARM_MOTOR_VELOCITY_KD, ClosedLoopSlot.kSlot1);
     armConfig
         .signals
         .absoluteEncoderPositionAlwaysOn(true)
@@ -113,7 +118,7 @@ public interface ArmIO {
 
     // added 3/6
     armConfig.softLimit.reverseSoftLimitEnabled(true);
-    armConfig.softLimit.reverseSoftLimit(0.485);
+    armConfig.softLimit.reverseSoftLimit(ArmConstants.SOFT_LIMIT);
 
     return armConfig;
   }
