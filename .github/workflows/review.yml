@@ -1,0 +1,25 @@
+name: VMFortress Review
+on:
+    pull_request:
+        branches:
+            - main
+        types: opened
+    pull_request_review:
+        types: submitted
+jobs:
+    checkReview:
+        name: Check that VMFortress Reviewed
+        runs-on: ubuntu-latest
+        if: github.event.pull_request.base.ref == 'main'
+        steps:
+            - name: Check if VMFortress Made the PR
+              id: check_vmfortress_made
+              run: if [[ "${{ github.event.pull_request.user.login }}" != "VMFortress" ]]; then exit 1; fi
+            - name: Check if VMFortress Reviewed
+              id: check_vmfortress_reviewed
+              if: ${{ steps.check_vmfortress_made.outcome == 'failure' }}
+              run: |
+                if [[ "${{ github.event.review.state }}" != "approved" ]]; then
+                    echo "VMFortress has not approved the PR."
+                    exit 1
+                fi
