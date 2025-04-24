@@ -16,10 +16,11 @@ jobs:
         continue-on-error: true
         steps:
             - name: Check if VMFortress is the Author
-              run: if [ "${{ github.event.pull_request.user.login }}" != "VMFortress" ]; then 
-                    echo VMFortress is not the author of the PR
+              run: |
+                if [ "${{ github.event.pull_request.user.login }}" != "VMFortress" ]; then
+                    echo "VMFortress is not the author of the PR"
                     exit 1
-                   fi
+                fi
     checkReviews:
         name: Check if VMFortress is an Accepting Reviewer
         runs-on: ubuntu-latest
