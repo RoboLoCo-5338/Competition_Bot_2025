@@ -5,21 +5,41 @@ on:
             - main
         types: opened
     pull_request_review:
-        types: submitted
+        types: 
+            - submitted
+            - dismissed
+        
 jobs:
-    checkReview:
-        name: Check that VMFortress Reviewed
+    checkAuthor:
+        name: Check if VMFortress is the Author
         runs-on: ubuntu-latest
-        if: github.event.pull_request.base.ref == 'main'
+        continue-on-error: true
         steps:
-            - name: Check if VMFortress Made the PR
-              id: check_vmfortress_made
-              run: if [[ "${{ github.event.pull_request.user.login }}" != "VMFortress" ]]; then exit 1; fi
-            - name: Check if VMFortress Reviewed
-              id: check_vmfortress_reviewed
-              if: ${{ steps.check_vmfortress_made.outcome == 'failure' }}
-              run: |
-                if [[ "${{ github.event.review.state }}" != "approved" ]]; then
-                    echo "VMFortress has not approved the PR."
+            - name: Check if VMFortress is the Author
+              run: if [ "${{ github.event.pull_request.user.name }}" != "VMFortress" ]; then 
+                    echo VMFortress is not the author of the PR
                     exit 1
+                   fi
+    checkReviews:
+        name: Check if VMFortress is an Accepting Reviewer
+        runs-on: ubuntu-latest
+        needs: checkAuthor
+        if: ${{github.event.pull_request.base.ref}} == 'main' && needs.checkAuthor.conclusion != 'success'
+        steps:
+            - name: Install JQ
+              run: sudo apt-get install jq
+            - name: Check if VMFortress Reviewed and Accepted
+              id: check_vmfortress_reviewed
+              run: |
+                reviews=$($curl -L \
+                -H "Accept: application/vnd.github+json" \
+                -H "Authorization: Bearer ${{secrets.PR_TOKEN}}" \
+                -H "X-GitHub-Api-Version: 2022-11-28" \
+                https://api.github.com/repos/RoboLoCo-5338/Competition_Bot_2025/pulls/${{github.event.pull_request.number}}/reviews)
+                reviewJson=$(echo "$reviews" | jq '.[]' | jq 'select(.user.login == "VMFortress" and .state=="APPROVED")')
+                if [[-z "$reviewJson" ]]; then
+                    echo VMFortress has not approved the PR
+                    exit 1
+                else
+                    echo VMFortress has approved the PR
                 fi
