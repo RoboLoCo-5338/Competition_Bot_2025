@@ -5,6 +5,8 @@ import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Mechanism;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
 import org.littletonrobotics.junction.Logger;
@@ -17,8 +19,11 @@ public class EndEffector extends SubsystemBase {
   private final Alert endEffectorDisconnectedAlert =
       new Alert(" End Effector motor disconnected!!", AlertType.kError);
 
+  private final SysIdRoutine sysIdRoutine;
+
   public EndEffector(EndEffectorIO io) {
     this.io = io;
+    this.sysIdRoutine = new SysIdRoutine(new SysIdRoutine.Config(null, null, null, (state) -> Logger.recordOutput("Elevator/SysIdState", state.toString())), new Mechanism(io::endEffectorOpenLoop, null, this));
   }
 
   @Override
@@ -44,5 +49,13 @@ public class EndEffector extends SubsystemBase {
 
   public EndEffectorIO getIO() {
     return io;
+  }
+
+  public Command sysIdQuasistatic(SysIdRoutine.Direction direction){
+    return sysIdRoutine.quasistatic(direction);
+  }
+
+  public Command sysIdDynamic(SysIdRoutine.Direction direction){
+    return sysIdRoutine.dynamic(direction);
   }
 }
