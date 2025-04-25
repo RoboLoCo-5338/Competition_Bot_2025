@@ -68,4 +68,12 @@ public class Arm extends SubsystemBase {
     SmartDashboard.putNumber("Getting in arm.java 2", io.getArmPosition(inputs));
     return () -> io.getArmPosition(inputs);
   }
+
+  public Command sysIdQuasistatic(SysIdRoutine.Direction direction){
+    return sysIdRoutine.quasistatic(direction);
+  }
+
+  public Command sysIdDynamic(SysIdRoutine.Direction direction){
+    return sysIdRoutine.dynamic(direction);
+  }
 }

@@ -111,4 +111,12 @@ public class Elevator extends SubsystemBase {
   public double getElevatorPosition() {
     return inputs.elevator1Position;
   }
+
+  public Command sysIdQuasistatic(SysIdRoutine.Direction direction){
+    return sysIdRoutine.quasistatic(direction);
+  }
+
+  public Command sysIdDynamic(SysIdRoutine.Direction direction){
+    return sysIdRoutine.dynamic(direction);
+  }
 }
