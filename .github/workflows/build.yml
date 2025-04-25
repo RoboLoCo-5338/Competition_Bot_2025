@@ -15,11 +15,3 @@ jobs:
         run: chmod +x gradlew
       - name: Build robot code
         run: ./gradlew build
-  spotlessCheck:
-    name: Check Spotless
-    runs-on: ubuntu-latest
-    container: wpilib/roborio-cross-ubuntu:2024-22.04
-    steps:
-      - name: Check Spotless
-        id: spotlessCheck
-        run: ./gradlew spotlessCheck
