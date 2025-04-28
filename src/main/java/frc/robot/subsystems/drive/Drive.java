@@ -56,6 +56,7 @@ import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 public class Drive extends SubsystemBase {
+  // pathplanner configuration settings based on robot specs
   private static final RobotConfig PP_CONFIG =
       new RobotConfig(
           DriveConstants.ROBOT_MASS_KG,
@@ -64,44 +65,57 @@ public class Drive extends SubsystemBase {
               TunerConstants.FrontLeft.WheelRadius,
               TunerConstants.kSpeedAt12Volts.in(MetersPerSecond),
               DriveConstants.WHEEL_COF,
+              // numMotors 1 cuz 1 drive motor per module w/ gear reduction
               DCMotor.getKrakenX60Foc(1)
                   .withReduction(TunerConstants.FrontLeft.DriveMotorGearRatio),
+              // max current without having wheels slip on carpet cuz going too fast
               TunerConstants.FrontLeft.SlipCurrent,
               1),
+          // module translations from center of bot
           getModuleTranslations());
 
+  // prevents odometry from being rewritten when locked
   static final Lock odometryLock = new ReentrantLock();
   private final GyroIO gyroIO;
+  // gyro inputs include things such as rotation, yaw velocity (horizontal rotation velocity), and
+  // yaw,pitch,roll
   private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
-  private final Module[] modules = new Module[4]; // FL, FR, BL, BR
+  private final Module[] modules = new Module[4]; // FL, FR, BL, BR (swerve modules)
   private final SysIdRoutine sysId;
   private final Alert gyroDisconnectedAlert =
       new Alert("Disconnected gyro, using kinematics as fallback.", AlertType.kError);
 
   private SwerveDriveKinematics kinematics = new SwerveDriveKinematics(getModuleTranslations());
   private Rotation2d rawGyroRotation = new Rotation2d();
-  private SwerveModulePosition[] lastModulePositions = // For delta tracking
+  // lastModulePositions exists for delta tracking (diff between curr and past)
+  private SwerveModulePosition[] lastModulePositions =
       new SwerveModulePosition[] {
         new SwerveModulePosition(),
         new SwerveModulePosition(),
         new SwerveModulePosition(),
         new SwerveModulePosition()
       };
+  // keeps track of the pose of the robot throughout
   private SwerveDrivePoseEstimator poseEstimator =
       new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, new Pose2d());
   // public TrapezoidProfile.Constraints autoConstraints = new Constraints(4.8, 4);
+
+  // pid controllers for drive and turn
   public PIDController autoXDriveController = new PIDController(2, 0.2, 0);
   public PIDController autoYDriveController = new PIDController(2, 0.2, 0);
   public PIDController autoTurnController = new PIDController(2, 0.2, 0);
 
   public boolean useVision = true;
 
+  // does all of this when a Drive object is created
   public Drive(
       GyroIO gyroIO,
       ModuleIO flModuleIO,
       ModuleIO frModuleIO,
       ModuleIO blModuleIO,
       ModuleIO brModuleIO) {
+    // turns arguments into instance variables
+    // gyroIO instance variable becomes pigeon, no longer just a placeholder interface
     this.gyroIO = gyroIO;
     modules[0] = new Module(flModuleIO, 0, TunerConstants.FrontLeft);
     modules[1] = new Module(frModuleIO, 1, TunerConstants.FrontRight);
@@ -114,23 +128,38 @@ public class Drive extends SubsystemBase {
     // Start odometry thread
     PhoenixOdometryThread.getInstance().start();
 
-    // Configure AutoBuilder for PathPlanner
+    // Configure AutoBuilder for PathPlanner (allows pathplanner to get info on robot as well as
+    // make robot move using consumers)
     AutoBuilder.configure(
+        // supplier in order to get pose
         this::getPose,
+        // consumer in order to set the pose using a value
         this::setPose,
+        // supplier in order to get chassis speeds
         this::getChassisSpeeds,
+        // consumer in order to set velocity using a value
         this::runVelocity,
+        // pid controllers for drive and rotation respectively
         new PPHolonomicDriveController(
             new PIDConstants(5.0, 0.0, 0.0), new PIDConstants(5.0, 0.0, 0.0)),
+        // robot config (details about the robot such as mass, moment of inertia, module
+        // translations, etc)
         PP_CONFIG,
+        // if alliance is red, then swap pathplanner paths to other side (red)
         () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
+        // pathplanner requires this (drive) to operate
         this);
+
+    // Used to make pathfinding compatible with advantagekit and log replay
     Pathfinding.setPathfinder(new LocalADStarAK());
+
+    // logs the current path
     PathPlannerLogging.setLogActivePathCallback(
         (activePath) -> {
           Logger.recordOutput(
               "Odometry/Trajectory", activePath.toArray(new Pose2d[activePath.size()]));
         });
+    // logs the target pose
     PathPlannerLogging.setLogTargetPoseCallback(
         (targetPose) -> {
           Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose);
@@ -140,21 +169,33 @@ public class Drive extends SubsystemBase {
     sysId =
         new SysIdRoutine(
             new SysIdRoutine.Config(
+                // default rampRate of 1V for quasistatic test
                 null,
+                // default stepVoltage of 7V for dynammic test
                 null,
+                // 10 seconds long
                 null,
                 (state) -> Logger.recordOutput("Drive/SysIdState", state.toString())),
             new SysIdRoutine.Mechanism(
                 (voltage) -> runCharacterization(voltage.in(Volts)), null, this));
+
+    // wraps input values into like a circle (works well with angle stuff b/c angles are in a
+    // circle, so 180 and -180 are seen as the same and therefore it doesn't do a 360)
     autoTurnController.enableContinuousInput(-Math.PI, Math.PI);
   }
 
+  // everything in this happens periodically (20ms or 50 times a second)
   @Override
   public void periodic() {
-    odometryLock.lock(); // Prevents odometry updates while reading data
+    // Prevents odometry updates while reading data
+    odometryLock.lock();
+    // pigeon logs in gyroInputs, essentially updating it, and makes it available to advantageScope
     gyroIO.updateInputs(gyroInputs);
+    // displays in advantageScope the current gyroInputs
     Logger.processInputs("Drive/Gyro", gyroInputs);
     for (var module : modules) {
+      // modules don't extend subsystembase, so their periodic does not auto-run, and so we must run
+      // it periodically manually
       module.periodic();
     }
     odometryLock.unlock();
@@ -174,19 +215,25 @@ public class Drive extends SubsystemBase {
 
     // Update odometry
     double[] sampleTimestamps =
-        modules[0].getOdometryTimestamps(); // All signals are sampled together
+        modules[0]
+            .getOdometryTimestamps(); // All signals are sampled together
     int sampleCount = sampleTimestamps.length;
     for (int i = 0; i < sampleCount; i++) {
-      // Read wheel positions and deltas from each module
       SwerveModulePosition[] modulePositions = new SwerveModulePosition[4];
       SwerveModulePosition[] moduleDeltas = new SwerveModulePosition[4];
       for (int moduleIndex = 0; moduleIndex < 4; moduleIndex++) {
+        // gets the odometry for each module for each timestamp
         modulePositions[moduleIndex] = modules[moduleIndex].getOdometryPositions()[i];
+        // creates new moduleDeltas
         moduleDeltas[moduleIndex] =
             new SwerveModulePosition(
+                // gets the change in distanceMeters, but angle is just the straightforward value
+                // even if the module is taking a curved path, there are still derivatives that are
+                // somewhat accurate, which i think is similar to what this is doing
                 modulePositions[moduleIndex].distanceMeters
                     - lastModulePositions[moduleIndex].distanceMeters,
                 modulePositions[moduleIndex].angle);
+        // updates lastmodulepositions
         lastModulePositions[moduleIndex] = modulePositions[moduleIndex];
       }
 
@@ -200,7 +247,7 @@ public class Drive extends SubsystemBase {
         rawGyroRotation = rawGyroRotation.plus(new Rotation2d(twist.dtheta));
       }
 
-      // Apply update
+      // Apply update to estimate the pose
       poseEstimator.updateWithTime(sampleTimestamps[i], rawGyroRotation, modulePositions);
     }
 
@@ -215,7 +262,10 @@ public class Drive extends SubsystemBase {
    */
   public void runVelocity(ChassisSpeeds speeds) {
     // Calculate module setpoints
+
+    // basically just calculates the desired delta pose
     ChassisSpeeds discreteSpeeds = ChassisSpeeds.discretize(speeds, 0.02);
+    // calculates required swerve module states for each module
     SwerveModuleState[] setpointStates = kinematics.toSwerveModuleStates(discreteSpeeds);
     SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, TunerConstants.kSpeedAt12Volts);
 
@@ -223,7 +273,7 @@ public class Drive extends SubsystemBase {
     Logger.recordOutput("SwerveStates/Setpoints", setpointStates);
     Logger.recordOutput("SwerveChassisSpeeds/Setpoints", discreteSpeeds);
 
-    // Send setpoints to modules
+    // Send setpoints to modules and runs
     for (int i = 0; i < 4; i++) {
       modules[i].runSetpoint(setpointStates[i]);
     }
@@ -232,9 +282,10 @@ public class Drive extends SubsystemBase {
     Logger.recordOutput("SwerveStates/SetpointsOptimized", setpointStates);
   }
 
-  /** Runs the drive in a straight line with the specified drive output. */
+  /** Runs the drive in a straight line with the specified drive output */
   public void runCharacterization(double output) {
     for (int i = 0; i < 4; i++) {
+      // in this case voltage, but can be changed to amps
       modules[i].runCharacterization(output);
     }
   }

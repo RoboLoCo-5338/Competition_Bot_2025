@@ -21,20 +21,23 @@ import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.DriveConstants;
 
 public class LED extends SubsystemBase {
-
+  //Wow, we don't even use AddressableLEDIO, surprising
   private final AddressableLED m_led;
   private final AddressableLEDBuffer buffer;
 
   public LED() {
-
+    //creates new LED connected to physical with buffer 300 (number of LEDS in the strip)
     m_led = new AddressableLED(0);
     buffer = new AddressableLEDBuffer(300);
     m_led.setLength(buffer.getLength());
+    //no led color
     m_led.setData(buffer);
+    //starts the LED strip
     m_led.start();
   }
 
   public InstantCommand flashGreen() {
+    //sequential group in instant commmand because otherwise this flashGreen command would be blocking other commands in a sequential command, so we wrap it in an instant command
     return new InstantCommand(
         () -> {
           new SequentialCommandGroup(
@@ -56,11 +59,12 @@ public class LED extends SubsystemBase {
     return new InstantCommand(
         () -> {
           if (DriveConstants.canceled) {
-
+            //if the auto-align command was canceled, turn LED red instead of green
             LEDPattern red = LEDPattern.solid(Color.kRed);
             red.applyTo(buffer);
             m_led.setData(buffer);
           } else {
+            //make it green
             LEDPattern green = LEDPattern.solid(Color.kGreen);
             green.applyTo(buffer);
             m_led.setData(buffer);
@@ -70,9 +74,10 @@ public class LED extends SubsystemBase {
 
   public RunCommand pulseBlue() {
     LEDPattern blue = LEDPattern.solid(Color.kBlue);
-
+    //pulses blue (one period takes 5 seconds)
     LEDPattern pulsingBlue = blue.breathe(Seconds.of(5));
     return new RunCommand(
+      //continuously applies the pattern to the buffer
         () -> {
           pulsingBlue.applyTo(buffer);
           m_led.setData(buffer);
@@ -83,6 +88,7 @@ public class LED extends SubsystemBase {
   public InstantCommand turnOff() {
 
     return new InstantCommand(
+      //makes the LED no color
         () -> {
           LEDPattern off = LEDPattern.kOff;
           off.applyTo(buffer);
@@ -93,8 +99,10 @@ public class LED extends SubsystemBase {
   public RunCommand goRainbow() {
     LEDPattern rainbow = LEDPattern.rainbow(255, 128);
     LEDPattern scrollingRainbow =
+    //makes the rainbow move along the strip 0.3 m/s
         rainbow.scrollAtAbsoluteSpeed(MetersPerSecond.of(0.3), LEDConstants.LED_SPACING);
     return new RunCommand(
+      //continously applies the pattern to the buffer
         () -> {
           scrollingRainbow.applyTo(buffer);
           m_led.setData(buffer);
@@ -103,7 +111,7 @@ public class LED extends SubsystemBase {
   }
 
   public InstantCommand turnColor(Color color) {
-
+    //turns into the specificied color
     return new InstantCommand(
         () -> {
           LEDPattern colorPattern = LEDPattern.solid(color);
@@ -120,23 +128,27 @@ public class LED extends SubsystemBase {
    * @return An InstantCommand that applies the progress mask pattern to the LED.
    */
   public static double getDistanceFromBarge(Drive drive) {
+    //gets distance from barge
     if (DriverStation.getAlliance().orElse(Alliance.Blue).equals(Alliance.Blue)) {
       return (-drive.getPose().getX() + 8.272272);
     } else {
       return (drive.getPose().getX() - 9.27);
     }
   }
-
+  //Trigger b/c it makes it so that we don't have to check it in periodic(), it is similar to button triggers
   public Trigger isCloseToBarge(Drive drive) {
+    //checks if the robot distance is between 1.45 and 0.6 meters from barge
     return new Trigger(
         () -> getDistanceFromBarge(drive) < 1.45 && getDistanceFromBarge(drive) > 0.60);
   }
 
   public Trigger isCriticalToBarge(Drive drive) {
+    //checks if the robot distance is less than 0.6 meters from barge
     return new Trigger(() -> getDistanceFromBarge(drive) < 0.60);
   }
 
   public SequentialCommandGroup sendBargeIndicator(CommandXboxController controller) {
+    //rumbles controllers
     return new SequentialCommandGroup(
         new InstantCommand(
             () -> {

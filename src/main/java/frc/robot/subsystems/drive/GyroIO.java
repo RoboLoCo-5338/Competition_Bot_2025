@@ -18,6 +18,7 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import org.littletonrobotics.junction.AutoLog;
 
 public interface GyroIO {
+  //autolog these things
   @AutoLog
   public static class GyroIOInputs {
     public boolean connected = false;

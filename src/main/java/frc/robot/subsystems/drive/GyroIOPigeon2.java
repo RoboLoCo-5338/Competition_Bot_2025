@@ -28,15 +28,18 @@ import java.util.Queue;
 
 /** IO implementation for Pigeon 2. */
 public class GyroIOPigeon2 implements GyroIO {
+  //creates new Pigeon object using the id and canbus name
   private final Pigeon2 pigeon =
       new Pigeon2(
           TunerConstants.DrivetrainConstants.Pigeon2Id,
           TunerConstants.DrivetrainConstants.CANBusName);
 
+  //initial yaw,roll,pitch
   private final StatusSignal<Angle> yaw = pigeon.getYaw();
   private final StatusSignal<Angle> roll = pigeon.getRoll();
   private final StatusSignal<Angle> pitch = pigeon.getPitch();
 
+  //First in first out queue
   private final Queue<Double> yawPositionQueue;
   private final Queue<Double> rollPositionQueue;
   private final Queue<Double> pitchPositionQueue;
@@ -48,19 +51,24 @@ public class GyroIOPigeon2 implements GyroIO {
     pigeon.getConfigurator().apply(new Pigeon2Configuration());
     pigeon.getConfigurator().setYaw(0.0);
 
+    //sets the update frequency to faster than periodic()
     yaw.setUpdateFrequency(DriveConstants.ODOMETRY_FREQUENCY);
     pitch.setUpdateFrequency(DriveConstants.ODOMETRY_FREQUENCY);
     roll.setUpdateFrequency(DriveConstants.ODOMETRY_FREQUENCY);
 
     yawVelocity.setUpdateFrequency(50.0);
 
+    //reduces update frequencies of signals not mentioned above
     pigeon.optimizeBusUtilization();
+
+    //creates new threads to run faster than periodic() in order to get all the signals from the pigeon and put them into a queue
     odometryTimestampQueue = PhoenixOdometryThread.getInstance().makeTimestampQueue();
     yawPositionQueue = PhoenixOdometryThread.getInstance().registerSignal(pigeon.getYaw());
     rollPositionQueue = PhoenixOdometryThread.getInstance().registerSignal(pigeon.getRoll());
     pitchPositionQueue = PhoenixOdometryThread.getInstance().registerSignal(pigeon.getPitch());
   }
 
+  //updates inputs
   @Override
   public void updateInputs(GyroIOInputs inputs) {
     inputs.connected = BaseStatusSignal.refreshAll(yaw, yawVelocity).equals(StatusCode.OK);
@@ -83,6 +91,7 @@ public class GyroIOPigeon2 implements GyroIO {
             .map((Double value) -> Rotation2d.fromDegrees(value))
             .toArray(Rotation2d[]::new);
 
+    //clears the queues to get new batch of signals
     odometryTimestampQueue.clear();
     yawPositionQueue.clear();
     rollPositionQueue.clear();

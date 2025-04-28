@@ -12,6 +12,7 @@ import frc.robot.generated.TunerConstants;
 import org.littletonrobotics.junction.AutoLog;
 
 public interface ElevatorIO {
+  //creates 2 new elevator motor objects 
   TalonFX elevatorMotor1 =
       new TalonFX(
           ElevatorConstants.ELEVATOR_MOTOR_ID1, TunerConstants.DrivetrainConstants.CANBusName);
@@ -24,6 +25,7 @@ public interface ElevatorIO {
   final PositionVoltage elevator2PositionRequest = new PositionVoltage(0.0);
   final VelocityVoltage elevator2VelocityRequest = new VelocityVoltage(0);
 
+  //autologger
   @AutoLog
   public static class ElevatorIOInputs {
     public double elevator1Position = 0.0;
@@ -118,7 +120,9 @@ public interface ElevatorIO {
    */
   public default TalonFXConfiguration getConfiguration(int motorNum) {
     var config = new TalonFXConfiguration();
+    //max voltage
     config.Voltage.PeakForwardVoltage = 16;
+    //elevator stays still when idle
     config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
     // Slot 0 is position
@@ -138,6 +142,7 @@ public interface ElevatorIO {
     config.Slot1.kG = ElevatorConstants.ElevatorVelocityConstants.ELEVATOR_MOTOR_kG;
     config.Slot1.kV = ElevatorConstants.ElevatorVelocityConstants.ELEVATOR_MOTOR_kV;
 
+    //Slot 2 just for stowing
     config.Slot2.GravityType = GravityTypeValue.Elevator_Static;
     config.Slot2.kP = ElevatorConstants.ElevatorStowPresetConstants.ELEVATOR_MOTOR_kP;
     config.Slot2.kI = ElevatorConstants.ElevatorStowPresetConstants.ELEVATOR_MOTOR_kI;
@@ -145,6 +150,7 @@ public interface ElevatorIO {
     config.Slot2.kG = ElevatorConstants.ElevatorStowPresetConstants.ELEVATOR_MOTOR_kG;
     config.Slot2.kV = ElevatorConstants.ElevatorStowPresetConstants.ELEVATOR_MOTOR_kV;
 
+    //adds soft limits
     config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
     config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 22.7;
     config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
@@ -155,6 +161,7 @@ public interface ElevatorIO {
     // CHANGE THIS VALUE OTHERWISE TORQUE MAY BE LIMITED/TOO HIGH
     currentConfig.StatorCurrentLimit = 140;
     config.CurrentLimits = currentConfig;
+    //inverts motor 2 because it's facing the opposite way
     if (motorNum == 2) config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     return config;
   }

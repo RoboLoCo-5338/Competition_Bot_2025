@@ -235,6 +235,7 @@ public class ModuleIOTalonFX implements ModuleIO {
     turnPositionQueue.clear();
   }
 
+  //runs drive motor with either voltage or current
   @Override
   public void setDriveOpenLoop(double output) {
     driveTalon.setControl(
@@ -244,6 +245,7 @@ public class ModuleIOTalonFX implements ModuleIO {
         });
   }
 
+  //runs turn motor with either voltage or current
   @Override
   public void setTurnOpenLoop(double output) {
     turnTalon.setControl(
@@ -255,7 +257,9 @@ public class ModuleIOTalonFX implements ModuleIO {
 
   @Override
   public void setDriveVelocity(double velocityRadPerSec) {
+    //converts rad/sec to rot/sec
     double velocityRotPerSec = Units.radiansToRotations(velocityRadPerSec);
+    //tells motor to run with a certain rot/sec
     driveTalon.setControl(
         switch (constants.DriveMotorClosedLoopOutput) {
           case Voltage -> velocityVoltageRequest.withVelocity(velocityRotPerSec);
@@ -263,6 +267,7 @@ public class ModuleIOTalonFX implements ModuleIO {
         });
   }
 
+  //sets rotation
   @Override
   public void setTurnPosition(Rotation2d rotation) {
     turnTalon.setControl(

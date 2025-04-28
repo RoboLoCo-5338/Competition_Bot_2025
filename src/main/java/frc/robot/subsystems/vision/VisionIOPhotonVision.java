@@ -26,12 +26,14 @@ public class VisionIOPhotonVision implements VisionIO {
    * @param rotationSupplier The 3D position of the camera relative to the robot.
    */
   public VisionIOPhotonVision(String name, Transform3d robotToCamera) {
+    //creates new camera
     camera = new PhotonCamera(name);
     this.robotToCamera = robotToCamera;
   }
 
   @Override
   public void updateInputs(VisionIOInputs inputs) {
+    // Check if the camera is connected
     inputs.connected = camera.isConnected();
 
     // Read new camera observations
@@ -57,7 +59,7 @@ public class VisionIOPhotonVision implements VisionIO {
         Transform3d fieldToRobot = fieldToCamera.plus(robotToCamera.inverse());
         Pose3d robotPose = new Pose3d(fieldToRobot.getTranslation(), fieldToRobot.getRotation());
 
-        // Calculate average tag distance
+        // Calculate total tag distance
         double totalTagDistance = 0.0;
         for (var target : result.targets) {
           totalTagDistance += target.bestCameraToTarget.getTranslation().getNorm();

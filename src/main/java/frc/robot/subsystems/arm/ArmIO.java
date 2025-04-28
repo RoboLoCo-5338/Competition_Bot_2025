@@ -12,9 +12,11 @@ import org.littletonrobotics.junction.AutoLog;
 
 public interface ArmIO {
 
+  //new spark flex motor
   SparkFlex armMotor = new SparkFlex(ArmConstants.ARM_MOTOR_ID, MotorType.kBrushless);
   SparkClosedLoopController armClosedLoopController = armMotor.getClosedLoopController();
-
+  
+  //autologger
   @AutoLog
   public static class ArmIOInputs {
     public double armPosition = 0.0;
@@ -86,22 +88,36 @@ public interface ArmIO {
     SparkFlexConfig armConfig = new SparkFlexConfig();
 
     armConfig
+        //sets it so that arm stays still when idle instead of falling
         .idleMode(IdleMode.kBrake)
+        //inverted
         .inverted(true)
+        //current limit for brushless motors
         .smartCurrentLimit(ArmConstants.ARM_MOTOR_CURRENT_LIMIT)
+        //when getting a percentage of voltage, it bases it off this value
         .voltageCompensation(12.0);
+
+    //absolute encoder config
     armConfig
         .absoluteEncoder
+        //inverted
         .inverted(true)
+        //gearing stuff
         .positionConversionFactor(1 / ArmSimConstants.GEARING)
         .velocityConversionFactor(2.0 / ArmSimConstants.GEARING);
+
+    //feedback closed loop (pid)
     armConfig
         .closedLoop
+        //uses the absolute encoder as the feedback sensor to measure error
         .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
+        //no position wrapping b/c only want arm to go the direction we tell it to
         .positionWrappingEnabled(false)
+        //for target position
         .pid(
             ArmConstants.ARM_MOTOR_POSITION_KP, ArmConstants.ARM_MOTOR_POSITION_KI,
             ArmConstants.ARM_MOTOR_POSITION_KD, ClosedLoopSlot.kSlot0)
+        //for target velocity
         .pid(
             ArmConstants.ARM_MOTOR_VELOCITY_KP, ArmConstants.ARM_MOTOR_VELOCITY_KI,
             ArmConstants.ARM_MOTOR_VELOCITY_KD, ClosedLoopSlot.kSlot1);
@@ -117,12 +133,16 @@ public interface ArmIO {
 
     // added 3/6
     armConfig.softLimit.reverseSoftLimitEnabled(true);
+    //soft limit so arm shouldn't go below 0.43
     armConfig.softLimit.reverseSoftLimit(0.43);
 
     return armConfig;
   }
 
   public default double getArmPosition(ArmIOInputs inputs) {
+    //placeholder...
     return 0.0;
   }
+  //cleaner version imo:
+  //public double getArmPosition (ArmIOInputs inputs);
 }

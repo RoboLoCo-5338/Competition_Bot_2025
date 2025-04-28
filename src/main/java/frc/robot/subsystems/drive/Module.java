@@ -42,9 +42,11 @@ public class Module {
       int index,
       SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration>
           constants) {
+    // sets the instance variables
     this.io = io;
     this.index = index;
     this.constants = constants;
+    // creates alerts, doesn't activate them yet
     driveDisconnectedAlert =
         new Alert(
             "Disconnected drive motor on module " + Integer.toString(index) + ".",
@@ -59,15 +61,18 @@ public class Module {
   }
 
   public void periodic() {
+    // updates inputs based on ModuleIOTalonFX
     io.updateInputs(inputs);
     Logger.processInputs("Drive/Module" + Integer.toString(index), inputs);
 
-    // Calculate positions for odometry
+    // Calculate positions for odometry of the module for each timestamp
     int sampleCount = inputs.odometryTimestamps.length; // All signals are sampled together
     odometryPositions = new SwerveModulePosition[sampleCount];
     for (int i = 0; i < sampleCount; i++) {
+      //calculates how far the module has traveled
       double positionMeters = inputs.odometryDrivePositionsRad[i] * constants.WheelRadius;
       Rotation2d angle = inputs.odometryTurnPositions[i];
+      //updates the odometryPositions of the module, so when getOdometryPositions is called later, it's accurate for each timestamp
       odometryPositions[i] = new SwerveModulePosition(positionMeters, angle);
     }
 
@@ -80,6 +85,7 @@ public class Module {
   /** Runs the module with the specified setpoint state. Mutates the state to optimize it. */
   public void runSetpoint(SwerveModuleState state) {
     // Optimize velocity setpoint
+    //
     state.optimize(getAngle());
     state.cosineScale(inputs.turnPosition);
 

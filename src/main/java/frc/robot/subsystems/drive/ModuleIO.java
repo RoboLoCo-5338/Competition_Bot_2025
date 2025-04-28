@@ -17,8 +17,10 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import org.littletonrobotics.junction.AutoLog;
 
 public interface ModuleIO {
+  // autolog to create ModuleIOInputsAutoLogged
   @AutoLog
   public static class ModuleIOInputs {
+    // stuff that gets auto logged
     public boolean driveConnected = false;
     public double drivePositionRad = 0.0;
     public double driveVelocityRadPerSec = 0.0;
@@ -40,6 +42,7 @@ public interface ModuleIO {
     public Rotation2d[] odometryTurnPositions = new Rotation2d[] {};
   }
 
+  // this is an interface so we have a couple abstract classes here
   /** Updates the set of loggable inputs. */
   public default void updateInputs(ModuleIOInputs inputs) {}
 

@@ -9,12 +9,14 @@ import frc.robot.generated.TunerConstants;
 import org.littletonrobotics.junction.AutoLog;
 
 public interface EndEffectorIO {
+  //creates new endEffector motor
   public final TalonFX endEffectorMotor =
       new TalonFX(EndEffectorConstants.EFFECTORID, TunerConstants.DrivetrainConstants.CANBusName);
   final VelocityVoltage endEffectorVelocityRequest = new VelocityVoltage(0.0);
 
   @AutoLog
   public static class EndEffectorIOInputs {
+    //auto logged stuff
     public double endEffectorVelocity = 0.0;
     public double endEffectorAppliedVolts = 0.0;
     public double endEffectorCurrentAmps = 0.0;
@@ -30,7 +32,9 @@ public interface EndEffectorIO {
 
   public default TalonFXConfiguration getEndEffectorConfiguration() {
     var config = new TalonFXConfiguration();
+    //sets it so that the motor goes down when there is no input
     config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+    //pid and feedforward values
     config.Slot0.kP = EndEffectorConstants.EFFECTOR_KP;
     config.Slot0.kI = EndEffectorConstants.EFFECTOR_KI;
     config.Slot0.kD = EndEffectorConstants.EFFECTOR_KD;
@@ -38,6 +42,7 @@ public interface EndEffectorIO {
     config.Slot0.kV = EndEffectorConstants.EFFECTOR_KV;
 
     var currentConfig = new CurrentLimitsConfigs();
+    //current limit
     currentConfig.StatorCurrentLimit = EndEffectorConstants.EFFECTOR_CURRENT_LIMIT;
     config.CurrentLimits = currentConfig;
     return config;

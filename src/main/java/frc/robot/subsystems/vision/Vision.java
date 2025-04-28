@@ -41,7 +41,7 @@ public class Vision extends SubsystemBase {
     this.consumer = consumer;
     this.io = io;
 
-    // Initialize inputs
+    // Initialize inputs (there can be multiple cameras)
     this.inputs = new VisionIOInputsAutoLogged[io.length];
     for (int i = 0; i < inputs.length; i++) {
       inputs[i] = new VisionIOInputsAutoLogged();
@@ -66,11 +66,13 @@ public class Vision extends SubsystemBase {
   }
 
   public int[] getTagIds(int cameraIndex) {
+    //returns tag ids of one camera
     return inputs[cameraIndex].tagIds;
   }
 
   @Override
   public void periodic() {
+    //update inputs for all cameras
     for (int i = 0; i < io.length; i++) {
       io[i].updateInputs(inputs[i]);
       Logger.processInputs("Vision/Camera" + Integer.toString(i), inputs[i]);
@@ -107,8 +109,7 @@ public class Vision extends SubsystemBase {
         boolean rejectPose =
             observation.tagCount() == 0 // Must have at least one tag
                 || (observation.tagCount() == 1
-                    && observation.ambiguity() > maxAmbiguity) // Cannot be high
-                // ambiguity
+                    && observation.ambiguity() > maxAmbiguity) // Cannot be high ambiguity
                 || Math.abs(observation.pose().getZ())
                     > maxZError // Must have realistic Z coordinate
 

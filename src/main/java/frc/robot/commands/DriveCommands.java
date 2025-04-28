@@ -58,7 +58,7 @@ import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
 public class DriveCommands {
-
+  //checks if the alliance is blue or red (blue is false, red is true)
   public static boolean isFlipped =
       DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red;
 
@@ -67,8 +67,9 @@ public class DriveCommands {
   private DriveCommands() {}
 
   private static Translation2d getLinearVelocityFromJoysticks(double x, double y) {
-    // Apply deadband
+    // Apply deadband of 0.06 as well as get magnitude using hypotenuse (vectors)
     double linearMagnitude = MathUtil.applyDeadband(Math.hypot(x, y), DriveConstants.DEADBAND);
+    //uses tangent to find angle of vector
     Rotation2d linearDirection = new Rotation2d(Math.atan2(y, x));
 
     // Square magnitude for more precise control
@@ -111,6 +112,7 @@ public class DriveCommands {
                   linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec(),
                   omega * drive.getMaxAngularSpeedRadPerSec());
           drive.runVelocity(
+            //turns field relative to robot relative
               ChassisSpeeds.fromFieldRelativeSpeeds(
                   speeds,
                   isFlipped
@@ -148,7 +150,8 @@ public class DriveCommands {
               Translation2d linearVelocity =
                   getLinearVelocityFromJoysticks(xSupplier.getAsDouble(), ySupplier.getAsDouble());
 
-              // Calculate angular speed
+              // Calculate next angular speed output based on current angle, and I think since it's a profiledPIDController w/ trapezoid profile,
+              // it will start to decelerate once the current angle is close enough to the target angle
               double omega =
                   angleController.calculate(
                       drive.getRotation().getRadians(), rotationSupplier.get().getRadians());
@@ -160,6 +163,7 @@ public class DriveCommands {
                       linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec(),
                       omega);
               drive.runVelocity(
+                  //turns field relative to robot relative
                   ChassisSpeeds.fromFieldRelativeSpeeds(
                       speeds,
                       isFlipped
@@ -318,10 +322,14 @@ public class DriveCommands {
         drive,
         xSupplier,
         ySupplier,
+        //rotationSupplier
         () -> {
+          //robot pose
           Translation2d robot = drive.getPose().getTranslation();
+          //reef pose
           Translation2d reef =
               (isFlipped) ? new Translation2d(13.06185, 4.03) : new Translation2d(4.5, 4.03);
+          //angle to get to reef based on robot position
           return new Rotation2d(Math.atan2(reef.getY() - robot.getY(), reef.getX() - robot.getX()));
         });
   }
@@ -339,6 +347,7 @@ public class DriveCommands {
       CommandXboxController driverController,
       DoubleSupplier elevatorHeight,
       Direction direction) {
+    //command that should end when isFinished is true
     return new DeferredCommand(
         () -> {
           Pose2d targetPose = destination.get().getTargetPosition();
@@ -348,7 +357,7 @@ public class DriveCommands {
                           * targetPose.minus(drive.getPose()).getX()
                       + targetPose.minus(drive.getPose()).getY()
                           * targetPose.minus(drive.getPose()).getY())
-              > 3) { // This condition checks if the distance for auto aligning is less than 3. If
+              > 3) { // This condition checks if the distance for auto aligning is less than 3 meters. If
             // it is greater, then something is likely wrong.
             return new InstantCommand();
 
@@ -366,10 +375,12 @@ public class DriveCommands {
 
               @Override
               public void initialize() {
+                //reset current pid controllers
                 drive.autoXDriveController.reset();
                 drive.autoYDriveController.reset();
                 drive.autoTurnController.reset();
 
+                //tolerances and setting targets
                 drive.autoXDriveController.setTolerance(0.01);
                 drive.autoYDriveController.setTolerance(0.01);
                 drive.autoTurnController.setTolerance(0.025);
@@ -381,6 +392,7 @@ public class DriveCommands {
               @Override
               public void execute() {
                 drive.runVelocity(
+                  //runs velocity using output from pid controllers based on current pose
                     ChassisSpeeds.fromFieldRelativeSpeeds(
                         new ChassisSpeeds(
                             drive.autoXDriveController.calculate(drive.getPose().getX()),
@@ -392,16 +404,19 @@ public class DriveCommands {
 
               @Override
               public boolean isFinished() {
-
                 boolean canceled = false;
                 System.out.println(direction);
                 if (DriverStation.isTeleop()) {
                   if (direction == Direction.Left) {
+                    //idk why this print statement is here
                     System.out.println("canceling ocmmand");
+                    //checks if andy pressed cancel button for left
                     canceled = !driverController.povLeft().getAsBoolean();
                   } else if (direction == Direction.Right) {
+                    //checks if andy pressed cancel button for right
                     canceled = !driverController.povRight().getAsBoolean();
                   } else if (direction == Direction.None) {
+                    //checks if andy pressed cancel button for either left or right, but only if direction is unspecified
                     canceled =
                         !driverController.povLeft().getAsBoolean()
                             || !driverController.povRight().getAsBoolean();
@@ -410,6 +425,7 @@ public class DriveCommands {
                 if (canceled) {
                   DriveConstants.canceled = true;
                 }
+                //checks if the robot is at the setpoint for all three pid controllers or if the command was cancelled by andy
                 return (drive.autoXDriveController.atSetpoint()
                         && drive.autoYDriveController.atSetpoint()
                         && drive.autoTurnController.atSetpoint())
@@ -418,6 +434,7 @@ public class DriveCommands {
 
               @Override
               public void end(boolean interrupted) {
+                //when its ended stop the robot
                 drive.runVelocity(new ChassisSpeeds(0, 0, 0));
               }
             };
@@ -425,6 +442,7 @@ public class DriveCommands {
         },
         new HashSet<Subsystem>() {
           {
+            //required subsystem
             add(drive);
           }
         });
@@ -462,6 +480,7 @@ public class DriveCommands {
 
     @Override
     public Pose2d getTargetPosition() {
+      //returns processor possession depending on the alliance
       return allianceFlip(new Pose2d(5.980, 0.532, new Rotation2d()));
     }
   }
@@ -493,11 +512,14 @@ public class DriveCommands {
     @Override
     public Pose2d getTargetPosition() {
       switch (station) {
+        //left coral station
         case Left:
           return allianceFlip(new Pose2d(1.56, 7.36, new Rotation2d(Degrees.of(-54))));
+        //right coral station
         case Right:
           return allianceFlip(new Pose2d(1.623, 0.682, new Rotation2d(Degrees.of(54))));
         default:
+        //closest coral station
           return drive
               .getPose()
               .nearest(
@@ -545,12 +567,15 @@ public class DriveCommands {
         default:
           o = reefCenter;
       }
+      //rotation based on which tag it sees
       Rotation2d rot =
           VisionConstants.aprilTagLayout.getTagPose(targetTagId).get().getRotation().toRotation2d();
+        //180 degree rotation if the robot is flipped
       if (!isFlipped) rot = rot.plus(new Rotation2d(Math.PI));
+      //rotates pose around reef center
       return allianceFlip(o.rotateAround(new Translation2d(4.5, 4.03), rot));
     }
-
+    //returns alliance reef poses
     public static ArrayList<Pose2d> getReefPoses(Direction direction) {
       ArrayList<Pose2d> poses = new ArrayList<>();
       for (int i = 0; i < 6; i++) {
@@ -569,6 +594,7 @@ public class DriveCommands {
       LED led,
       DoubleSupplier elevatorHeight) {
     return new SequentialCommandGroup(
+        //turns on led to orange
         new InstantCommand(
             () -> {
               System.out.println("reef align starts");
@@ -577,6 +603,7 @@ public class DriveCommands {
               RobotContainer.doRainbow = false;
             }),
         led.turnColor(Color.kOrange), // change to davids commit of wait 3 instead of flash
+        //paths to destination based on nearest reef side plus direction based on controller
         pathToDestination(
             drive,
             () ->
@@ -588,6 +615,8 @@ public class DriveCommands {
             controller,
             elevatorHeight,
             direction),
+        //schedules a sequential command group inside of an instant command because I think even if reefAlign command terminates, the led sequuential command group will keep running
+        //runs only after the defferedCommand pathToDestination is finished
         new InstantCommand(
             () -> {
               new SequentialCommandGroup(
@@ -639,21 +668,27 @@ public class DriveCommands {
       Arm arm,
       EndEffector endEffector) {
     return new ParallelCommandGroup(
+        //raises elevator and moves end effector to preset position based on which preset
             (level == Level.L4)
                 ? PresetCommands.presetL4(elevator, endEffector, arm)
                 : (level == Level.L3)
                     ? PresetCommands.presetL3(elevator, endEffector, arm)
                     : PresetCommands.presetL2(elevator, endEffector, arm),
+            //simultaneously aligns to reef
             reefAlign(drive, direction, controller, led, elevatorHeight))
         .andThen(
+          //stops the preset command
             PresetCommands.stopAll(elevator, endEffector, arm),
             ((level == Level.L4)
+            //shoots out -100 if L4 preset and shoots 100 if L2 or L3 preset
                 ? endEffector.setEndEffectorVelocity(-100)
                 : endEffector.setEndEffectorVelocity(100)))
         .until(
+          //stops the shooting when both lasercans no longer detect the coral in the end effector
             () ->
                 endEffector.getIO().getLaserCanMeasurement1() > 100
                     && endEffector.getIO().getLaserCanMeasurement2() > 100)
+                    //sets end effector back to 0
         .andThen(() -> endEffector.setEndEffectorVelocity(0));
   }
 

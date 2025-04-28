@@ -29,13 +29,15 @@ public class ElevatorIOTalonFX implements ElevatorIO {
   private final StatusSignal<Integer> elevator1Version;
   private final StatusSignal<Integer> elevator2Version;
 
+  //debouncer to ensure elevator (dis)connected
   private final Debouncer elevator1ConnectedDebounce = new Debouncer(0.5);
   private final Debouncer elevator2ConnectedDebounce = new Debouncer(0.5);
 
   public ElevatorIOTalonFX() {
+    //applies the configurations
     elevatorMotor1.getConfigurator().apply(getConfiguration(1));
-
     elevatorMotor2.getConfigurator().apply(getConfiguration(2));
+    //says that the current position is equal to 0
     elevatorMotor1.setPosition(0);
     elevatorMotor2.setPosition(0);
 
@@ -70,9 +72,10 @@ public class ElevatorIOTalonFX implements ElevatorIO {
     ParentDevice.optimizeBusUtilizationForAll(elevatorMotor1, elevatorMotor2);
     elevatorMotor2.setControl(new StrictFollower(elevatorMotor1.getDeviceID()));
   }
-
+  //updates inputs
   @Override
   public void updateInputs(ElevatorIOInputs inputs) {
+    //refreshes info about elevator motors
     var motor1Status =
         BaseStatusSignal.refreshAll(
             elevator1Position, elevator1Velocity, elevator1Current, elevator1AppliedVolts);
@@ -102,15 +105,15 @@ public class ElevatorIOTalonFX implements ElevatorIO {
     //     ElevatorConstants.ElevatorPositionConstants.ELEVATOR_FEEDFORWARD;
     // elevator2PositionRequest.FeedForward =
     //     ElevatorConstants.ElevatorPositionConstants.ELEVATOR_FEEDFORWARD;
-
     elevatorMotor1.setControl(elevator1PositionRequest.withPosition(position).withSlot(slot));
     System.out.println(slot);
   }
 
   @Override
   public void setElevatorVelocity(double velocity) {
+    //ensures no feedforward voltage is applied (should already be fine even without this I think)
     elevator1VelocityRequest.FeedForward =
         ElevatorConstants.ElevatorVelocityConstants.ELEVATOR_FEEDFORWARD;
-    elevatorMotor1.setControl(elevator1VelocityRequest.withVelocity(velocity).withSlot(1));
+    elevatorMotor1.setControl(elevator1VelocityRequest.withVelocity(velocity).withSlot(1));     
   }
 }

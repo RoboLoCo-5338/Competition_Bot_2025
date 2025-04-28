@@ -10,26 +10,27 @@ import frc.robot.Constants.Mode;
 import org.littletonrobotics.junction.Logger;
 
 public class EndEffector extends SubsystemBase {
-
+  //new input/output w/ motor
   public final EndEffectorIO io;
   private final EndEffectorIOInputsAutoLogged inputs = new EndEffectorIOInputsAutoLogged();
-
+  //alert for when the end effector is disconnected
   private final Alert endEffectorDisconnectedAlert =
       new Alert(" End Effector motor disconnected!!", AlertType.kError);
-
+  //sets io during object creation
   public EndEffector(EndEffectorIO io) {
     this.io = io;
   }
 
   @Override
   public void periodic() {
+    //periodically updates inputs (autologger)
     io.updateInputs(inputs);
     Logger.processInputs("End Effector", inputs);
-
+    //sets alert if needed
     endEffectorDisconnectedAlert.set(
         !inputs.endEffectorConnected && Constants.currentMode != Mode.SIM);
   }
-
+  //command to set end effector velocity w/ subsystem requirement of the end effector
   public Command setEndEffectorVelocity(double velocity) {
     return new InstantCommand(
         () -> {
@@ -37,7 +38,7 @@ public class EndEffector extends SubsystemBase {
         },
         this);
   }
-
+  //command to set end effector speed 
   public Command setEndEffectorSpeed(double speed) {
     return new InstantCommand(() -> io.setEndEffectorSpeed(speed));
   }

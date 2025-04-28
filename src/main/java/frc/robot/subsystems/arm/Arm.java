@@ -27,10 +27,12 @@ public class Arm extends SubsystemBase {
 
   @Override
   public void periodic() {
+    //updates inputs
     io.updateInputs(inputs);
     Logger.processInputs("Arm", inputs);
+    //updates arm position
     armPosition = io.getArmPosition(inputs);
-
+    //decides whether or not to set armDisconnectedAlert
     armDisconnectedAlert.set(!inputs.armConnected && Constants.currentMode != Mode.SIM);
   }
 
@@ -43,6 +45,7 @@ public class Arm extends SubsystemBase {
    * @return A command that sets the arm to the given position.
    */
   public Command setArmPosition(double position) {
+    //runs setArmPosition and the .until() checks if the current armPosition is within the tolerance in order to end the command
     return new StartEndCommand(() -> io.setArmPosition(position), () -> io.setArmVelocity(0), this)
         .until(() -> Math.abs((inputs.armPosition - position)) < ArmConstants.POSITION_TOLERANCE);
   }
@@ -60,6 +63,7 @@ public class Arm extends SubsystemBase {
   }
 
   public DoubleSupplier getArmPosition() {
+    //gets arm position from the autologger
     SmartDashboard.putNumber("Getting arm position in Arm.java", armPosition);
     SmartDashboard.putNumber("Getting in arm.java 2", io.getArmPosition(inputs));
     return () -> io.getArmPosition(inputs);

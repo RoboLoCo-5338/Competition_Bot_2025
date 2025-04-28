@@ -18,19 +18,21 @@ import java.util.function.DoubleSupplier;
 
 public class ArmIOSpark implements ArmIO {
 
+  //absolute encoder
   private final AbsoluteEncoder armEncoder;
 
+  //debouncer to make sure that arm is really (not) connected and it's not just some wacky signal
   private final Debouncer armConnectedDebouncer = new Debouncer(0.5);
 
   private ArmFeedforward feedforward;
-
+  
   public ArmIOSpark() {
     armEncoder = armMotor.getAbsoluteEncoder();
-
+    //sets feedfoward with kS, kG, kV
     feedforward =
         new ArmFeedforward(
             ArmConstants.ARM_MOTOR_KS, ArmConstants.ARM_MOTOR_KG, ArmConstants.ARM_MOTOR_KV);
-
+    //tries to set the armconfig
     tryUntilOk(
         armMotor,
         5,
@@ -43,8 +45,12 @@ public class ArmIOSpark implements ArmIO {
   public void updateInputs(ArmIOInputs inputs) {
     sparkStickyFault = false;
     // SmartDashboard.putNumber("ArmPosition Before", inputs.armPosition);
+
+    //gets position from arm encoder and puts it in inputs
     ifOk(armMotor, armEncoder::getPosition, (value) -> inputs.armPosition = value);
     // SmartDashboard.putNumber("ArmPosition After", inputs.armPosition);
+
+    //gets velocity from arm encoder and puts it in inputs
     ifOk(armMotor, armEncoder::getVelocity, (value) -> inputs.armVelocity = value);
     ifOk(
         armMotor,
@@ -58,13 +64,13 @@ public class ArmIOSpark implements ArmIO {
 
   @Override
   public void setArmPosition(double position) {
-
+    //uses slot 0's pid values to set position
     armClosedLoopController.setReference(position, ControlType.kPosition, ClosedLoopSlot.kSlot0);
   }
 
   @Override
   public void setArmVelocity(double velocityRadPerSec) {
-
+    //calculates voltage feedforward
     double ffvolts =
         feedforward.calculate((armEncoder.getPosition() - 0.705) * 2 * Math.PI, velocityRadPerSec);
 
@@ -76,9 +82,10 @@ public class ArmIOSpark implements ArmIO {
         ArbFFUnits.kVoltage);
   }
 
+  //gets arm position
   @Override
   public double getArmPosition(ArmIOInputs inputs) {
-    SmartDashboard.putNumber("Arm Positoin in method", inputs.armPosition);
+    SmartDashboard.putNumber("Arm Position in method", inputs.armPosition);
     return inputs.armPosition;
   }
 }
