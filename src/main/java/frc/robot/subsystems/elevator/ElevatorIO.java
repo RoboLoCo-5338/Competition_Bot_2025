@@ -8,7 +8,6 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
 import edu.wpi.first.units.measure.Voltage;
 import frc.robot.generated.TunerConstants;
 import org.littletonrobotics.junction.AutoLog;
@@ -160,5 +159,5 @@ public interface ElevatorIO {
     return config;
   }
 
-  public default void elevatorOpenLoop(Voltage voltage){}
+  public default void elevatorOpenLoop(Voltage voltage) {}
 }

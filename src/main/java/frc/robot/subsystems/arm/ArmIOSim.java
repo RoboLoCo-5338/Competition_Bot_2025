@@ -84,7 +84,7 @@ public class ArmIOSim extends SimMechanism implements ArmIO {
   }
 
   @Override
-  public void armOpenLoop(Voltage voltage){
+  public void armOpenLoop(Voltage voltage) {
     armClosedLoopController.setReference(voltage.magnitude(), ControlType.kVoltage);
   }
 

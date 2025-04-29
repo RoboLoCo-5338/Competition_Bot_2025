@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Mechanism;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
 import frc.robot.subsystems.SysIDSubsystem;
-
 import org.littletonrobotics.junction.Logger;
 
 public class EndEffector extends SubsystemBase implements SysIDSubsystem {
@@ -25,7 +24,14 @@ public class EndEffector extends SubsystemBase implements SysIDSubsystem {
 
   public EndEffector(EndEffectorIO io) {
     this.io = io;
-    this.sysIdRoutine = new SysIdRoutine(new SysIdRoutine.Config(null, null, null, (state) -> Logger.recordOutput("Elevator/SysIdState", state.toString())), new Mechanism(io::endEffectorOpenLoop, null, this));
+    this.sysIdRoutine =
+        new SysIdRoutine(
+            new SysIdRoutine.Config(
+                null,
+                null,
+                null,
+                (state) -> Logger.recordOutput("Elevator/SysIdState", state.toString())),
+            new Mechanism(io::endEffectorOpenLoop, null, this));
   }
 
   @Override
@@ -53,11 +59,11 @@ public class EndEffector extends SubsystemBase implements SysIDSubsystem {
     return io;
   }
 
-  public Command sysIdQuasistatic(SysIdRoutine.Direction direction){
+  public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
     return sysIdRoutine.quasistatic(direction);
   }
 
-  public Command sysIdDynamic(SysIdRoutine.Direction direction){
+  public Command sysIdDynamic(SysIdRoutine.Direction direction) {
     return sysIdRoutine.dynamic(direction);
   }
 
@@ -67,7 +73,7 @@ public class EndEffector extends SubsystemBase implements SysIDSubsystem {
   }
 
   @Override
-  public String getName(){
+  public String getName() {
     return "End Effector ";
   }
 }

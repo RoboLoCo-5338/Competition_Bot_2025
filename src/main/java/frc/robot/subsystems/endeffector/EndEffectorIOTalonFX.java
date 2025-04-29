@@ -122,7 +122,7 @@ public class EndEffectorIOTalonFX implements EndEffectorIO {
   }
 
   @Override
-  public void endEffectorOpenLoop(Voltage voltage){
+  public void endEffectorOpenLoop(Voltage voltage) {
     endEffectorMotor.setVoltage(voltage.magnitude());
   }
 }

@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Mechanism;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
 import frc.robot.subsystems.SysIDSubsystem;
-
 import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.Logger;
 
@@ -28,7 +27,14 @@ public class Arm extends SubsystemBase implements SysIDSubsystem {
 
   public Arm(ArmIO io) {
     this.io = io;
-    this.sysIdRoutine = new SysIdRoutine(new SysIdRoutine.Config(null, null, null, (state) -> Logger.recordOutput("Arm/SysIdState", state.toString())), new Mechanism(io::armOpenLoop, null, this));
+    this.sysIdRoutine =
+        new SysIdRoutine(
+            new SysIdRoutine.Config(
+                null,
+                null,
+                null,
+                (state) -> Logger.recordOutput("Arm/SysIdState", state.toString())),
+            new Mechanism(io::armOpenLoop, null, this));
   }
 
   @Override
@@ -71,11 +77,11 @@ public class Arm extends SubsystemBase implements SysIDSubsystem {
     return () -> io.getArmPosition(inputs);
   }
 
-  public Command sysIdQuasistatic(SysIdRoutine.Direction direction){
+  public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
     return sysIdRoutine.quasistatic(direction);
   }
 
-  public Command sysIdDynamic(SysIdRoutine.Direction direction){
+  public Command sysIdDynamic(SysIdRoutine.Direction direction) {
     return sysIdRoutine.dynamic(direction);
   }
 
@@ -85,7 +91,7 @@ public class Arm extends SubsystemBase implements SysIDSubsystem {
   }
 
   @Override
-  public String getName(){
+  public String getName() {
     return "Elevator ";
   }
 }
