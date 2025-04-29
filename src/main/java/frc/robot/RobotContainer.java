@@ -81,6 +81,8 @@ public class RobotContainer {
 
   public CommandXboxController operatorController = new CommandXboxController(1);
 
+  public CommandXboxController sysIdController = new CommandXboxController(2);
+
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
 
@@ -187,6 +189,10 @@ public class RobotContainer {
         "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
     autoChooser.addOption(
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+
+    arm.addRoutinesToChooser(autoChooser);
+    elevator.addRoutinesToChooser(autoChooser);
+    endEffector.addRoutinesToChooser(autoChooser);
 
     // Configure the button bindings
     configureButtonBindings();
@@ -352,6 +358,8 @@ public class RobotContainer {
                 () -> {
                   DriveCommands.slowMode = 1;
                 }));
+
+    sysIdController.a().onTrue(drive)
   }
 
   public void periodic() {}
