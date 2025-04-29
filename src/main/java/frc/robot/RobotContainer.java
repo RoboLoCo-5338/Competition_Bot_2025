@@ -18,13 +18,14 @@ import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -69,9 +70,6 @@ public class RobotContainer {
   public final Drive drive;
   public final Vision vision;
   public final LED led;
-  public static boolean autoAlignDebounce = true;
-  public static boolean doRainbow = true;
-  public static boolean preEnable = true;
 
   private final Elevator elevator;
 
@@ -110,9 +108,6 @@ public class RobotContainer {
         elevator = new Elevator(new ElevatorIOTalonFX());
         arm = new Arm(new ArmIOSpark());
         led = new LED();
-
-        //  led.setBargeIndicator(drive, elevator);
-
         break;
 
       case SIM:
@@ -164,19 +159,12 @@ public class RobotContainer {
     NamedCommands.registerCommand("Endeffector Stop", endEffector.setEndEffectorVelocity(0));
     NamedCommands.registerCommand("OutakeLaserCan", PresetCommands.outtakeLaserCan(endEffector));
     NamedCommands.registerCommand(
-        "Align Left",
-        DriveCommands.reefAlign(
-            drive, Direction.Left, driverController, led, () -> elevator.getElevatorPosition()));
+        "Align Left", DriveCommands.reefAlign(drive, Direction.Left, driverController, led));
     NamedCommands.registerCommand(
-        "Align Center",
-        DriveCommands.reefAlign(
-            drive, Direction.None, driverController, led, () -> elevator.getElevatorPosition()));
+        "Align Center", DriveCommands.reefAlign(drive, Direction.None, driverController, led));
     NamedCommands.registerCommand(
-        "Align Right",
-        DriveCommands.reefAlign(
-            drive, Direction.Right, driverController, led, () -> elevator.getElevatorPosition()));
-    NamedCommands.registerCommand(
-        "IntakeLaserCAN", PresetCommands.moveEndEffectorLaserCan(endEffector));
+        "Align Right", DriveCommands.reefAlign(drive, Direction.Right, driverController, led));
+    NamedCommands.registerCommand("IntakeLaserCAN", PresetCommands.intakeLaserCan(endEffector));
     NamedCommands.registerCommand(
         "Stop Preset", PresetCommands.stopAll(elevator, endEffector, arm));
     NamedCommands.registerCommand(
@@ -207,17 +195,13 @@ public class RobotContainer {
     // LED check if it is close/critical to barge
 
     led.isCloseToBarge(drive)
-        .and(() -> !RobotContainer.preEnable)
-        //turns off rainbow and makes color white
-        .whileTrue(new InstantCommand(() -> RobotContainer.doRainbow = false))
-        .whileTrue(led.turnColor(Color.kWhite))
-        .onFalse(new InstantCommand(() -> RobotContainer.doRainbow = true));
+        .and(() -> RobotState.isTeleop())
+        .whileTrue(led.turnColor(Color.kWhite));
     led.isCriticalToBarge(drive)
-        .and(() -> !RobotContainer.preEnable)
-        //turns off rainbow, sends rumble to controller, and makes color dark blue
-        .whileTrue(new InstantCommand(() -> RobotContainer.doRainbow = false))
+        .and(() -> RobotState.isTeleop())
         .onTrue(led.sendBargeIndicator(operatorController))
         .whileTrue(led.turnColor(Color.kDarkBlue));
+    new Trigger(() -> RobotState.isDisabled()).whileTrue(led.pulseBlue());
   }
   //deadband on controllers (anything less than 0.2 is not counted)
   public static double deadband(double controllerAxis) {
@@ -237,12 +221,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     // Default command, normal field-relative drive
 
-    // drive.setDefaultCommand(
-    //     DriveCommands.joystickDrive(
-    //         drive,
-    //         () -> -driverController.getLeftY(),
-    //         () -> -driverController.getLeftX(),
-    //         () -> -driverController.getRightX() * Math.abs(driverController.getRightX())));
+    led.setDefaultCommand(led.goRainbow());
 
     drive.setDefaultCommand(
         //default command is the joystick drive, with the suppliers being the left and right joysticks
@@ -276,9 +255,6 @@ public class RobotContainer {
         .whileTrue(endEffector.setEndEffectorVelocity(-100))
         .onFalse(endEffector.setEndEffectorVelocity(0));
 
-    //end effector intake using laser can automatically (onTrue makesit only once when pressed)
-    operatorController.leftStick().onTrue(PresetCommands.moveEndEffectorLaserCan(endEffector));
-    //stows
     operatorController.a().onTrue(PresetCommands.stowElevator(elevator, endEffector, arm));
     //presets (cancels if operator lets go)
     operatorController.b().whileTrue(PresetCommands.presetL2(elevator, endEffector, arm));
@@ -291,17 +267,10 @@ public class RobotContainer {
         .onTrue(endEffector.setEndEffectorSpeed(-1))
         .onFalse(endEffector.setEndEffectorVelocity(0));
 
-    //while operator presses left bumper, the netShoot command will take place
-    operatorController.leftBumper().whileTrue(PresetCommands.netShoot(arm, endEffector));
+    // operatorController.leftBumper().whileTrue(PresetCommands.netShoot(arm, endEffector));
+    operatorController.povUp().onTrue(PresetCommands.outtakeLaserCan(endEffector));
 
-    //while operator presses the up dpad, outtake l4 with lasercan
-    operatorController.povUp().whileTrue(PresetCommands.outtakeLaserCan(endEffector));
-
-    //while operator presses the down dpad, intake l4 with lasercan
-    operatorController
-        .povDown()
-        .whileTrue(PresetCommands.moveEndEffectorLaserCan(endEffector))
-        .onFalse(PresetCommands.stopAll(elevator, endEffector, arm));
+    operatorController.leftBumper().onTrue(PresetCommands.intakeLaserCan(endEffector));
 
     //driver can also shoot out l2,l3,intake
     driverController
@@ -337,49 +306,52 @@ public class RobotContainer {
     //     .whileTrue(
     //         DriveCommands.reefStrafe(
     //             drive, () -> driverController.getLeftY(), () -> driverController.getLeftX()));
-    
-
-    //driverleft bumper to automatically score l2/l3
+    Command reefScoreLeftL3 =
+        DriveCommands.reefScore(
+            drive,
+            Direction.Left,
+            DriveCommands.Level.L3,
+            driverController,
+            led,
+            elevator,
+            arm,
+            endEffector);
+    Command reefAlignLeft = DriveCommands.reefAlign(drive, Direction.Left, driverController, led);
+    Command reefAlignRight = DriveCommands.reefAlign(drive, Direction.Right, driverController, led);
     driverController
         .leftBumper()
         .and(() -> drive.useVision)
-        .whileTrue(
-            DriveCommands.reefScore(
-                drive,
-                Direction.Left,
-                DriveCommands.Level.L3,
-                driverController,
-                led,
-                () -> elevator.getElevatorPosition(),
-                elevator,
-                arm,
-                endEffector));
-
-    //driver left dpad to autoalign to left side of reef
+        .and(
+            new Trigger(
+                    () ->
+                        !(reefScoreLeftL3.isScheduled()
+                            || reefAlignLeft.isScheduled()
+                            || reefAlignRight.isScheduled()))
+                .debounce(0.5))
+        .whileTrue(reefScoreLeftL3);
     driverController
         .povLeft()
         .and(() -> drive.useVision)
-        .whileTrue(
-            DriveCommands.reefAlign(
-                drive,
-                Direction.Left,
-                driverController,
-                led,
-                () -> elevator.getElevatorPosition()));
-    
-    //driver right dpad to autoalign to right side of reef
+        .and(
+            new Trigger(
+                    () ->
+                        !(reefScoreLeftL3.isScheduled()
+                            || reefAlignLeft.isScheduled()
+                            || reefAlignRight.isScheduled()))
+                .debounce(0.5))
+        .whileTrue(reefAlignLeft);
     driverController
         .povRight()
         .and(() -> drive.useVision)
-        .whileTrue(
-            DriveCommands.reefAlign(
-                drive,
-                Direction.Right,
-                driverController,
-                led,
-                () -> elevator.getElevatorPosition()));
+        .and(
+            new Trigger(
+                    () ->
+                        !(reefScoreLeftL3.isScheduled()
+                            || reefAlignLeft.isScheduled()
+                            || reefAlignRight.isScheduled()))
+                .debounce(0.5))
+        .whileTrue(reefAlignRight);
 
-    //driver holding down right trigger to slow down robot
     driverController
         .rightTrigger()
         .onTrue(
@@ -392,10 +364,6 @@ public class RobotContainer {
                 () -> {
                   DriveCommands.slowMode = 1;
                 }));
-  }
-  //creates trigger for when doRainbow is true, set rainbow to led
-  public void ledInit() {
-    new Trigger(() -> RobotContainer.doRainbow).whileTrue(startRainbow());
   }
 
   public void periodic() {}
@@ -413,11 +381,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    //pathplanner auto chooser from smartdashboard
-    return autoChooser.get();
-  }
-
-  public RunCommand startRainbow() {
-    return led.goRainbow();
+    return new SequentialCommandGroup(
+        PresetCommands.stopAll(elevator, endEffector, arm), autoChooser.get());
   }
 }

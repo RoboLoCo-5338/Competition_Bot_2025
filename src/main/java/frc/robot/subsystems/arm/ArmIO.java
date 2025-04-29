@@ -104,9 +104,8 @@ public interface ArmIO {
         .inverted(true)
         //gearing stuff
         .positionConversionFactor(1 / ArmSimConstants.GEARING)
-        .velocityConversionFactor(2.0 / ArmSimConstants.GEARING);
-
-    //feedback closed loop (pid)
+        .velocityConversionFactor(
+            2.0 / ArmSimConstants.GEARING); // TODO: figure out why we need this to be 2.0
     armConfig
         .closedLoop
         //uses the absolute encoder as the feedback sensor to measure error
@@ -133,8 +132,7 @@ public interface ArmIO {
 
     // added 3/6
     armConfig.softLimit.reverseSoftLimitEnabled(true);
-    //soft limit so arm shouldn't go below 0.43
-    armConfig.softLimit.reverseSoftLimit(0.43);
+    armConfig.softLimit.reverseSoftLimit(ArmConstants.SOFT_LIMIT);
 
     return armConfig;
   }

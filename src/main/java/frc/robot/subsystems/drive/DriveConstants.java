@@ -1,6 +1,8 @@
 package frc.robot.subsystems.drive;
 
 import com.ctre.phoenix6.CANBus;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import frc.robot.generated.TunerConstants;
@@ -27,7 +29,6 @@ public class DriveConstants {
 
   static final Lock odometryLock = new ReentrantLock();
   public static final double DEADBAND = 0.06;
-  public static boolean canceled = false;
   public static final double ANGLE_KP = 5.0;
   public static final double ANGLE_KD = 0.4;
   public static final double ANGLE_MAX_VELOCITY = 8.0;
@@ -39,6 +40,20 @@ public class DriveConstants {
   public static final double AUTO_ALIGN_X_TOLERANCE = 0.005;
   public static final double AUTO_ALIGN_Y_TOLERANCE = 0.005;
   public static final double AUTO_ALIGN_ANGULAR_TOLERANCE = 0.005;
+
+  public static final double AUTO_ALIGN_DRIVE_KP = 2;
+  public static final double AUTO_ALIGN_DRIVE_KI = 0.2;
+  public static final double AUTO_ALIGN_DRIVE_KD = 0.0;
+  public static final double AUTO_ALIGN_TURN_KP = 2;
+  public static final double AUTO_ALIGN_TURN_KI = 0.2;
+  public static final double AUTO_ALIGN_TURN_KD = 0.0;
+
+  public static final Pose2d reefRight =
+      new Pose2d(3.06 - Units.inchesToMeters(2.5), 3.77 + 0.05 + 0.0127, new Rotation2d());
+  public static final Pose2d reefLeft =
+      new Pose2d(3.06 - Units.inchesToMeters(2.5), 4.175, new Rotation2d());
+  public static final Pose2d reefCenter =
+      new Pose2d(3.06 - Units.inchesToMeters(2.5), 3.8327, new Rotation2d());
 
   public final class DriveSimConstants {
     public static final double DRIVE_KP = 0.05;

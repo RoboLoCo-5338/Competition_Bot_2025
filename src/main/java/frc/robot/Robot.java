@@ -21,7 +21,6 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.DriveCommands;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.SimMechanism;
@@ -41,7 +40,6 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 public class Robot extends LoggedRobot {
   private Command autonomousCommand;
   private RobotContainer robotContainer;
-  private boolean disabled = true;
 
   public Robot() {
     // Record metadata
@@ -127,16 +125,11 @@ public class Robot extends LoggedRobot {
 
   /** This function is called once when the robot is disabled. */
   @Override
-  public void disabledInit() {
-    disabled = true;
-    robotContainer.doRainbow = false;
-  }
+  public void disabledInit() {}
 
   /** This function is called periodically when disabled. */
   @Override
-  public void disabledPeriodic() {
-    new Trigger(() -> this.disabled).whileTrue(robotContainer.led.pulseBlue());
-  }
+  public void disabledPeriodic() {}
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
@@ -148,11 +141,6 @@ public class Robot extends LoggedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.schedule();
     }
-    disabled = false;
-    robotContainer.preEnable = false;
-    robotContainer.ledInit();
-
-    ;
   }
 
   /** This function is called periodically during autonomous. */
@@ -169,10 +157,7 @@ public class Robot extends LoggedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
-    disabled = false;
-    robotContainer.preEnable = false;
     robotContainer.teleopInit();
-    robotContainer.ledInit();
   }
 
   /** This function is called periodically during operator control. */

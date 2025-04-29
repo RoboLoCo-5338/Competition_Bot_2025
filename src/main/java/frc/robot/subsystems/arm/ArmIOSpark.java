@@ -72,7 +72,7 @@ public class ArmIOSpark implements ArmIO {
   public void setArmVelocity(double velocityRadPerSec) {
     //calculates voltage feedforward
     double ffvolts =
-        feedforward.calculate((armEncoder.getPosition() - 0.705) * 2 * Math.PI, velocityRadPerSec);
+        feedforward.calculate((armEncoder.getPosition()) * 2 * Math.PI, velocityRadPerSec);
 
     armClosedLoopController.setReference(
         Units.radiansPerSecondToRotationsPerMinute(velocityRadPerSec),

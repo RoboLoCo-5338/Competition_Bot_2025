@@ -10,15 +10,16 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.drive.Drive;
-import frc.robot.subsystems.drive.DriveConstants;
 
 public class LED extends SubsystemBase {
   //Wow, we don't even use AddressableLEDIO, surprising
@@ -36,45 +37,21 @@ public class LED extends SubsystemBase {
     m_led.start();
   }
 
-  public InstantCommand flashGreen() {
-    //sequential group in instant commmand because otherwise this flashGreen command would be blocking other commands in a sequential command, so we wrap it in an instant command
-    return new InstantCommand(
-        () -> {
-          new SequentialCommandGroup(
-                  turnGreen(),
-                  new WaitCommand(0.3),
-                  turnOff(),
-                  new WaitCommand(0.3),
-                  turnGreen(),
-                  new WaitCommand(0.3),
-                  turnOff(),
-                  new WaitCommand(0.3),
-                  turnGreen())
-              .schedule();
-        });
+  public Command alignEndFlash(boolean canceled) {
+    return new ScheduleCommand(
+        new SequentialCommandGroup(
+                turnColor(canceled ? Color.kRed : Color.kGreen).withTimeout(0.3),
+                turnOff(),
+                new WaitCommand(0.3),
+                turnColor(canceled ? Color.kRed : Color.kGreen).withTimeout(0.3),
+                turnOff(),
+                new WaitCommand(0.3),
+                turnColor(canceled ? Color.kRed : Color.kGreen))
+            .withTimeout(0.3));
   }
 
-  public InstantCommand turnGreen() {
-
-    return new InstantCommand(
-        () -> {
-          if (DriveConstants.canceled) {
-            //if the auto-align command was canceled, turn LED red instead of green
-            LEDPattern red = LEDPattern.solid(Color.kRed);
-            red.applyTo(buffer);
-            m_led.setData(buffer);
-          } else {
-            //make it green
-            LEDPattern green = LEDPattern.solid(Color.kGreen);
-            green.applyTo(buffer);
-            m_led.setData(buffer);
-          }
-        });
-  }
-
-  public RunCommand pulseBlue() {
+  public Command pulseBlue() {
     LEDPattern blue = LEDPattern.solid(Color.kBlue);
-    //pulses blue (one period takes 5 seconds)
     LEDPattern pulsingBlue = blue.breathe(Seconds.of(5));
     return new RunCommand(
       //continuously applies the pattern to the buffer
@@ -85,24 +62,23 @@ public class LED extends SubsystemBase {
         this);
   }
 
-  public InstantCommand turnOff() {
-
+  public Command turnOff() {
     return new InstantCommand(
       //makes the LED no color
         () -> {
           LEDPattern off = LEDPattern.kOff;
           off.applyTo(buffer);
           m_led.setData(buffer);
-        });
+        },
+        this);
   }
 
-  public RunCommand goRainbow() {
+  public Command goRainbow() {
     LEDPattern rainbow = LEDPattern.rainbow(255, 128);
     LEDPattern scrollingRainbow =
     //makes the rainbow move along the strip 0.3 m/s
         rainbow.scrollAtAbsoluteSpeed(MetersPerSecond.of(0.3), LEDConstants.LED_SPACING);
-    return new RunCommand(
-      //continously applies the pattern to the buffer
+    return new InstantCommand(
         () -> {
           scrollingRainbow.applyTo(buffer);
           m_led.setData(buffer);
@@ -110,14 +86,14 @@ public class LED extends SubsystemBase {
         this);
   }
 
-  public InstantCommand turnColor(Color color) {
-    //turns into the specificied color
-    return new InstantCommand(
+  public Command turnColor(Color color) {
+    return new RunCommand(
         () -> {
           LEDPattern colorPattern = LEDPattern.solid(color);
           colorPattern.applyTo(buffer);
           m_led.setData(buffer);
-        });
+        },
+        this);
   }
 
   /**
@@ -160,14 +136,4 @@ public class LED extends SubsystemBase {
               controller.setRumble(RumbleType.kBothRumble, 0.0);
             }));
   }
-  // public Command setBargeIndicator(Drive drive, Elevator elevator) {
-  //   return new RunCommand(
-  //       () -> {
-
-  //         LEDPattern.solid(Color.kWhite)
-  //             .applyTo(buffer);
-
-  //         m_led.setData(buffer);
-  //       });
-  // }
 }

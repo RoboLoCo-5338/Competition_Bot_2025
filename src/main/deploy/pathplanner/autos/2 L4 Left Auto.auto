@@ -15,19 +15,19 @@
           "data": {
             "commands": [
               {
-                "type": "deadline",
+                "type": "parallel",
                 "data": {
                   "commands": [
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 2.0
-                      }
-                    },
                     {
                       "type": "named",
                       "data": {
                         "name": "L4 Preset"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.7
                       }
                     }
                   ]
@@ -38,15 +38,15 @@
                 "data": {
                   "commands": [
                     {
-                      "type": "wait",
+                      "type": "named",
                       "data": {
-                        "waitTime": 2.0
+                        "name": "Align Right"
                       }
                     },
                     {
-                      "type": "named",
+                      "type": "wait",
                       "data": {
-                        "name": "Align Left"
+                        "waitTime": 2.5
                       }
                     }
                   ]
@@ -56,9 +56,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "deadline",
           "data": {
-            "name": "OutakeLaserCan"
+            "commands": [
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.5
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "OuttakeLaserCAN"
+                }
+              }
+            ]
           }
         },
         {
@@ -98,7 +111,7 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "sequential",
           "data": {
             "commands": [
               {
@@ -108,37 +121,57 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "Align Right"
+                        "name": "L4 Preset"
                       }
                     },
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 1.5
+                        "waitTime": 0.7
                       }
                     }
                   ]
                 }
               },
               {
-                "type": "named",
+                "type": "deadline",
                 "data": {
-                  "name": "L4 Preset"
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Align Left"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 2.0
+                      }
+                    }
+                  ]
                 }
               }
             ]
           }
         },
         {
-          "type": "named",
+          "type": "deadline",
           "data": {
-            "name": "OutakeLaserCan"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Endeffector Stop"
+            "commands": [
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.5
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "OuttakeLaserCAN"
+                }
+              }
+            ]
           }
         },
         {
@@ -148,7 +181,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Left Reef Move Back 2"
+                  "pathName": "Left Reef to Source 2"
                 }
               },
               {
