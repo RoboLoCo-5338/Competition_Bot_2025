@@ -81,8 +81,6 @@ public class RobotContainer {
 
   public CommandXboxController operatorController = new CommandXboxController(1);
 
-  public CommandXboxController sysIdController = new CommandXboxController(2);
-
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
 
@@ -358,8 +356,6 @@ public class RobotContainer {
                 () -> {
                   DriveCommands.slowMode = 1;
                 }));
-
-    sysIdController.a().onTrue(drive)
   }
 
   public void periodic() {}
