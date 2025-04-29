@@ -115,7 +115,7 @@ public class ElevatorIOTalonFX implements ElevatorIO {
   }
 
   @Override
-  public void elevatorOpenLoop(Voltage voltage){
+  public void elevatorOpenLoop(Voltage voltage) {
     elevatorMotor1.setVoltage(voltage.magnitude());
   }
 }

@@ -11,11 +11,10 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Mechanism;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
 import frc.robot.subsystems.SysIDSubsystem;
-
 import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.Logger;
 
-public class Elevator extends SubsystemBase implements SysIDSubsystem{
+public class Elevator extends SubsystemBase implements SysIDSubsystem {
   public final ElevatorIO io;
   private final ElevatorIOInputsAutoLogged inputs = new ElevatorIOInputsAutoLogged();
   private double prevError = 0;
@@ -30,8 +29,14 @@ public class Elevator extends SubsystemBase implements SysIDSubsystem{
 
   public Elevator(ElevatorIO io) {
     this.io = io;
-    this.sysIdRoutine = new SysIdRoutine(new SysIdRoutine.Config(null, null, null, (state) -> Logger.recordOutput("Elevator/SysIdState", state.toString())), new Mechanism(io::elevatorOpenLoop, null, this));
-
+    this.sysIdRoutine =
+        new SysIdRoutine(
+            new SysIdRoutine.Config(
+                null,
+                null,
+                null,
+                (state) -> Logger.recordOutput("Elevator/SysIdState", state.toString())),
+            new Mechanism(io::elevatorOpenLoop, null, this));
   }
 
   /**
@@ -114,11 +119,11 @@ public class Elevator extends SubsystemBase implements SysIDSubsystem{
     return inputs.elevator1Position;
   }
 
-  public Command sysIdQuasistatic(SysIdRoutine.Direction direction){
+  public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
     return sysIdRoutine.quasistatic(direction);
   }
 
-  public Command sysIdDynamic(SysIdRoutine.Direction direction){
+  public Command sysIdDynamic(SysIdRoutine.Direction direction) {
     return sysIdRoutine.dynamic(direction);
   }
 
@@ -128,7 +133,7 @@ public class Elevator extends SubsystemBase implements SysIDSubsystem{
   }
 
   @Override
-  public String getName(){
+  public String getName() {
     return "Elevator ";
   }
 }
