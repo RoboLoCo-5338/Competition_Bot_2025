@@ -11,10 +11,12 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Mechanism;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
+import frc.robot.subsystems.SysIDSubsystem;
+
 import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.Logger;
 
-public class Arm extends SubsystemBase {
+public class Arm extends SubsystemBase implements SysIDSubsystem {
 
   public final ArmIO io;
   public final ArmIOInputsAutoLogged inputs = new ArmIOInputsAutoLogged();
@@ -75,5 +77,15 @@ public class Arm extends SubsystemBase {
 
   public Command sysIdDynamic(SysIdRoutine.Direction direction){
     return sysIdRoutine.dynamic(direction);
+  }
+
+  @Override
+  public SysIdRoutine getSysIdRoutine() {
+    return sysIdRoutine;
+  }
+
+  @Override
+  public String getName(){
+    return "Elevator ";
   }
 }

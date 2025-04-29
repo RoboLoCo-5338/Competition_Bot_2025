@@ -9,9 +9,11 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Mechanism;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
+import frc.robot.subsystems.SysIDSubsystem;
+
 import org.littletonrobotics.junction.Logger;
 
-public class EndEffector extends SubsystemBase {
+public class EndEffector extends SubsystemBase implements SysIDSubsystem {
 
   public final EndEffectorIO io;
   private final EndEffectorIOInputsAutoLogged inputs = new EndEffectorIOInputsAutoLogged();
@@ -57,5 +59,15 @@ public class EndEffector extends SubsystemBase {
 
   public Command sysIdDynamic(SysIdRoutine.Direction direction){
     return sysIdRoutine.dynamic(direction);
+  }
+
+  @Override
+  public SysIdRoutine getSysIdRoutine() {
+    return sysIdRoutine;
+  }
+
+  @Override
+  public String getName(){
+    return "End Effector ";
   }
 }
