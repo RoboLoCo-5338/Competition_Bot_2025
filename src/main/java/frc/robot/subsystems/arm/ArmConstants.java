@@ -5,13 +5,13 @@ import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 
 public final class ArmConstants {
   public static final int ARM_MOTOR_ID = 44;
-  public static final double ARM_MOTOR_POSITION_KP = 2.5;
+  public static final double ARM_MOTOR_POSITION_KP = 0.0;
   public static final double ARM_MOTOR_POSITION_KI = 0.00;
-  public static final double ARM_MOTOR_POSITION_KD = 0.25;
-  public static final double ARM_MOTOR_VELOCITY_KP = 0.005;
+  public static final double ARM_MOTOR_POSITION_KD = 0.0;
+  public static final double ARM_MOTOR_VELOCITY_KP = 0.00;
   public static final double ARM_MOTOR_VELOCITY_KI = 0.00;
-  public static final double ARM_MOTOR_VELOCITY_KD = 0.0005;
-  public static final double ARM_MOTOR_KG = 0.25;
+  public static final double ARM_MOTOR_VELOCITY_KD = 0.000;
+  public static final double ARM_MOTOR_KG = 0.0;
   public static final double ARM_MOTOR_KV = 0.00;
   public static final double ARM_MOTOR_KS = 0.0;
   public static final int ARM_MOTOR_CURRENT_LIMIT = 60;
