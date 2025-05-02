@@ -83,6 +83,7 @@ public class RobotContainer {
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
+  private Pose2d initialPose;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -204,6 +205,12 @@ public class RobotContainer {
         .onTrue(led.sendBargeIndicator(operatorController))
         .whileTrue(led.turnColor(Color.kDarkBlue));
     new Trigger(() -> RobotState.isDisabled()).whileTrue(led.pulseBlue());
+
+    initialPose = drive.getPose();
+    new Trigger(() -> drive.getPose().minus(initialPose).getTranslation().getNorm() > 3)
+        .onTrue(
+            DriveCommands.joystickDrive(drive, () -> 0, () -> 0, () -> 0)
+                .until(driverController.rightStick()));
   }
 
   public static double deadband(double controllerAxis) {
@@ -307,8 +314,10 @@ public class RobotContainer {
     //         elevator,
     //         arm,
     //         endEffector);
-    // Command reefAlignLeft = DriveCommands.reefAlign(drive, Direction.Left, driverController, led);
-    // Command reefAlignRight = DriveCommands.reefAlign(drive, Direction.Right, driverController, led);
+    // Command reefAlignLeft = DriveCommands.reefAlign(drive, Direction.Left, driverController,
+    // led);
+    // Command reefAlignRight = DriveCommands.reefAlign(drive, Direction.Right, driverController,
+    // led);
     // driverController
     //     .leftBumper()
     //     .and(() -> drive.useVision)
@@ -355,8 +364,11 @@ public class RobotContainer {
                 () -> {
                   DriveCommands.slowMode = 1;
                 }));
-    driverController.rightStick().onTrue(Commands.runOnce(() -> DriveCommands.slowerMode = ((DriveCommands.slowerMode==0.25)? 1: 0.25)));
-    
+    driverController
+        .rightStick()
+        .onTrue(
+            Commands.runOnce(
+                () -> DriveCommands.slowerMode = ((DriveCommands.slowerMode == 0.25) ? 1 : 0.25)));
   }
 
   public void periodic() {}
