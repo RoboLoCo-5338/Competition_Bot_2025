@@ -55,7 +55,6 @@ import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionConstants;
 import frc.robot.subsystems.vision.VisionIO;
-import frc.robot.subsystems.vision.VisionIOPhotonVision;
 import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -99,9 +98,12 @@ public class RobotContainer {
                 new ModuleIOTalonFX(TunerConstants.BackRight));
         vision =
             new Vision(
-                drive::addVisionMeasurement,
-                new VisionIOPhotonVision(
-                    VisionConstants.camera0Name, VisionConstants.robotToCamera0));
+                drive::addVisionMeasurement
+                // new VisionIOPhotonVision(
+                //     VisionConstants.camera0Name, VisionConstants.robotToCamera0),
+                // new VisionIOPhotonVision(
+                //     VisionConstants.camera1Name, VisionConstants.robotToCamera1));
+                );
         // new VisionIOPhotonVision(
         //     VisionConstants.camera1Name, VisionConstants.robotToCamera1));
         endEffector = new EndEffector(new EndEffectorIOTalonFX());

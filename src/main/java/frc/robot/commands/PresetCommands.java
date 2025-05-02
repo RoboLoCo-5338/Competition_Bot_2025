@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -21,10 +22,10 @@ public class PresetCommands {
 
   public static Command stowElevator(Elevator elevator, EndEffector endEffector, Arm arm) {
     return new SequentialCommandGroup(
-        arm.setArmPosition(0.51),
+        arm.setArmPosition(-0.264 + 0.09),
         new WaitCommand(0.1),
         elevator.setElevatorPosition(0.05, 2),
-        arm.setArmPosition(0.42));
+        arm.setArmPosition(-0.264));
   }
 
   public static Command presetL2(Elevator elevator, EndEffector endEffector, Arm arm) {

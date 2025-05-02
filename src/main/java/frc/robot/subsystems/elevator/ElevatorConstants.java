@@ -52,8 +52,8 @@ public final class ElevatorConstants {
   }
 
   public static final class ElevatorPresetConstants {
-    public static final double ELEVATOR_L2 = 7.9;
-    public static final double ELEVATOR_L3 = 14.708;
+    public static final double ELEVATOR_L2 = 8.4;
+    public static final double ELEVATOR_L3 = 15.2;
     public static final double ELEVATOR_L4 = 19.40;
     public static final double ELEVATOR_NET = 16.486; // TODO: update
     public static final double ELEVATOR_L3_ALGAE = 0.0;

@@ -94,8 +94,9 @@ public interface ArmIO {
         .absoluteEncoder
         .inverted(true)
         .positionConversionFactor(1 / ArmSimConstants.GEARING)
-        .velocityConversionFactor(
-            2.0 / ArmSimConstants.GEARING); // TODO: figure out why we need this to be 2.0
+        .velocityConversionFactor(2.0 / ArmSimConstants.GEARING)
+        .zeroOffset(0.8888339)
+        .zeroCentered(true); // TODO: figure out why we need this to be 2.0
     armConfig
         .closedLoop
         .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
@@ -115,10 +116,6 @@ public interface ArmIO {
         .appliedOutputPeriodMs(20)
         .busVoltagePeriodMs(20)
         .outputCurrentPeriodMs(20);
-
-    // added 3/6
-    armConfig.softLimit.reverseSoftLimitEnabled(true);
-    armConfig.softLimit.reverseSoftLimit(ArmConstants.SOFT_LIMIT);
 
     return armConfig;
   }
