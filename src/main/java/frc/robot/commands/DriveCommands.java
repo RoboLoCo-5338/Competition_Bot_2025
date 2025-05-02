@@ -59,6 +59,7 @@ public class DriveCommands {
       DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red;
 
   public static double slowMode = 1;
+  public static double slowerMode = 0.25;
 
   private DriveCommands() {}
 
@@ -90,12 +91,12 @@ public class DriveCommands {
           // Get linear velocity
           Translation2d linearVelocity =
               getLinearVelocityFromJoysticks(
-                  xSupplier.getAsDouble() * slowMode, ySupplier.getAsDouble() * slowMode);
+                  xSupplier.getAsDouble() * slowMode*slowerMode, ySupplier.getAsDouble() * slowMode*slowerMode);
 
           // Apply rotation deadband
           double omega =
               MathUtil.applyDeadband(
-                  omegaSupplier.getAsDouble() * slowMode, DriveConstants.DEADBAND);
+                  omegaSupplier.getAsDouble() * slowMode*slowerMode, DriveConstants.DEADBAND);
 
           // Square rotation value for more precise control
           omega = Math.copySign(omega * omega, omega);
