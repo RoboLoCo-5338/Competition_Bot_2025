@@ -28,7 +28,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -231,11 +230,15 @@ public class RobotContainer {
         .whileTrue(led.turnColor(Color.kDarkBlue));
   }
 
-  public static double deadband(double controllerAxis) {
-    if (Math.abs(controllerAxis) < 0.2) {
+  public static double processedJoystickInput(
+      double controllerAxis, double deadband, double sensitivity, double scalar) {
+    if (Math.abs(controllerAxis) < deadband) {
       return 0;
     } else {
-      return (1 / (1 - 0.2)) * (controllerAxis + (Math.signum(controllerAxis) * 0.2));
+      return Math.signum(controllerAxis)
+          * Math.abs(scalar
+          * (1 / Math.pow((1.0 - deadband), sensitivity))
+          * Math.pow((Math.abs(controllerAxis) - deadband), sensitivity));
     }
   }
 
@@ -269,9 +272,12 @@ public class RobotContainer {
                     * Math.pow(Math.abs(driverController.getRightX()), 2.2 - 1)));
 
     elevator.setDefaultCommand(
-        elevator.setElevatorVelocity(() -> deadband(-operatorController.getLeftY()) * 25));
+        elevator.setElevatorVelocity(
+            () -> processedJoystickInput(-operatorController.getLeftY(), 0.2, 3.0, 25)));
 
-    arm.setDefaultCommand(arm.setArmVelocity(() -> 2 * Math.PI * -operatorController.getRightY()));
+    arm.setDefaultCommand(
+        arm.setArmVelocity(
+            () -> processedJoystickInput(-operatorController.getRightY(), 0.2, 1.0, 2 * Math.PI)));
 
     operatorController
         .leftTrigger()
@@ -577,7 +583,6 @@ public class RobotContainer {
   public void periodic() {}
 
   public void teleopInit() {
-    SmartDashboard.putNumber("Laser Can", endEffector.io.getLaserCanMeasurement1());
     endEffector.setEndEffectorVelocity(0);
     elevator.setElevatorVelocity(() -> 0);
   }
@@ -588,8 +593,11 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return new SequentialCommandGroup(
-        PresetCommands.stopAll(elevator, endEffector, arm), autoChooser.get());
+    return autoChooser.get();
+  }
+
+  public Command stopMotors() {
+    return PresetCommands.stopAll(elevator, endEffector, arm);
   }
 
   public RunCommand startRainbow() {
