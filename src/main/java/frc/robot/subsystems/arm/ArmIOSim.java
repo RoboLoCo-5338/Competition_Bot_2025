@@ -9,10 +9,13 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController.ArbFFUnits;
+import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import frc.robot.subsystems.SimMechanism;
 import frc.robot.subsystems.arm.ArmConstants.ArmSimConstants;
 import java.util.function.DoubleSupplier;
@@ -29,7 +32,7 @@ public class ArmIOSim extends SimMechanism implements ArmIO {
           ArmSimConstants.LENGTH,
           ArmSimConstants.MIN_ANGLE,
           ArmSimConstants.MAX_ANGLE,
-          false,
+          true,
           ArmSimConstants.STARTING_ANGLE);
   SparkFlexSim armSim;
   SparkAbsoluteEncoderSim armEncoderSim;
@@ -37,18 +40,24 @@ public class ArmIOSim extends SimMechanism implements ArmIO {
 
   public ArmIOSim(LoggedMechanismLigament2d endEffector) {
     super();
-    armMotor.configure(
-        getArmConfig(), ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    SparkFlexConfig c = getArmConfig();
+    c.softLimit.reverseSoftLimit(-0.3);
+    // Soft limit has weird behavior in sim currently
+    c.softLimit.reverseSoftLimitEnabled(false);
+    armMotor.configure(c, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     armSim = new SparkFlexSim(armMotor, armGearBox);
-    armEncoderSim = new SparkAbsoluteEncoderSim(armMotor);
+    armEncoderSim = armSim.getAbsoluteEncoderSim();
     armDrawn =
         endEffector
+            .append(new LoggedMechanismLigament2d(null, ArmSimConstants.LENGTH, 0))
             .append(new LoggedMechanismLigament2d("rotator", 0, -90))
             .append(
                 new LoggedMechanismLigament2d(
                     "endEffectorArm",
                     ArmSimConstants.LENGTH,
-                    Units.radiansToDegrees(ArmSimConstants.STARTING_ANGLE)));
+                    Units.radiansToDegrees(ArmSimConstants.STARTING_ANGLE),
+                    10,
+                    new Color8Bit(Color.kRed)));
   }
 
   @Override
@@ -61,8 +70,10 @@ public class ArmIOSim extends SimMechanism implements ArmIO {
         RobotController.getBatteryVoltage(),
         0.02);
     inputs.armConnected = true;
-    inputs.armPosition = Units.radiansToRotations(armPhysicsSim.getAngleRads());
-    inputs.armVelocity = Units.radiansToRotations(armPhysicsSim.getVelocityRadPerSec());
+    inputs.armPosition =
+        Units.radiansToRotations(armPhysicsSim.getAngleRads()) + ArmSimConstants.SIM_OFFSET;
+    inputs.armVelocity =
+        Units.radiansPerSecondToRotationsPerMinute(armPhysicsSim.getVelocityRadPerSec());
     ifOk(
         armMotor,
         new DoubleSupplier[] {armMotor::getAppliedOutput, armMotor::getBusVoltage},
@@ -79,18 +90,33 @@ public class ArmIOSim extends SimMechanism implements ArmIO {
 
   @Override
   public void setArmPosition(double position) {
-    armClosedLoopController.setReference(Units.radiansToRotations(position), ControlType.kPosition);
+    double ffvolts =
+        feedforward.calculate(
+            Units.rotationsToRadians(armEncoderSim.getPosition() - ArmSimConstants.SIM_OFFSET),
+            Units.rotationsPerMinuteToRadiansPerSecond(armEncoderSim.getVelocity()));
+    armClosedLoopController.setReference(
+        position - ArmSimConstants.SIM_OFFSET,
+        ControlType.kPosition,
+        ClosedLoopSlot.kSlot0,
+        ffvolts,
+        ArbFFUnits.kVoltage);
+  }
+
+  @Override
+  public double getArmPosition(ArmIOInputs inputs) {
+    return inputs.armPosition;
   }
 
   @Override
   public void setArmVelocity(double velocityRadPerSec) {
     double ffvolts =
-        ArmConstants.ARM_MOTOR_KS * Math.signum(velocityRadPerSec)
-            + ArmConstants.ARM_MOTOR_KV * velocityRadPerSec;
+        feedforward.calculate(
+            Units.rotationsToRadians(armEncoderSim.getPosition() - ArmSimConstants.SIM_OFFSET),
+            velocityRadPerSec);
     armClosedLoopController.setReference(
-        Units.radiansToRotations(velocityRadPerSec),
+        Units.radiansPerSecondToRotationsPerMinute(velocityRadPerSec),
         ControlType.kVelocity,
-        ClosedLoopSlot.kSlot0,
+        ClosedLoopSlot.kSlot1,
         ffvolts,
         ArbFFUnits.kVoltage);
   }
