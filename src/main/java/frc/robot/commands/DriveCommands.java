@@ -394,10 +394,8 @@ public class DriveCommands {
               public boolean isFinished() {
 
                 boolean canceled = false;
-                System.out.println(direction);
                 if (DriverStation.isTeleop()) {
                   if (direction == Direction.Left) {
-                    System.out.println("canceling ocmmand");
                     canceled = !driverController.povLeft().getAsBoolean();
                   } else if (direction == Direction.Right) {
                     canceled = !driverController.povRight().getAsBoolean();
@@ -571,8 +569,6 @@ public class DriveCommands {
     return new SequentialCommandGroup(
         new InstantCommand(
             () -> {
-              System.out.println("reef align starts");
-
               DriveConstants.canceled = false;
               RobotContainer.doRainbow = false;
             }),
@@ -591,7 +587,6 @@ public class DriveCommands {
         new InstantCommand(
             () -> {
               new SequentialCommandGroup(
-                      new InstantCommand(() -> System.out.println("we are running!")),
                       led.flashGreen(),
                       new WaitCommand(1.5),
                       new InstantCommand(() -> RobotContainer.autoAlignDebounce = true),
