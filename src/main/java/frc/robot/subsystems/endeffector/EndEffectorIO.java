@@ -52,4 +52,8 @@ public interface EndEffectorIO {
   public default int getLaserCanMeasurement2() {
     return -1;
   }
+
+  public default double getEndEffectorVelocity() {
+    return 0.0;
+  }
 }

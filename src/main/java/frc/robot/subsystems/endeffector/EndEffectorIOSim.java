@@ -3,6 +3,7 @@ package frc.robot.subsystems.endeffector;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import frc.robot.subsystems.SimMechanism;
@@ -13,9 +14,7 @@ public class EndEffectorIOSim extends SimMechanism implements EndEffectorIO {
   FlywheelSim physicsSim =
       new FlywheelSim(
           LinearSystemId.createFlywheelSystem(
-              DCMotor.getKrakenX60(1),
-              EndEffectorSimConstants.MOI,
-              EndEffectorSimConstants.GEARING),
+              DCMotor.getKrakenX60(1), EndEffectorSimConstants.MOI, EndEffectorConstants.GEARING),
           DCMotor.getKrakenX60(1));
 
   public EndEffectorIOSim() {
@@ -29,26 +28,39 @@ public class EndEffectorIOSim extends SimMechanism implements EndEffectorIO {
     physicsSim.setInputVoltage(simMotor.getMotorVoltage());
 
     inputs.endEffectorConnected = true;
-    inputs.endEffectorVelocity = physicsSim.getAngularVelocityRPM();
+    inputs.endEffectorVelocity = Units.radiansToRotations(physicsSim.getAngularVelocityRadPerSec());
     inputs.endEffectorAppliedVolts = physicsSim.getInputVoltage();
     inputs.endEffectorCurrentAmps = physicsSim.getCurrentDrawAmps();
 
     physicsSim.update(0.02);
 
     simMotor.addRotorPosition(
-        physicsSim.getAngularVelocityRadPerSec() * 0.02 * EndEffectorSimConstants.GEARING);
+        Units.radiansToRotations(physicsSim.getAngularVelocityRadPerSec())
+            * 0.02
+            * EndEffectorConstants.GEARING);
     simMotor.setRotorVelocity(
-        physicsSim.getAngularVelocityRadPerSec() * EndEffectorSimConstants.GEARING);
+        Units.radiansToRotations(physicsSim.getAngularVelocityRadPerSec())
+            * EndEffectorConstants.GEARING);
   }
 
   @Override
   public void setEndEffectorVelocity(double velocity) {
     endEffectorMotor.setControl(
-        endEffectorVelocityRequest.withVelocity(velocity * EndEffectorSimConstants.GEARING));
+        endEffectorVelocityRequest.withVelocity(velocity * EndEffectorConstants.GEARING));
+  }
+
+  @Override
+  public void setEndEffectorSpeed(double speed) {
+    endEffectorMotor.set(speed * EndEffectorConstants.GEARING);
   }
 
   @Override
   public double[] getCurrents() {
     return new double[] {physicsSim.getCurrentDrawAmps()};
+  }
+
+  @Override
+  public double getEndEffectorVelocity() {
+    return physicsSim.getAngularVelocityRadPerSec();
   }
 }
