@@ -15,6 +15,7 @@ package frc.robot;
 
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
+import frc.robot.subsystems.elevator.ElevatorConstants;
 
 /**
  * This class defines the runtime mode used by AdvantageKit. The mode is always "real" when running
@@ -39,11 +40,12 @@ public final class Constants {
   }
 
   public static final class PresetConstants {
-    public static final double elevatorl2 = 7.9; // This was 17 for testing PID
-    public static final double elevatorl3 = 14.708;
-    public static final double elevatorl4 = 19.40;
-    public static final double elevatorNet = 16.486;
-    public static final double elevatorl3Algae = 0.0;
+    public static final double elevatorl2 =
+        10.05 * ElevatorConstants.METERS_PER_ROTATION; // This was 17 for testing PID
+    public static final double elevatorl3 = 17 * ElevatorConstants.METERS_PER_ROTATION;
+    public static final double elevatorl4 = 19.40 * ElevatorConstants.METERS_PER_ROTATION;
+    public static final double elevatorNet = 16.486 * ElevatorConstants.METERS_PER_ROTATION;
+    public static final double elevatorl3Algae = 0.2 * ElevatorConstants.METERS_PER_ROTATION;
 
     // public static final double arml2 = 0.543;
     // public static final double arml3 = 0.543;
