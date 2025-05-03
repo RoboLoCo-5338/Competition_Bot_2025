@@ -1,19 +1,24 @@
 package frc.robot.subsystems.arm;
 
 import com.revrobotics.spark.ClosedLoopSlot;
+import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
-import frc.robot.subsystems.arm.ArmConstants.ArmSimConstants;
+import edu.wpi.first.math.controller.ArmFeedforward;
 import org.littletonrobotics.junction.AutoLog;
 
 public interface ArmIO {
 
   SparkFlex armMotor = new SparkFlex(ArmConstants.ARM_MOTOR_ID, MotorType.kBrushless);
   SparkClosedLoopController armClosedLoopController = armMotor.getClosedLoopController();
+  ArmFeedforward feedforward =
+      new ArmFeedforward(
+          ArmConstants.ARM_MOTOR_KS, ArmConstants.ARM_MOTOR_KG, ArmConstants.ARM_MOTOR_KV);
+  SparkAbsoluteEncoder armEncoder = armMotor.getAbsoluteEncoder();
 
   @AutoLog
   public static class ArmIOInputs {
@@ -93,16 +98,17 @@ public interface ArmIO {
     armConfig
         .absoluteEncoder
         .inverted(true)
-        .positionConversionFactor(1 / ArmSimConstants.GEARING)
-        .velocityConversionFactor(
-            2.0 / ArmSimConstants.GEARING); // TODO: figure out why we need this to be 2.0
+        .positionConversionFactor(1.0 / ArmConstants.ENCODER_GEARING)
+        .velocityConversionFactor(1.0 / ArmConstants.ENCODER_GEARING);
     armConfig
         .closedLoop
         .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
         .positionWrappingEnabled(false)
         .pid(
-            ArmConstants.ARM_MOTOR_POSITION_KP, ArmConstants.ARM_MOTOR_POSITION_KI,
-            ArmConstants.ARM_MOTOR_POSITION_KD, ClosedLoopSlot.kSlot0)
+            ArmConstants.ARM_MOTOR_POSITION_KP,
+            ArmConstants.ARM_MOTOR_POSITION_KI,
+            ArmConstants.ARM_MOTOR_POSITION_KD,
+            ClosedLoopSlot.kSlot0)
         .pid(
             ArmConstants.ARM_MOTOR_VELOCITY_KP, ArmConstants.ARM_MOTOR_VELOCITY_KI,
             ArmConstants.ARM_MOTOR_VELOCITY_KD, ClosedLoopSlot.kSlot1);
@@ -116,7 +122,6 @@ public interface ArmIO {
         .busVoltagePeriodMs(20)
         .outputCurrentPeriodMs(20);
 
-    // added 3/6
     armConfig.softLimit.reverseSoftLimitEnabled(true);
     armConfig.softLimit.reverseSoftLimit(ArmConstants.SOFT_LIMIT);
 

@@ -2,7 +2,6 @@ package frc.robot.subsystems.arm;
 
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
@@ -60,8 +59,6 @@ public class Arm extends SubsystemBase {
   }
 
   public DoubleSupplier getArmPosition() {
-    SmartDashboard.putNumber("Getting arm position in Arm.java", armPosition);
-    SmartDashboard.putNumber("Getting in arm.java 2", io.getArmPosition(inputs));
     return () -> io.getArmPosition(inputs);
   }
 }

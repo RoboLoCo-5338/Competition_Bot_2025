@@ -137,6 +137,8 @@ public class Robot extends LoggedRobot {
     DriveCommands.isFlipped = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red;
     autonomousCommand = robotContainer.getAutonomousCommand();
 
+    robotContainer.stopMotors().schedule();
+
     // schedule the autonomous command (example)
     if (autonomousCommand != null) {
       autonomousCommand.schedule();

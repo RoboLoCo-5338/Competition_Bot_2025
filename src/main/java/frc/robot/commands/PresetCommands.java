@@ -1,6 +1,5 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
@@ -28,7 +27,6 @@ public class PresetCommands {
   }
 
   public static Command presetL2(Elevator elevator, EndEffector endEffector, Arm arm) {
-    SmartDashboard.putString("preset2", "inside preset functoin");
     return new SequentialCommandGroup(
         arm.setArmPosition(ArmPresetConstants.ARM_L2_L3),
         elevator.setElevatorPosition(ElevatorPresetConstants.ELEVATOR_L2, 0));
@@ -48,7 +46,7 @@ public class PresetCommands {
   }
 
   public static Command stopAll(Elevator elevator, EndEffector endEffector, Arm arm) {
-    return new SequentialCommandGroup(
+    return new ParallelCommandGroup(
         elevator.setElevatorVelocity(() -> 0.0),
         endEffector.setEndEffectorVelocity(0),
         arm.setArmVelocity(() -> 0));
