@@ -93,15 +93,17 @@ public interface ArmIO {
     armConfig
         .absoluteEncoder
         .inverted(true)
-        .positionConversionFactor(1 / ArmSimConstants.GEARING)
-        .velocityConversionFactor(2.0 / ArmSimConstants.GEARING);
+        .positionConversionFactor(1.0 / ArmConstants.ENCODER_GEARING)
+        .velocityConversionFactor(1.0 / ArmConstants.ENCODER_GEARING);
     armConfig
         .closedLoop
         .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
         .positionWrappingEnabled(false)
         .pid(
-            ArmConstants.ARM_MOTOR_POSITION_KP, ArmConstants.ARM_MOTOR_POSITION_KI,
-            ArmConstants.ARM_MOTOR_POSITION_KD, ClosedLoopSlot.kSlot0)
+            ArmConstants.ARM_MOTOR_POSITION_KP,
+            ArmConstants.ARM_MOTOR_POSITION_KI,
+            ArmConstants.ARM_MOTOR_POSITION_KD,
+            ClosedLoopSlot.kSlot0)
         .pid(
             ArmConstants.ARM_MOTOR_VELOCITY_KP, ArmConstants.ARM_MOTOR_VELOCITY_KI,
             ArmConstants.ARM_MOTOR_VELOCITY_KD, ClosedLoopSlot.kSlot1);
@@ -115,7 +117,6 @@ public interface ArmIO {
         .busVoltagePeriodMs(20)
         .outputCurrentPeriodMs(20);
 
-    // added 3/6
     armConfig.softLimit.reverseSoftLimitEnabled(true);
     armConfig.softLimit.reverseSoftLimit(0.43);
 
