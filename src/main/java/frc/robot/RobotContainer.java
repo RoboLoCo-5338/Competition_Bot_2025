@@ -221,9 +221,10 @@ public class RobotContainer {
       return 0;
     } else {
       return Math.signum(controllerAxis)
-          * Math.abs(scalar
-          * (1 / Math.pow((1.0 - deadband), sensitivity))
-          * Math.pow((Math.abs(controllerAxis) - deadband), sensitivity));
+          * Math.abs(
+              scalar
+                  * (1 / Math.pow((1.0 - deadband), sensitivity))
+                  * Math.pow((Math.abs(controllerAxis) - deadband), sensitivity));
     }
   }
 
@@ -371,10 +372,6 @@ public class RobotContainer {
                 () -> {
                   DriveCommands.slowMode = 1;
                 }));
-  }
-
-  public void ledInit() {
-    new Trigger(() -> RobotContainer.doRainbow).whileTrue(startRainbow());
   }
 
   @AutoLogOutput(key = "Odometry/ElevatorStage1")
