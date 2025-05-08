@@ -207,10 +207,11 @@ public class RobotContainer {
     new Trigger(() -> RobotState.isDisabled()).whileTrue(led.pulseBlue());
 
     initialPose = drive.getPose();
-    new Trigger(() -> drive.getPose().minus(initialPose).getTranslation().getNorm() > 3)
+    new Trigger(() -> drive.getPose().minus(initialPose).getTranslation().getNorm() > 5)
         .onTrue(
             DriveCommands.joystickDrive(drive, () -> 0, () -> 0, () -> 0)
-                .until(driverController.rightStick()));
+                .until(driverController.leftStick())
+                .finallyDo(() -> initialPose = drive.getPose()));
   }
 
   public static double deadband(double controllerAxis) {
@@ -368,7 +369,7 @@ public class RobotContainer {
         .rightStick()
         .onTrue(
             Commands.runOnce(
-                () -> DriveCommands.slowerMode = ((DriveCommands.slowerMode == 0.25) ? 1 : 0.25)));
+                () -> DriveCommands.slowerMode = ((DriveCommands.slowerMode == 0.50) ? 1 : 0.50)));
   }
 
   public void periodic() {}

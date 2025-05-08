@@ -59,7 +59,7 @@ public class DriveCommands {
       DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red;
 
   public static double slowMode = 1;
-  public static double slowerMode = 0.25;
+  public static double slowerMode = 0.50;
 
   private DriveCommands() {}
 
