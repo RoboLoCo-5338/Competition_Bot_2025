@@ -93,6 +93,7 @@ public interface ArmIO {
         .voltageCompensation(12.0);
     armConfig
         .absoluteEncoder
+        .zeroCentered(true)
         .inverted(true)
         .positionConversionFactor(1 / ArmSimConstants.GEARING)
         .velocityConversionFactor(
@@ -117,9 +118,9 @@ public interface ArmIO {
         .busVoltagePeriodMs(20)
         .outputCurrentPeriodMs(20);
 
-    // added 3/6
-    armConfig.softLimit.reverseSoftLimitEnabled(true);
-    armConfig.softLimit.reverseSoftLimit(ArmConstants.SOFT_LIMIT);
+    // // added 3/6
+    // armConfig.softLimit.reverseSoftLimitEnabled(true);
+    // armConfig.softLimit.reverseSoftLimit(ArmConstants.SOFT_LIMIT);
 
     return armConfig;
   }

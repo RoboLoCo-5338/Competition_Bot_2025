@@ -1,5 +1,10 @@
 package frc.robot.subsystems.endeffector;
 
+import static edu.wpi.first.units.Units.Second;
+import static edu.wpi.first.units.Units.Volts;
+
+import edu.wpi.first.units.measure.Velocity;
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -27,8 +32,8 @@ public class EndEffector extends SubsystemBase implements SysIDSubsystem {
     this.sysIdRoutine =
         new SysIdRoutine(
             new SysIdRoutine.Config(
-                null,
-                null,
+                Velocity.ofBaseUnits(0.5, Volts.per(Second)),
+                Voltage.ofBaseUnits(0.5, Volts),
                 null,
                 (state) -> Logger.recordOutput("Elevator/SysIdState", state.toString())),
             new Mechanism(io::endEffectorOpenLoop, null, this));
