@@ -9,6 +9,7 @@ import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.ParentDevice;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Temperature;
@@ -22,6 +23,7 @@ public class EndEffectorIOTalonFX implements EndEffectorIO {
   private final StatusSignal<Current> endEffectorCurrent;
   private final StatusSignal<Temperature> endEffectorTemperature;
   private final StatusSignal<Integer> endEffectorVersion;
+  private final StatusSignal<Angle> endEffectorPosition;
 
   private final Debouncer effectorDebouncer = new Debouncer(0.5);
 
@@ -35,6 +37,7 @@ public class EndEffectorIOTalonFX implements EndEffectorIO {
     endEffectorCurrent = endEffectorMotor.getStatorCurrent();
     endEffectorTemperature = endEffectorMotor.getDeviceTemp();
     endEffectorVersion = endEffectorMotor.getVersion();
+    endEffectorPosition = endEffectorMotor.getPosition();
 
     endEffectorMotor.getConfigurator().apply(getEndEffectorConfiguration());
 
@@ -76,6 +79,7 @@ public class EndEffectorIOTalonFX implements EndEffectorIO {
     inputs.endEffectorAppliedVolts = endEffectorAppliedVolts.getValueAsDouble();
     inputs.endEffectorCurrentAmps = endEffectorCurrent.getValueAsDouble();
     inputs.endEffectorTemperature = endEffectorTemperature.getValueAsDouble();
+    inputs.endEffectorPosition = endEffectorPosition.getValueAsDouble();
   }
 
   @Override
@@ -123,6 +127,7 @@ public class EndEffectorIOTalonFX implements EndEffectorIO {
 
   @Override
   public void endEffectorOpenLoop(Voltage voltage) {
+    System.out.println(voltage);
     endEffectorMotor.setControl(endEffectorOpenLoop.withOutput(voltage));
   }
 }
