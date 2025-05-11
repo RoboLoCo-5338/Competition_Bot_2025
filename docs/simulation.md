@@ -37,16 +37,27 @@ This document goes over the details and setup for the 3D simulation for the 2025
 9) Open the "AdvantageScope (WPILib) 2025" program
     1) Click in the top left File->Connect to Simulator
 10) Select what you want to view for the simulation:
-  1) For 2D mechanism simulation:
+  1) To automatically set up the layout:
+     1) Click in the top left File->Import Layout
+     2) Navigate to the competition bot folder
+     3) Select SimLayout.json
+     4) All the tabs should appear. For reference, they are:
+        1) Line Graph: Allows you to chart values
+        2) Odometry: 2d field odometry
+        3) 3d Field: Allows for 3d visualization of the robot
+        4) Mechanism: Allows for 2d visualization of a mechanism
+        5) Controller: Visualization of driver(left) and operator(right) controller inputs
+        6) Console: Shows Code Console
+  2) For manual 2D mechanism simulation setup:
     1) Click the + in the top right and click "Mechanism"
     2) On the left, go to the tab AdvantageKit->RealOutputs->Elevator
     3) Drag the "Mechanism" object here underneath the Mechanism display
-  2) For 2D field simulation:
+  3) For manual 2D field simulation setup:
     1) Click the + in the top right and click "Odometry"
     2) In the bottom right, click "2025 Field (AndyMark)"
     3) On the left, go to the tab AdvantageKit->RealOutputs->Odometry
     4) Drag the "Robot" object underneath the Odometry display
-  3) For 3D field and mechanism simulation:
+  4) For manual 3D field and mechanism simulation setup:
     1) Import the 3D CAD configuration
       1) Click in the top left Help->Use Custom Assets Folder
       2) Navigate to the competition robot folder

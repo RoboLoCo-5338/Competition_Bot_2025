@@ -1,0 +1,250 @@
+{
+  "hubs": [
+    {
+      "x": 1990,
+      "y": 275,
+      "width": 1100,
+      "height": 918,
+      "state": {
+        "sidebar": {
+          "width": 346,
+          "expanded": [
+            "/AdvantageKit/RealOutputs/Logger",
+            "/AdvantageKit/RealOutputs/Test",
+            "/AdvantageKit/RealOutputs/Odometry/Robot/translation",
+            "/AdvantageKit/RealOutputs/Test/ReefPose",
+            "/AdvantageKit/RealOutputs/Vision/Summary",
+            "/AdvantageKit/RealOutputs/Vision/Summary/TagPoses",
+            "/AdvantageKit/RealOutputs/Vision/Summary/TagPoses/0",
+            "/AdvantageKit/RealOutputs/Vision/Summary/TagPoses/3",
+            "/AdvantageKit/RealOutputs/Test/TurnAngle",
+            "/AdvantageKit/RealOutputs/Test/NearestTarget",
+            "/AdvantageKit/RealOutputs/Test/NearestTarget/translation",
+            "/AdvantageKit/RealOutputs/Vision/Summary/RobotPoses",
+            "/AdvantageKit/RealOutputs/Test/climb",
+            "/AdvantageKit/RealOutputs/Test/climb/arm",
+            "/AdvantageKit/RealOutputs/ClimbIOSim",
+            "/AdvantageKit/RealOutputs/Climb",
+            "/AdvantageKit/RealOutputs/Odometry/Robot",
+            "/AdvantageKit/SystemStats",
+            "/AdvantageKit/PowerDistribution",
+            "/AdvantageKit/RealOutputs/Elevator",
+            "/AdvantageKit/RealOutputs/Elevator/Mechanism",
+            "/AdvantageKit/Arm",
+            "/AdvantageKit/Elevator",
+            "/SmartDashboard",
+            "/Preferences",
+            "/Preferences/EndEffectorConstants",
+            "/Preferences/EndEffectorConstants/test",
+            "/Preferences/EndEffectorConstants/testPidController",
+            "/Preferences/ArmPresetConstants",
+            "/AdvantageKit",
+            "/AdvantageKit/RealOutputs/Vision/AllGamePiecePoses",
+            "/AdvantageKit/RealOutputs/Vision",
+            "/AdvantageKit/Vision",
+            "/AdvantageKit/Vision/Camera0",
+            "/AdvantageKit/Vision/Camera0/GamePieces/0",
+            "/AdvantageKit/Vision/Camera0/GamePieces/1",
+            "/AdvantageKit/Vision/Camera0/GamePieces",
+            "/AdvantageKit/RealOutputs",
+            "/AdvantageKit/RealOutputs/Target translation magnitude",
+            "/AdvantageKit/RealOutputs/Odometry"
+          ]
+        },
+        "tabs": {
+          "selected": 6,
+          "tabs": [
+            {
+              "type": 0,
+              "title": "",
+              "controller": null,
+              "controllerUUID": "8m2srzzkz6mv3krc8l3557xnlt6bh2xr",
+              "renderer": "#/",
+              "controlsHeight": 0
+            },
+            {
+              "type": 1,
+              "title": "Line Graph",
+              "controller": {
+                "leftSources": [],
+                "rightSources": [],
+                "discreteSources": [],
+                "leftLockedRange": null,
+                "rightLockedRange": null,
+                "leftUnitConversion": {
+                  "type": null,
+                  "factor": 1
+                },
+                "rightUnitConversion": {
+                  "type": null,
+                  "factor": 1
+                },
+                "leftFilter": 0,
+                "rightFilter": 0
+              },
+              "controllerUUID": "72fi3c59k4b5lrnwr2yiqgf9dpcgpq5t",
+              "renderer": null,
+              "controlsHeight": 200
+            },
+            {
+              "type": 2,
+              "title": "Odometry",
+              "controller": {
+                "sources": [
+                  {
+                    "type": "robot",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/Odometry/Robot",
+                    "logType": "Pose2d",
+                    "visible": true,
+                    "options": {}
+                  }
+                ],
+                "game": "2025 Field (Welded)",
+                "bumpers": "blue",
+                "origin": "blue",
+                "orientation": 0,
+                "size": 30
+              },
+              "controllerUUID": "jqeeyrbcszthfrpghepvyttmdg0egfwa",
+              "renderer": null,
+              "controlsHeight": 200
+            },
+            {
+              "type": 3,
+              "title": "3D Field",
+              "controller": {
+                "sources": [
+                  {
+                    "type": "robot",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/Odometry/Robot",
+                    "logType": "Pose2d",
+                    "visible": true,
+                    "options": {
+                      "model": "USSRivets"
+                    }
+                  },
+                  {
+                    "type": "component",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/Odometry/ElevatorStage1",
+                    "logType": "Pose3d",
+                    "visible": true,
+                    "options": {}
+                  },
+                  {
+                    "type": "component",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/Odometry/ElevatorStage2",
+                    "logType": "Pose3d",
+                    "visible": true,
+                    "options": {}
+                  },
+                  {
+                    "type": "component",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/Odometry/EndEffector",
+                    "logType": "Pose3d",
+                    "visible": true,
+                    "options": {}
+                  },
+                  {
+                    "type": "component",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/Odometry/EndEffectorFrontRoller",
+                    "logType": "Pose3d",
+                    "visible": true,
+                    "options": {}
+                  },
+                  {
+                    "type": "component",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/Odometry/EndEffectorBackRoller",
+                    "logType": "Pose3d",
+                    "visible": true,
+                    "options": {}
+                  },
+                  {
+                    "type": "component",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/Odometry/FrontLeftSwerveModule",
+                    "logType": "Pose3d",
+                    "visible": true,
+                    "options": {}
+                  },
+                  {
+                    "type": "component",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/Odometry/FrontLeftWheel",
+                    "logType": "Pose3d",
+                    "visible": true,
+                    "options": {}
+                  },
+                  {
+                    "type": "component",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/Odometry/FrontRightSwerveModule",
+                    "logType": "Pose3d",
+                    "visible": true,
+                    "options": {}
+                  },
+                  {
+                    "type": "component",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/Odometry/FrontRightWheel",
+                    "logType": "Pose3d",
+                    "visible": true,
+                    "options": {}
+                  }
+                ],
+                "game": "2025 Field (AndyMark)",
+                "origin": "blue"
+              },
+              "controllerUUID": "svn4sw7z38q00ilht4iq0fxgpxwnu5pi",
+              "renderer": {
+                "cameraIndex": -1,
+                "orbitFov": 50,
+                "cameraPosition": [
+                  3.496963559822603,
+                  4.599255750122049,
+                  -6.368587838248356
+                ],
+                "cameraTarget": [
+                  3.0703938709013534,
+                  2.6922055215521916,
+                  -4.794483670098167
+                ]
+              },
+              "controlsHeight": 200
+            },
+            {
+              "type": 10,
+              "title": "Mechanism",
+              "controller": [],
+              "controllerUUID": "zrftxq546ofl90ghpg3sh0qysbs4ox8e",
+              "renderer": null,
+              "controlsHeight": 200
+            },
+            {
+              "type": 8,
+              "title": "Joysticks",
+              "controller": [
+                "Xbox Controller (White)",
+                "Xbox Controller (White)",
+                "None",
+                "None",
+                "None",
+                "None"
+              ],
+              "controllerUUID": "vgnu1ok6j6769imif188jqiztn2lw2ej",
+              "renderer": null,
+              "controlsHeight": 85
+            },
+            {
+              "type": 5,
+              "title": "Console",
+              "controller": "NT:/AdvantageKit/RealOutputs/Console",
+              "controllerUUID": "1dxn8vlfayb1se6o3528ta4a5kb2sffh",
+              "renderer": {
+                "highlight": false
+              },
+              "controlsHeight": 0
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "satellites": [],
+  "version": "4.1.0"
+}
