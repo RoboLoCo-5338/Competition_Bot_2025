@@ -1,0 +1,94 @@
+{
+  "name" : "USSRivets",
+  "rotations" : [{"axis" : "x", "degrees" : 90}, {"axis" : "z", "degrees" : 90}],
+  "position" : [0, 0, 0],
+  "cameras": [
+    {
+      "name" : "Front Camera",
+      "fov" : 78,
+      "resolution" : [
+        1920,
+        1080
+      ],
+      "position" : [0.282448, -0.248158, 0.195343],
+      "rotations" : [{"axis" : "y", "degrees" : -10}, {"axis" : "z", "degrees" : 22}]
+    },
+    {
+      "name" : "Back Camera",
+      "fov" : 78,
+      "resolution" : [
+        1920,
+        1080
+      ],
+      "position" : [-0.04318,-0.006096,0.976403],
+      "rotations" : [{"axis" : "z", "degrees" : 180}]
+    }
+  ],
+  "components": [
+    {
+      "name" : "Stage 1",
+      "zeroedRotations" : [{ "axis" : "x", "degrees" : 90}, {"axis" : "z", "degrees" : 90}],
+      "zeroedPosition" : [-0.1651, 0, -0.10795]
+    },
+    {
+      "name" : "Stage 2",
+      "zeroedRotations" : [{ "axis" : "x", "degrees" : 90}, {"axis" : "z", "degrees" : 90}],
+      "zeroedPosition" : [ -0.1651, 0, -0.13335]
+    },
+    {
+      "name" : "End Effector",
+      "zeroedRotations" : [{ "axis" : "x", "degrees" : 90}, {"axis" : "z", "degrees" : 90}],
+      "zeroedPosition" : [ -0.2413, 0.003175, -0.79375]
+    },
+    {
+      "name" : "Front Roller",
+      "zeroedRotations" : [{ "axis" : "x", "degrees" : 90}, {"axis" : "z", "degrees" : 90}],
+      "zeroedPosition" : [-0.318926, 0.00108115, -0.370936]
+    },
+    {
+      "name" : "Back Roller",
+      "zeroedRotations" : [{ "axis" : "x", "degrees" : 90}, {"axis" : "z", "degrees" : 90}],
+      "zeroedPosition" : [-0.197628, 0.00526875, -0.440842]
+    },
+    {
+      "name" : "Back Left Swerve",
+      "zeroedRotations" : [{ "axis" : "x", "degrees" : 90}, {"axis" : "z", "degrees" : -73.43}],
+      "zeroedPosition" : [-0.37906713546, 0.20521741352, -0.0508]
+    },
+    {
+      "name" : "Back Left Wheel",
+      "zeroedRotations" : [{ "axis" : "x", "degrees" : 90}, {"axis" : "z", "degrees" : -73.43}],
+      "zeroedPosition" : [-0.37896564906, 0.20528308321, -0.0508]
+    },
+    {
+      "name" : "Back Right Swerve",
+      "zeroedRotations" : [{ "axis" : "x", "degrees" : 90}, {"axis" : "z", "degrees" : 106.57}],
+      "zeroedPosition" : [0.20521741352, 0.37906713546, -0.0508]
+    },
+    {
+      "name" : "Back Right Wheel",
+      "zeroedRotations" : [{ "axis" : "x", "degrees" : 90}, {"axis" : "z", "degrees" : 106.57}],
+      "zeroedPosition" : [0.20531889993, 0.37913280515, -0.0508]
+    },
+    {
+      "name" : "Front Left Swerve",
+      "zeroedRotations" : [{ "axis" : "x", "degrees" : 90}, {"axis" : "z", "degrees" : -73.43}],
+      "zeroedPosition" : [0.20668026089, 0.38002305895, -0.0508]
+    },
+    {
+      "name" : "Front Left Wheel",
+      "zeroedRotations" : [{ "axis" : "x", "degrees" : 90}, {"axis" : "z", "degrees" :  -73.43}],
+      "zeroedPosition" : [0.20511592711, 0.37900146577, -0.0508]
+    },
+    {
+      "name" : "Front Right Swerve",
+      "zeroedRotations" : [{ "axis" : "x", "degrees" : 90}, {"axis" : "z", "degrees" : 106.57}],
+      "zeroedPosition" : [-0.37906713546, 0.20521741352, -0.0508]
+    },
+    {
+      "name" : "Front Right Wheel",
+      "zeroedRotations" : [{ "axis" : "x", "degrees" : 90}, {"axis" : "z", "degrees" : 106.57}],
+      "zeroedPosition" : [-0.37916862187, 0.20515174383, -0.0508]
+    }
+  ]
+}
