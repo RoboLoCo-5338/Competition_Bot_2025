@@ -59,11 +59,12 @@ public final class ElevatorConstants {
   }
 
   public static final class ElevatorPresetConstants {
-    public static final double ELEVATOR_L2 = 7.9;
-    public static final double ELEVATOR_L3 = 14.708;
-    public static final double ELEVATOR_L4 = 19.40;
-    public static final double ELEVATOR_NET = 16.486; // TODO: update
-    public static final double ELEVATOR_L3_ALGAE = 0.0;
-    public static final double ELEVATOR_STOW = 0.05;
+    public static final double ELEVATOR_L2 = 7.58 * ElevatorConstants.METERS_PER_ROTATION;
+    public static final double ELEVATOR_L3 = 13.9 * ElevatorConstants.METERS_PER_ROTATION;
+    public static final double ELEVATOR_L4 = 19.40 * ElevatorConstants.METERS_PER_ROTATION;
+    public static final double ELEVATOR_NET =
+        16.486 * ElevatorConstants.METERS_PER_ROTATION; // TODO: update
+    public static final double ELEVATOR_L3_ALGAE = 0.2 * ElevatorConstants.METERS_PER_ROTATION;
+    public static final double ELEVATOR_STOW = 0.87 * ElevatorConstants.METERS_PER_ROTATION;
   }
 }

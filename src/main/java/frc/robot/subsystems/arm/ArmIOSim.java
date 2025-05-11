@@ -74,6 +74,7 @@ public class ArmIOSim extends SimMechanism implements ArmIO {
         Units.radiansToRotations(armPhysicsSim.getAngleRads()) + ArmSimConstants.SIM_OFFSET;
     inputs.armVelocity =
         Units.radiansPerSecondToRotationsPerMinute(armPhysicsSim.getVelocityRadPerSec());
+    armSim.setPosition(inputs.armPosition - ArmSimConstants.SIM_OFFSET);
     ifOk(
         armMotor,
         new DoubleSupplier[] {armMotor::getAppliedOutput, armMotor::getBusVoltage},

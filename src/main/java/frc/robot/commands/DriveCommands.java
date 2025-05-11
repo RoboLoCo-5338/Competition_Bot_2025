@@ -29,7 +29,6 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
@@ -378,11 +377,11 @@ public class DriveCommands {
             @Override
             public void end(boolean interrupted) {
               drive.runVelocity(new ChassisSpeeds(0, 0, 0));
-              led.alignEndFlash(
-                      !(drive.autoXDriveController.atSetpoint()
-                          && drive.autoYDriveController.atSetpoint()
-                          && drive.autoTurnController.atSetpoint()))
-                  .schedule();
+              /*led.alignEndFlash(
+                  !(drive.autoXDriveController.atSetpoint()
+                      && drive.autoYDriveController.atSetpoint()
+                      && drive.autoTurnController.atSetpoint()))
+              .schedule();*/
             }
           }.onlyIf(
               () ->
@@ -525,7 +524,7 @@ public class DriveCommands {
   public static Command reefAlign(
       Drive drive, Direction direction, CommandXboxController controller, LED led) {
     return new ParallelCommandGroup(
-        led.turnColor(Color.kOrange),
+        // led.turnColor(Color.kOrange),
         pathToDestination(
             drive,
             () ->
