@@ -37,7 +37,7 @@ This document goes over the details and setup for the 3D simulation for the 2025
 9) Open the "AdvantageScope (WPILib) 2025" program
     1) Click in the top left File->Connect to Simulator
 10) Select what you want to view for the simulation:
-  1) To automatically set up the layout:
+  1) To automatically set up the layout(skips steps 20-22):
      1) Click in the top left File->Import Layout
      2) Navigate to the competition bot folder
      3) Select SimLayout.json
