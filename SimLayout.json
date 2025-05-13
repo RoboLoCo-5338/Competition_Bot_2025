@@ -1,15 +1,14 @@
 {
   "hubs": [
     {
-      "x": 1990,
-      "y": 275,
-      "width": 1100,
-      "height": 918,
+      "x": 217,
+      "y": 154,
+      "width": 1105,
+      "height": 654,
       "state": {
         "sidebar": {
           "width": 346,
           "expanded": [
-            "/AdvantageKit/RealOutputs/Logger",
             "/AdvantageKit/RealOutputs/Test",
             "/AdvantageKit/RealOutputs/Odometry/Robot/translation",
             "/AdvantageKit/RealOutputs/Test/ReefPose",
@@ -28,7 +27,6 @@
             "/AdvantageKit/RealOutputs/Odometry/Robot",
             "/AdvantageKit/SystemStats",
             "/AdvantageKit/PowerDistribution",
-            "/AdvantageKit/RealOutputs/Elevator",
             "/AdvantageKit/RealOutputs/Elevator/Mechanism",
             "/AdvantageKit/Arm",
             "/AdvantageKit/Elevator",
@@ -40,7 +38,6 @@
             "/Preferences/ArmPresetConstants",
             "/AdvantageKit",
             "/AdvantageKit/RealOutputs/Vision/AllGamePiecePoses",
-            "/AdvantageKit/RealOutputs/Vision",
             "/AdvantageKit/Vision",
             "/AdvantageKit/Vision/Camera0",
             "/AdvantageKit/Vision/Camera0/GamePieces/0",
@@ -48,11 +45,16 @@
             "/AdvantageKit/Vision/Camera0/GamePieces",
             "/AdvantageKit/RealOutputs",
             "/AdvantageKit/RealOutputs/Target translation magnitude",
-            "/AdvantageKit/RealOutputs/Odometry"
+            "/AdvantageKit/RealOutputs/Elevator",
+            "/AdvantageKit/RealOutputs/Elevator/Mechanism/elevator",
+            "/AdvantageKit/RealOutputs/Elevator/Mechanism/elevator/stage",
+            "/AdvantageKit/RealOutputs/Elevator/Mechanism/elevator/stage/null",
+            "/AdvantageKit/RealOutputs/Elevator/Mechanism/elevator/stage/null/rotator",
+            "/AdvantageKit/RealOutputs/Elevator/Mechanism/elevator/stage/null/rotator/endEffectorArm"
           ]
         },
         "tabs": {
-          "selected": 6,
+          "selected": 4,
           "tabs": [
             {
               "type": 0,
@@ -197,7 +199,7 @@
                 "cameraPosition": [
                   3.496963559822603,
                   4.599255750122049,
-                  -6.368587838248356
+                  -6.368587838248357
                 ],
                 "cameraTarget": [
                   3.0703938709013534,
@@ -209,9 +211,17 @@
             },
             {
               "type": 10,
-              "title": "Mechanism",
-              "controller": [],
-              "controllerUUID": "zrftxq546ofl90ghpg3sh0qysbs4ox8e",
+              "title": "Elevator",
+              "controller": [
+                {
+                  "type": "mechanism",
+                  "logKey": "NT:/AdvantageKit/RealOutputs/Elevator/Mechanism",
+                  "logType": "Mechanism2d",
+                  "visible": true,
+                  "options": {}
+                }
+              ],
+              "controllerUUID": "hrkfvjqgeyuywauhhwoi7x5wgrsu7p75",
               "renderer": null,
               "controlsHeight": 200
             },
@@ -246,5 +256,5 @@
     }
   ],
   "satellites": [],
-  "version": "4.1.0"
+  "version": "4.1.1"
 }
