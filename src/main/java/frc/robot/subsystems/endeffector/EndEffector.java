@@ -32,9 +32,9 @@ public class EndEffector extends SubsystemBase implements SysIDSubsystem {
     this.sysIdRoutine =
         new SysIdRoutine(
             new SysIdRoutine.Config(
-                Velocity.ofBaseUnits(0.5, Volts.per(Second)),
-                Voltage.ofBaseUnits(0.5, Volts),
-                null,
+                Velocity.ofBaseUnits(0.2, Volts.per(Second)),
+                Voltage.ofBaseUnits(2, Volts),
+                Second.of(30),
                 (state) -> Logger.recordOutput("Elevator/SysIdState", state.toString())),
             new Mechanism(io::endEffectorOpenLoop, null, this));
   }
