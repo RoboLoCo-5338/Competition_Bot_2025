@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public interface SimMechanism {
   static final ArrayList<SimMechanism> MECHANISMS = new ArrayList<SimMechanism>();
 
-  public default void initSimVoltage(){
+  public default void initSimVoltage() {
     MECHANISMS.add(this);
   }
 
