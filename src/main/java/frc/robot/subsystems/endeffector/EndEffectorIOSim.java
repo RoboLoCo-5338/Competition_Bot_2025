@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import frc.robot.subsystems.SimMechanism;
 import frc.robot.subsystems.endeffector.EndEffectorConstants.EndEffectorSimConstants;
 
-public class EndEffectorIOSim extends SimMechanism implements EndEffectorIO {
+public class EndEffectorIOSim implements SimMechanism, EndEffectorIO {
   TalonFXSimState simMotor = endEffectorMotor.getSimState();
   FlywheelSim physicsSim =
       new FlywheelSim(
@@ -18,7 +18,7 @@ public class EndEffectorIOSim extends SimMechanism implements EndEffectorIO {
           DCMotor.getKrakenX60(1));
 
   public EndEffectorIOSim() {
-    super();
+    initSimVoltage();
     endEffectorMotor.getConfigurator().apply(getEndEffectorConfiguration());
   }
 

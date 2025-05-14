@@ -14,7 +14,7 @@ import org.littletonrobotics.junction.mechanism.LoggedMechanism2d;
 import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d;
 import org.littletonrobotics.junction.mechanism.LoggedMechanismRoot2d;
 
-public class ElevatorIOSim extends SimMechanism implements ElevatorIO {
+public class ElevatorIOSim implements SimMechanism, ElevatorIO {
   TalonFXSimState motor1Sim = elevatorMotor1.getSimState();
   TalonFXSimState motor2Sim = elevatorMotor2.getSimState();
   ElevatorSim physicsSim =
@@ -38,7 +38,7 @@ public class ElevatorIOSim extends SimMechanism implements ElevatorIO {
       root.append(new LoggedMechanismLigament2d("stage", ElevatorSimConstants.STARTING_HEIGHT, 90));
 
   public ElevatorIOSim() {
-    super();
+    initSimVoltage();
     elevatorMotor1.getConfigurator().apply(getConfiguration(1));
     elevatorMotor2.getConfigurator().apply(getConfiguration(2));
     motor2Sim.Orientation = ChassisReference.Clockwise_Positive;

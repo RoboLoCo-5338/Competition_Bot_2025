@@ -21,7 +21,7 @@ import frc.robot.subsystems.arm.ArmConstants.ArmSimConstants;
 import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d;
 
-public class ArmIOSim extends SimMechanism implements ArmIO {
+public class ArmIOSim implements SimMechanism, ArmIO {
 
   DCMotor armGearBox = DCMotor.getNeoVortex(1);
   SingleJointedArmSim armPhysicsSim =
@@ -39,7 +39,7 @@ public class ArmIOSim extends SimMechanism implements ArmIO {
   LoggedMechanismLigament2d armDrawn;
 
   public ArmIOSim(LoggedMechanismLigament2d endEffector) {
-    super();
+    initSimVoltage();
     SparkFlexConfig c = getArmConfig();
     c.softLimit.reverseSoftLimit(-0.3);
     // Soft limit has weird behavior in sim currently
