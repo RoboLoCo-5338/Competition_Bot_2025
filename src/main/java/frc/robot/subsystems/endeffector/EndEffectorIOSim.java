@@ -1,6 +1,15 @@
 package frc.robot.subsystems.endeffector;
 
+import org.dyn4j.geometry.Triangle;
+import org.dyn4j.geometry.Vector2;
+import org.ironmaple.simulation.IntakeSimulation;
+import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
+import org.littletonrobotics.junction.Logger;
+
 import com.ctre.phoenix6.sim.TalonFXSimState;
+
+import au.grapplerobotics.LaserCan;
+import au.grapplerobotics.interfaces.LaserCanInterface.Measurement;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.math.util.Units;
@@ -16,10 +25,12 @@ public class EndEffectorIOSim implements SimMechanism, EndEffectorIO {
           LinearSystemId.createFlywheelSystem(
               DCMotor.getKrakenX60(1), EndEffectorSimConstants.MOI, EndEffectorConstants.GEARING),
           DCMotor.getKrakenX60(1));
+  IntakeSimulation intakeSim;
 
-  public EndEffectorIOSim() {
+  public EndEffectorIOSim(SwerveDriveSimulation driveSim) {
     initSimVoltage();
     endEffectorMotor.getConfigurator().apply(getEndEffectorConfiguration());
+    this.intakeSim = new IntakeSimulation("Coral", driveSim, new Triangle(new Vector2(), null, null), 1);
   }
 
   @Override
