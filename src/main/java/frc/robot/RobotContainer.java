@@ -130,7 +130,7 @@ public class RobotContainer {
       case SIM:
         // Sim robot, instantiate physics sim IO implementations
         driveSimulation =
-            new SwerveDriveSimulation(Drive.mapleSimConfig, new Pose2d(3, 3, new Rotation2d()));
+            new SwerveDriveSimulation(Drive.mapleSimConfig, new Pose2d(0, 0, new Rotation2d()));
         SimulatedArena.getInstance().addDriveTrainSimulation(driveSimulation);
         drive =
             new Drive(
@@ -148,7 +148,10 @@ public class RobotContainer {
             new Vision(
                 drive,
                 new VisionIOPhotonVisionSim(
-                    VisionConstants.camera0Name, VisionConstants.robotToCamera0, drive::getPose));
+                    VisionConstants.camera0Name,
+                    VisionConstants.robotToCamera0,
+                    driveSimulation::getSimulatedDriveTrainPose));
+        drive.setPose(new Pose2d(3, 3, new Rotation2d()));
         break;
 
       default:
@@ -574,7 +577,9 @@ public class RobotContainer {
             drive.getModulePositions()[1].angle.getRadians()));
   }
 
-  public void periodic() {}
+  public void periodic() {
+    Logger.recordOutput("Though Pose", driveSimulation.getSimulatedDriveTrainPose());
+  }
 
   public void teleopInit() {
     endEffector.setEndEffectorVelocity(0);
@@ -597,7 +602,7 @@ public class RobotContainer {
   public void resetSimulationField() {
     if (Constants.currentMode != Constants.Mode.SIM) return;
 
-    driveSimulation.setSimulationWorldPose(new Pose2d(3, 3, new Rotation2d()));
+    driveSimulation.setSimulationWorldPose(drive.getPose());
     SimulatedArena.getInstance().resetFieldForAuto();
   }
 
