@@ -1,7 +1,6 @@
 package frc.robot.subsystems.drive;
 
 import com.ctre.phoenix6.CANBus;
-import com.roboloco.tune.IsTunableConstants;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -10,7 +9,6 @@ import frc.robot.generated.TunerConstants;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-@IsTunableConstants
 public class DriveConstants {
   // TunerConstants doesn't include these constants, so they are declared locally
   static final double ODOMETRY_FREQUENCY =
