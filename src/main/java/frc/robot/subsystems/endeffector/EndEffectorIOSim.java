@@ -1,12 +1,11 @@
 package frc.robot.subsystems.endeffector;
 
 import static edu.wpi.first.units.Units.Inches;
-import static edu.wpi.first.units.Units.Meters;
-import static edu.wpi.first.units.Units.MetersPerSecond;
 
 import com.ctre.phoenix6.sim.TalonFXSimState;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.math.util.Units;
@@ -19,9 +18,7 @@ import frc.robot.subsystems.endeffector.EndEffectorConstants.EndEffectorSimConst
 import java.util.function.Supplier;
 import org.ironmaple.simulation.IntakeSimulation;
 import org.ironmaple.simulation.IntakeSimulation.IntakeSide;
-import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
-import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoralOnFly;
 import org.littletonrobotics.junction.Logger;
 
 public class EndEffectorIOSim implements SimMechanism, EndEffectorIO {
@@ -34,6 +31,7 @@ public class EndEffectorIOSim implements SimMechanism, EndEffectorIO {
   IntakeSimulation intakeSim;
   CoralState coralState = CoralState.EMPTY;
   Supplier<Pose3d> coralPoseSupplier;
+  Supplier<Pose2d> robotPoseSupplier;
 
   public EndEffectorIOSim(SwerveDriveSimulation driveSim, Supplier<Pose3d> coralPoseSupplier) {
     initSimVoltage();
@@ -61,28 +59,28 @@ public class EndEffectorIOSim implements SimMechanism, EndEffectorIO {
                 () -> {
                   coralState = CoralState.EFFECTOR;
                 }));
-    new Trigger(
-            () -> Math.abs(Units.radiansToRotations(physicsSim.getAngularVelocityRadPerSec())) > 25)
-        .debounce(0.2)
-        .and(() -> coralState == CoralState.EFFECTOR)
-        .onTrue(
-            new InstantCommand(
-                () -> {
-                  coralState = CoralState.EMPTY;
-                  SimulatedArena.getInstance()
-                      .addGamePieceProjectile(
-                          new ReefscapeCoralOnFly(
-                              driveSim.getSimulatedDriveTrainPose().getTranslation(),
-                              new Translation2d(
-                                  coralPoseSupplier.get().getTranslation().getX(),
-                                  coralPoseSupplier.get().getTranslation().getX()),
-                              driveSim.getDriveTrainSimulatedChassisSpeedsFieldRelative(),
-                              driveSim.getGyroSimulation().getGyroReading(),
-                              Meters.of(coralPoseSupplier.get().getZ()),
-                              MetersPerSecond.of(1),
-                              coralPoseSupplier.get().getRotation().getMeasureY()));
-                }));
+    // new Trigger(
+    //         () -> Math.abs(Units.radiansToRotations(physicsSim.getAngularVelocityRadPerSec())) >
+    // 25)
+    //     .debounce(0.2)
+    //     .and(() -> coralState == CoralState.EFFECTOR)
+    //     .onTrue(
+    //         new InstantCommand(
+    //             () -> {
+    //               coralState = CoralState.EMPTY;
+    //               SimulatedArena.getInstance()
+    //                   .addGamePieceProjectile(
+    //                       new ReefscapeCoralOnFly(
+    //                           driveSim.getSimulatedDriveTrainPose().getTranslation(),
+    //                           coralPoseSupplier.get().getTranslation().toTranslation2d(),
+    //                           driveSim.getDriveTrainSimulatedChassisSpeedsFieldRelative(),
+    //                           driveSim.getGyroSimulation().getGyroReading(),
+    //                           Meters.of(coralPoseSupplier.get().getZ()),
+    //                           MetersPerSecond.of(1),
+    //                           coralPoseSupplier.get().getRotation().getMeasureY()));
+    //             }));
     this.coralPoseSupplier = coralPoseSupplier;
+    this.robotPoseSupplier = driveSim::getSimulatedDriveTrainPose;
   }
 
   @Override
@@ -105,10 +103,14 @@ public class EndEffectorIOSim implements SimMechanism, EndEffectorIO {
         Units.radiansToRotations(physicsSim.getAngularVelocityRadPerSec())
             * EndEffectorConstants.GEARING);
     // May move this out and into EndEffector when we have lasercan working
+
     Logger.recordOutput(
         "Odometry/IntakedCoral",
         (coralState == CoralState.EFFECTOR)
-            ? new Pose3d[] {coralPoseSupplier.get()}
+            ? new Pose3d[] {
+              new Pose3d(robotPoseSupplier.get())
+                  .plus(new Transform3d(new Pose3d(), coralPoseSupplier.get()))
+            }
             : new Pose3d[0]);
   }
 

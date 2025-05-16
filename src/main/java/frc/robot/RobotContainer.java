@@ -145,7 +145,7 @@ public class RobotContainer {
         led = new LED();
         endEffector =
             new EndEffector(
-                new EndEffectorIOSim(driveSimulation, this::getEndEffectorBackRollerSimPose));
+                new EndEffectorIOSim(driveSimulation, this::getEndEffectorCoralSimPose));
         elevator = new Elevator(new ElevatorIOSim());
         arm = new Arm(new ArmIOSim(((ElevatorIOSim) elevator.getIO()).getLigamentEnd()));
         vision =
@@ -351,7 +351,7 @@ public class RobotContainer {
                             || reefAlignLeft.isScheduled()
                             || reefAlignRight.isScheduled()))
                 .debounce(0.5))
-        .onTrue(reefScoreLeftL3);
+        .onTrue(reefScoreLeftL3.until(driverController.leftBumper().negate()));
     driverController
         .povLeft()
         .and(drive::usingVision)
@@ -362,7 +362,7 @@ public class RobotContainer {
                             || reefAlignLeft.isScheduled()
                             || reefAlignRight.isScheduled()))
                 .debounce(0.5))
-        .onTrue(reefAlignLeft);
+        .onTrue(reefAlignLeft.until(driverController.povLeft().negate()));
     driverController
         .povRight()
         .and(drive::usingVision)
@@ -373,7 +373,7 @@ public class RobotContainer {
                             || reefAlignLeft.isScheduled()
                             || reefAlignRight.isScheduled()))
                 .debounce(0.5))
-        .onTrue(reefAlignRight);
+        .onTrue(reefAlignRight.until(driverController.povRight().negate()));
 
     driverController
         .rightTrigger()
@@ -424,6 +424,27 @@ public class RobotContainer {
                         arm.getArmPosition().getAsDouble() - ArmSimConstants.SIM_OFFSET)
                     + ArmConstants.ArmSimConstants.STARTING_ANGLE
                     + Units.degreesToRadians(90)),
+            0.0));
+  }
+
+  public Pose3d getEndEffectorCoralSimPose() {
+    double elevatorHeight = elevator.getElevatorPosition() * 1;
+    double offset_x =
+        EndEffectorConstants.EndEffectorSimConstants.FRONT_ROLLER_ORIGIN_X
+            - ArmConstants.ArmSimConstants.ORIGIN_X;
+    double offset_z =
+        EndEffectorConstants.EndEffectorSimConstants.FRONT_ROLLER_ORIGIN_Z
+            - ArmConstants.ArmSimConstants.ORIGIN_Z;
+    double final_x = offset_x + ArmConstants.ArmSimConstants.ORIGIN_X;
+    double final_z = offset_z + ArmConstants.ArmSimConstants.ORIGIN_Z + elevatorHeight;
+    return new Pose3d(
+        final_x,
+        EndEffectorConstants.EndEffectorSimConstants.FRONT_ROLLER_ORIGIN_Y,
+        final_z,
+        new Rotation3d(
+            0.0,
+            (Units.rotationsToRadians(
+                arm.getArmPosition().getAsDouble() - ArmSimConstants.SIM_OFFSET + 0.25)),
             0.0));
   }
 
