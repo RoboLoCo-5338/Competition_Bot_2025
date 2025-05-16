@@ -67,46 +67,6 @@ public class Elevator extends SubsystemBase implements SysIDSubsystem {
                     < ElevatorConstants.POSITION_TOLERANCE);
   }
 
-  // /**
-  //  * PID controller for the elevator. This function uses the laser can to measure the elevator's
-  //  * position and calculates the error, integral, and derivative of the error. It then applies
-  // the
-  //  * gains to the error, integral, and derivative to calculate the output velocity. The output
-  //  * velocity is then set on the elevator.
-  //  *
-  //  * @param position The desired position of the elevator.
-  //  */
-  // private void elevatorPID(double position) {
-  //   double curPosition = io.getLaserCanMeasurement();
-  //   if (curPosition == -1) {
-  //     io.setElevatorVelocity(0);
-  //     return;
-  //   }
-  //   error = position - curPosition;
-  //   integral += error;
-  //   double derivative = error - prevError;
-  //   double output =
-  //       ElevatorConstants.ELEVATOR_kP_LASERCAN * error
-  //           + ElevatorConstants.ELEVATOR_kI_LASERCAN * integral
-  //           + ElevatorConstants.ELEVATOR_kD_LASERCAN * derivative;
-
-  //   io.setElevatorVelocity(output);
-  // }
-
-  // public Command moveElevatorLaserCan(double position) {
-  //   return new FunctionalCommand(
-  //       () -> {
-  //         integral = 0;
-  //         prevError = 0;
-  //         error = 0;
-  //         io.setElevatorVelocity(0.0);
-  //       },
-  //       () -> elevatorPID(position),
-  //       (interrupted) -> io.setElevatorVelocity(0.0),
-  //       () -> Math.abs(error) < ElevatorConstants.ELEVATOR_EPSILON,
-  //       this);
-  // }
-
   public Command setElevatorVelocity(DoubleSupplier velocity) {
     return new InstantCommand(() -> io.setElevatorVelocity(velocity.getAsDouble()), this);
   }
