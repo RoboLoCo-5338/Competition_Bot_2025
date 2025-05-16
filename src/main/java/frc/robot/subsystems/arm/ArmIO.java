@@ -8,6 +8,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import org.littletonrobotics.junction.AutoLog;
 
@@ -97,6 +98,7 @@ public interface ArmIO {
         .voltageCompensation(12.0);
     armConfig
         .absoluteEncoder
+        .zeroCentered(true)
         .inverted(true)
         .positionConversionFactor(1.0 / ArmConstants.ENCODER_GEARING)
         .velocityConversionFactor(1.0 / ArmConstants.ENCODER_GEARING);
@@ -122,8 +124,9 @@ public interface ArmIO {
         .busVoltagePeriodMs(20)
         .outputCurrentPeriodMs(20);
 
-    armConfig.softLimit.reverseSoftLimitEnabled(true);
-    armConfig.softLimit.reverseSoftLimit(ArmConstants.SOFT_LIMIT);
+    // // added 3/6
+    // armConfig.softLimit.reverseSoftLimitEnabled(true);
+    // armConfig.softLimit.reverseSoftLimit(ArmConstants.SOFT_LIMIT);
 
     return armConfig;
   }
@@ -131,4 +134,6 @@ public interface ArmIO {
   public default double getArmPosition(ArmIOInputs inputs) {
     return 0.0;
   }
+
+  public default void armOpenLoop(Voltage voltage) {}
 }

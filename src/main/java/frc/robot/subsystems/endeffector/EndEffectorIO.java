@@ -3,8 +3,10 @@ package frc.robot.subsystems.endeffector;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.units.measure.Voltage;
 import frc.robot.generated.TunerConstants;
 import org.littletonrobotics.junction.AutoLog;
 
@@ -12,6 +14,7 @@ public interface EndEffectorIO {
   public final TalonFX endEffectorMotor =
       new TalonFX(EndEffectorConstants.EFFECTORID, TunerConstants.DrivetrainConstants.CANBusName);
   final VelocityVoltage endEffectorVelocityRequest = new VelocityVoltage(0.0);
+  final VoltageOut endEffectorOpenLoop = new VoltageOut(0.0);
 
   @AutoLog
   public static class EndEffectorIOInputs {
@@ -22,6 +25,7 @@ public interface EndEffectorIO {
     public double endEffectorDistance1 = -1;
     public double endEffectorDistance2 = -1;
     public double endEffectorTemperature = 0.0;
+    public double endEffectorPosition = 0.0;
   }
 
   public default void updateInputs(EndEffectorIOInputs inputs) {}
@@ -56,4 +60,6 @@ public interface EndEffectorIO {
   public default double getEndEffectorVelocity() {
     return 0.0;
   }
+
+  public default void endEffectorOpenLoop(Voltage voltage) {}
 }

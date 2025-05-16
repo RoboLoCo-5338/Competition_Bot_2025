@@ -28,42 +28,42 @@ public class DriveConstants {
   public static final double WHEEL_COF = 0.975;
 
   static final Lock odometryLock = new ReentrantLock();
-  public static final double DEADBAND = 0.06;
-  public static final double ANGLE_KP = 5.0;
-  public static final double ANGLE_KD = 0.4;
-  public static final double ANGLE_MAX_VELOCITY = 8.0;
-  public static final double ANGLE_MAX_ACCELERATION = 20.0;
-  public static final double FF_START_DELAY = 2.0; // Secs
-  public static final double FF_RAMP_RATE = 0.1; // Volts/Sec
-  public static final double WHEEL_RADIUS_MAX_VELOCITY = 0.25; // Rad/Sec
-  public static final double WHEEL_RADIUS_RAMP_RATE = 0.05; // Rad/Sec^2
-  public static final double AUTO_ALIGN_X_TOLERANCE = 0.005;
-  public static final double AUTO_ALIGN_Y_TOLERANCE = 0.005;
-  public static final double AUTO_ALIGN_ANGULAR_TOLERANCE = 0.005;
+  public static double DEADBAND = 0.06;
+  public static double ANGLE_KP = 5.0;
+  public static double ANGLE_KD = 0.4;
+  public static double ANGLE_MAX_VELOCITY = 8.0;
+  public static double ANGLE_MAX_ACCELERATION = 20.0;
+  public static double FF_START_DELAY = 2.0; // Secs
+  public static double FF_RAMP_RATE = 0.1; // Volts/Sec
+  public static double WHEEL_RADIUS_MAX_VELOCITY = 0.25; // Rad/Sec
+  public static double WHEEL_RADIUS_RAMP_RATE = 0.05; // Rad/Sec^2
+  public static double AUTO_ALIGN_X_TOLERANCE = 0.005;
+  public static double AUTO_ALIGN_Y_TOLERANCE = 0.005;
+  public static double AUTO_ALIGN_ANGULAR_TOLERANCE = 0.005;
 
-  public static final double AUTO_ALIGN_DRIVE_KP = 2;
-  public static final double AUTO_ALIGN_DRIVE_KI = 0.2;
-  public static final double AUTO_ALIGN_DRIVE_KD = 0.0;
-  public static final double AUTO_ALIGN_TURN_KP = 2;
-  public static final double AUTO_ALIGN_TURN_KI = 0.2;
-  public static final double AUTO_ALIGN_TURN_KD = 0.0;
+  public static double AUTO_ALIGN_DRIVE_KP = 2;
+  public static double AUTO_ALIGN_DRIVE_KI = 0.2;
+  public static double AUTO_ALIGN_DRIVE_KD = 0.0;
+  public static double AUTO_ALIGN_TURN_KP = 2;
+  public static double AUTO_ALIGN_TURN_KI = 0.2;
+  public static double AUTO_ALIGN_TURN_KD = 0.0;
 
-  public static final Pose2d reefRight =
+  public static Pose2d reefRight =
       new Pose2d(3.06 - Units.inchesToMeters(2.5), 3.77 + 0.05 + 0.0127, new Rotation2d());
-  public static final Pose2d reefLeft =
+  public static Pose2d reefLeft =
       new Pose2d(3.06 - Units.inchesToMeters(2.5), 4.175, new Rotation2d());
-  public static final Pose2d reefCenter =
+  public static Pose2d reefCenter =
       new Pose2d(3.06 - Units.inchesToMeters(2.5), 3.8327, new Rotation2d());
 
-  public final class DriveSimConstants {
-    public static final double DRIVE_KP = 0.05;
-    public static final double DRIVE_KD = 0.0;
-    public static final double DRIVE_KS = 0.0;
-    public static final double DRIVE_KV_ROT =
+  public class DriveSimConstants {
+    public static double DRIVE_KP = 0.05;
+    public static double DRIVE_KD = 0.0;
+    public static double DRIVE_KS = 0.0;
+    public static double DRIVE_KV_ROT =
         0.91035; // Same units as TunerConstants: (volt * secs) / rotation
-    public static final double DRIVE_KV = 1.0 / Units.rotationsToRadians(1.0 / DRIVE_KV_ROT);
-    public static final double TURN_KP = 8.0;
-    public static final double TURN_KD = 0.0;
+    public static double DRIVE_KV = 1.0 / Units.rotationsToRadians(1.0 / DRIVE_KV_ROT);
+    public static double TURN_KP = 8.0;
+    public static double TURN_KD = 0.0;
     public static final DCMotor DRIVE_GEARBOX = DCMotor.getKrakenX60Foc(1);
     public static final DCMotor TURN_GEARBOX = DCMotor.getKrakenX60Foc(1);
 

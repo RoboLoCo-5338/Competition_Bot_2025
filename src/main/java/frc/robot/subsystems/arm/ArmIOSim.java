@@ -12,6 +12,7 @@ import com.revrobotics.spark.SparkClosedLoopController.ArbFFUnits;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj.util.Color;
@@ -106,6 +107,11 @@ public class ArmIOSim implements SimMechanism, ArmIO {
   @Override
   public double getArmPosition(ArmIOInputs inputs) {
     return inputs.armPosition;
+  }
+
+  @Override
+  public void armOpenLoop(Voltage voltage) {
+    armClosedLoopController.setReference(voltage.magnitude(), ControlType.kVoltage);
   }
 
   @Override

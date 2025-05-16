@@ -4,10 +4,12 @@ import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.units.measure.Voltage;
 import frc.robot.generated.TunerConstants;
 import org.littletonrobotics.junction.AutoLog;
 
@@ -23,6 +25,7 @@ public interface ElevatorIO {
   final VelocityVoltage elevator1VelocityRequest = new VelocityVoltage(0);
   final PositionVoltage elevator2PositionRequest = new PositionVoltage(0.0);
   final VelocityVoltage elevator2VelocityRequest = new VelocityVoltage(0);
+  final VoltageOut elevatorOpenLoop = new VoltageOut(0.0);
 
   @AutoLog
   public static class ElevatorIOInputs {
@@ -158,4 +161,6 @@ public interface ElevatorIO {
     if (motorNum == 2) config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     return config;
   }
+
+  public default void elevatorOpenLoop(Voltage voltage) {}
 }

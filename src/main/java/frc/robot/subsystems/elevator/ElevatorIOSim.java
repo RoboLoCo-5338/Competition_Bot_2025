@@ -4,6 +4,7 @@ import com.ctre.phoenix6.controls.StrictFollower;
 import com.ctre.phoenix6.sim.ChassisReference;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import frc.robot.Constants;
@@ -101,5 +102,10 @@ public class ElevatorIOSim implements SimMechanism, ElevatorIO {
 
   public LoggedMechanismLigament2d getLigamentEnd() {
     return elevator;
+  }
+
+  @Override
+  public void elevatorOpenLoop(Voltage voltage) {
+    elevatorMotor1.setVoltage(voltage.magnitude());
   }
 }

@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -128,6 +129,11 @@ public class EndEffectorIOSim implements SimMechanism, EndEffectorIO {
   @Override
   public double[] getCurrents() {
     return new double[] {physicsSim.getCurrentDrawAmps()};
+  }
+
+  @Override
+  public void endEffectorOpenLoop(Voltage voltage) {
+    endEffectorMotor.setVoltage(voltage.magnitude());
   }
 
   @Override

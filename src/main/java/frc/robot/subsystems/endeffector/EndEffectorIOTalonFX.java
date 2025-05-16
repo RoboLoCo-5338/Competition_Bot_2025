@@ -8,7 +8,7 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.ParentDevice;
 import edu.wpi.first.math.filter.Debouncer;
-import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Temperature;
@@ -21,6 +21,7 @@ public class EndEffectorIOTalonFX implements EndEffectorIO {
   private final StatusSignal<Current> endEffectorCurrent;
   private final StatusSignal<Temperature> endEffectorTemperature;
   private final StatusSignal<Integer> endEffectorVersion;
+  private final StatusSignal<Angle> endEffectorPosition;
 
   private final Debouncer effectorDebouncer = new Debouncer(0.5);
 
@@ -34,6 +35,7 @@ public class EndEffectorIOTalonFX implements EndEffectorIO {
     endEffectorCurrent = endEffectorMotor.getStatorCurrent();
     endEffectorTemperature = endEffectorMotor.getDeviceTemp();
     endEffectorVersion = endEffectorMotor.getVersion();
+    endEffectorPosition = endEffectorMotor.getPosition();
 
     endEffectorMotor.getConfigurator().apply(getEndEffectorConfiguration());
 
@@ -66,15 +68,16 @@ public class EndEffectorIOTalonFX implements EndEffectorIO {
   public void updateInputs(EndEffectorIOInputs inputs) {
     var motor1Status =
         BaseStatusSignal.refreshAll(
-            endEffectorVelocity, endEffectorCurrent, endEffectorAppliedVolts);
+            endEffectorVelocity, endEffectorCurrent, endEffectorAppliedVolts, endEffectorPosition);
 
     inputs.endEffectorConnected = effectorDebouncer.calculate(motor1Status.isOK());
     inputs.endEffectorDistance1 = getLaserCanMeasurement1();
     inputs.endEffectorDistance2 = getLaserCanMeasurement2();
-    inputs.endEffectorVelocity = Units.rotationsToRadians(endEffectorVelocity.getValueAsDouble());
+    inputs.endEffectorVelocity = endEffectorVelocity.getValueAsDouble();
     inputs.endEffectorAppliedVolts = endEffectorAppliedVolts.getValueAsDouble();
     inputs.endEffectorCurrentAmps = endEffectorCurrent.getValueAsDouble();
     inputs.endEffectorTemperature = endEffectorTemperature.getValueAsDouble();
+    inputs.endEffectorPosition = endEffectorPosition.getValueAsDouble();
   }
 
   @Override
@@ -118,5 +121,11 @@ public class EndEffectorIOTalonFX implements EndEffectorIO {
       }
       return -1;
     }
+  }
+
+  @Override
+  public void endEffectorOpenLoop(Voltage voltage) {
+    System.out.println(voltage);
+    endEffectorMotor.setControl(endEffectorOpenLoop.withOutput(voltage));
   }
 }

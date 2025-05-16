@@ -18,7 +18,7 @@ public final class ElevatorConstants {
 
   public static final class ElevatorPositionConstants {
     public static final double ELEVATOR_FEEDFORWARD = 0.0;
-    public static final double ELEVATOR_MOTOR_kP = 3.0;
+    public static final double ELEVATOR_MOTOR_kP = 3.7457; // 0.3
     public static final double ELEVATOR_MOTOR_kI = 0.03;
     public static final double ELEVATOR_MOTOR_kD = 0.28;
     public static final double ELEVATOR_MOTOR_kG = 0.5;
@@ -59,12 +59,11 @@ public final class ElevatorConstants {
   }
 
   public static final class ElevatorPresetConstants {
-    public static final double ELEVATOR_L2 = 7.58 * ElevatorConstants.METERS_PER_ROTATION;
-    public static final double ELEVATOR_L3 = 13.9 * ElevatorConstants.METERS_PER_ROTATION;
+    public static final double ELEVATOR_L2 = 9.486 * ElevatorConstants.METERS_PER_ROTATION;
+    public static final double ELEVATOR_L3 = 16.6 * ElevatorConstants.METERS_PER_ROTATION;
     public static final double ELEVATOR_L4 = 19.40 * ElevatorConstants.METERS_PER_ROTATION;
-    public static final double ELEVATOR_NET =
-        16.486 * ElevatorConstants.METERS_PER_ROTATION; // TODO: update
-    public static final double ELEVATOR_L3_ALGAE = 0.2 * ElevatorConstants.METERS_PER_ROTATION;
-    public static final double ELEVATOR_STOW = 0.87 * ElevatorConstants.METERS_PER_ROTATION;
+    public static final double ELEVATOR_NET = 16.486 * ElevatorConstants.METERS_PER_ROTATION; // TODO: update
+    public static final double ELEVATOR_L3_ALGAE = 0.0; * ElevatorConstants.METERS_PER_ROTATION
+    public static final double ELEVATOR_STOW = 0.05 * ElevatorConstants.METERS_PER_ROTATION;
   }
 }

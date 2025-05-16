@@ -20,10 +20,10 @@ public class PresetCommands {
 
   public static Command stowElevator(Elevator elevator, EndEffector endEffector, Arm arm) {
     return new SequentialCommandGroup(
-        arm.setArmPosition(0.51),
+        arm.setArmPosition(ArmPresetConstants.ARM_STOW_INITIAL),
         new WaitCommand(0.1),
-        elevator.setElevatorPosition(0.05, 2),
-        arm.setArmPosition(0.42));
+        elevator.setElevatorPosition(ElevatorPresetConstants.ELEVATOR_STOW, 2),
+        arm.setArmPosition(ArmPresetConstants.ARM_STOW_FINAL));
   }
 
   public static Command presetL2(Elevator elevator, EndEffector endEffector, Arm arm) {
