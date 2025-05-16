@@ -351,7 +351,7 @@ public class RobotContainer {
                             || reefAlignLeft.isScheduled()
                             || reefAlignRight.isScheduled()))
                 .debounce(0.5))
-        .whileTrue(reefScoreLeftL3);
+        .onTrue(reefScoreLeftL3);
     driverController
         .povLeft()
         .and(drive::usingVision)
@@ -362,7 +362,7 @@ public class RobotContainer {
                             || reefAlignLeft.isScheduled()
                             || reefAlignRight.isScheduled()))
                 .debounce(0.5))
-        .whileTrue(reefAlignLeft);
+        .onTrue(reefAlignLeft);
     driverController
         .povRight()
         .and(drive::usingVision)
@@ -373,7 +373,7 @@ public class RobotContainer {
                             || reefAlignLeft.isScheduled()
                             || reefAlignRight.isScheduled()))
                 .debounce(0.5))
-        .whileTrue(reefAlignRight);
+        .onTrue(reefAlignRight);
 
     driverController
         .rightTrigger()
