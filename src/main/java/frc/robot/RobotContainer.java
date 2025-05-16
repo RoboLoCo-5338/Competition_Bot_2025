@@ -37,7 +37,6 @@ import frc.robot.commands.PresetCommands;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmConstants;
-import frc.robot.subsystems.arm.ArmConstants.ArmSimConstants;
 import frc.robot.subsystems.arm.ArmIO;
 import frc.robot.subsystems.arm.ArmIOSim;
 import frc.robot.subsystems.arm.ArmIOSpark;
@@ -424,8 +423,7 @@ public class RobotContainer {
         new Rotation3d(
             0.0,
             -1
-                * (Units.rotationsToRadians(
-                        arm.getArmPosition().getAsDouble() - ArmSimConstants.SIM_OFFSET)
+                * (Units.rotationsToRadians(arm.getArmPosition().getAsDouble())
                     + ArmConstants.ArmSimConstants.STARTING_ANGLE
                     + Units.degreesToRadians(90)),
             0.0));
@@ -446,10 +444,7 @@ public class RobotContainer {
         EndEffectorConstants.EndEffectorSimConstants.FRONT_ROLLER_ORIGIN_Y,
         final_z,
         new Rotation3d(
-            0.0,
-            (Units.rotationsToRadians(
-                arm.getArmPosition().getAsDouble() - ArmSimConstants.SIM_OFFSET + 0.25)),
-            0.0));
+            0.0, (Units.rotationsToRadians(arm.getArmPosition().getAsDouble() + 0.25)), 0.0));
   }
 
   @AutoLogOutput(key = "Odometry/EndEffectorFrontRoller")
@@ -457,8 +452,7 @@ public class RobotContainer {
     double elevatorHeight = elevator.getElevatorPosition() * 1;
     double endEffectorRotation =
         -1
-            * (Units.rotationsToRadians(
-                    arm.getArmPosition().getAsDouble() - ArmSimConstants.SIM_OFFSET)
+            * (Units.rotationsToRadians(arm.getArmPosition().getAsDouble())
                 + ArmConstants.ArmSimConstants.STARTING_ANGLE
                 + Units.degreesToRadians(90));
 
@@ -496,8 +490,7 @@ public class RobotContainer {
     double elevatorHeight = elevator.getElevatorPosition() * 1;
     double endEffectorRotation =
         -1
-            * (Units.rotationsToRadians(
-                    arm.getArmPosition().getAsDouble() - ArmSimConstants.SIM_OFFSET)
+            * (Units.rotationsToRadians(arm.getArmPosition().getAsDouble())
                 + ArmConstants.ArmSimConstants.STARTING_ANGLE
                 + Units.degreesToRadians(90));
 

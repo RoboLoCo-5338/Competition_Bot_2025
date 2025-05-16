@@ -71,11 +71,10 @@ public class ArmIOSim implements SimMechanism, ArmIO {
         RobotController.getBatteryVoltage(),
         0.02);
     inputs.armConnected = true;
-    inputs.armPosition =
-        Units.radiansToRotations(armPhysicsSim.getAngleRads()) + ArmSimConstants.SIM_OFFSET;
+    inputs.armPosition = Units.radiansToRotations(armPhysicsSim.getAngleRads());
     inputs.armVelocity =
         Units.radiansPerSecondToRotationsPerMinute(armPhysicsSim.getVelocityRadPerSec());
-    armSim.setPosition(inputs.armPosition - ArmSimConstants.SIM_OFFSET);
+    armSim.setPosition(inputs.armPosition);
     ifOk(
         armMotor,
         new DoubleSupplier[] {armMotor::getAppliedOutput, armMotor::getBusVoltage},
@@ -94,14 +93,10 @@ public class ArmIOSim implements SimMechanism, ArmIO {
   public void setArmPosition(double position) {
     double ffvolts =
         feedforward.calculate(
-            Units.rotationsToRadians(armEncoderSim.getPosition() - ArmSimConstants.SIM_OFFSET),
+            Units.rotationsToRadians(armEncoderSim.getPosition()),
             Units.rotationsPerMinuteToRadiansPerSecond(armEncoderSim.getVelocity()));
     armClosedLoopController.setReference(
-        position - ArmSimConstants.SIM_OFFSET,
-        ControlType.kPosition,
-        ClosedLoopSlot.kSlot0,
-        ffvolts,
-        ArbFFUnits.kVoltage);
+        position, ControlType.kPosition, ClosedLoopSlot.kSlot0, ffvolts, ArbFFUnits.kVoltage);
   }
 
   @Override
@@ -116,10 +111,10 @@ public class ArmIOSim implements SimMechanism, ArmIO {
 
   @Override
   public void setArmVelocity(double velocityRadPerSec) {
+
     double ffvolts =
-        feedforward.calculate(
-            Units.rotationsToRadians(armEncoderSim.getPosition() - ArmSimConstants.SIM_OFFSET),
-            velocityRadPerSec);
+        feedforward.calculate((armEncoderSim.getPosition()) * 2 * Math.PI, velocityRadPerSec);
+
     armClosedLoopController.setReference(
         Units.radiansPerSecondToRotationsPerMinute(velocityRadPerSec),
         ControlType.kVelocity,
