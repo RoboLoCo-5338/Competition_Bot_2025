@@ -98,6 +98,8 @@ public class RobotContainer {
 
   public CommandXboxController operatorController = new CommandXboxController(1);
 
+  public CommandXboxController simController = new CommandXboxController(2);
+
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
 
@@ -141,7 +143,9 @@ public class RobotContainer {
                 new ModuleIOTalonFXSim(TunerConstants.BackRight, driveSimulation.getModules()[3]),
                 driveSimulation::setSimulationWorldPose);
         led = new LED();
-        endEffector = new EndEffector(new EndEffectorIOSim());
+        endEffector =
+            new EndEffector(
+                new EndEffectorIOSim(driveSimulation, this::getEndEffectorBackRollerSimPose));
         elevator = new Elevator(new ElevatorIOSim());
         arm = new Arm(new ArmIOSim(((ElevatorIOSim) elevator.getIO()).getLigamentEnd()));
         vision =
@@ -383,6 +387,8 @@ public class RobotContainer {
                 () -> {
                   DriveCommands.slowMode = 1;
                 }));
+    // simController.a().onTrue(SimulatedArena.getInstance().addGamePiece(new
+    // ReefscapeCoralOnField(null)));
   }
 
   @AutoLogOutput(key = "Odometry/ElevatorStage1")
@@ -576,9 +582,7 @@ public class RobotContainer {
             drive.getModulePositions()[1].angle.getRadians()));
   }
 
-  public void periodic() {
-    Logger.recordOutput("Though Pose", driveSimulation.getSimulatedDriveTrainPose());
-  }
+  public void periodic() {}
 
   public void teleopInit() {
     endEffector.setEndEffectorVelocity(0);
