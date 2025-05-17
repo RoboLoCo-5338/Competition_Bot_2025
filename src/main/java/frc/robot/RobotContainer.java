@@ -431,20 +431,38 @@ public class RobotContainer {
 
   public Pose3d getEndEffectorCoralSimPose() {
     double elevatorHeight = elevator.getElevatorPosition() * 1;
+    double endEffectorRotation =
+        -1
+            * (Units.rotationsToRadians(arm.getArmPosition().getAsDouble())
+                + ArmConstants.ArmSimConstants.STARTING_ANGLE
+                + Units.degreesToRadians(90));
+
     double offset_x =
         EndEffectorConstants.EndEffectorSimConstants.FRONT_ROLLER_ORIGIN_X
-            - ArmConstants.ArmSimConstants.ORIGIN_X;
+            - ArmConstants.ArmSimConstants.ORIGIN_X
+            - 0.05;
     double offset_z =
         EndEffectorConstants.EndEffectorSimConstants.FRONT_ROLLER_ORIGIN_Z
-            - ArmConstants.ArmSimConstants.ORIGIN_Z;
-    double final_x = offset_x + ArmConstants.ArmSimConstants.ORIGIN_X;
-    double final_z = offset_z + ArmConstants.ArmSimConstants.ORIGIN_Z + elevatorHeight;
+            - ArmConstants.ArmSimConstants.ORIGIN_Z
+            - 0.1;
+
+    double rotated_x =
+        offset_x * Math.cos(endEffectorRotation) + offset_z * Math.sin(endEffectorRotation);
+    double rotated_z =
+        -offset_x * Math.sin(endEffectorRotation) + offset_z * Math.cos(endEffectorRotation);
+
+    double final_x = rotated_x + ArmConstants.ArmSimConstants.ORIGIN_X;
+    double final_z = rotated_z + ArmConstants.ArmSimConstants.ORIGIN_Z + elevatorHeight;
     return new Pose3d(
         final_x,
         EndEffectorConstants.EndEffectorSimConstants.FRONT_ROLLER_ORIGIN_Y,
         final_z,
         new Rotation3d(
-            0.0, (Units.rotationsToRadians(arm.getArmPosition().getAsDouble() + 0.25)), 0.0));
+            0.0,
+            Math.PI / 2
+                - Units.rotationsToRadians(arm.getArmPosition().getAsDouble())
+                + Units.degreesToRadians(27),
+            0.0));
   }
 
   @AutoLogOutput(key = "Odometry/EndEffectorFrontRoller")

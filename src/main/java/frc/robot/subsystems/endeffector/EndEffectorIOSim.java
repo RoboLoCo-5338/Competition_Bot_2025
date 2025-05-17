@@ -54,20 +54,18 @@ public class EndEffectorIOSim implements SimMechanism, EndEffectorIO {
     //             new Vector2(Units.inchesToMeters(-13.512198), Units.inchesToMeters(-7))),
     //         1); // TODO: check with mech on this, think its correct
     intakeSim.startIntake(); // the intake sim is started because funnel, not end effector
-    new Trigger(() -> intakeSim.getGamePiecesAmount()>0)
+    new Trigger(() -> intakeSim.getGamePiecesAmount() > 0)
         .onTrue(new InstantCommand(() -> coralState = CoralState.FUNNEL));
     new Trigger(() -> coralState == CoralState.FUNNEL)
         .debounce(0.2) // Waits for a bit simulate coral falling into the
-        .and(
-            () -> Math.abs(Units.radiansToRotations(physicsSim.getAngularVelocityRadPerSec())) > 25)
+        .and(() -> Units.radiansToRotations(physicsSim.getAngularVelocityRadPerSec()) > 25)
         .onTrue(
             new InstantCommand(
                 () -> {
                   coralState = CoralState.EFFECTOR;
                 }));
     new Trigger(
-            () -> Units.radiansToRotations(physicsSim.getAngularVelocityRadPerSec()) >
-    25)
+            () -> Math.abs(Units.radiansToRotations(physicsSim.getAngularVelocityRadPerSec())) > 25)
         .debounce(0.2)
         .and(() -> coralState == CoralState.EFFECTOR)
         .onTrue(
@@ -79,11 +77,17 @@ public class EndEffectorIOSim implements SimMechanism, EndEffectorIO {
                       .addGamePieceProjectile(
                           new ReefscapeCoralOnFly(
                               driveSim.getSimulatedDriveTrainPose().getTranslation(),
-                              coralPoseSupplier.get().getTranslation().toTranslation2d().rotateAround(new Translation2d(), driveSim.getSimulatedDriveTrainPose().getRotation()),
+                              coralPoseSupplier
+                                  .get()
+                                  .getTranslation()
+                                  .toTranslation2d()
+                                  .rotateAround(
+                                      new Translation2d(),
+                                      driveSim.getSimulatedDriveTrainPose().getRotation()),
                               driveSim.getDriveTrainSimulatedChassisSpeedsFieldRelative(),
                               driveSim.getGyroSimulation().getGyroReading(),
                               Meters.of(coralPoseSupplier.get().getZ()),
-                              MetersPerSecond.of(1*Math.signum(getEndEffectorVelocity())),
+                              MetersPerSecond.of(1 * Math.signum(getEndEffectorVelocity())),
                               coralPoseSupplier.get().getRotation().getMeasureY()));
                 }));
     this.coralPoseSupplier = coralPoseSupplier;
