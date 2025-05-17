@@ -35,7 +35,7 @@ public class EndEffector extends SubsystemBase implements SysIDSubsystem {
                 Velocity.ofBaseUnits(0.2, Volts.per(Second)),
                 Voltage.ofBaseUnits(2, Volts),
                 Second.of(30),
-                (state) -> Logger.recordOutput("Elevator/SysIdState", state.toString())),
+                (state) -> Logger.recordOutput("EndEffector/SysIdState", state.toString())),
             new Mechanism(io::endEffectorOpenLoop, null, this));
   }
 
