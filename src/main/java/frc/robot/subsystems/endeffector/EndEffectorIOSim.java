@@ -8,7 +8,6 @@ import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.math.util.Units;
@@ -77,13 +76,7 @@ public class EndEffectorIOSim implements SimMechanism, EndEffectorIO {
                       .addGamePieceProjectile(
                           new ReefscapeCoralOnFly(
                               driveSim.getSimulatedDriveTrainPose().getTranslation(),
-                              coralPoseSupplier
-                                  .get()
-                                  .getTranslation()
-                                  .toTranslation2d()
-                                  .rotateAround(
-                                      new Translation2d(),
-                                      driveSim.getSimulatedDriveTrainPose().getRotation()),
+                              coralPoseSupplier.get().getTranslation().toTranslation2d(),
                               driveSim.getDriveTrainSimulatedChassisSpeedsFieldRelative(),
                               driveSim.getGyroSimulation().getGyroReading(),
                               Meters.of(coralPoseSupplier.get().getZ()),

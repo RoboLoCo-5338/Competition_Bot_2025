@@ -62,18 +62,9 @@ public class PresetCommands {
     return new SequentialCommandGroup(
             new RepeatCommand(endEffector.setEndEffectorVelocity(100))
                 .until(
-                    () -> {
-                      System.out.println(
-                          "LaserCan1: " + endEffector.getIO().getLaserCanMeasurement1());
-                      System.out.println(
-                          "LaserCan2: " + endEffector.getIO().getLaserCanMeasurement2());
-                      return (endEffector.getIO().getLaserCanMeasurement1() < 100
-                          && endEffector.getIO().getLaserCanMeasurement2() < 100);
-                    })
-                .finallyDo(
                     () ->
-                        System.out.println(
-                            "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")),
+                        (endEffector.getIO().getLaserCanMeasurement1() < 100
+                            && endEffector.getIO().getLaserCanMeasurement2() < 100)),
             endEffector.setEndEffectorVelocity(0.0))
         .onlyIf(
             () ->
