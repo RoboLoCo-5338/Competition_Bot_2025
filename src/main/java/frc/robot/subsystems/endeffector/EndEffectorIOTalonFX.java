@@ -125,7 +125,6 @@ public class EndEffectorIOTalonFX implements EndEffectorIO {
 
   @Override
   public void endEffectorOpenLoop(Voltage voltage) {
-    System.out.println(voltage);
     endEffectorMotor.setControl(endEffectorOpenLoop.withOutput(voltage));
   }
 }

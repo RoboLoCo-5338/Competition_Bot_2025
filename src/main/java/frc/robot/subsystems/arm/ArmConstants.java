@@ -26,7 +26,7 @@ public final class ArmConstants {
     public static final double GEARING = 50;
     public static final double MIN_ANGLE = Units.degreesToRadians(-103);
     public static final double MAX_ANGLE = Units.degreesToRadians(90);
-    public static final double STARTING_ANGLE = ArmPresetConstants.ARM_STOW_FINAL;
+    public static final double STARTING_ANGLE = 0;
 
     public static final double ORIGIN_X = 0.2413; // meters
     public static final double ORIGIN_Y = -0.003175; // meters

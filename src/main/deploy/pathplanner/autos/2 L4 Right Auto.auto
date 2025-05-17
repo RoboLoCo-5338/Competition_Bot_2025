@@ -104,10 +104,16 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Align Left"
+                  "name": "Align Right"
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "OuttakeLaserCan"
           }
         },
         {
@@ -140,12 +146,6 @@
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "OuttakeLaserCAN"
           }
         },
         {

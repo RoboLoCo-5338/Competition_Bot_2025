@@ -125,7 +125,6 @@ public class EndEffectorIOSim implements SimMechanism, EndEffectorIO {
                   .plus(new Transform3d(new Pose3d(), coralPoseSupplier.get()))
             }
             : new Pose3d[0]);
-    System.out.println(coralState);
   }
 
   @Override

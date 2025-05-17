@@ -30,16 +30,13 @@ public class SimCommands {
   public static Command addRightCoral() {
     return new InstantCommand(
             () -> {
-              System.out.println("runs");
-              System.out.println(SimulatedArena.getInstance().getGamePiecesByType("Coral"));
               SimulatedArena.getInstance()
                   .addGamePiece(
                       new ReefscapeCoralOnField(
                           (DriverStation.getAlliance().orElse(Alliance.Blue).equals(Alliance.Blue))
                               ? new Pose2d(1.217, 0.929, Rotation2d.fromDegrees(57.995))
                               : FlippingUtil.flipFieldPose(
-                                  new Pose2d(1.217, 0.929, Rotation2d.fromDegrees(57.995)))));
-              System.out.println(SimulatedArena.getInstance().getGamePiecesByType("Coral"));
+                                  new Pose2d(1.19, 0.85, Rotation2d.fromDegrees(57.995)))));
             })
         .onlyIf(() -> RobotBase.isSimulation());
   }

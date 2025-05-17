@@ -47,7 +47,7 @@ public final class ElevatorConstants {
     public static final double CARRIAGE_MASS =
         Units.lbsToKilograms(19.119058) / 2; // Two motors sharing the weight
     public static final double DRUM_RADIUS = Units.inchesToMeters(1.44);
-    public static final double MIN_HEIGHT = Units.inchesToMeters(1);
+    public static final double MIN_HEIGHT = Units.inchesToMeters(0);
     public static final double MAX_HEIGHT = Units.inchesToMeters(53);
     public static final double STARTING_HEIGHT = Units.inchesToMeters(1);
     public static final double STAGE_1_ORIGIN_X = 0.1651; // meters
