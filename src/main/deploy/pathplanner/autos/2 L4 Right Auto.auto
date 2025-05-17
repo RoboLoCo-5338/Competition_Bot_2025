@@ -32,7 +32,7 @@
         {
           "type": "named",
           "data": {
-            "name": "OuttakeLaserCAN"
+            "name": "OuttakeLaserCan"
           }
         },
         {
@@ -71,6 +71,12 @@
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AddRightCoral"
           }
         },
         {

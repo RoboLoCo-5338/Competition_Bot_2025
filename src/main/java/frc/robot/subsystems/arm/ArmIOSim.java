@@ -71,7 +71,6 @@ public class ArmIOSim implements SimMechanism, ArmIO {
     inputs.armPosition = Units.radiansToRotations(armPhysicsSim.getAngleRads());
     inputs.armVelocity =
         Units.radiansPerSecondToRotationsPerMinute(armPhysicsSim.getVelocityRadPerSec());
-    armSim.setPosition(inputs.armPosition);
     ifOk(
         armMotor,
         new DoubleSupplier[] {armMotor::getAppliedOutput, armMotor::getBusVoltage},

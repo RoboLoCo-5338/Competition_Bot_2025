@@ -1,6 +1,5 @@
 package frc.robot.subsystems.endeffector;
 
-import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
@@ -20,8 +19,9 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.SimMechanism;
 import frc.robot.subsystems.endeffector.EndEffectorConstants.EndEffectorSimConstants;
 import java.util.function.Supplier;
+import org.dyn4j.geometry.Triangle;
+import org.dyn4j.geometry.Vector2;
 import org.ironmaple.simulation.IntakeSimulation;
-import org.ironmaple.simulation.IntakeSimulation.IntakeSide;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoralOnFly;
@@ -42,17 +42,17 @@ public class EndEffectorIOSim implements SimMechanism, EndEffectorIO {
   public EndEffectorIOSim(SwerveDriveSimulation driveSim, Supplier<Pose3d> coralPoseSupplier) {
     initSimVoltage();
     endEffectorMotor.getConfigurator().apply(getEndEffectorConfiguration());
-    this.intakeSim =
-        IntakeSimulation.InTheFrameIntake("Coral", driveSim, Inches.of(34), IntakeSide.BACK, 1);
     // this.intakeSim =
-    //     new IntakeSimulation(
-    //         "Coral",
-    //         driveSim,
-    //         new Triangle(
-    //             new Vector2(),
-    //             new Vector2(Units.inchesToMeters(-13.758452), Units.inchesToMeters(13.296619)),
-    //             new Vector2(Units.inchesToMeters(-13.512198), Units.inchesToMeters(-7))),
-    //         1); // TODO: check with mech on this, think its correct
+    //     IntakeSimulation.InTheFrameIntake("Coral", driveSim, Inches.of(34), IntakeSide.BACK, 1);
+    this.intakeSim =
+        new IntakeSimulation(
+            "Coral",
+            driveSim,
+            new Triangle(
+                new Vector2(),
+                new Vector2(Units.inchesToMeters(-13.758452), Units.inchesToMeters(13.296619)),
+                new Vector2(Units.inchesToMeters(-13.512198), Units.inchesToMeters(-7))),
+            1); // TODO: check with mech on this, think its correct
     intakeSim.startIntake(); // the intake sim is started because funnel, not end effector
     new Trigger(() -> intakeSim.getGamePiecesAmount() > 0)
         .onTrue(new InstantCommand(() -> coralState = CoralState.FUNNEL));
@@ -125,6 +125,7 @@ public class EndEffectorIOSim implements SimMechanism, EndEffectorIO {
                   .plus(new Transform3d(new Pose3d(), coralPoseSupplier.get()))
             }
             : new Pose3d[0]);
+    System.out.println(coralState);
   }
 
   @Override

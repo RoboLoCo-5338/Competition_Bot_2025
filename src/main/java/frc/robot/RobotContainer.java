@@ -31,9 +31,11 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.Constants.Mode;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveCommands.Direction;
 import frc.robot.commands.PresetCommands;
+import frc.robot.commands.SimCommands;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmConstants;
@@ -182,7 +184,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("Endeffector Out", endEffector.setEndEffectorVelocity(100));
     NamedCommands.registerCommand("Endeffector Out L4", endEffector.setEndEffectorVelocity(-100));
     NamedCommands.registerCommand("Endeffector Stop", endEffector.setEndEffectorVelocity(0));
-    NamedCommands.registerCommand("OutakeLaserCan", PresetCommands.outtakeLaserCan(endEffector));
+    NamedCommands.registerCommand("OuttakeLaserCan", PresetCommands.outtakeLaserCan(endEffector));
     NamedCommands.registerCommand(
         "Align Left", DriveCommands.reefAlign(drive, Direction.Left, driverController, led));
     NamedCommands.registerCommand(
@@ -194,6 +196,9 @@ public class RobotContainer {
         "Stop Preset", PresetCommands.stopAll(elevator, endEffector, arm));
     NamedCommands.registerCommand(
         "StowPreset", PresetCommands.stowElevator(elevator, endEffector, arm));
+
+    NamedCommands.registerCommand("Add Left Coral", SimCommands.addLeftCoral());
+    NamedCommands.registerCommand("AddRightCoral", SimCommands.addRightCoral());
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -392,6 +397,10 @@ public class RobotContainer {
                 }));
     // simController.a().onTrue(SimulatedArena.getInstance().addGamePiece(new
     // ReefscapeCoralOnField(null)));
+    if (Constants.currentMode == Mode.SIM) {
+      simController.b().onTrue(SimCommands.addLeftCoral());
+      simController.x().onTrue(SimCommands.addRightCoral());
+    }
   }
 
   @AutoLogOutput(key = "Odometry/ElevatorStage1")
