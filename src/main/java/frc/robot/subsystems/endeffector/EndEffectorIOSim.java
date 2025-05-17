@@ -12,6 +12,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Voltage;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -34,7 +35,7 @@ public class EndEffectorIOSim implements SimMechanism, EndEffectorIO {
               DCMotor.getKrakenX60(1), EndEffectorSimConstants.MOI, EndEffectorConstants.GEARING),
           DCMotor.getKrakenX60(1));
   IntakeSimulation intakeSim;
-  CoralState coralState = CoralState.EMPTY;
+  CoralState coralState = CoralState.EFFECTOR;
   Supplier<Pose3d> coralPoseSupplier;
   Supplier<Pose2d> robotPoseSupplier;
 
@@ -80,8 +81,16 @@ public class EndEffectorIOSim implements SimMechanism, EndEffectorIO {
                               driveSim.getDriveTrainSimulatedChassisSpeedsFieldRelative(),
                               driveSim.getGyroSimulation().getGyroReading(),
                               Meters.of(coralPoseSupplier.get().getZ()),
-                              MetersPerSecond.of(1 * Math.signum(getEndEffectorVelocity())),
+                              MetersPerSecond.of(5 * Math.signum(getEndEffectorVelocity())),
                               coralPoseSupplier.get().getRotation().getMeasureY()));
+                }));
+    intakeSim.addGamePieceToIntake();
+    new Trigger(DriverStation::isEnabled)
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  intakeSim.startIntake();
+                  intakeSim.setGamePiecesCount(1);
                 }));
     this.coralPoseSupplier = coralPoseSupplier;
     this.robotPoseSupplier = driveSim::getSimulatedDriveTrainPose;

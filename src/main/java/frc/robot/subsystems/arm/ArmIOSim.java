@@ -42,9 +42,6 @@ public class ArmIOSim implements SimMechanism, ArmIO {
   public ArmIOSim(LoggedMechanismLigament2d endEffector) {
     initSimVoltage();
     SparkFlexConfig c = getArmConfig();
-    c.softLimit.reverseSoftLimit(-0.3);
-    // Soft limit has weird behavior in sim currently
-    c.softLimit.reverseSoftLimitEnabled(false);
     armMotor.configure(c, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     armSim = new SparkFlexSim(armMotor, armGearBox);
     armEncoderSim = armSim.getAbsoluteEncoderSim();
