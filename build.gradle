@@ -179,7 +179,6 @@ createVersionFile.dependsOn(eventDeploy)
 
 // Spotless formatting
 project.compileJava.dependsOn(spotlessApply)
-spotlessCheck.dependsOn(checkstyleMain)
 spotless {
     java {
         target fileTree(".") {
@@ -220,5 +219,5 @@ spotless {
 }
 
 checkstyleMain{
-    enabled = gradle.startParameter.taskNames.contains('spotlessCheck')
+    enabled = gradle.startParameter.taskNames.contains('checkstyleMain')
 }
