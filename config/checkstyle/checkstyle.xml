@@ -27,6 +27,7 @@
         <module name="InnerTypeLast"/>
         <module name="MagicNumber"> 
             <property name="ignoreFieldDeclaration" value="false"/>
+            <property name="ignoreAnnotation" value="true">
         </module>
         <module name="LocalFinalVariableName"/>
         <module name="LocalVariableName"/>
