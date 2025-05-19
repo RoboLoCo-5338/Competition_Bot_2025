@@ -3,6 +3,7 @@ plugins {
     id "edu.wpi.first.GradleRIO" version "2025.3.1"
     id "com.peterabeles.gversion" version "1.10"
     id "com.diffplug.spotless" version "6.12.0"
+    id "checkstyle"
 }
 
 java {
@@ -178,6 +179,7 @@ createVersionFile.dependsOn(eventDeploy)
 
 // Spotless formatting
 project.compileJava.dependsOn(spotlessApply)
+spotlessCheck.dependsOn(checkstyleMain)
 spotless {
     java {
         target fileTree(".") {
@@ -215,4 +217,8 @@ spotless {
         indentWithSpaces(2)
         endWithNewline()
     }
+}
+
+checkstyleMain{
+    enabled = gradle.startParameter.taskNames.contains('spotlessCheck')
 }
