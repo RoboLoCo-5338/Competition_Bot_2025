@@ -10,7 +10,6 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.units.measure.Voltage;
-import frc.robot.subsystems.arm.ArmConstants.ArmSimConstants;
 import org.littletonrobotics.junction.AutoLog;
 
 public interface ArmIO {

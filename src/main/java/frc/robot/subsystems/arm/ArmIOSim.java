@@ -109,11 +109,6 @@ public class ArmIOSim implements SimMechanism, ArmIO {
   }
 
   @Override
-  public void armOpenLoop(Voltage voltage) {
-    armClosedLoopController.setReference(voltage.magnitude(), ControlType.kVoltage);
-  }
-
-  @Override
   public void setArmVelocity(double velocityRadPerSec) {
 
     double ffvolts =

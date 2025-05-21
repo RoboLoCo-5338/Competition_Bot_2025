@@ -60,5 +60,6 @@ public interface EndEffectorIO {
   public default double getEndEffectorVelocity() {
     return 0.0;
   }
+
   public default void endEffectorOpenLoop(Voltage voltage) {}
 }
