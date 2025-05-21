@@ -147,7 +147,6 @@ public class EndEffectorIOSim implements SimMechanism, EndEffectorIO {
   public void endEffectorOpenLoop(Voltage voltage) {
     endEffectorMotor.setVoltage(voltage.magnitude());
   }
-
   @Override
   public double getEndEffectorVelocity() {
     return physicsSim.getAngularVelocityRadPerSec();
