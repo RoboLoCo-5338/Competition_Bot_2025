@@ -39,10 +39,10 @@ import frc.robot.commands.SimCommands;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmConstants;
+import frc.robot.subsystems.arm.ArmConstants.ArmPresetConstants;
 import frc.robot.subsystems.arm.ArmIO;
 import frc.robot.subsystems.arm.ArmIOSim;
 import frc.robot.subsystems.arm.ArmIOSpark;
-import frc.robot.subsystems.arm.ArmConstants.ArmPresetConstants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.DriveConstants;
 import frc.robot.subsystems.drive.GyroIO;
@@ -148,7 +148,8 @@ public class RobotContainer {
         led = new LED();
         endEffector =
             new EndEffector(
-                new EndEffectorIOSim(driveSimulation, this::getEndEffectorCoralSimPose, this::stowed));
+                new EndEffectorIOSim(
+                    driveSimulation, this::getEndEffectorCoralSimPose, this::stowed));
         elevator = new Elevator(new ElevatorIOSim());
         arm = new Arm(new ArmIOSim(((ElevatorIOSim) elevator.getIO()).getLigamentEnd()));
         vision =
@@ -635,9 +636,11 @@ public class RobotContainer {
             drive.getModulePositions()[1].angle.getRadians()));
   }
 
-  public boolean stowed(){
-    return Math.abs(arm.getArmPosition()-ArmPresetConstants.ARM_STOW_FINAL)<ArmConstants.POSITION_TOLERANCE && 
-        Math.abs(elevator.getElevatorPosition()-ElevatorPresetConstants.ELEVATOR_STOW)<ElevatorConstants.POSITION_TOLERANCE;
+  public boolean stowed() {
+    return Math.abs(arm.getArmPosition() - ArmPresetConstants.ARM_STOW_FINAL)
+            < ArmConstants.POSITION_TOLERANCE
+        && Math.abs(elevator.getElevatorPosition() - ElevatorPresetConstants.ELEVATOR_STOW)
+            < ElevatorConstants.POSITION_TOLERANCE;
   }
 
   public void periodic() {}

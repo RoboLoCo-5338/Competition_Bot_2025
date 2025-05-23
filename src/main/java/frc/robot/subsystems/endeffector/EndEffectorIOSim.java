@@ -18,7 +18,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.SimMechanism;
 import frc.robot.subsystems.endeffector.EndEffectorConstants.EndEffectorSimConstants;
-
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 import org.dyn4j.geometry.Triangle;
@@ -41,7 +40,8 @@ public class EndEffectorIOSim implements SimMechanism, EndEffectorIO {
   Supplier<Pose3d> coralPoseSupplier;
   Supplier<Pose2d> robotPoseSupplier;
 
-  public EndEffectorIOSim(SwerveDriveSimulation driveSim, Supplier<Pose3d> coralPoseSupplier, BooleanSupplier stowed) {
+  public EndEffectorIOSim(
+      SwerveDriveSimulation driveSim, Supplier<Pose3d> coralPoseSupplier, BooleanSupplier stowed) {
     initSimVoltage();
     endEffectorMotor.getConfigurator().apply(getEndEffectorConfiguration());
     // this.intakeSim =
