@@ -18,6 +18,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.SimMechanism;
 import frc.robot.subsystems.endeffector.EndEffectorConstants.EndEffectorSimConstants;
+
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 import org.dyn4j.geometry.Triangle;
 import org.dyn4j.geometry.Vector2;
@@ -39,7 +41,7 @@ public class EndEffectorIOSim implements SimMechanism, EndEffectorIO {
   Supplier<Pose3d> coralPoseSupplier;
   Supplier<Pose2d> robotPoseSupplier;
 
-  public EndEffectorIOSim(SwerveDriveSimulation driveSim, Supplier<Pose3d> coralPoseSupplier) {
+  public EndEffectorIOSim(SwerveDriveSimulation driveSim, Supplier<Pose3d> coralPoseSupplier, BooleanSupplier stowed) {
     initSimVoltage();
     endEffectorMotor.getConfigurator().apply(getEndEffectorConfiguration());
     // this.intakeSim =
@@ -57,6 +59,7 @@ public class EndEffectorIOSim implements SimMechanism, EndEffectorIO {
     new Trigger(() -> intakeSim.getGamePiecesAmount() > 0)
         .onTrue(new InstantCommand(() -> coralState = CoralState.FUNNEL));
     new Trigger(() -> coralState == CoralState.FUNNEL)
+        .and(stowed)
         .debounce(0.2) // Waits for a bit simulate coral falling into the
         .and(() -> Units.radiansToRotations(physicsSim.getAngularVelocityRadPerSec()) > 25)
         .onTrue(

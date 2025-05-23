@@ -70,8 +70,8 @@ public class Arm extends SubsystemBase implements SysIDSubsystem {
     return new InstantCommand(() -> io.setArmVelocity(velocity.getAsDouble()), this);
   }
 
-  public DoubleSupplier getArmPosition() {
-    return () -> io.getArmPosition(inputs);
+  public double getArmPosition() {
+    return io.getArmPosition(inputs);
   }
 
   public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {

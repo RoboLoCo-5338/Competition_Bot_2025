@@ -42,6 +42,7 @@ import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.ArmIO;
 import frc.robot.subsystems.arm.ArmIOSim;
 import frc.robot.subsystems.arm.ArmIOSpark;
+import frc.robot.subsystems.arm.ArmConstants.ArmPresetConstants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.DriveConstants;
 import frc.robot.subsystems.drive.GyroIO;
@@ -52,6 +53,7 @@ import frc.robot.subsystems.drive.ModuleIOTalonFXReal;
 import frc.robot.subsystems.drive.ModuleIOTalonFXSim;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorConstants;
+import frc.robot.subsystems.elevator.ElevatorConstants.ElevatorPresetConstants;
 import frc.robot.subsystems.elevator.ElevatorIO;
 import frc.robot.subsystems.elevator.ElevatorIOSim;
 import frc.robot.subsystems.elevator.ElevatorIOTalonFX;
@@ -146,7 +148,7 @@ public class RobotContainer {
         led = new LED();
         endEffector =
             new EndEffector(
-                new EndEffectorIOSim(driveSimulation, this::getEndEffectorCoralSimPose));
+                new EndEffectorIOSim(driveSimulation, this::getEndEffectorCoralSimPose, this::stowed));
         elevator = new Elevator(new ElevatorIOSim());
         arm = new Arm(new ArmIOSim(((ElevatorIOSim) elevator.getIO()).getLigamentEnd()));
         vision =
@@ -438,7 +440,7 @@ public class RobotContainer {
         new Rotation3d(
             0.0,
             -1
-                * (Units.rotationsToRadians(arm.getArmPosition().getAsDouble())
+                * (Units.rotationsToRadians(arm.getArmPosition())
                     + ArmConstants.ArmSimConstants.STARTING_ANGLE
                     + Units.degreesToRadians(90)),
             0.0));
@@ -448,7 +450,7 @@ public class RobotContainer {
     double elevatorHeight = elevator.getElevatorPosition() * 1;
     double endEffectorRotation =
         -1
-            * (Units.rotationsToRadians(arm.getArmPosition().getAsDouble())
+            * (Units.rotationsToRadians(arm.getArmPosition())
                 + ArmConstants.ArmSimConstants.STARTING_ANGLE
                 + Units.degreesToRadians(90));
 
@@ -475,7 +477,7 @@ public class RobotContainer {
         new Rotation3d(
             0.0,
             Math.PI / 2
-                - Units.rotationsToRadians(arm.getArmPosition().getAsDouble())
+                - Units.rotationsToRadians(arm.getArmPosition())
                 + Units.degreesToRadians(27),
             0.0));
   }
@@ -485,7 +487,7 @@ public class RobotContainer {
     double elevatorHeight = elevator.getElevatorPosition() * 1;
     double endEffectorRotation =
         -1
-            * (Units.rotationsToRadians(arm.getArmPosition().getAsDouble())
+            * (Units.rotationsToRadians(arm.getArmPosition())
                 + ArmConstants.ArmSimConstants.STARTING_ANGLE
                 + Units.degreesToRadians(90));
 
@@ -523,7 +525,7 @@ public class RobotContainer {
     double elevatorHeight = elevator.getElevatorPosition() * 1;
     double endEffectorRotation =
         -1
-            * (Units.rotationsToRadians(arm.getArmPosition().getAsDouble())
+            * (Units.rotationsToRadians(arm.getArmPosition())
                 + ArmConstants.ArmSimConstants.STARTING_ANGLE
                 + Units.degreesToRadians(90));
 
@@ -631,6 +633,11 @@ public class RobotContainer {
             0.0,
             drive.getWheelRadiusCharacterizationPositions()[1],
             drive.getModulePositions()[1].angle.getRadians()));
+  }
+
+  public boolean stowed(){
+    return Math.abs(arm.getArmPosition()-ArmPresetConstants.ARM_STOW_FINAL)<ArmConstants.POSITION_TOLERANCE && 
+        Math.abs(elevator.getElevatorPosition()-ElevatorPresetConstants.ELEVATOR_STOW)<ElevatorConstants.POSITION_TOLERANCE;
   }
 
   public void periodic() {}
