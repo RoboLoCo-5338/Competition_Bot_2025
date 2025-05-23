@@ -197,8 +197,10 @@ public class RobotContainer {
     NamedCommands.registerCommand(
         "StowPreset", PresetCommands.stowElevator(elevator, endEffector, arm));
 
-    NamedCommands.registerCommand("Add Left Coral", SimCommands.addLeftCoral());
-    NamedCommands.registerCommand("AddRightCoral", SimCommands.addRightCoral());
+    NamedCommands.registerCommand(
+        "Add Left Coral", SimCommands.addLeftCoral(driveSimulation::getSimulatedDriveTrainPose));
+    NamedCommands.registerCommand(
+        "AddRightCoral", SimCommands.addRightCoral(driveSimulation::getSimulatedDriveTrainPose));
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -398,8 +400,12 @@ public class RobotContainer {
     // simController.a().onTrue(SimulatedArena.getInstance().addGamePiece(new
     // ReefscapeCoralOnField(null)));
     if (Constants.currentMode == Mode.SIM) {
-      simController.b().onTrue(SimCommands.addLeftCoral());
-      simController.x().onTrue(SimCommands.addRightCoral());
+      simController
+          .b()
+          .onTrue(SimCommands.addLeftCoral(driveSimulation::getSimulatedDriveTrainPose));
+      simController
+          .x()
+          .onTrue(SimCommands.addRightCoral(driveSimulation::getSimulatedDriveTrainPose));
     }
   }
 
