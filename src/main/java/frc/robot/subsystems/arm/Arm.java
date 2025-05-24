@@ -89,6 +89,6 @@ public class Arm extends SubsystemBase implements SysIDSubsystem {
 
   @Override
   public String getName() {
-    return "Elevator ";
+    return "Arm ";
   }
 }
