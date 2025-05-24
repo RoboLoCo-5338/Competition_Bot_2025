@@ -26,7 +26,7 @@ public interface SysIDSubsystem {
         getName() + "SysId Dynamic Backward",
         sysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse));
     autoChooser.addOption(
-        "All Sysid Routines(Recommended)",
+        getName() + "All Sysid Routines(Recommended)",
         new SequentialCommandGroup(
             sysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward),
             new WaitCommand(5),
