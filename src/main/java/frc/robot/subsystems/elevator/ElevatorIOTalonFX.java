@@ -66,7 +66,9 @@ public class ElevatorIOTalonFX implements ElevatorIO {
                 elevator2Position,
                 elevator2Velocity,
                 elevator2AppliedVolts,
-                elevator2Current));
+                elevator2Current,
+                elevator1Temperature,
+                elevator2Temperature));
     ParentDevice.optimizeBusUtilizationForAll(elevatorMotor1, elevatorMotor2);
     elevatorMotor2.setControl(new StrictFollower(elevatorMotor1.getDeviceID()));
   }
