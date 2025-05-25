@@ -11,8 +11,8 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.units.measure.Voltage;
 import frc.robot.generated.TunerConstants;
-import org.littletonrobotics.junction.AutoLog;
 import frc.robot.subsystems.SimMechanism;
+import org.littletonrobotics.junction.AutoLog;
 
 public class ElevatorIO extends SimMechanism{
   TalonFX elevatorMotor1 =

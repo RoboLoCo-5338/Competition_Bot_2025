@@ -15,10 +15,9 @@ package frc.robot.subsystems.drive;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.subsystems.SimMechanism;
-
 import org.littletonrobotics.junction.AutoLog;
 
-public class ModuleIO extends SimMechanism{
+public class ModuleIO extends SimMechanism {
   @AutoLog
   public static class ModuleIOInputs {
     public boolean driveConnected = false;

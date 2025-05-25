@@ -12,7 +12,7 @@ import frc.robot.subsystems.SimMechanism;
 
 import org.littletonrobotics.junction.AutoLog;
 
-public class EndEffectorIO extends SimMechanism{
+public class EndEffectorIO extends SimMechanism {
   public final TalonFX endEffectorMotor =
       new TalonFX(EndEffectorConstants.EFFECTORID, TunerConstants.DrivetrainConstants.CANBusName);
   final VelocityVoltage endEffectorVelocityRequest = new VelocityVoltage(0.0);
