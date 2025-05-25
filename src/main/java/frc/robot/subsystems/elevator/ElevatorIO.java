@@ -14,7 +14,7 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.SimMechanism;
 import org.littletonrobotics.junction.AutoLog;
 
-public class ElevatorIO extends SimMechanism{
+public class ElevatorIO extends SimMechanism {
   TalonFX elevatorMotor1 =
       new TalonFX(
           ElevatorConstants.ELEVATOR_MOTOR_ID1, TunerConstants.DrivetrainConstants.CANBusName);
