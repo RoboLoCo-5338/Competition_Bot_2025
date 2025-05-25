@@ -14,7 +14,6 @@
 package frc.robot.subsystems.drive;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.subsystems.SimMechanism;
 import org.littletonrobotics.junction.AutoLog;
 
 public class ModuleIO {
