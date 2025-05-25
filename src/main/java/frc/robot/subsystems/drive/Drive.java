@@ -388,11 +388,13 @@ public class Drive extends SubsystemBase {
   public void setPose(Pose2d pose) {
     poseEstimator.resetPosition(rawGyroRotation, getModulePositions(), pose);
   }
-
+  /** Disables Vision */
   public void disableVision() {
     useVision = false;
   }
-
+  /**
+   * Enables Vision
+   */
   public void enableVision() {
     useVision = true;
   }

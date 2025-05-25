@@ -193,7 +193,6 @@ public class RobotContainer {
     configureButtonBindings();
 
     // LED check if it is close/critical to barge
-
     led.isCloseToBarge(drive)
         .and(() -> RobotState.isTeleop())
         .whileTrue(led.turnColor(Color.kWhite));
@@ -221,6 +220,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     // Default command, normal field-relative drive
 
+    //led default is to be rainbow
     led.setDefaultCommand(led.goRainbow());
 
     drive.setDefaultCommand(

@@ -78,35 +78,59 @@ public class Elevator extends SubsystemBase {
         ElevatorConstants.ELEVATOR_kP_LASERCAN * error
             + ElevatorConstants.ELEVATOR_kI_LASERCAN * integral
             + ElevatorConstants.ELEVATOR_kD_LASERCAN * derivative;
-
+    //sets velocity based on calculations
     io.setElevatorVelocity(output);
   }
-
+  /**
+   * <p>I don't think this works</p>
+   * 
+   * Moves the elevator to the specified position using "PID control" 
+   * @param position desired position
+   * @return FunctionalCommand
+   */
   public Command moveElevatorLaserCan(double position) {
     return new FunctionalCommand(
+      //onInit
         () -> {
           integral = 0;
           prevError = 0;
           error = 0;
           io.setElevatorVelocity(0.0);
         },
+        //onExecute
         () -> elevatorPID(position),
+        //onEnd
         (interrupted) -> io.setElevatorVelocity(0.0),
+        //isFinished
+        //This should probably also include if inputs.elevator1Position is within tolerance of position...
         () -> Math.abs(error) < ElevatorConstants.ELEVATOR_EPSILON,
+        //req
         this);
   }
 
+  /**
+   * Sets elevator velocity to specified value
+   * @param velocity Desired velocity
+   * @return InstantCommand
+   */
   public Command setElevatorVelocity(DoubleSupplier velocity) {
     // Sets the elevator velocity to the specified value
     return new InstantCommand(() -> io.setElevatorVelocity(velocity.getAsDouble()), this);
   }
 
+  /**
+   * returns the ElevatorIO object for the elevator
+   * @return
+   */
   public ElevatorIO getIO() {
     return io;
   }
 
+  /**
+   * returns autologged elevator position
+   * @return
+   */
   public double getElevatorPosition() {
-    //returns autologged elevator position
     return inputs.elevator1Position;
   }
 }

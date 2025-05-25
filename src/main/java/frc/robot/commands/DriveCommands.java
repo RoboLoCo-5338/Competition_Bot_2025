@@ -61,7 +61,12 @@ public class DriveCommands {
   public static double slowMode = 1;
 
   private DriveCommands() {}
-
+  /**
+   * Calculates the new vector based on joystick input
+   * @param x from joystick
+   * @param y from joystick
+   * @return Translation 2d of the vector created (resulting vector magnitude is min 0, max 1)
+   */
   private static Translation2d getLinearVelocityFromJoysticks(double x, double y) {
     // Apply deadband of 0.06 as well as get magnitude using hypotenuse (vectors)
     double linearMagnitude = MathUtil.applyDeadband(Math.hypot(x, y), DriveConstants.DEADBAND);
@@ -510,7 +515,12 @@ public class DriveCommands {
       // rotates the left or right pose around the reef based on the tag id
       return getReefPose(direction, tagId);
     }
-
+    /**
+     * Gets the pose of the left/right/center of the side of the reef with the tag id
+     * @param direction 
+     * @param targetTagId
+     * @return Pose2d
+     */
     public static Pose2d getReefPose(Direction direction, int targetTagId) {
       Pose2d o =
           switch (direction) {
@@ -525,7 +535,11 @@ public class DriveCommands {
       //rotates pose around reef center
       return allianceFlip(o.rotateAround(new Translation2d(4.5, 4.03), rot));
     }
-    //returns alliance reef poses
+    /**
+     * Returns all the reef poses based on the side of each side of the reef
+     * @param direction left/right/none(center)
+     * @return ArrayList of poses
+     */
     public static ArrayList<Pose2d> getReefPoses(Direction direction) {
       ArrayList<Pose2d> poses = new ArrayList<>();
       for (int i = 0; i < 6; i++) {
@@ -537,6 +551,15 @@ public class DriveCommands {
     }
   }
 
+  /**
+   * Aligns the robot to the reef based on closest reef side, and then paths to the reef based on direction (left/right/none)
+   * Also turns led orange
+   * @param drive
+   * @param direction
+   * @param controller
+   * @param led
+   * @return ParallelCommandGroup
+   */
   public static Command reefAlign(
       Drive drive, Direction direction, CommandXboxController controller, LED led) {
     return new ParallelCommandGroup(
@@ -546,6 +569,7 @@ public class DriveCommands {
             () ->
                 new Reef(
                     direction,
+                    //gets index of closest reef pose
                     Reef.getReefPoses(direction)
                             .indexOf(drive.getPose().nearest(Reef.getReefPoses(direction)))
                         + ((isFlipped) ? 6 : 17)),
@@ -554,6 +578,10 @@ public class DriveCommands {
             led));
   }
 
+  /**
+   * Raises elevator/arm and reefAligns simultaneously, then automatically scores coral in reef until lasercan no longer detects coral
+   * @return ParallelCommandGroup w/ SequentialCommandGroup inside
+   */
   public static Command reefScore(
       Drive drive,
       Direction direction,

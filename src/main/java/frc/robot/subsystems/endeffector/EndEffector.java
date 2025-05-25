@@ -30,7 +30,7 @@ public class EndEffector extends SubsystemBase {
     endEffectorDisconnectedAlert.set(
         !inputs.endEffectorConnected && Constants.currentMode != Mode.SIM);
   }
-  //command to set end effector velocity w/ subsystem requirement of the end effector
+  /** instant command to set end effector velocity w/ subsystem requirement of the end effector */
   public Command setEndEffectorVelocity(double velocity) {
     return new InstantCommand(
         () -> {
@@ -38,7 +38,7 @@ public class EndEffector extends SubsystemBase {
         },
         this);
   }
-  //command to set end effector speed 
+  /**instant command to set end effector speed */
   public Command setEndEffectorSpeed(double speed) {
     return new InstantCommand(() -> io.setEndEffectorSpeed(speed));
   }

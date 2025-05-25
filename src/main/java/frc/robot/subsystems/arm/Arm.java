@@ -62,6 +62,10 @@ public class Arm extends SubsystemBase {
     return new InstantCommand(() -> io.setArmVelocity(velocity.getAsDouble()), this);
   }
 
+  /**
+   * Supplier for arm position
+   * @return DoubleSupplier
+   */
   public DoubleSupplier getArmPosition() {
     //gets arm position from the autologger
     SmartDashboard.putNumber("Getting arm position in Arm.java", armPosition);

@@ -37,6 +37,11 @@ public class LED extends SubsystemBase {
     m_led.start();
   }
 
+  /**
+   * flashes the LED at the end of the align command (red or green depending on if canceled)
+   * @param canceled
+   * @return 
+   */
   public Command alignEndFlash(boolean canceled) {
     return new ScheduleCommand(
         new SequentialCommandGroup(
@@ -50,6 +55,10 @@ public class LED extends SubsystemBase {
             .withTimeout(0.3));
   }
 
+  /**
+   * pulses blue continuously
+   * @return RunCommand
+   */
   public Command pulseBlue() {
     LEDPattern blue = LEDPattern.solid(Color.kBlue);
     LEDPattern pulsingBlue = blue.breathe(Seconds.of(5));
@@ -62,6 +71,10 @@ public class LED extends SubsystemBase {
         this);
   }
 
+  /**
+   * Turns the leds off
+   * @return InstantCommand
+   */
   public Command turnOff() {
     return new InstantCommand(
       //makes the LED no color
@@ -73,6 +86,10 @@ public class LED extends SubsystemBase {
         this);
   }
 
+  /**
+   * Turns leds into scrolling rainbow
+   * @return InstantCommand
+   */
   public Command goRainbow() {
     LEDPattern rainbow = LEDPattern.rainbow(255, 128);
     LEDPattern scrollingRainbow =
@@ -86,7 +103,11 @@ public class LED extends SubsystemBase {
         this);
   }
 
+  /** Changes color
+   * @return RunCommand
+   */
   public Command turnColor(Color color) {
+    //turns the color by continuously applying the color to the buffer
     return new RunCommand(
         () -> {
           LEDPattern colorPattern = LEDPattern.solid(color);
@@ -112,17 +133,23 @@ public class LED extends SubsystemBase {
     }
   }
   //Trigger b/c it makes it so that we don't have to check it in periodic(), it is similar to button triggers
+  /**
+   * Checks if robot is within 0.6 to 1.45 meters of barge
+   * @param drive
+   * @return
+   */
   public Trigger isCloseToBarge(Drive drive) {
     //checks if the robot distance is between 1.45 and 0.6 meters from barge
     return new Trigger(
         () -> getDistanceFromBarge(drive) < 1.45 && getDistanceFromBarge(drive) > 0.60);
   }
-
+  /** Checks if robot is less than 0.6 meters of barge */
   public Trigger isCriticalToBarge(Drive drive) {
     //checks if the robot distance is less than 0.6 meters from barge
     return new Trigger(() -> getDistanceFromBarge(drive) < 0.60);
   }
-
+  
+  /** Rumbles the controllers */
   public SequentialCommandGroup sendBargeIndicator(CommandXboxController controller) {
     //rumbles controllers
     return new SequentialCommandGroup(

@@ -45,8 +45,8 @@ public class AddressableLEDIO implements LEDIO {
     m_led.setData(m_ledBuffer);
   }
 
+  /** changes led port number (might not work b/c didn't setLength or setData or start this new LED)*/
   public void changeLEDPort(int port) {
-    //changes the led port (I think this is wrong b/c we didn't setLength or setData or start this new LED)
     m_led.close();
     m_led = new AddressableLED(port);
   }
