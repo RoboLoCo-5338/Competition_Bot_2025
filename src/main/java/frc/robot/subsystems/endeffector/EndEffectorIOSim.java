@@ -106,6 +106,7 @@ public class EndEffectorIOSim implements SimMechanism, EndEffectorIO {
 
     inputs.endEffectorConnected = true;
     inputs.endEffectorVelocity = Units.radiansToRotations(physicsSim.getAngularVelocityRadPerSec());
+    inputs.endEffectorPosition = endEffectorMotor.getPosition().getValueAsDouble();
     inputs.endEffectorAppliedVolts = physicsSim.getInputVoltage();
     inputs.endEffectorCurrentAmps = physicsSim.getCurrentDrawAmps();
 
