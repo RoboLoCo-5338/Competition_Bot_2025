@@ -14,7 +14,7 @@ import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 
-public class ElevatorIOTalonFX implements ElevatorIO {
+public class ElevatorIOTalonFX extends ElevatorIO {
 
   private final StatusSignal<Angle> elevator1Position;
   private final StatusSignal<AngularVelocity> elevator1Velocity;

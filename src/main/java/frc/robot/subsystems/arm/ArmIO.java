@@ -8,10 +8,11 @@ import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.units.measure.Voltage;
+import frc.robot.subsystems.SimMechanism;
 import frc.robot.subsystems.arm.ArmConstants.ArmSimConstants;
 import org.littletonrobotics.junction.AutoLog;
 
-public interface ArmIO {
+public class ArmIO extends SimMechanism{
 
   SparkFlex armMotor = new SparkFlex(ArmConstants.ARM_MOTOR_ID, MotorType.kBrushless);
   SparkClosedLoopController armClosedLoopController = armMotor.getClosedLoopController();
@@ -38,7 +39,7 @@ public interface ArmIO {
    *   <li>{@code armCurrent}: The current drawn by the arm motor in amps
    * </ul>
    */
-  public default void updateInputs(ArmIOInputs inputs) {}
+  public void updateInputs(ArmIOInputs inputs) {}
 
   /**
    * Sets the position of the arm in radians. This method is "fire-and-forget" in the sense that it
@@ -49,7 +50,7 @@ public interface ArmIO {
    *
    * @param position the desired position in radians
    */
-  public default void setArmPosition(double position) {}
+  public void setArmPosition(double position) {}
 
   /**
    * Sets the velocity of the arm in radians per second. This method is "fire-and-forget" in the
@@ -59,7 +60,7 @@ public interface ArmIO {
    *
    * @param velocityRadPerSec The velocity of the arm in radians per second.
    */
-  public default void setArmVelocity(double velocity) {}
+  public void setArmVelocity(double velocity) {}
 
   /**
    * Gets the configuration used for the Talon FX motor controllers of the arm subsystem.
@@ -83,7 +84,7 @@ public interface ArmIO {
    *
    * @return the configuration used for the Talon FX motor controllers of the arm subsystem
    */
-  public default SparkFlexConfig getArmConfig() {
+  public SparkFlexConfig getArmConfig() {
     SparkFlexConfig armConfig = new SparkFlexConfig();
 
     armConfig
@@ -125,9 +126,9 @@ public interface ArmIO {
     return armConfig;
   }
 
-  public default double getArmPosition(ArmIOInputs inputs) {
+  public double getArmPosition(ArmIOInputs inputs) {
     return 0.0;
   }
 
-  public default void armOpenLoop(Voltage voltage) {}
+  public void armOpenLoop(Voltage voltage) {}
 }

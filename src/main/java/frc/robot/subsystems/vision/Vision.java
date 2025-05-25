@@ -44,7 +44,7 @@ public class Vision extends SubsystemBase {
     // Initialize inputs
     this.inputs = new VisionIOInputsAutoLogged[io.length];
     for (int i = 0; i < inputs.length; i++) {
-      inputs[i] = new VisionIOInputsAutoLogged();
+      inputs[i] = io[i].new VisionIOInputsAutoLogged();
     }
 
     // Initialize disconnected alerts

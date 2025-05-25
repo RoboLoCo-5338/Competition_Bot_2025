@@ -12,8 +12,9 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.units.measure.Voltage;
 import frc.robot.generated.TunerConstants;
 import org.littletonrobotics.junction.AutoLog;
+import frc.robot.subsystems.SimMechanism;
 
-public interface ElevatorIO {
+public class ElevatorIO extends SimMechanism{
   TalonFX elevatorMotor1 =
       new TalonFX(
           ElevatorConstants.ELEVATOR_MOTOR_ID1, TunerConstants.DrivetrainConstants.CANBusName);
@@ -61,7 +62,7 @@ public interface ElevatorIO {
    *   <li>{@code elevator2CurrentAmps}: The current drawn by the second elevator motor in amps
    * </ul>
    */
-  public default void updateInputs(ElevatorIOInputs inputs) {}
+  public void updateInputs(ElevatorIOInputs inputs) {}
 
   /**
    * Sets the target velocity for both elevator motors.
@@ -71,7 +72,7 @@ public interface ElevatorIO {
    *
    * @param velocity The target velocity in meters per second for the elevator motors.
    */
-  public default void setElevatorVelocity(double velocity) {}
+  public void setElevatorVelocity(double velocity) {}
 
   /**
    * Sets the target position for both elevator motors.
@@ -81,7 +82,7 @@ public interface ElevatorIO {
    *
    * @param position The target position in meters for the elevator motors.
    */
-  public default void setElevatorPosition(double position, int slot) {}
+  public void setElevatorPosition(double position, int slot) {}
 
   /**
    * Gets the current measurement from the laser can sensor.
@@ -92,7 +93,7 @@ public interface ElevatorIO {
    * @return The current measurement in millimeters from the laser can sensor, or -1 if the
    *     measurement is invalid or not available.
    */
-  public default int getLaserCanMeasurement() {
+  public int getLaserCanMeasurement() {
     return -1;
   }
 
@@ -118,7 +119,7 @@ public interface ElevatorIO {
    *
    * @return the configuration used for the Talon FX motor controllers of the elevator subsystem
    */
-  public default TalonFXConfiguration getConfiguration(int motorNum) {
+  public TalonFXConfiguration getConfiguration(int motorNum) {
     var config = new TalonFXConfiguration();
     config.Voltage.PeakForwardVoltage = 16;
     config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
@@ -161,5 +162,5 @@ public interface ElevatorIO {
     return config;
   }
 
-  public default void elevatorOpenLoop(Voltage voltage) {}
+  public void elevatorOpenLoop(Voltage voltage) {}
 }

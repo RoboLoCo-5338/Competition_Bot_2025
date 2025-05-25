@@ -6,7 +6,7 @@ import org.littletonrobotics.junction.AutoLog;
 import org.littletonrobotics.junction.LogTable;
 import org.littletonrobotics.junction.inputs.LoggableInputs;
 
-public interface VisionIO {
+public class VisionIO {
   @AutoLog
   public static class VisionIOInputs {
     public boolean connected = false;
@@ -50,5 +50,5 @@ public interface VisionIO {
     PHOTONVISION
   }
 
-  public default void updateInputs(VisionIOInputs inputs) {}
+  public void updateInputs(VisionIOInputs inputs) {}
 }

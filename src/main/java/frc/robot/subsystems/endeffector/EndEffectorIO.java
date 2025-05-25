@@ -8,9 +8,11 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.units.measure.Voltage;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.SimMechanism;
+
 import org.littletonrobotics.junction.AutoLog;
 
-public interface EndEffectorIO {
+public class EndEffectorIO extends SimMechanism{
   public final TalonFX endEffectorMotor =
       new TalonFX(EndEffectorConstants.EFFECTORID, TunerConstants.DrivetrainConstants.CANBusName);
   final VelocityVoltage endEffectorVelocityRequest = new VelocityVoltage(0.0);
@@ -28,11 +30,11 @@ public interface EndEffectorIO {
     public double endEffectorPosition = 0.0;
   }
 
-  public default void updateInputs(EndEffectorIOInputs inputs) {}
+  public void updateInputs(EndEffectorIOInputs inputs) {}
 
-  public default void setEndEffectorVelocity(double velocity) {}
+  public void setEndEffectorVelocity(double velocity) {}
 
-  public default TalonFXConfiguration getEndEffectorConfiguration() {
+  public TalonFXConfiguration getEndEffectorConfiguration() {
     var config = new TalonFXConfiguration();
     config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
     config.Slot0.kP = EndEffectorConstants.EFFECTOR_KP;
@@ -47,15 +49,15 @@ public interface EndEffectorIO {
     return config;
   }
 
-  public default void setEndEffectorSpeed(double speed) {}
+  public void setEndEffectorSpeed(double speed) {}
 
-  public default int getLaserCanMeasurement1() {
+  public int getLaserCanMeasurement1() {
     return -1;
   }
 
-  public default int getLaserCanMeasurement2() {
+  public int getLaserCanMeasurement2() {
     return -1;
   }
 
-  public default void endEffectorOpenLoop(Voltage voltage) {}
+  public void endEffectorOpenLoop(Voltage voltage) {}
 }

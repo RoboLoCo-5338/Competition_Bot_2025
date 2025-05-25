@@ -15,7 +15,7 @@ import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 import frc.robot.subsystems.endeffector.EndEffectorConstants.EndEffectorSimConstants;
 
-public class EndEffectorIOTalonFX implements EndEffectorIO {
+public class EndEffectorIOTalonFX extends EndEffectorIO {
 
   private final StatusSignal<AngularVelocity> endEffectorVelocity;
   private final StatusSignal<Voltage> endEffectorAppliedVolts;

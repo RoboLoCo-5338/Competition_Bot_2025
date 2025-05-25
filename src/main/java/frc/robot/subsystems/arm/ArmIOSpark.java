@@ -17,7 +17,7 @@ import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.function.DoubleSupplier;
 
-public class ArmIOSpark implements ArmIO {
+public class ArmIOSpark extends ArmIO {
 
   private final AbsoluteEncoder armEncoder;
 
