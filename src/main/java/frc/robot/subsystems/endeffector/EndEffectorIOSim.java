@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import frc.robot.subsystems.SimMechanism;
 import frc.robot.subsystems.endeffector.EndEffectorConstants.EndEffectorSimConstants;
 
-public class EndEffectorIOSim extends EndEffectorIOTalonFX {
+public class EndEffectorIOSim extends EndEffectorIOTalonFX implements SimMechanism {
   TalonFXSimState simMotor = endEffectorMotor.getSimState();
   FlywheelSim physicsSim =
       new FlywheelSim(
@@ -22,7 +22,7 @@ public class EndEffectorIOSim extends EndEffectorIOTalonFX {
   public EndEffectorIOSim() {
     super();
     endEffectorMotor.getConfigurator().apply(getEndEffectorConfiguration());
-    SimMechanism.MECHANISMS.add(this);
+    initSimVoltage();
   }
 
   @Override
@@ -49,7 +49,7 @@ public class EndEffectorIOSim extends EndEffectorIOTalonFX {
         endEffectorVelocityRequest.withVelocity(velocity * EndEffectorSimConstants.GEARING));
   }
 
-  // @Override
+  @Override
   public double[] getCurrents() {
     return new double[] {physicsSim.getCurrentDrawAmps()};
   }

@@ -4,8 +4,12 @@ import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import java.util.ArrayList;
 
-public class SimMechanism {
-  public static ArrayList<SimMechanism> MECHANISMS = new ArrayList<SimMechanism>();
+public interface SimMechanism {
+  static final ArrayList<SimMechanism> MECHANISMS = new ArrayList<SimMechanism>();
+
+  public default void initSimVoltage() {
+    MECHANISMS.add(this);
+  }
 
   public static void updateBatteryVoltages() {
     ArrayList<Double> currents = new ArrayList<Double>();
@@ -19,7 +23,5 @@ public class SimMechanism {
             currents.stream().mapToDouble(Double::doubleValue).toArray()));
   }
 
-  public double[] getCurrents() {
-    return new double[] {0.0}; // Default implementation, should be overridden by subclasses
-  }
+  public abstract double[] getCurrents();
 }

@@ -19,7 +19,7 @@ import frc.robot.subsystems.arm.ArmConstants.ArmSimConstants;
 import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d;
 
-public class ArmIOSim extends ArmIOSpark {
+public class ArmIOSim extends ArmIOSpark implements SimMechanism {
 
   DCMotor armGearBox = DCMotor.getNeoVortex(1);
   SingleJointedArmSim armPhysicsSim =
@@ -50,7 +50,7 @@ public class ArmIOSim extends ArmIOSpark {
                     "endEffectorArm",
                     ArmSimConstants.LENGTH,
                     Units.radiansToDegrees(ArmSimConstants.STARTING_ANGLE)));
-    SimMechanism.MECHANISMS.add(this);
+    initSimVoltage();
   }
 
   @Override

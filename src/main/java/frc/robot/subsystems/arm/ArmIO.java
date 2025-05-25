@@ -12,7 +12,7 @@ import frc.robot.subsystems.SimMechanism;
 import frc.robot.subsystems.arm.ArmConstants.ArmSimConstants;
 import org.littletonrobotics.junction.AutoLog;
 
-public class ArmIO extends SimMechanism {
+public class ArmIO {
 
   SparkFlex armMotor = new SparkFlex(ArmConstants.ARM_MOTOR_ID, MotorType.kBrushless);
   SparkClosedLoopController armClosedLoopController = armMotor.getClosedLoopController();
