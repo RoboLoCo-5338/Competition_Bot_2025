@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import frc.robot.subsystems.SimMechanism;
 import frc.robot.subsystems.endeffector.EndEffectorConstants.EndEffectorSimConstants;
 
-public class EndEffectorIOSim extends EndEffectorIO {
+public class EndEffectorIOSim extends EndEffectorIOTalonFX {
   TalonFXSimState simMotor = endEffectorMotor.getSimState();
   FlywheelSim physicsSim =
       new FlywheelSim(

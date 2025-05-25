@@ -28,7 +28,7 @@ import frc.robot.subsystems.SimMechanism;
  * Physics sim implementation of module IO. The sim models are configured using a set of module
  * constants from Phoenix. Simulation is always based on voltage control.
  */
-public class ModuleIOSim extends ModuleIO {
+public class ModuleIOSim extends ModuleIOTalonFX {
   // TunerConstants doesn't support separate sim constants, so they are declared locally
 
   private final DCMotorSim driveSim;
@@ -49,7 +49,7 @@ public class ModuleIOSim extends ModuleIO {
   public ModuleIOSim(
       SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration>
           constants) {
-    super();
+    super(constants);
     // Create drive and turn sim models
     driveSim =
         new DCMotorSim(

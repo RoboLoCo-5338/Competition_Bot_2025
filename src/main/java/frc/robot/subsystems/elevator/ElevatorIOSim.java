@@ -14,7 +14,7 @@ import org.littletonrobotics.junction.mechanism.LoggedMechanism2d;
 import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d;
 import org.littletonrobotics.junction.mechanism.LoggedMechanismRoot2d;
 
-public class ElevatorIOSim extends ElevatorIO {
+public class ElevatorIOSim extends ElevatorIOTalonFX {
   TalonFXSimState motor1Sim = elevatorMotor1.getSimState();
   TalonFXSimState motor2Sim = elevatorMotor2.getSimState();
   ElevatorSim physicsSim =

@@ -19,7 +19,7 @@ import frc.robot.subsystems.arm.ArmConstants.ArmSimConstants;
 import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d;
 
-public class ArmIOSim extends ArmIO {
+public class ArmIOSim extends ArmIOSpark {
 
   DCMotor armGearBox = DCMotor.getNeoVortex(1);
   SingleJointedArmSim armPhysicsSim =
