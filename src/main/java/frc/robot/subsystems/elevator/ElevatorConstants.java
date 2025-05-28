@@ -56,7 +56,7 @@ public final class ElevatorConstants {
     public static final double ELEVATOR_L3 = 16.6;
     public static final double ELEVATOR_L4 = 19.40;
     public static final double ELEVATOR_NET = 16.486; // TODO: update
-    public static final double ELEVATOR_L3_ALGAE = 1.302/ElevatorSimConstants.METERS_PER_ROTATION;
+    public static final double ELEVATOR_L3_ALGAE = 1.302 / ElevatorSimConstants.METERS_PER_ROTATION;
     public static final double ELEVATOR_STOW = 0.05;
   }
 }
