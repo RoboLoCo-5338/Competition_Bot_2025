@@ -41,19 +41,8 @@ public class EndEffectorIOSim extends EndEffectorIOTalonFX implements SimMechani
         physicsSim.getAngularVelocityRadPerSec() * EndEffectorSimConstants.GEARING);
   }
 
-  // @Override
-  // public void setEndEffectorVelocity(double velocity) {
-  //   endEffectorMotor.setControl(
-  //       endEffectorVelocityRequest.withVelocity(velocity * EndEffectorSimConstants.GEARING));
-  // }
-
   @Override
   public double[] getCurrents() {
     return new double[] {physicsSim.getCurrentDrawAmps()};
   }
-
-  // @Override
-  // public void endEffectorOpenLoop(Voltage voltage) {
-  //   endEffectorMotor.setVoltage(voltage.magnitude());
-  // }
 }

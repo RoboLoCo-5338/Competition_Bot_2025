@@ -69,29 +69,4 @@ public class ArmIOSim extends ArmIOSpark implements SimMechanism {
   public double[] getCurrents() {
     return new double[] {armPhysicsSim.getCurrentDrawAmps()};
   }
-
-  /*
-  @Override
-  public void setArmPosition(double position) {
-    armClosedLoopController.setReference(Units.radiansToRotations(position), ControlType.kPosition);
-  }
-
-  @Override
-  public void armOpenLoop(Voltage voltage) {
-    armClosedLoopController.setReference(voltage.magnitude(), ControlType.kVoltage);
-  }
-
-  @Override
-  public void setArmVelocity(double velocityRadPerSec) {
-    double ffvolts =
-        ArmConstants.ARM_MOTOR_KS * Math.signum(velocityRadPerSec)
-            + ArmConstants.ARM_MOTOR_KV * velocityRadPerSec;
-    armClosedLoopController.setReference(
-        Units.radiansToRotations(velocityRadPerSec),
-        ControlType.kVelocity,
-        ClosedLoopSlot.kSlot0,
-        ffvolts,
-        ArbFFUnits.kVoltage);
-  }
-  */
 }

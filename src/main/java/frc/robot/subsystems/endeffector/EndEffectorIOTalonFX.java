@@ -6,7 +6,11 @@ import au.grapplerobotics.LaserCan;
 import au.grapplerobotics.interfaces.LaserCanInterface.Measurement;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.ParentDevice;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -63,6 +67,21 @@ public class EndEffectorIOTalonFX extends EndEffectorIO {
     } catch (Exception e) {
       System.out.println("Error: " + e);
     }
+  }
+
+  public TalonFXConfiguration getEndEffectorConfiguration() {
+    var config = new TalonFXConfiguration();
+    config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+    config.Slot0.kP = EndEffectorConstants.EFFECTOR_KP;
+    config.Slot0.kI = EndEffectorConstants.EFFECTOR_KI;
+    config.Slot0.kD = EndEffectorConstants.EFFECTOR_KD;
+    config.Slot0.kG = EndEffectorConstants.EFFECTOR_KG;
+    config.Slot0.kV = EndEffectorConstants.EFFECTOR_KV;
+
+    var currentConfig = new CurrentLimitsConfigs();
+    currentConfig.StatorCurrentLimit = EndEffectorConstants.EFFECTOR_CURRENT_LIMIT;
+    config.CurrentLimits = currentConfig;
+    return config;
   }
 
   @Override

@@ -32,21 +32,6 @@ public class EndEffectorIO {
 
   public void setEndEffectorVelocity(double velocity) {}
 
-  public TalonFXConfiguration getEndEffectorConfiguration() {
-    var config = new TalonFXConfiguration();
-    config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-    config.Slot0.kP = EndEffectorConstants.EFFECTOR_KP;
-    config.Slot0.kI = EndEffectorConstants.EFFECTOR_KI;
-    config.Slot0.kD = EndEffectorConstants.EFFECTOR_KD;
-    config.Slot0.kG = EndEffectorConstants.EFFECTOR_KG;
-    config.Slot0.kV = EndEffectorConstants.EFFECTOR_KV;
-
-    var currentConfig = new CurrentLimitsConfigs();
-    currentConfig.StatorCurrentLimit = EndEffectorConstants.EFFECTOR_CURRENT_LIMIT;
-    config.CurrentLimits = currentConfig;
-    return config;
-  }
-
   public void setEndEffectorSpeed(double speed) {}
 
   public int getLaserCanMeasurement1() {
