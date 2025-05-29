@@ -3,7 +3,6 @@ package frc.robot.subsystems.elevator;
 import com.ctre.phoenix6.sim.ChassisReference;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import frc.robot.Constants;
@@ -38,8 +37,6 @@ public class ElevatorIOSim extends ElevatorIOTalonFX implements SimMechanism {
 
   public ElevatorIOSim() {
     super();
-    elevatorMotor1.getConfigurator().apply(getConfiguration(1));
-    elevatorMotor2.getConfigurator().apply(getConfiguration(2));
     motor2Sim.Orientation = ChassisReference.Clockwise_Positive;
     initSimVoltage();
   }
@@ -76,22 +73,22 @@ public class ElevatorIOSim extends ElevatorIOTalonFX implements SimMechanism {
 
     elevator.setLength(physicsSim.getPositionMeters());
   }
+  
+  // @Override
+  // public void setElevatorVelocity(double velocity) {
+  //   elevatorMotor1.setControl(
+  //       elevator1VelocityRequest.withVelocity(velocity / ElevatorSimConstants.METERS_PER_ROTATION));
+  //   elevatorMotor2.setControl(
+  //       elevator2VelocityRequest.withVelocity(velocity / ElevatorSimConstants.METERS_PER_ROTATION));
+  // }
 
-  @Override
-  public void setElevatorVelocity(double velocity) {
-    elevatorMotor1.setControl(
-        elevator1VelocityRequest.withVelocity(velocity / ElevatorSimConstants.METERS_PER_ROTATION));
-    elevatorMotor2.setControl(
-        elevator2VelocityRequest.withVelocity(velocity / ElevatorSimConstants.METERS_PER_ROTATION));
-  }
-
-  @Override
-  public void setElevatorPosition(double position, int slot) {
-    elevatorMotor1.setControl(
-        elevator1PositionRequest.withPosition(position / ElevatorSimConstants.METERS_PER_ROTATION));
-    elevatorMotor2.setControl(
-        elevator2PositionRequest.withPosition(position / ElevatorSimConstants.METERS_PER_ROTATION));
-  }
+  // @Override
+  // public void setElevatorPosition(double position, int slot) {
+  //   elevatorMotor1.setControl(
+  //       elevator1PositionRequest.withPosition(position / ElevatorSimConstants.METERS_PER_ROTATION));
+  //   elevatorMotor2.setControl(
+  //       elevator2PositionRequest.withPosition(position / ElevatorSimConstants.METERS_PER_ROTATION));
+  // }
 
   @Override
   public double[] getCurrents() {
@@ -102,8 +99,8 @@ public class ElevatorIOSim extends ElevatorIOTalonFX implements SimMechanism {
     return elevator;
   }
 
-  @Override
-  public void elevatorOpenLoop(Voltage voltage) {
-    elevatorMotor1.setVoltage(voltage.magnitude());
-  }
+  // @Override
+  // public void elevatorOpenLoop(Voltage voltage) {
+  //   elevatorMotor1.setVoltage(voltage.magnitude());
+  // }
 }

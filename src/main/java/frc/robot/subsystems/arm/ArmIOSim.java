@@ -4,14 +4,8 @@ import static frc.robot.util.SparkUtil.ifOk;
 
 import com.revrobotics.sim.SparkAbsoluteEncoderSim;
 import com.revrobotics.sim.SparkFlexSim;
-import com.revrobotics.spark.ClosedLoopSlot;
-import com.revrobotics.spark.SparkBase.ControlType;
-import com.revrobotics.spark.SparkBase.PersistMode;
-import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.SparkClosedLoopController.ArbFFUnits;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import frc.robot.subsystems.SimMechanism;
@@ -38,9 +32,6 @@ public class ArmIOSim extends ArmIOSpark implements SimMechanism {
 
   public ArmIOSim(LoggedMechanismLigament2d endEffector) {
     super();
-    armMotor.configure(
-        getArmConfig(), ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    armSim = new SparkFlexSim(armMotor, armGearBox);
     armEncoderSim = new SparkAbsoluteEncoderSim(armMotor);
     armDrawn =
         endEffector
@@ -79,6 +70,7 @@ public class ArmIOSim extends ArmIOSpark implements SimMechanism {
     return new double[] {armPhysicsSim.getCurrentDrawAmps()};
   }
 
+  /*
   @Override
   public void setArmPosition(double position) {
     armClosedLoopController.setReference(Units.radiansToRotations(position), ControlType.kPosition);
@@ -101,4 +93,5 @@ public class ArmIOSim extends ArmIOSpark implements SimMechanism {
         ffvolts,
         ArbFFUnits.kVoltage);
   }
+  */
 }
