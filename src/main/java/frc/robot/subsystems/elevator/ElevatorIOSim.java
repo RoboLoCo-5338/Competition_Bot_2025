@@ -73,21 +73,25 @@ public class ElevatorIOSim extends ElevatorIOTalonFX implements SimMechanism {
 
     elevator.setLength(physicsSim.getPositionMeters());
   }
-  
+
   // @Override
   // public void setElevatorVelocity(double velocity) {
   //   elevatorMotor1.setControl(
-  //       elevator1VelocityRequest.withVelocity(velocity / ElevatorSimConstants.METERS_PER_ROTATION));
+  //       elevator1VelocityRequest.withVelocity(velocity /
+  // ElevatorSimConstants.METERS_PER_ROTATION));
   //   elevatorMotor2.setControl(
-  //       elevator2VelocityRequest.withVelocity(velocity / ElevatorSimConstants.METERS_PER_ROTATION));
+  //       elevator2VelocityRequest.withVelocity(velocity /
+  // ElevatorSimConstants.METERS_PER_ROTATION));
   // }
 
   // @Override
   // public void setElevatorPosition(double position, int slot) {
   //   elevatorMotor1.setControl(
-  //       elevator1PositionRequest.withPosition(position / ElevatorSimConstants.METERS_PER_ROTATION));
+  //       elevator1PositionRequest.withPosition(position /
+  // ElevatorSimConstants.METERS_PER_ROTATION));
   //   elevatorMotor2.setControl(
-  //       elevator2PositionRequest.withPosition(position / ElevatorSimConstants.METERS_PER_ROTATION));
+  //       elevator2PositionRequest.withPosition(position /
+  // ElevatorSimConstants.METERS_PER_ROTATION));
   // }
 
   @Override
