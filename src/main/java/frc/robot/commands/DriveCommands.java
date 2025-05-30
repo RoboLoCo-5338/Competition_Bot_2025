@@ -352,18 +352,29 @@ public class DriveCommands {
               drive.autoTurnController.setTolerance(0.025);
               drive.autoXDriveController.setSetpoint(targetPose.getX());
               drive.autoYDriveController.setSetpoint(targetPose.getY());
-              drive.autoTurnController.setSetpoint(targetPose.getRotation().getRadians());
+              drive.autoTurnController.setSetpoint(0); // this makes sense i promise
             }
 
             @Override
             public void execute() {
+              double rotTarget = targetPose.getRotation().getRadians();
+              double rotCurrent = drive.getPose().getRotation().getRadians();
+
+              // dont want to deal with wrap around so its all linear kind of
+              if (rotTarget < 0) rotTarget += 2 * Math.PI;
+              if (rotCurrent < 0) rotCurrent += 2 * Math.PI;
+
+              double dif = rotTarget - rotCurrent;
+
+              if (dif > Math.PI) dif -= 2*Math.PI;
+              if (dif < -Math.PI) dif += 2*Math.PI;
+
               drive.runVelocity(
                   ChassisSpeeds.fromFieldRelativeSpeeds(
                       new ChassisSpeeds(
                           drive.autoXDriveController.calculate(drive.getPose().getX()),
                           drive.autoYDriveController.calculate(drive.getPose().getY()),
-                          drive.autoTurnController.calculate(
-                              drive.getPose().getRotation().getRadians())),
+                          drive.autoTurnController.calculate(-dif)),
                       drive.getPose().getRotation()));
             }
 
