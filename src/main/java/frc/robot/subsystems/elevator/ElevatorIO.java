@@ -1,26 +1,9 @@
 package frc.robot.subsystems.elevator;
 
-import com.ctre.phoenix6.controls.PositionVoltage;
-import com.ctre.phoenix6.controls.VelocityVoltage;
-import com.ctre.phoenix6.controls.VoltageOut;
-import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.units.measure.Voltage;
-import frc.robot.generated.TunerConstants;
 import org.littletonrobotics.junction.AutoLog;
 
 public class ElevatorIO {
-  TalonFX elevatorMotor1 =
-      new TalonFX(
-          ElevatorConstants.ELEVATOR_MOTOR_ID1, TunerConstants.DrivetrainConstants.CANBusName);
-  TalonFX elevatorMotor2 =
-      new TalonFX(
-          ElevatorConstants.ELEVATOR_MOTOR_ID2, TunerConstants.DrivetrainConstants.CANBusName);
-  final PositionVoltage elevator1PositionRequest = new PositionVoltage(0.0);
-  final VelocityVoltage elevator1VelocityRequest = new VelocityVoltage(0);
-  final PositionVoltage elevator2PositionRequest = new PositionVoltage(0.0);
-  final VelocityVoltage elevator2VelocityRequest = new VelocityVoltage(0);
-  final VoltageOut elevatorOpenLoop = new VoltageOut(0.0);
-
   @AutoLog
   public static class ElevatorIOInputs {
     public double elevator1Position = 0.0;
