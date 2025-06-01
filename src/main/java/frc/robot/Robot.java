@@ -16,6 +16,7 @@ package frc.robot;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants.DriveMotorArrangement;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants.SteerMotorArrangement;
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Threads;
@@ -24,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.DriveCommands;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.SimMechanism;
+import java.util.ArrayList;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -37,7 +39,9 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
  * the package after creating this project, you must also update the build.gradle file in the
  * project.
  */
+@Logged
 public class Robot extends LoggedRobot {
+  ArrayList<Runnable> periodicCallbacks = new ArrayList<>();
   private Command autonomousCommand;
   private RobotContainer robotContainer;
 
@@ -84,6 +88,7 @@ public class Robot extends LoggedRobot {
 
     // Start AdvantageKit logger
     Logger.start();
+    Epiloguer.bind(this);
 
     // Check for valid swerve config
     var modules =
@@ -121,6 +126,7 @@ public class Robot extends LoggedRobot {
     CommandScheduler.getInstance().run();
     // Return to normal thread priority
     Threads.setCurrentThreadPriority(false, 10);
+    periodicCallbacks.forEach(callback -> callback.run());
   }
 
   /** This function is called once when the robot is disabled. */
@@ -188,5 +194,9 @@ public class Robot extends LoggedRobot {
   @Override
   public void simulationPeriodic() {
     SimMechanism.updateBatteryVoltages();
+  }
+
+  public void addPeriodicCallback(Runnable callBack) {
+    periodicCallbacks.add(callBack);
   }
 }
