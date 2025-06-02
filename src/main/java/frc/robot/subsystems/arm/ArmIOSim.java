@@ -67,6 +67,10 @@ public class ArmIOSim implements SimMechanism, ArmIO {
             armPhysicsSim.getVelocityRadPerSec()),
         RobotController.getBatteryVoltage(),
         0.02);
+    armEncoderSim.setPosition(
+        Units.radiansToRotations(
+            armPhysicsSim.getAngleRads())); // TODO: Figure out why this needs to be done
+    armSim.setPosition(Units.radiansToRotations(armPhysicsSim.getAngleRads()));
     inputs.armConnected = true;
     inputs.armPosition = Units.radiansToRotations(armPhysicsSim.getAngleRads());
     inputs.armVelocity =
@@ -76,10 +80,6 @@ public class ArmIOSim implements SimMechanism, ArmIO {
         new DoubleSupplier[] {armMotor::getAppliedOutput, armMotor::getBusVoltage},
         (values) -> inputs.armAppliedVolts = values[0] * values[1]);
     inputs.armCurrent = armPhysicsSim.getCurrentDrawAmps();
-    armEncoderSim.setPosition(
-        Units.radiansToRotations(
-            armPhysicsSim.getAngleRads())); // TODO: Figure out why this needs to be done
-    armSim.setPosition(Units.radiansToRotations(armPhysicsSim.getAngleRads()));
     armDrawn.setAngle(Units.radiansToDegrees(armPhysicsSim.getAngleRads()));
   }
 
