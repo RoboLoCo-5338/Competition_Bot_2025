@@ -43,7 +43,11 @@ public class EndEffectorIOTalonFX implements EndEffectorIO {
         5,
         () ->
             BaseStatusSignal.setUpdateFrequencyForAll(
-                50.0, endEffectorVelocity, endEffectorAppliedVolts, endEffectorCurrent));
+                50.0,
+                endEffectorVelocity,
+                endEffectorAppliedVolts,
+                endEffectorCurrent,
+                endEffectorTemperature));
 
     ParentDevice.optimizeBusUtilizationForAll(endEffectorMotor);
 
@@ -68,7 +72,11 @@ public class EndEffectorIOTalonFX implements EndEffectorIO {
   public void updateInputs(EndEffectorIOInputs inputs) {
     var motor1Status =
         BaseStatusSignal.refreshAll(
-            endEffectorVelocity, endEffectorCurrent, endEffectorAppliedVolts, endEffectorPosition);
+            endEffectorVelocity,
+            endEffectorCurrent,
+            endEffectorAppliedVolts,
+            endEffectorPosition,
+            endEffectorTemperature);
 
     inputs.endEffectorConnected = effectorDebouncer.calculate(motor1Status.isOK());
     inputs.endEffectorDistance1 = getLaserCanMeasurement1();
