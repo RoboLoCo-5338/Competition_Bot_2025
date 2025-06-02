@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Mechanism;
 import frc.robot.Constants;
@@ -56,7 +57,7 @@ public class Arm extends SubsystemBase implements SysIDSubsystem {
    */
   public Command setArmPosition(double position) {
     return new StartEndCommand(() -> io.setArmPosition(position), () -> io.setArmVelocity(0), this)
-        .until(() -> Math.abs((inputs.armPosition - position)) < ArmConstants.POSITION_TOLERANCE);
+        .until(new Trigger(() -> inputs.armVelocity<0.01).debounce(0.5).or(() -> Math.abs((inputs.armPosition - position)) < ArmConstants.POSITION_TOLERANCE));
   }
 
   /**

@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Mechanism;
 import frc.robot.Constants;
@@ -61,10 +62,10 @@ public class Elevator extends SubsystemBase implements SysIDSubsystem {
   public Command setElevatorPosition(double position, int slot) {
     return new StartEndCommand(
             () -> io.setElevatorPosition(position, slot), () -> io.setElevatorVelocity(0), this)
-        .until(
+        .until(new Trigger(() -> inputs.elevator1Velocity < 0.01).debounce(0.5).or(
             () ->
                 Math.abs(position - inputs.elevator1Position)
-                    < ElevatorConstants.POSITION_TOLERANCE);
+                    < ElevatorConstants.POSITION_TOLERANCE));
   }
 
   public Command setElevatorVelocity(DoubleSupplier velocity) {
