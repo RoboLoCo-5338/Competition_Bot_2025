@@ -286,7 +286,7 @@ public class RobotContainer {
 
     arm.setDefaultCommand(
         arm.setArmVelocity(
-            () -> processedJoystickInput(-operatorController.getRightY(), 0.2, 1.0, 2 * Math.PI)));
+            () -> processedJoystickInput(-operatorController.getRightY(), 0.2, 1.0, 7 * Math.PI)));
 
     operatorController
         .leftTrigger()
