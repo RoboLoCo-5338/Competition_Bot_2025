@@ -57,7 +57,13 @@ public class Arm extends SubsystemBase implements SysIDSubsystem {
    */
   public Command setArmPosition(double position) {
     return new StartEndCommand(() -> io.setArmPosition(position), () -> io.setArmVelocity(0), this)
-        .until(new Trigger(() -> inputs.armVelocity<0.01).debounce(0.5).or(() -> Math.abs((inputs.armPosition - position)) < ArmConstants.POSITION_TOLERANCE));
+        .until(
+            new Trigger(() -> inputs.armVelocity < 0.01)
+                .debounce(0.5)
+                .or(
+                    () ->
+                        Math.abs((inputs.armPosition - position))
+                            < ArmConstants.POSITION_TOLERANCE));
   }
 
   /**
