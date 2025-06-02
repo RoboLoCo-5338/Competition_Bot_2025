@@ -40,7 +40,7 @@ public class Arm extends SubsystemBase implements SysIDSubsystem {
   public void periodic() {
     io.updateInputs(inputs);
     Logger.processInputs("Arm", inputs);
-    armPosition = io.getArmPosition(inputs);
+    armPosition = inputs.armPosition;
 
     armDisconnectedAlert.set(!inputs.armConnected && Constants.currentMode != Mode.SIM);
   }
@@ -71,7 +71,7 @@ public class Arm extends SubsystemBase implements SysIDSubsystem {
   }
 
   public double getArmPosition() {
-    return io.getArmPosition(inputs);
+    return inputs.armPosition;
   }
 
   public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {

@@ -99,11 +99,6 @@ public class ArmIOSim implements SimMechanism, ArmIO {
   }
 
   @Override
-  public double getArmPosition(ArmIOInputs inputs) {
-    return inputs.armPosition;
-  }
-
-  @Override
   public void armOpenLoop(Voltage voltage) {
     armMotor.setVoltage(voltage);
   }

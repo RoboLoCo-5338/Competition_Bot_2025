@@ -366,8 +366,8 @@ public class DriveCommands {
 
               double dif = rotTarget - rotCurrent;
 
-              if (dif > Math.PI) dif -= 2*Math.PI;
-              if (dif < -Math.PI) dif += 2*Math.PI;
+              if (dif > Math.PI) dif -= 2 * Math.PI;
+              if (dif < -Math.PI) dif += 2 * Math.PI;
 
               drive.runVelocity(
                   ChassisSpeeds.fromFieldRelativeSpeeds(

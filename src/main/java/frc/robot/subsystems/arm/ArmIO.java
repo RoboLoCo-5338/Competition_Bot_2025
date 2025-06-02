@@ -131,9 +131,5 @@ public interface ArmIO {
     return armConfig;
   }
 
-  public default double getArmPosition(ArmIOInputs inputs) {
-    return 0.0;
-  }
-
   public default void armOpenLoop(Voltage voltage) {}
 }
