@@ -27,6 +27,7 @@ public class Elevator extends SubsystemBase implements SysIDSubsystem {
       new Alert("Elevator motor 1 disconnected", AlertType.kError);
 
   private final SysIdRoutine sysIdRoutine;
+  private boolean elevatorPositionRunning = false;
 
   public Elevator(ElevatorIO io) {
     this.io = io;
@@ -61,10 +62,22 @@ public class Elevator extends SubsystemBase implements SysIDSubsystem {
    */
   public Command setElevatorPosition(double position, int slot) {
     return new StartEndCommand(
-            () -> io.setElevatorPosition(position, slot), () -> io.setElevatorVelocity(0), this)
+            () -> {
+              io.setElevatorPosition(position, slot);
+              elevatorPositionRunning = true;
+            },
+            () -> {
+              io.setElevatorVelocity(0);
+              elevatorPositionRunning = false;
+            },
+            this)
         .until(
-            new Trigger(() -> inputs.elevator1Velocity < 0.01)
+            new Trigger(() -> Math.abs(inputs.elevator1Velocity) < 0.001)
+                .and(() -> elevatorPositionRunning)
                 .debounce(0.5)
+                .onTrue(
+                    new InstantCommand()) // Why the heck does this need to be here? The code breaks
+                // if it's not there.
                 .or(
                     () ->
                         Math.abs(position - inputs.elevator1Position)
