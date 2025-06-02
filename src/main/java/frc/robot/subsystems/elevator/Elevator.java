@@ -62,10 +62,13 @@ public class Elevator extends SubsystemBase implements SysIDSubsystem {
   public Command setElevatorPosition(double position, int slot) {
     return new StartEndCommand(
             () -> io.setElevatorPosition(position, slot), () -> io.setElevatorVelocity(0), this)
-        .until(new Trigger(() -> inputs.elevator1Velocity < 0.01).debounce(0.5).or(
-            () ->
-                Math.abs(position - inputs.elevator1Position)
-                    < ElevatorConstants.POSITION_TOLERANCE));
+        .until(
+            new Trigger(() -> inputs.elevator1Velocity < 0.01)
+                .debounce(0.5)
+                .or(
+                    () ->
+                        Math.abs(position - inputs.elevator1Position)
+                            < ElevatorConstants.POSITION_TOLERANCE));
   }
 
   public Command setElevatorVelocity(DoubleSupplier velocity) {
