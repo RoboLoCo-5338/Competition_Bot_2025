@@ -24,6 +24,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
+import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -56,6 +58,9 @@ import frc.robot.subsystems.vision.VisionConstants;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOPhotonVision;
 import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
+
+import java.util.Set;
+
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -240,9 +245,10 @@ public class RobotContainer {
                     * Math.pow(Math.abs(driverController.getRightX()), 2.2 - 1)));
 
     elevator.setDefaultCommand(
-        elevator.setElevatorVelocity(() -> deadband(-operatorController.getLeftY()) * 25));
+        new ConditionalCommand(elevator.setElevatorVelocity(() -> deadband(-operatorController.getLeftY()) * 25), new DeferredCommand(() -> elevator.setElevatorPosition(elevator.getElevatorPosition(), 0), Set.of(elevator)), () -> deadband(-operatorController.getLeftY())!=0)
+    );
 
-    arm.setDefaultCommand(arm.setArmVelocity(() -> 7 * Math.PI * -operatorController.getRightY()));
+    arm.setDefaultCommand(new ConditionalCommand(arm.setArmVelocity(() -> 7 * Math.PI * -operatorController.getRightY()), new DeferredCommand(() -> arm.setArmPosition(arm.getArmPosition()), Set.of(arm)), () -> deadband(-operatorController.getRightY())!=0));
 
     operatorController
         .leftTrigger()
