@@ -1,13 +1,13 @@
 {
   "hubs": [
     {
-      "x": 217,
-      "y": 154,
-      "width": 1105,
-      "height": 654,
+      "x": -8,
+      "y": -8,
+      "width": 1552,
+      "height": 928,
       "state": {
         "sidebar": {
-          "width": 346,
+          "width": 308,
           "expanded": [
             "/AdvantageKit/RealOutputs/Test",
             "/AdvantageKit/RealOutputs/Odometry/Robot/translation",
@@ -27,7 +27,6 @@
             "/AdvantageKit/RealOutputs/Odometry/Robot",
             "/AdvantageKit/SystemStats",
             "/AdvantageKit/PowerDistribution",
-            "/AdvantageKit/RealOutputs/Elevator/Mechanism",
             "/AdvantageKit/Arm",
             "/AdvantageKit/Elevator",
             "/SmartDashboard",
@@ -45,11 +44,21 @@
             "/AdvantageKit/RealOutputs/Elevator/Mechanism/elevator/stage",
             "/AdvantageKit/RealOutputs/Elevator/Mechanism/elevator/stage/null",
             "/AdvantageKit/RealOutputs/Elevator/Mechanism/elevator/stage/null/rotator",
-            "/AdvantageKit/RealOutputs/Elevator/Mechanism/elevator/stage/null/rotator/endEffectorArm"
+            "/AdvantageKit/RealOutputs/Elevator/Mechanism/elevator/stage/null/rotator/endEffectorArm",
+            "/AdvantageKit/RealOutputs/FieldSimulation",
+            "/AdvantageKit/RealOutputs/Odometry",
+            "/AdvantageKit/Drive",
+            "/AdvantageKit/Drive/Module0",
+            "/AdvantageKit/RealOutputs/SwerveStates",
+            "/AdvantageKit/RealOutputs/SwerveStates/SetpointsOptimized",
+            "/AdvantageKit/RealOutputs/SwerveStates/SetpointsOptimized/0",
+            "/AdvantageKit/RealOutputs/SwerveStates/Measured",
+            "/AdvantageKit/RealOutputs/SwerveStates/Measured/0",
+            "/AdvantageKit/End Effector"
           ]
         },
         "tabs": {
-          "selected": 4,
+          "selected": 3,
           "tabs": [
             {
               "type": 0,
@@ -182,6 +191,33 @@
                     "logType": "Pose3d",
                     "visible": true,
                     "options": {}
+                  },
+                  {
+                    "type": "gamePiece",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/FieldSimulation/Coral",
+                    "logType": "Pose3d[]",
+                    "visible": true,
+                    "options": {
+                      "variant": "Coral"
+                    }
+                  },
+                  {
+                    "type": "gamePiece",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/Odometry/IntakedCoral",
+                    "logType": "Pose3d[]",
+                    "visible": true,
+                    "options": {
+                      "variant": "Coral"
+                    }
+                  },
+                  {
+                    "type": "gamePiece",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/FieldSimulation/Algae",
+                    "logType": "Pose3d[]",
+                    "visible": true,
+                    "options": {
+                      "variant": "Algae"
+                    }
                   }
                 ],
                 "game": "2025 Field (AndyMark)",
@@ -192,14 +228,14 @@
                 "cameraIndex": -1,
                 "orbitFov": 50,
                 "cameraPosition": [
-                  3.496963559822603,
-                  4.599255750122049,
-                  -6.368587838248357
+                  1.9570615047805413,
+                  5.0379338646406975,
+                  0.6166776255280795
                 ],
                 "cameraTarget": [
-                  3.0703938709013534,
-                  2.6922055215521916,
-                  -4.794483670098167
+                  -4.166218498594566,
+                  1.523809709529898,
+                  0.44869720198444746
                 ]
               },
               "controlsHeight": 200
