@@ -9,7 +9,7 @@ This document goes over the details and setup for the 3D simulation for the 2025
 4) Install [Git LFS](https://git-lfs.com/)
 
 ## Initial Setup:
-1) If you do not already have the repository installed, perform the following: 
+1) If you do not already have the repository installed, perform the following:
     1) Open Git Bash. Optionally, change the folder you'll work in by typing `cd <folder>`
     2) Enable Git LFS with command `git lfs install`
     3) Clone the 2025 Competition Bot repository with command `git clone https://github.com/RoboLoCo-5338/Competition_Bot_2025.git`. You'll have to log into your GitHub account to continue
