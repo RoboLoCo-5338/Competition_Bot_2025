@@ -39,6 +39,8 @@ public class EndEffectorIOSim extends EndEffectorIOTalonFX implements SimMechani
         physicsSim.getAngularVelocityRadPerSec() * 0.02 * EndEffectorSimConstants.GEARING);
     simMotor.setRotorVelocity(
         physicsSim.getAngularVelocityRadPerSec() * EndEffectorSimConstants.GEARING);
+
+    super.updateInputs(inputs);
   }
 
   @Override

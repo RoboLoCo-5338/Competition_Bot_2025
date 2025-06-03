@@ -72,6 +72,8 @@ public class ElevatorIOSim extends ElevatorIOTalonFX implements SimMechanism {
         physicsSim.getVelocityMetersPerSecond() / ElevatorSimConstants.METERS_PER_ROTATION);
 
     elevator.setLength(physicsSim.getPositionMeters());
+
+    super.updateInputs(inputs);
   }
 
   @Override

@@ -63,6 +63,8 @@ public class ArmIOSim extends ArmIOSpark implements SimMechanism {
     inputs.armCurrent = armPhysicsSim.getCurrentDrawAmps();
 
     armDrawn.setAngle(Units.radiansToDegrees(armPhysicsSim.getAngleRads()));
+
+    super.updateInputs(inputs);
   }
 
   @Override
