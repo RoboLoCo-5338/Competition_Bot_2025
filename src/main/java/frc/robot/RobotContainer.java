@@ -67,7 +67,7 @@ import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionConstants;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOPhotonVision;
-import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
+import frc.robot.subsystems.vision.VisionIOSimpleVision;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.littletonrobotics.junction.AutoLogOutput;
@@ -155,9 +155,9 @@ public class RobotContainer {
         vision =
             new Vision(
                 drive,
-                new VisionIOPhotonVisionSim(
-                    VisionConstants.camera0Name,
-                    VisionConstants.robotToCamera0,
+                new VisionIOSimpleVision(
+                    // VisionConstants.camera0Name,
+                    // VisionConstants.robotToCamera0,
                     driveSimulation::getSimulatedDriveTrainPose));
         break;
 
