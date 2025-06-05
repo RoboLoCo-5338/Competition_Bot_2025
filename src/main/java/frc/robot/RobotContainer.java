@@ -58,9 +58,7 @@ import frc.robot.subsystems.vision.VisionConstants;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOPhotonVision;
 import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
-
 import java.util.Set;
-
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -245,10 +243,18 @@ public class RobotContainer {
                     * Math.pow(Math.abs(driverController.getRightX()), 2.2 - 1)));
 
     elevator.setDefaultCommand(
-        new ConditionalCommand(elevator.setElevatorVelocity(() -> deadband(-operatorController.getLeftY()) * 25), new DeferredCommand(() -> elevator.setElevatorPosition(elevator.getElevatorPosition(), 0), Set.of(elevator)), () -> deadband(-operatorController.getLeftY())!=0)
-    );
+        new ConditionalCommand(
+            elevator.setElevatorVelocity(() -> deadband(-operatorController.getLeftY()) * 25),
+            new DeferredCommand(
+                () -> elevator.setElevatorPosition(elevator.getElevatorPosition(), 0),
+                Set.of(elevator)),
+            () -> deadband(-operatorController.getLeftY()) != 0));
 
-    arm.setDefaultCommand(new ConditionalCommand(arm.setArmVelocity(() -> 7 * Math.PI * -operatorController.getRightY()), new DeferredCommand(() -> arm.setArmPosition(arm.getArmPosition()), Set.of(arm)), () -> deadband(-operatorController.getRightY())!=0));
+    arm.setDefaultCommand(
+        new ConditionalCommand(
+            arm.setArmVelocity(() -> 7 * Math.PI * -operatorController.getRightY()),
+            new DeferredCommand(() -> arm.setArmPosition(arm.getArmPosition()), Set.of(arm)),
+            () -> deadband(-operatorController.getRightY()) != 0));
 
     operatorController
         .leftTrigger()
