@@ -68,6 +68,8 @@ import frc.robot.subsystems.vision.VisionConstants;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOPhotonVision;
 import frc.robot.subsystems.vision.VisionIOSimpleVision;
+import frc.robot.util.Level;
+
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.littletonrobotics.junction.AutoLogOutput;
@@ -346,7 +348,7 @@ public class RobotContainer {
         DriveCommands.reefScore(
             drive,
             Direction.Left,
-            DriveCommands.Level.L3,
+            Level.L3,
             driverController,
             led,
             elevator,

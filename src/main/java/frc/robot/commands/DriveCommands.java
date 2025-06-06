@@ -42,6 +42,8 @@ import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.endeffector.EndEffector;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.vision.VisionConstants;
+import frc.robot.util.Level;
+
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -581,11 +583,5 @@ public class DriveCommands {
     Left,
     Right,
     None
-  }
-
-  public enum Level {
-    L2,
-    L3,
-    L4
   }
 }
