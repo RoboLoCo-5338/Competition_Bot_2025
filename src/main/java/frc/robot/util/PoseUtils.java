@@ -3,8 +3,11 @@ package frc.robot.util;
 import com.pathplanner.lib.util.FlippingUtil;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import frc.robot.subsystems.vision.VisionConstants;
 
 public class PoseUtils {
   public static Pose2d allianceFlip(Pose2d pose, Alliance alliance) {
@@ -25,5 +28,13 @@ public class PoseUtils {
         && MathUtil.angleModulus(pose1.getRotation().getRadians())
                 - MathUtil.angleModulus(pose2.getRotation().getRadians())
             < angularTolerance;
+  }
+
+  public static Pose2d tagRotate(Pose2d pose, int tag, Alliance alliance) {
+    boolean isFlipped = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red;
+    Rotation2d rot =
+        VisionConstants.aprilTagLayout.getTagPose(tag).get().getRotation().toRotation2d();
+    if (isFlipped) rot = rot.plus(new Rotation2d(Math.PI));
+    return allianceFlip(pose.rotateAround(new Translation2d(4.5, 4.03), rot));
   }
 }

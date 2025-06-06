@@ -37,11 +37,15 @@ public class EndEffectorIOSim implements SimMechanism, EndEffectorIO {
           DCMotor.getKrakenX60(1));
   IntakeSimulation intakeSim;
   CoralState coralState = CoralState.EFFECTOR;
+  boolean hasAlgae = false;
   Supplier<Pose3d> coralPoseSupplier;
   Supplier<Pose2d> robotPoseSupplier;
 
   public EndEffectorIOSim(
-      SwerveDriveSimulation driveSim, Supplier<Pose3d> coralPoseSupplier, BooleanSupplier stowed) {
+      SwerveDriveSimulation driveSim,
+      Supplier<Pose3d> coralPoseSupplier,
+      BooleanSupplier stowed,
+      BooleanSupplier canIntakeAlgae) {
     initSimVoltage();
     endEffectorMotor.getConfigurator().apply(getEndEffectorConfiguration());
     // this.intakeSim =
@@ -95,6 +99,12 @@ public class EndEffectorIOSim implements SimMechanism, EndEffectorIO {
                   intakeSim.startIntake();
                   intakeSim.setGamePiecesCount(1);
                 }));
+    new Trigger(
+            () ->
+                Units.radiansToRotations(physicsSim.getAngularVelocityRadPerSec()) < -25
+                    && !hasAlgae)
+        .and(canIntakeAlgae)
+        .onTrue(new InstantCommand(() -> hasAlgae = true));
     this.coralPoseSupplier = coralPoseSupplier;
     this.robotPoseSupplier = driveSim::getSimulatedDriveTrainPose;
   }
@@ -124,6 +134,14 @@ public class EndEffectorIOSim implements SimMechanism, EndEffectorIO {
     Logger.recordOutput(
         "Odometry/IntakedCoral",
         (coralState == CoralState.EFFECTOR)
+            ? new Pose3d[] {
+              new Pose3d(robotPoseSupplier.get())
+                  .plus(new Transform3d(new Pose3d(), coralPoseSupplier.get()))
+            }
+            : new Pose3d[0]);
+    Logger.recordOutput(
+        "Odometry/IntakedAlgae",
+        (hasAlgae)
             ? new Pose3d[] {
               new Pose3d(robotPoseSupplier.get())
                   .plus(new Transform3d(new Pose3d(), coralPoseSupplier.get()))

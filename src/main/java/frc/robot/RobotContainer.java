@@ -20,6 +20,8 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.Timer;
@@ -62,6 +64,7 @@ import frc.robot.subsystems.endeffector.EndEffectorConstants;
 import frc.robot.subsystems.endeffector.EndEffectorIO;
 import frc.robot.subsystems.endeffector.EndEffectorIOSim;
 import frc.robot.subsystems.endeffector.EndEffectorIOTalonFX;
+import frc.robot.subsystems.endeffector.ReefAlgaeSimHandler;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionConstants;
@@ -93,6 +96,8 @@ public class RobotContainer {
   private final EndEffector endEffector;
 
   private final Arm arm;
+
+  private ReefAlgaeSimHandler reefHandler = null;
 
   private static double last_roller_position = 0.0;
   private static double time_elapsed = 0.0;
@@ -147,10 +152,6 @@ public class RobotContainer {
                 new ModuleIOTalonFXSim(TunerConstants.BackRight, driveSimulation.getModules()[3]),
                 driveSimulation::setSimulationWorldPose);
         led = new LED();
-        endEffector =
-            new EndEffector(
-                new EndEffectorIOSim(
-                    driveSimulation, this::getEndEffectorCoralSimPose, this::stowed));
         elevator = new Elevator(new ElevatorIOSim());
         arm = new Arm(new ArmIOSim(((ElevatorIOSim) elevator.getIO()).getLigamentEnd()));
         vision =
@@ -160,6 +161,16 @@ public class RobotContainer {
                     // VisionConstants.camera0Name,
                     // VisionConstants.robotToCamera0,
                     driveSimulation::getSimulatedDriveTrainPose));
+        reefHandler = new ReefAlgaeSimHandler(DriverStation.getAlliance().orElse(Alliance.Blue));
+        endEffector =
+            new EndEffector(
+                new EndEffectorIOSim(
+                    driveSimulation,
+                    this::getEndEffectorCoralSimPose,
+                    this::stowed,
+                    () ->
+                        reefHandler.canIntakeAlgae(
+                            driveSimulation.getSimulatedDriveTrainPose(), arm, elevator)));
         break;
 
       default:

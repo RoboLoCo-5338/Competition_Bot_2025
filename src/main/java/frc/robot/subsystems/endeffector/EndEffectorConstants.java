@@ -1,5 +1,8 @@
 package frc.robot.subsystems.endeffector;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+
 public final class EndEffectorConstants {
   public static final int EFFECTORID = 43;
   public static final int EFFECTOR_CURRENT_LIMIT = 200;
@@ -22,5 +25,7 @@ public final class EndEffectorConstants {
     public static final double BACK_ROLLER_ORIGIN_X = 0.197628;
     public static final double BACK_ROLLER_ORIGIN_Y = -0.00526875;
     public static final double BACK_ROLLER_ORIGIN_Z = 0.440842;
+
+    public static final Pose2d ALGAE_REEF = new Pose2d(3.788, 4.031, new Rotation2d());
   }
 }

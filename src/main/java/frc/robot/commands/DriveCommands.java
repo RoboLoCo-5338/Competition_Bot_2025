@@ -40,7 +40,6 @@ import frc.robot.subsystems.drive.DriveConstants;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.endeffector.EndEffector;
 import frc.robot.subsystems.led.LED;
-import frc.robot.subsystems.vision.VisionConstants;
 import frc.robot.util.Level;
 import frc.robot.util.PoseUtils;
 import java.text.DecimalFormat;
@@ -501,10 +500,7 @@ public class DriveCommands {
             case Right -> DriveConstants.reefRight;
             case None -> DriveConstants.reefCenter;
           };
-      Rotation2d rot =
-          VisionConstants.aprilTagLayout.getTagPose(targetTagId).get().getRotation().toRotation2d();
-      if (!isFlipped) rot = rot.plus(new Rotation2d(Math.PI));
-      return PoseUtils.allianceFlip(o.rotateAround(new Translation2d(4.5, 4.03), rot));
+      return PoseUtils.tagRotate(o, targetTagId, DriverStation.getAlliance().orElse(Alliance.Blue));
     }
 
     public static ArrayList<Pose2d> getReefPoses(Direction direction) {

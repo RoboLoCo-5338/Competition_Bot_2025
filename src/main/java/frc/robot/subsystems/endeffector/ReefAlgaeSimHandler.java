@@ -1,10 +1,12 @@
 package frc.robot.subsystems.endeffector;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.ArmConstants.ArmPresetConstants;
@@ -12,27 +14,29 @@ import frc.robot.subsystems.drive.DriveConstants;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorConstants.ElevatorPresetConstants;
-import frc.robot.subsystems.vision.VisionConstants;
+import frc.robot.subsystems.endeffector.EndEffectorConstants.EndEffectorSimConstants;
 import frc.robot.util.Level;
 import frc.robot.util.PoseUtils;
+import java.util.ArrayList;
+import org.littletonrobotics.junction.Logger;
 
-public class ReefAlgaeSimHandler {
+public class ReefAlgaeSimHandler extends SubsystemBase {
   private class ReefSegment {
     public boolean hasAlgae;
     public Level algaeLevel;
     public Pose2d intakePose;
+    public Pose3d algaePose;
 
     public ReefSegment(int tagIndex, Alliance alliance) {
       boolean isFlipped = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red;
       hasAlgae = true;
       if (alliance == Alliance.Red) algaeLevel = (tagIndex % 2 == 0) ? Level.L2 : Level.L3;
       else algaeLevel = (tagIndex % 2 == 0) ? Level.L3 : Level.L2;
-      Rotation2d rot =
-          VisionConstants.aprilTagLayout.getTagPose(tagIndex).get().getRotation().toRotation2d();
-      if (isFlipped) rot = rot.plus(new Rotation2d(Math.PI));
-      intakePose =
-          PoseUtils.allianceFlip(
-              DriveConstants.reefCenter.rotateAround(new Translation2d(4.5, 4.03), rot));
+      intakePose = PoseUtils.tagRotate(DriveConstants.reefCenter, tagIndex, alliance);
+      algaePose =
+          new Pose3d(PoseUtils.tagRotate(EndEffectorSimConstants.ALGAE_REEF, tagIndex, alliance))
+              .plus(
+                  new Transform3d(0, 0, (algaeLevel == Level.L2) ? 0.93 : 1.35, new Rotation3d()));
     }
   }
 
@@ -64,5 +68,17 @@ public class ReefAlgaeSimHandler {
                 < ElevatorConstants.POSITION_TOLERANCE;
     }
     return false;
+  }
+
+  @Override
+  public void periodic() {
+    ArrayList<Pose3d> algaeRenderPoses = new ArrayList<>();
+    for (ReefSegment segment : reefSegments) {
+      if (segment.hasAlgae) {
+        algaeRenderPoses.add(segment.algaePose);
+      }
+    }
+    Pose3d[] o = new Pose3d[algaeRenderPoses.size()];
+    Logger.recordOutput("FieldSimulation/AlgaeReef", algaeRenderPoses.toArray(o));
   }
 }
