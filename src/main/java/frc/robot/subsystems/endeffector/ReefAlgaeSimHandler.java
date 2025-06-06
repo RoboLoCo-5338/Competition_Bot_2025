@@ -9,6 +9,7 @@ import frc.robot.commands.DriveCommands;
 import frc.robot.subsystems.drive.DriveConstants;
 import frc.robot.subsystems.vision.VisionConstants;
 import frc.robot.util.Level;
+import frc.robot.util.PoseUtils;
 
 public class ReefAlgaeSimHandler {
   public class ReefSegment {
@@ -23,7 +24,7 @@ public class ReefAlgaeSimHandler {
         Rotation2d rot =
           VisionConstants.aprilTagLayout.getTagPose(tagIndex).get().getRotation().toRotation2d();
         if (isFlipped) rot = rot.plus(new Rotation2d(Math.PI));
-        intakePose = DriveCommands.allianceFlip(DriveConstants.reefCenter.rotateAround(new Translation2d(4.5, 4.03), rot)); //Don't ask me why I'm using a func from DriveCommands
+        intakePose = PoseUtils.allianceFlip(DriveConstants.reefCenter.rotateAround(new Translation2d(4.5, 4.03), rot)); //Don't ask me why I'm using a func from DriveCommands
     }
   }
 }

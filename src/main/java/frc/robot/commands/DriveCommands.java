@@ -43,6 +43,7 @@ import frc.robot.subsystems.endeffector.EndEffector;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.vision.VisionConstants;
 import frc.robot.util.Level;
+import frc.robot.util.PoseUtils;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -398,11 +399,7 @@ public class DriveCommands {
             }
           }.onlyIf(
               () ->
-                  Math.sqrt(
-                          targetPose.minus(drive.getPose()).getX()
-                                  * targetPose.minus(drive.getPose()).getX()
-                              + targetPose.minus(drive.getPose()).getY()
-                                  * targetPose.minus(drive.getPose()).getY())
+                  PoseUtils.distanceBetweenPoses(targetPose, targetPose)
                       < 3);
         },
         new HashSet<Subsystem>() {
@@ -410,16 +407,6 @@ public class DriveCommands {
             add(drive);
           }
         });
-  }
-
-  /**
-   * Util function to flip the pose of the alliance based on the alliance
-   *
-   * @param pose Pose to flip
-   * @return Flipped Pose
-   */
-  public static Pose2d allianceFlip(Pose2d pose) {
-    return (isFlipped) ? FlippingUtil.flipFieldPose(pose) : pose;
   }
 
   private static class WheelRadiusCharacterizationState {
@@ -444,7 +431,7 @@ public class DriveCommands {
 
     @Override
     public Pose2d getTargetPosition() {
-      return allianceFlip(new Pose2d(5.980, 0.532, new Rotation2d()));
+      return PoseUtils.allianceFlip(new Pose2d(5.980, 0.532, new Rotation2d()));
     }
   }
 
@@ -476,16 +463,16 @@ public class DriveCommands {
     public Pose2d getTargetPosition() {
       switch (station) {
         case Left:
-          return allianceFlip(new Pose2d(1.56, 7.36, new Rotation2d(Degrees.of(-54))));
+          return PoseUtils.allianceFlip(new Pose2d(1.56, 7.36, new Rotation2d(Degrees.of(-54))));
         case Right:
-          return allianceFlip(new Pose2d(1.623, 0.682, new Rotation2d(Degrees.of(54))));
+          return PoseUtils.allianceFlip(new Pose2d(1.623, 0.682, new Rotation2d(Degrees.of(54))));
         default:
           return drive
               .getPose()
               .nearest(
                   List.of(
-                      allianceFlip(new Pose2d(1.56, 7.36, new Rotation2d(Degrees.of(-54)))),
-                      allianceFlip(new Pose2d(1.623, 0.682, new Rotation2d(Degrees.of(54))))));
+                    PoseUtils.allianceFlip(new Pose2d(1.56, 7.36, new Rotation2d(Degrees.of(-54)))),
+                      PoseUtils.allianceFlip(new Pose2d(1.623, 0.682, new Rotation2d(Degrees.of(54))))));
       }
     }
   }
@@ -520,7 +507,7 @@ public class DriveCommands {
       Rotation2d rot =
           VisionConstants.aprilTagLayout.getTagPose(targetTagId).get().getRotation().toRotation2d();
       if (!isFlipped) rot = rot.plus(new Rotation2d(Math.PI));
-      return allianceFlip(o.rotateAround(new Translation2d(4.5, 4.03), rot));
+      return PoseUtils.allianceFlip(o.rotateAround(new Translation2d(4.5, 4.03), rot));
     }
 
     public static ArrayList<Pose2d> getReefPoses(Direction direction) {
