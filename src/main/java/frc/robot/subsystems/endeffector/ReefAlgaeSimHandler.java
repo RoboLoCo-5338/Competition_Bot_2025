@@ -56,16 +56,20 @@ public class ReefAlgaeSimHandler extends SubsystemBase {
           pose,
           segment.intakePose,
           DriveConstants.AUTO_ALIGN_X_TOLERANCE,
-          DriveConstants.AUTO_ALIGN_ANGULAR_TOLERANCE))
-        return segment.hasAlgae
-            && Math.abs(arm.getArmPosition() - ArmPresetConstants.ARM_ALGAE)
-                < ArmConstants.POSITION_TOLERANCE
-            && Math.abs(
-                    elevator.getElevatorPosition()
-                        - ((segment.algaeLevel == Level.L2)
-                            ? ElevatorPresetConstants.ELEVATOR_L2_ALGAE
-                            : ElevatorPresetConstants.ELEVATOR_L3_ALGAE))
-                < ElevatorConstants.POSITION_TOLERANCE;
+          DriveConstants.AUTO_ALIGN_ANGULAR_TOLERANCE)) {
+        boolean o =
+            segment.hasAlgae
+                && Math.abs(arm.getArmPosition() - ArmPresetConstants.ARM_ALGAE)
+                    < ArmConstants.POSITION_TOLERANCE
+                && Math.abs(
+                        elevator.getElevatorPosition()
+                            - ((segment.algaeLevel == Level.L2)
+                                ? ElevatorPresetConstants.ELEVATOR_L2_ALGAE
+                                : ElevatorPresetConstants.ELEVATOR_L3_ALGAE))
+                    < ElevatorConstants.POSITION_TOLERANCE;
+        if (o) segment.hasAlgae = false; // consume algae
+        return o;
+      }
     }
     return false;
   }

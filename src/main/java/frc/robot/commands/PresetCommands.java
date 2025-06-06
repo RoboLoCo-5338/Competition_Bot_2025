@@ -44,6 +44,18 @@ public class PresetCommands {
             elevator.setElevatorPosition(ElevatorPresetConstants.ELEVATOR_L4, 0)));
   }
 
+  public static Command presetAlgaeL2(Elevator elevator, EndEffector endEffector, Arm arm) {
+    return new SequentialCommandGroup(
+        arm.setArmPosition(ArmPresetConstants.ARM_ALGAE),
+        elevator.setElevatorPosition(ElevatorPresetConstants.ELEVATOR_L2_ALGAE, 0));
+  }
+
+  public static Command presetAlgaeL3(Elevator elevator, EndEffector endEffector, Arm arm) {
+    return new SequentialCommandGroup(
+        arm.setArmPosition(ArmPresetConstants.ARM_ALGAE),
+        elevator.setElevatorPosition(ElevatorPresetConstants.ELEVATOR_L3_ALGAE, 0));
+  }
+
   public static Command stopAll(Elevator elevator, EndEffector endEffector, Arm arm) {
     return new ParallelCommandGroup(
         elevator.setElevatorVelocity(() -> 0.0),

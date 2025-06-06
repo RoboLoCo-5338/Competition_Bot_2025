@@ -6,6 +6,7 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
@@ -144,7 +145,12 @@ public class EndEffectorIOSim implements SimMechanism, EndEffectorIO {
         (hasAlgae)
             ? new Pose3d[] {
               new Pose3d(robotPoseSupplier.get())
-                  .plus(new Transform3d(new Pose3d(), coralPoseSupplier.get()))
+                  .plus(
+                      new Transform3d(
+                          new Pose3d(),
+                          coralPoseSupplier
+                              .get()
+                              .plus(new Transform3d(0, 0, -0.18, new Rotation3d()))))
             }
             : new Pose3d[0]);
   }
