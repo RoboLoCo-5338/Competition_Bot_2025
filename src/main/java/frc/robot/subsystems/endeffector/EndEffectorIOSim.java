@@ -2,6 +2,7 @@ package frc.robot.subsystems.endeffector;
 
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.Radians;
 
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -26,6 +27,7 @@ import org.dyn4j.geometry.Vector2;
 import org.ironmaple.simulation.IntakeSimulation;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
+import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeAlgaeOnFly;
 import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoralOnFly;
 import org.littletonrobotics.junction.Logger;
 
@@ -61,53 +63,9 @@ public class EndEffectorIOSim implements SimMechanism, EndEffectorIO {
                 new Vector2(Units.inchesToMeters(-13.512198), Units.inchesToMeters(-7))),
             1); // TODO: check with mech on this, think its correct
     intakeSim.startIntake(); // the intake sim is started because funnel, not end effector
-    new Trigger(() -> intakeSim.getGamePiecesAmount() > 0)
-        .onTrue(new InstantCommand(() -> coralState = CoralState.FUNNEL));
-    new Trigger(() -> coralState == CoralState.FUNNEL)
-        .and(stowed)
-        .debounce(0.2) // Waits for a bit simulate coral falling into the
-        .and(() -> Units.radiansToRotations(physicsSim.getAngularVelocityRadPerSec()) > 25)
-        .onTrue(
-            new InstantCommand(
-                () -> {
-                  coralState = CoralState.EFFECTOR;
-                }));
-    new Trigger(
-            () -> Math.abs(Units.radiansToRotations(physicsSim.getAngularVelocityRadPerSec())) > 25)
-        .debounce(0.2)
-        .and(() -> coralState == CoralState.EFFECTOR)
-        .onTrue(
-            new InstantCommand(
-                () -> {
-                  coralState = CoralState.EMPTY;
-                  intakeSim.obtainGamePieceFromIntake();
-                  SimulatedArena.getInstance()
-                      .addGamePieceProjectile(
-                          new ReefscapeCoralOnFly(
-                              driveSim.getSimulatedDriveTrainPose().getTranslation(),
-                              coralPoseSupplier.get().getTranslation().toTranslation2d(),
-                              driveSim.getDriveTrainSimulatedChassisSpeedsFieldRelative(),
-                              driveSim.getGyroSimulation().getGyroReading(),
-                              Meters.of(coralPoseSupplier.get().getZ()),
-                              MetersPerSecond.of(5 * Math.signum(getEndEffectorVelocity())),
-                              coralPoseSupplier.get().getRotation().getMeasureY()));
-                }));
-    intakeSim.addGamePieceToIntake();
-    new Trigger(DriverStation::isEnabled)
-        .onTrue(
-            new InstantCommand(
-                () -> {
-                  intakeSim.startIntake();
-                  intakeSim.setGamePiecesCount(1);
-                }));
-    new Trigger(
-            () ->
-                Units.radiansToRotations(physicsSim.getAngularVelocityRadPerSec()) < -25
-                    && !hasAlgae)
-        .and(canIntakeAlgae)
-        .onTrue(new InstantCommand(() -> hasAlgae = true));
     this.coralPoseSupplier = coralPoseSupplier;
     this.robotPoseSupplier = driveSim::getSimulatedDriveTrainPose;
+    configureTriggers(driveSim, stowed, canIntakeAlgae);
   }
 
   @Override
@@ -195,5 +153,80 @@ public class EndEffectorIOSim implements SimMechanism, EndEffectorIO {
     FUNNEL,
     EFFECTOR,
     EMPTY
+  }
+
+  private void configureTriggers(
+      SwerveDriveSimulation driveSim, BooleanSupplier stowed, BooleanSupplier canIntakeAlgae) {
+    new Trigger(() -> intakeSim.getGamePiecesAmount() > 0)
+        .onTrue(new InstantCommand(() -> coralState = CoralState.FUNNEL));
+    new Trigger(() -> coralState == CoralState.FUNNEL)
+        .and(stowed)
+        .debounce(0.2) // Waits for a bit simulate coral falling into the
+        .and(() -> Units.radiansToRotations(physicsSim.getAngularVelocityRadPerSec()) > 25)
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  coralState = CoralState.EFFECTOR;
+                }));
+    new Trigger(
+            () -> Math.abs(Units.radiansToRotations(physicsSim.getAngularVelocityRadPerSec())) > 25)
+        .debounce(0.2)
+        .and(() -> coralState == CoralState.EFFECTOR)
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  coralState = CoralState.EMPTY;
+                  intakeSim.obtainGamePieceFromIntake();
+                  SimulatedArena.getInstance()
+                      .addGamePieceProjectile(
+                          new ReefscapeCoralOnFly(
+                              driveSim.getSimulatedDriveTrainPose().getTranslation(),
+                              coralPoseSupplier.get().getTranslation().toTranslation2d(),
+                              driveSim.getDriveTrainSimulatedChassisSpeedsFieldRelative(),
+                              driveSim.getGyroSimulation().getGyroReading(),
+                              Meters.of(coralPoseSupplier.get().getZ()),
+                              MetersPerSecond.of(5 * Math.signum(getEndEffectorVelocity())),
+                              coralPoseSupplier.get().getRotation().getMeasureY()));
+                }));
+    intakeSim.addGamePieceToIntake();
+    new Trigger(DriverStation::isEnabled)
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  intakeSim.startIntake();
+                  intakeSim.setGamePiecesCount(1);
+                }));
+    new Trigger(
+            () ->
+                Units.radiansToRotations(physicsSim.getAngularVelocityRadPerSec()) < -25
+                    && !hasAlgae)
+        .and(canIntakeAlgae)
+        .onTrue(new InstantCommand(() -> hasAlgae = true));
+    new Trigger(
+            () ->
+                Units.radiansToRotations(physicsSim.getAngularVelocityRadPerSec()) > 25 && hasAlgae)
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  hasAlgae = false;
+                  SimulatedArena.getInstance()
+                      .addGamePieceProjectile(
+                          new ReefscapeAlgaeOnFly(
+                              driveSim.getSimulatedDriveTrainPose().getTranslation(),
+                              coralPoseSupplier
+                                  .get()
+                                  .plus(new Transform3d(0, 0, -0.18, new Rotation3d()))
+                                  .getTranslation()
+                                  .toTranslation2d(),
+                              driveSim.getDriveTrainSimulatedChassisSpeedsFieldRelative(),
+                              driveSim.getGyroSimulation().getGyroReading(),
+                              Meters.of(coralPoseSupplier.get().getZ()),
+                              MetersPerSecond.of(Math.signum(getEndEffectorVelocity())),
+                              coralPoseSupplier
+                                  .get()
+                                  .getRotation()
+                                  .getMeasureY()
+                                  .plus(Radians.of(0.164732207819))));
+                }));
   }
 }
