@@ -17,8 +17,8 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
-import frc.robot.subsystems.SimMechanism;
 import frc.robot.subsystems.arm.ArmConstants.ArmSimConstants;
+import frc.robot.subsystems.sim.SimMechanism;
 import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d;
 

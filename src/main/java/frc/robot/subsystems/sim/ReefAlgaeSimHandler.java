@@ -1,4 +1,4 @@
-package frc.robot.subsystems.endeffector;
+package frc.robot.subsystems.sim;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;

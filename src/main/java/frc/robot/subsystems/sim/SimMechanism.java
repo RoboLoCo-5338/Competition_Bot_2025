@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.sim;
 
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
