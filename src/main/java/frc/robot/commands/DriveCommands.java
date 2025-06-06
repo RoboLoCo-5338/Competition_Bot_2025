@@ -15,7 +15,6 @@ package frc.robot.commands;
 
 import static edu.wpi.first.units.Units.Degrees;
 
-import com.pathplanner.lib.util.FlippingUtil;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -44,7 +43,6 @@ import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.vision.VisionConstants;
 import frc.robot.util.Level;
 import frc.robot.util.PoseUtils;
-
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -397,10 +395,7 @@ public class DriveCommands {
                       && drive.autoTurnController.atSetpoint()))
               .schedule();*/
             }
-          }.onlyIf(
-              () ->
-                  PoseUtils.distanceBetweenPoses(targetPose, targetPose)
-                      < 3);
+          }.onlyIf(() -> PoseUtils.distanceBetweenPoses(targetPose, targetPose) < 3);
         },
         new HashSet<Subsystem>() {
           {
@@ -471,8 +466,10 @@ public class DriveCommands {
               .getPose()
               .nearest(
                   List.of(
-                    PoseUtils.allianceFlip(new Pose2d(1.56, 7.36, new Rotation2d(Degrees.of(-54)))),
-                      PoseUtils.allianceFlip(new Pose2d(1.623, 0.682, new Rotation2d(Degrees.of(54))))));
+                      PoseUtils.allianceFlip(
+                          new Pose2d(1.56, 7.36, new Rotation2d(Degrees.of(-54)))),
+                      PoseUtils.allianceFlip(
+                          new Pose2d(1.623, 0.682, new Rotation2d(Degrees.of(54))))));
       }
     }
   }

@@ -69,7 +69,6 @@ import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOPhotonVision;
 import frc.robot.subsystems.vision.VisionIOSimpleVision;
 import frc.robot.util.Level;
-
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.littletonrobotics.junction.AutoLogOutput;
@@ -346,14 +345,7 @@ public class RobotContainer {
     //             drive, () -> driverController.getLeftY(), () -> driverController.getLeftX()));
     Command reefScoreLeftL3 =
         DriveCommands.reefScore(
-            drive,
-            Direction.Left,
-            Level.L3,
-            driverController,
-            led,
-            elevator,
-            arm,
-            endEffector);
+            drive, Direction.Left, Level.L3, driverController, led, elevator, arm, endEffector);
     Command reefAlignLeft = DriveCommands.reefAlign(drive, Direction.Left, driverController, led);
     Command reefAlignRight = DriveCommands.reefAlign(drive, Direction.Right, driverController, led);
     driverController

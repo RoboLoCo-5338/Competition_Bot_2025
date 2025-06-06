@@ -64,6 +64,8 @@ public final class ElevatorConstants {
     public static final double ELEVATOR_L4 = 19.40 * ElevatorConstants.METERS_PER_ROTATION;
     public static final double ELEVATOR_NET =
         16.486 * ElevatorConstants.METERS_PER_ROTATION; // TODO: update
+    public static final double ELEVATOR_L2_ALGAE =
+        9.486 * ElevatorConstants.METERS_PER_ROTATION; // TODO update
     public static final double ELEVATOR_L3_ALGAE = 1.302;
     public static final double ELEVATOR_STOW = 0.05 * ElevatorConstants.METERS_PER_ROTATION;
   }

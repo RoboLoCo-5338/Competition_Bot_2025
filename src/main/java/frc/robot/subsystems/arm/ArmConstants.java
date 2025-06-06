@@ -38,7 +38,7 @@ public final class ArmConstants {
         -0.203; // TODO: update these values for new end effector arm
     public static final double ARM_L4 = 0.075;
     public static final double ARM_NET = 0.25;
-    public static final double ARM_L3_ALGAE = 0.0;
+    public static final double ARM_ALGAE = 0.0; // TODO: update
     public static final double ARM_STOW_INITIAL = -0.264 + 0.09;
     public static final double ARM_STOW_FINAL = -0.25;
   }
