@@ -28,10 +28,9 @@ public class ReefAlgaeSimHandler extends SubsystemBase {
     public Pose3d algaePose;
 
     public ReefSegment(int tagIndex, Alliance alliance) {
-      boolean isFlipped = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red;
       hasAlgae = true;
-      if (alliance == Alliance.Red) algaeLevel = (tagIndex % 2 == 0) ? Level.L2 : Level.L3;
-      else algaeLevel = (tagIndex % 2 == 0) ? Level.L3 : Level.L2;
+      if (alliance == Alliance.Red) algaeLevel = (tagIndex % 2 == 0) ? Level.L3 : Level.L2;
+      else algaeLevel = (tagIndex % 2 == 0) ? Level.L2 : Level.L3;
       intakePose = PoseUtils.tagRotate(DriveConstants.reefCenter, tagIndex, alliance);
       algaePose =
           new Pose3d(PoseUtils.tagRotate(EndEffectorSimConstants.ALGAE_REEF, tagIndex, alliance))
