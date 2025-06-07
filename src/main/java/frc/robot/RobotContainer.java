@@ -203,6 +203,7 @@ public class RobotContainer {
             .withName("Drive SysId Dynamic Reverse Command"));
 
     arm.addRoutinesToChooser(autoChooser);
+    drive.addRoutinesToChooser(autoChooser);
     elevator.addRoutinesToChooser(autoChooser);
     endEffector.addRoutinesToChooser(autoChooser);
 
