@@ -46,7 +46,7 @@ public class LED extends SubsystemBase {
                     new WaitCommand(0.3),
                     turnColor(canceled ? Color.kRed : Color.kGreen))
                 .withTimeout(0.3))
-        .withName("Align End Flash Command");
+        .withName("Align End Flash");
   }
 
   public Command pulseBlue() {
@@ -58,7 +58,7 @@ public class LED extends SubsystemBase {
               m_led.setData(buffer);
             },
             this)
-        .withName("Pulse Blue Command");
+        .withName("Pulse Blue");
   }
 
   public Command turnOff() {
@@ -69,7 +69,7 @@ public class LED extends SubsystemBase {
               m_led.setData(buffer);
             },
             this)
-        .withName("Turn Off Command");
+        .withName("Turn Off");
   }
 
   public Command goRainbow() {
@@ -82,7 +82,7 @@ public class LED extends SubsystemBase {
               m_led.setData(buffer);
             },
             this)
-        .withName("Go Rainbow Command");
+        .withName("Go Rainbow");
   }
 
   public Command turnColor(Color color) {
@@ -93,7 +93,7 @@ public class LED extends SubsystemBase {
               m_led.setData(buffer);
             },
             this)
-        .withName("Turn Color Command");
+        .withName("Turn Color");
   }
 
   /**

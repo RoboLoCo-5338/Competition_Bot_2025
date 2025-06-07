@@ -114,7 +114,7 @@ public class DriveCommands {
                           : drive.getRotation()));
             },
             drive)
-        .withName("Joystick Drive Command");
+        .withName("Joystick Drive");
   }
 
   /**
@@ -164,7 +164,7 @@ public class DriveCommands {
                           : drive.getRotation()));
             },
             drive)
-        .withName("Joystick Drive At Angle Command")
+        .withName("Joystick Drive At Angle")
 
         // Reset PID controller when command starts
         .beforeStarting(() -> angleController.reset(drive.getRotation().getRadians()));
@@ -195,7 +195,7 @@ public class DriveCommands {
                 },
                 drive)
             .withTimeout(DriveConstants.FF_START_DELAY)
-            .withName("Feedforward Characterization Command"),
+            .withName("Feedforward Characterization"),
         // Start timer
         Commands.runOnce(timer::restart),
 
@@ -301,7 +301,7 @@ public class DriveCommands {
                                   + formatter.format(Units.metersToInches(wheelRadius))
                                   + " inches");
                         })))
-        .withName("Wheel Radius Characterization Command");
+        .withName("Wheel Radius Characterization");
   }
   /**
    * Locks rotation onto the center of the reef
@@ -324,7 +324,7 @@ public class DriveCommands {
               return new Rotation2d(
                   Math.atan2(reef.getY() - robot.getY(), reef.getX() - robot.getX()));
             })
-        .withName("Reef Strafe Command");
+        .withName("Reef Strafe");
   }
 
   /**
@@ -403,7 +403,7 @@ public class DriveCommands {
                 add(drive);
               }
             })
-        .withName("Path to Destination Command");
+        .withName("Path to Destination");
   }
 
   /**
@@ -543,7 +543,7 @@ public class DriveCommands {
                 controller,
                 direction,
                 led))
-        .withName("Reef Align Command");
+        .withName("Reef Align");
   }
 
   public static Command reefScore(
@@ -572,7 +572,7 @@ public class DriveCommands {
                 endEffector.getIO().getLaserCanMeasurement1() > 100
                     && endEffector.getIO().getLaserCanMeasurement2() > 100)
         .andThen(() -> endEffector.setEndEffectorVelocity(0))
-        .withName("Reef Score Command");
+        .withName("Reef Score");
   }
 
   public enum Direction {
