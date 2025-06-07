@@ -17,7 +17,7 @@ public class PresetCommands {
   public static Command endEffectorSet(EndEffector endEffector, Arm arm, double position) {
     return arm.setArmPosition(position)
         .onlyIf(() -> !(arm.getArmPosition().getAsDouble() > position))
-        .withName("endEffectorSet Command");
+        .withName("endEffectorSet");
   }
 
   public static Command stowElevator(Elevator elevator, EndEffector endEffector, Arm arm) {
@@ -26,7 +26,7 @@ public class PresetCommands {
             new WaitCommand(0.1),
             elevator.setElevatorPosition(ElevatorPresetConstants.ELEVATOR_STOW, 2),
             arm.setArmPosition(ArmPresetConstants.ARM_STOW_FINAL))
-        .withName("stowElevator Command");
+        .withName("stowElevator");
   }
 
   public static Command presetL2(Elevator elevator, EndEffector endEffector, Arm arm) {
@@ -34,14 +34,14 @@ public class PresetCommands {
     return new SequentialCommandGroup(
             arm.setArmPosition(ArmPresetConstants.ARM_L2_L3),
             elevator.setElevatorPosition(ElevatorPresetConstants.ELEVATOR_L2, 0))
-        .withName("presetL2 Command");
+        .withName("presetL2");
   }
 
   public static Command presetL3(Elevator elevator, EndEffector endEffector, Arm arm) {
     return new SequentialCommandGroup(
             arm.setArmPosition(ArmPresetConstants.ARM_L2_L3),
             elevator.setElevatorPosition(ElevatorPresetConstants.ELEVATOR_L3, 0))
-        .withName("presetL3 Command");
+        .withName("presetL3");
   }
 
   public static Command presetL4(Elevator elevator, EndEffector endEffector, Arm arm) {
@@ -49,7 +49,7 @@ public class PresetCommands {
             new ParallelCommandGroup(
                 arm.setArmPosition(ArmPresetConstants.ARM_L4),
                 elevator.setElevatorPosition(ElevatorPresetConstants.ELEVATOR_L4, 0)))
-        .withName("presetL4 Command");
+        .withName("presetL4");
   }
 
   public static Command stopAll(Elevator elevator, EndEffector endEffector, Arm arm) {
@@ -57,14 +57,14 @@ public class PresetCommands {
             elevator.setElevatorVelocity(() -> 0.0),
             endEffector.setEndEffectorVelocity(0),
             arm.setArmVelocity(() -> 0))
-        .withName("stopAll Command");
+        .withName("stopAll");
   }
 
   public static Command netShoot(Arm arm, EndEffector endEffector) {
     return new ParallelCommandGroup(
             arm.setArmPosition(ArmPresetConstants.ARM_NET),
             new SequentialCommandGroup(new WaitCommand(0.8), endEffector.setEndEffectorSpeed(-1)))
-        .withName("netShoot Command");
+        .withName("netShoot");
   }
 
   public static Command intakeLaserCan(EndEffector endEffector) {
@@ -79,7 +79,7 @@ public class PresetCommands {
             () ->
                 !(endEffector.getIO().getLaserCanMeasurement1() == -1
                     || endEffector.getIO().getLaserCanMeasurement2() == -1))
-        .withName("intakeLaserCan Command");
+        .withName("intakeLaserCan");
   }
 
   public static Command outtakeLaserCan(EndEffector endEffector) {
@@ -94,6 +94,6 @@ public class PresetCommands {
             () ->
                 endEffector.getIO().getLaserCanMeasurement1() == -1
                     || endEffector.getIO().getLaserCanMeasurement2() == -1)
-        .withName("outtakeLaserCan Command");
+        .withName("outtakeLaserCan");
   }
 }
