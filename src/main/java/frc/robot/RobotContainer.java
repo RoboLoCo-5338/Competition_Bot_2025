@@ -113,7 +113,7 @@ public class RobotContainer {
         // Sim robot, instantiate physics sim IO implementations
         drive =
             new Drive(
-                new GyroIO() {},
+                new GyroIO(),
                 new ModuleIOSim(TunerConstants.FrontLeft),
                 new ModuleIOSim(TunerConstants.FrontRight),
                 new ModuleIOSim(TunerConstants.BackLeft),
@@ -135,17 +135,17 @@ public class RobotContainer {
         // Replayed robot, disable IO implementations
         drive =
             new Drive(
-                new GyroIO() {},
-                new ModuleIO() {},
-                new ModuleIO() {},
-                new ModuleIO() {},
-                new ModuleIO() {});
+                new GyroIO(),
+                new ModuleIO(),
+                new ModuleIO(),
+                new ModuleIO(),
+                new ModuleIO());
 
         led = new LED();
-        endEffector = new EndEffector(new EndEffectorIO() {});
-        elevator = new Elevator(new ElevatorIO() {});
-        arm = new Arm(new ArmIO() {});
-        vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
+        endEffector = new EndEffector(new EndEffectorIO());
+        elevator = new Elevator(new ElevatorIO());
+        arm = new Arm(new ArmIO());
+        vision = new Vision(drive::addVisionMeasurement, new VisionIO(), new VisionIO());
         break;
     }
 

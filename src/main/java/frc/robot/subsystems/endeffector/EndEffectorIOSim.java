@@ -1,5 +1,7 @@
 package frc.robot.subsystems.endeffector;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
@@ -28,10 +30,9 @@ public class EndEffectorIOSim extends EndEffectorIOTalonFX implements SimMechani
     simMotor.setSupplyVoltage(RobotController.getBatteryVoltage());
     physicsSim.setInputVoltage(simMotor.getMotorVoltage());
 
-    inputs.endEffectorConnected = true;
-    inputs.endEffectorVelocity = physicsSim.getAngularVelocityRPM();
-    inputs.endEffectorAppliedVolts = physicsSim.getInputVoltage();
-    inputs.endEffectorCurrentAmps = physicsSim.getCurrentDrawAmps();
+    Logger.recordOutput("endEffectorVelocity", physicsSim.getAngularVelocityRPM());
+    Logger.recordOutput("endEffectorAppliedVolts", physicsSim.getInputVoltage());
+    Logger.recordOutput("endEffectorCurrentAmps", physicsSim.getCurrentDrawAmps());
 
     physicsSim.update(0.02);
 

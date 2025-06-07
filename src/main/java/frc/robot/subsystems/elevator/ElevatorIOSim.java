@@ -9,6 +9,7 @@ import frc.robot.Constants;
 import frc.robot.subsystems.SimMechanism;
 import frc.robot.subsystems.elevator.ElevatorConstants.ElevatorSimConstants;
 import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.mechanism.LoggedMechanism2d;
 import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d;
 import org.littletonrobotics.junction.mechanism.LoggedMechanismRoot2d;
@@ -48,17 +49,15 @@ public class ElevatorIOSim extends ElevatorIOTalonFX implements SimMechanism {
 
     physicsSim.setInputVoltage((motor1Sim.getMotorVoltage() + motor2Sim.getMotorVoltage()) / 2);
 
-    inputs.elevator1Connected = true;
-    inputs.elevator1Position = physicsSim.getPositionMeters();
-    inputs.elevator1Velocity = physicsSim.getVelocityMetersPerSecond();
-    inputs.elevator1AppliedVolts = motor1Sim.getMotorVoltage();
-    inputs.elevator1CurrentAmps = motor2Sim.getSupplyCurrent();
+    Logger.recordOutput("elevator1Position", physicsSim.getPositionMeters());
+    Logger.recordOutput("elevator1Velocity", physicsSim.getVelocityMetersPerSecond());
+    Logger.recordOutput("elevator1AppliedVolts", motor1Sim.getMotorVoltage());
+    Logger.recordOutput("elevator1CurrentAmps", motor2Sim.getSupplyCurrent());
 
-    inputs.elevator2Connected = true;
-    inputs.elevator2Position = physicsSim.getPositionMeters();
-    inputs.elevator2Velocity = physicsSim.getVelocityMetersPerSecond();
-    inputs.elevator2AppliedVolts = motor2Sim.getMotorVoltage();
-    inputs.elevator2CurrentAmps = motor2Sim.getSupplyCurrent();
+    Logger.recordOutput("elevator2Position", physicsSim.getPositionMeters());
+    Logger.recordOutput("elevator2Velocity", physicsSim.getVelocityMetersPerSecond());
+    Logger.recordOutput("elevator2AppliedVolts", motor2Sim.getMotorVoltage());
+    Logger.recordOutput("elevator2CurrentAmps", motor2Sim.getSupplyCurrent());
 
     physicsSim.update(0.02);
 
