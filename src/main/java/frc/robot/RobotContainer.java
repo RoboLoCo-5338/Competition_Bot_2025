@@ -171,31 +171,31 @@ public class RobotContainer {
     autoChooser.addOption(
         "Drive Wheel Radius Characterization",
         DriveCommands.wheelRadiusCharacterization(drive)
-            .withName("Drive Wheel Radius Characterization Command"));
+            .withName("Drive Wheel Radius Characterization"));
     autoChooser.addOption(
         "Drive Simple FF Characterization",
         DriveCommands.feedforwardCharacterization(drive)
-            .withName("Drive Simple FF Characterization Command"));
+            .withName("Drive Simple FF Characterization"));
     autoChooser.addOption(
         "Drive SysId (Quasistatic Forward)",
         drive
             .sysIdQuasistatic(SysIdRoutine.Direction.kForward)
-            .withName("Drive SysId Quasistatic Forward Command"));
+            .withName("Drive SysId Quasistatic Forward"));
     autoChooser.addOption(
         "Drive SysId (Quasistatic Reverse)",
         drive
             .sysIdQuasistatic(SysIdRoutine.Direction.kReverse)
-            .withName("Drive SysId Quasistatic Reverse Command"));
+            .withName("Drive SysId Quasistatic Reverse"));
     autoChooser.addOption(
         "Drive SysId (Dynamic Forward)",
         drive
             .sysIdDynamic(SysIdRoutine.Direction.kForward)
-            .withName("Drive SysId Dynamic Forward Command"));
+            .withName("Drive SysId Dynamic Forward"));
     autoChooser.addOption(
         "Drive SysId (Dynamic Reverse)",
         drive
             .sysIdDynamic(SysIdRoutine.Direction.kReverse)
-            .withName("Drive SysId Dynamic Reverse Command"));
+            .withName("Drive SysId Dynamic Reverse"));
 
     arm.addRoutinesToChooser(autoChooser);
     elevator.addRoutinesToChooser(autoChooser);
@@ -317,13 +317,13 @@ public class RobotContainer {
                 elevator,
                 arm,
                 endEffector)
-            .withName("Score Left L3 Command");
+            .withName("Score Left L3");
     Command reefAlignLeft =
         DriveCommands.reefAlign(drive, Direction.Left, driverController, led)
-            .withName("Align Left Command");
+            .withName("Align Left");
     Command reefAlignRight =
         DriveCommands.reefAlign(drive, Direction.Right, driverController, led)
-            .withName("Align Right Command");
+            .withName("Align Right");
     driverController
         .leftBumper()
         .and(() -> drive.useVision)
@@ -390,6 +390,6 @@ public class RobotContainer {
   }
 
   public Command stopMotors() {
-    return PresetCommands.stopAll(elevator, endEffector, arm).withName("Stop Motors Command");
+    return PresetCommands.stopAll(elevator, endEffector, arm).withName("Stop Motors");
   }
 }
