@@ -192,10 +192,11 @@ public class EndEffectorIOSim implements SimMechanism, EndEffectorIO {
     new Trigger(DriverStation::isEnabled)
         .onTrue(
             new InstantCommand(
-                () -> {
-                  intakeSim.startIntake();
-                  intakeSim.setGamePiecesCount(1);
-                }));
+                    () -> {
+                      intakeSim.startIntake();
+                      intakeSim.setGamePiecesCount(1);
+                    })
+                .ignoringDisable(true));
     new Trigger(
             () ->
                 Units.radiansToRotations(physicsSim.getAngularVelocityRadPerSec()) < -25
