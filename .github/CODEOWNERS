@@ -6,7 +6,7 @@
 /src/main/java/frc/robot/util/LocalADStarAK.java @shreshtaparthaje
 
 # Vision Specific Files
-/src/main/java/frc/robot/subsystems/vision/ @Advay17 @314PiGuy @aedanmills
+/src/main/java/frc/robot/subsystems/vision/ @Advay17 @314PiGuy
 
 # Drivetrain
 /src/main/java/frc/robot/subsystems/drive/ @Rohit1046
@@ -22,7 +22,7 @@
 /src/main/java/frc/robot/subsystems/SimMechanism.java @Advay17 @314PiGuy
 
 # LED Specific Files
-/src/main/java/frc/robot/commands/led/ @Advay17 @ironon
+/src/main/java/frc/robot/commands/led/ @Advay17
 
 /src/main/java/frc/robot/util/*Util.java @Rohit1046
 
