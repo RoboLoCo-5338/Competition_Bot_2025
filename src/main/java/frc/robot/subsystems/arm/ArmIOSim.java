@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import frc.robot.subsystems.SimMechanism;
 import frc.robot.subsystems.arm.ArmConstants.ArmSimConstants;
 import java.util.function.DoubleSupplier;
-
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d;
 
@@ -57,11 +56,12 @@ public class ArmIOSim extends ArmIOSpark implements SimMechanism {
         0.02);
 
     Logger.recordOutput("Arm Position", Units.radiansToRotations(armPhysicsSim.getAngleRads()));
-    Logger.recordOutput("Arm Velocity", Units.radiansToRotations(armPhysicsSim.getVelocityRadPerSec()));
+    Logger.recordOutput(
+        "Arm Velocity", Units.radiansToRotations(armPhysicsSim.getVelocityRadPerSec()));
     ifOk(
         armMotor,
         new DoubleSupplier[] {armMotor::getAppliedOutput, armMotor::getBusVoltage},
-        (values) -> inputs.armAppliedVolts = values[0] * values[1]);
+        (values) -> Logger.recordOutput("armAppliedVolts", values[0] * values[1]));
     Logger.recordOutput("Arm Current", armPhysicsSim.getCurrentDrawAmps());
 
     armDrawn.setAngle(Units.radiansToDegrees(armPhysicsSim.getAngleRads()));

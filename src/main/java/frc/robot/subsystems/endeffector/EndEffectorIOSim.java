@@ -1,7 +1,5 @@
 package frc.robot.subsystems.endeffector;
 
-import org.littletonrobotics.junction.Logger;
-
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
@@ -9,6 +7,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import frc.robot.subsystems.SimMechanism;
 import frc.robot.subsystems.endeffector.EndEffectorConstants.EndEffectorSimConstants;
+import org.littletonrobotics.junction.Logger;
 
 public class EndEffectorIOSim extends EndEffectorIOTalonFX implements SimMechanism {
   TalonFXSimState simMotor = endEffectorMotor.getSimState();

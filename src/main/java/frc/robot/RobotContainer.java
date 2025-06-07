@@ -134,12 +134,7 @@ public class RobotContainer {
       default:
         // Replayed robot, disable IO implementations
         drive =
-            new Drive(
-                new GyroIO(),
-                new ModuleIO(),
-                new ModuleIO(),
-                new ModuleIO(),
-                new ModuleIO());
+            new Drive(new GyroIO(), new ModuleIO(), new ModuleIO(), new ModuleIO(), new ModuleIO());
 
         led = new LED();
         endEffector = new EndEffector(new EndEffectorIO());
