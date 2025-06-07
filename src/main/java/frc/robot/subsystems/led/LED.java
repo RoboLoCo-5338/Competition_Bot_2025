@@ -37,36 +37,39 @@ public class LED extends SubsystemBase {
 
   public Command alignEndFlash(boolean canceled) {
     return new ScheduleCommand(
-        new SequentialCommandGroup(
-                turnColor(canceled ? Color.kRed : Color.kGreen).withTimeout(0.3),
-                turnOff(),
-                new WaitCommand(0.3),
-                turnColor(canceled ? Color.kRed : Color.kGreen).withTimeout(0.3),
-                turnOff(),
-                new WaitCommand(0.3),
-                turnColor(canceled ? Color.kRed : Color.kGreen))
-            .withTimeout(0.3));
+            new SequentialCommandGroup(
+                    turnColor(canceled ? Color.kRed : Color.kGreen).withTimeout(0.3),
+                    turnOff(),
+                    new WaitCommand(0.3),
+                    turnColor(canceled ? Color.kRed : Color.kGreen).withTimeout(0.3),
+                    turnOff(),
+                    new WaitCommand(0.3),
+                    turnColor(canceled ? Color.kRed : Color.kGreen))
+                .withTimeout(0.3))
+        .withName("Align End Flash Command");
   }
 
   public Command pulseBlue() {
     LEDPattern blue = LEDPattern.solid(Color.kBlue);
     LEDPattern pulsingBlue = blue.breathe(Seconds.of(5));
     return new RunCommand(
-        () -> {
-          pulsingBlue.applyTo(buffer);
-          m_led.setData(buffer);
-        },
-        this);
+            () -> {
+              pulsingBlue.applyTo(buffer);
+              m_led.setData(buffer);
+            },
+            this)
+        .withName("Pulse Blue Command");
   }
 
   public Command turnOff() {
     return new InstantCommand(
-        () -> {
-          LEDPattern off = LEDPattern.kOff;
-          off.applyTo(buffer);
-          m_led.setData(buffer);
-        },
-        this);
+            () -> {
+              LEDPattern off = LEDPattern.kOff;
+              off.applyTo(buffer);
+              m_led.setData(buffer);
+            },
+            this)
+        .withName("Turn Off Command");
   }
 
   public Command goRainbow() {
@@ -74,21 +77,23 @@ public class LED extends SubsystemBase {
     LEDPattern scrollingRainbow =
         rainbow.scrollAtAbsoluteSpeed(MetersPerSecond.of(0.3), LEDConstants.LED_SPACING);
     return new InstantCommand(
-        () -> {
-          scrollingRainbow.applyTo(buffer);
-          m_led.setData(buffer);
-        },
-        this);
+            () -> {
+              scrollingRainbow.applyTo(buffer);
+              m_led.setData(buffer);
+            },
+            this)
+        .withName("Go Rainbow Command");
   }
 
   public Command turnColor(Color color) {
     return new RunCommand(
-        () -> {
-          LEDPattern colorPattern = LEDPattern.solid(color);
-          colorPattern.applyTo(buffer);
-          m_led.setData(buffer);
-        },
-        this);
+            () -> {
+              LEDPattern colorPattern = LEDPattern.solid(color);
+              colorPattern.applyTo(buffer);
+              m_led.setData(buffer);
+            },
+            this)
+        .withName("Turn Color Command");
   }
 
   /**

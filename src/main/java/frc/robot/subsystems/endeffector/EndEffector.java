@@ -50,14 +50,16 @@ public class EndEffector extends SubsystemBase implements SysIDSubsystem {
 
   public Command setEndEffectorVelocity(double velocity) {
     return new InstantCommand(
-        () -> {
-          io.setEndEffectorVelocity(velocity);
-        },
-        this);
+            () -> {
+              io.setEndEffectorVelocity(velocity);
+            },
+            this)
+        .withName("Set End Effector Velocity Command");
   }
 
   public Command setEndEffectorSpeed(double speed) {
-    return new InstantCommand(() -> io.setEndEffectorSpeed(speed));
+    return new InstantCommand(() -> io.setEndEffectorSpeed(speed))
+        .withName("Set End Effector Speed Command");
   }
 
   public EndEffectorIO getIO() {
@@ -65,11 +67,11 @@ public class EndEffector extends SubsystemBase implements SysIDSubsystem {
   }
 
   public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
-    return sysIdRoutine.quasistatic(direction);
+    return sysIdRoutine.quasistatic(direction).withName("SysId Quasistatic Command");
   }
 
   public Command sysIdDynamic(SysIdRoutine.Direction direction) {
-    return sysIdRoutine.dynamic(direction);
+    return sysIdRoutine.dynamic(direction).withName("SysId Dynamic Command");
   }
 
   @Override
