@@ -174,19 +174,33 @@ public class RobotContainer {
 
     // Set up SysId routines
     autoChooser.addOption(
-        "Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization(drive));
+        "Drive Wheel Radius Characterization",
+        DriveCommands.wheelRadiusCharacterization(drive)
+            .withName("Drive Wheel Radius Characterization Command"));
     autoChooser.addOption(
-        "Drive Simple FF Characterization", DriveCommands.feedforwardCharacterization(drive));
+        "Drive Simple FF Characterization",
+        DriveCommands.feedforwardCharacterization(drive)
+            .withName("Drive Simple FF Characterization Command"));
     autoChooser.addOption(
         "Drive SysId (Quasistatic Forward)",
-        drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+        drive
+            .sysIdQuasistatic(SysIdRoutine.Direction.kForward)
+            .withName("Drive SysId Quasistatic Forward Command"));
     autoChooser.addOption(
         "Drive SysId (Quasistatic Reverse)",
-        drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+        drive
+            .sysIdQuasistatic(SysIdRoutine.Direction.kReverse)
+            .withName("Drive SysId Quasistatic Reverse Command"));
     autoChooser.addOption(
-        "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
+        "Drive SysId (Dynamic Forward)",
+        drive
+            .sysIdDynamic(SysIdRoutine.Direction.kForward)
+            .withName("Drive SysId Dynamic Forward Command"));
     autoChooser.addOption(
-        "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+        "Drive SysId (Dynamic Reverse)",
+        drive
+            .sysIdDynamic(SysIdRoutine.Direction.kReverse)
+            .withName("Drive SysId Dynamic Reverse Command"));
 
     arm.addRoutinesToChooser(autoChooser);
     elevator.addRoutinesToChooser(autoChooser);
@@ -300,16 +314,21 @@ public class RobotContainer {
     //             drive, () -> driverController.getLeftY(), () -> driverController.getLeftX()));
     Command reefScoreLeftL3 =
         DriveCommands.reefScore(
-            drive,
-            Direction.Left,
-            DriveCommands.Level.L3,
-            driverController,
-            led,
-            elevator,
-            arm,
-            endEffector);
-    Command reefAlignLeft = DriveCommands.reefAlign(drive, Direction.Left, driverController, led);
-    Command reefAlignRight = DriveCommands.reefAlign(drive, Direction.Right, driverController, led);
+                drive,
+                Direction.Left,
+                DriveCommands.Level.L3,
+                driverController,
+                led,
+                elevator,
+                arm,
+                endEffector)
+            .withName("Score Left L3 Command");
+    Command reefAlignLeft =
+        DriveCommands.reefAlign(drive, Direction.Left, driverController, led)
+            .withName("Align Left Command");
+    Command reefAlignRight =
+        DriveCommands.reefAlign(drive, Direction.Right, driverController, led)
+            .withName("Align Right Command");
     driverController
         .leftBumper()
         .and(() -> drive.useVision)
@@ -376,6 +395,6 @@ public class RobotContainer {
   }
 
   public Command stopMotors() {
-    return PresetCommands.stopAll(elevator, endEffector, arm);
+    return PresetCommands.stopAll(elevator, endEffector, arm).withName("Stop Motors Command");
   }
 }
