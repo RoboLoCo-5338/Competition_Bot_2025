@@ -75,11 +75,11 @@ public class PresetCommands {
                         (endEffector.getIO().getLaserCanMeasurement1() < 100
                             && endEffector.getIO().getLaserCanMeasurement2() < 100)),
             endEffector.setEndEffectorVelocity(0.0))
-        .withName("intakeLaserCan Command")
         .onlyIf(
             () ->
                 !(endEffector.getIO().getLaserCanMeasurement1() == -1
-                    || endEffector.getIO().getLaserCanMeasurement2() == -1));
+                    || endEffector.getIO().getLaserCanMeasurement2() == -1))
+        .withName("intakeLaserCan Command");
   }
 
   public static Command outtakeLaserCan(EndEffector endEffector) {
@@ -90,10 +90,10 @@ public class PresetCommands {
                         (endEffector.getIO().getLaserCanMeasurement1() > 100
                             && endEffector.getIO().getLaserCanMeasurement2() > 100)),
             endEffector.setEndEffectorVelocity(0.0))
-        .withName("outtakeLaserCan Command")
         .onlyIf(
             () ->
                 endEffector.getIO().getLaserCanMeasurement1() == -1
-                    || endEffector.getIO().getLaserCanMeasurement2() == -1);
+                    || endEffector.getIO().getLaserCanMeasurement2() == -1)
+        .withName("outtakeLaserCan Command");
   }
 }
