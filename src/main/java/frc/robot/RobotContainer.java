@@ -193,8 +193,8 @@ public class RobotContainer {
     }
 
     // Set up commands for auto
-    NamedCommands.registerCommand("L4 Preset", PresetCommands.presetL4(elevator, endEffector, arm));
-    NamedCommands.registerCommand("L2 Preset", PresetCommands.presetL2(elevator, endEffector, arm));
+    NamedCommands.registerCommand("L4 Preset", PresetCommands.presetL4(elevator, arm));
+    NamedCommands.registerCommand("L2 Preset", PresetCommands.presetL2(elevator, arm));
 
     NamedCommands.registerCommand("Endeffector Out", endEffector.setEndEffectorVelocity(100));
     NamedCommands.registerCommand("Endeffector Out L4", endEffector.setEndEffectorVelocity(-100));
@@ -210,7 +210,7 @@ public class RobotContainer {
     NamedCommands.registerCommand(
         "Stop Preset", PresetCommands.stopAll(elevator, endEffector, arm));
     NamedCommands.registerCommand(
-        "StowPreset", PresetCommands.stowElevator(elevator, endEffector, arm));
+        "StowPreset", PresetCommands.stowElevator(elevator, arm));
 
     NamedCommands.registerCommand(
         "Add Left Coral", SimCommands.addLeftCoral(driveSimulation::getSimulatedDriveTrainPose));
@@ -310,10 +310,10 @@ public class RobotContainer {
         .whileTrue(endEffector.setEndEffectorVelocity(-100))
         .onFalse(endEffector.setEndEffectorVelocity(0));
 
-    operatorController.a().onTrue(PresetCommands.stowElevator(elevator, endEffector, arm));
-    operatorController.b().whileTrue(PresetCommands.presetL2(elevator, endEffector, arm));
-    operatorController.x().whileTrue(PresetCommands.presetL3(elevator, endEffector, arm));
-    operatorController.y().whileTrue(PresetCommands.presetL4(elevator, endEffector, arm));
+    operatorController.a().onTrue(PresetCommands.stowElevator(elevator, arm));
+    operatorController.b().whileTrue(PresetCommands.presetL2(elevator, arm));
+    operatorController.x().whileTrue(PresetCommands.presetL3(elevator, arm));
+    operatorController.y().whileTrue(PresetCommands.presetL4(elevator, arm));
 
     operatorController
         .rightBumper()
