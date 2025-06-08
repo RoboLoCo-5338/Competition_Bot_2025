@@ -41,9 +41,9 @@ public class Arm extends SubsystemBase implements SysIDSubsystem {
                 null,
                 (state) -> Logger.recordOutput("Arm/SysIdState", state.toString())),
             new Mechanism(io::armOpenLoop, null, this));
-    SmartDashboard.putBoolean(getName() + " Disabled", false);
-    lastDisabled = false;
     if (Constants.currentMode == Mode.REAL) {
+      SmartDashboard.putBoolean(getName() + "Disabled", false);
+      lastDisabled = false;
       realArm = (ArmIOSpark) io;
       simArm = new ArmIOSim(Elevator.simElevator.getLigamentEnd());
     }
@@ -51,23 +51,24 @@ public class Arm extends SubsystemBase implements SysIDSubsystem {
 
   @Override
   public void periodic() {
+    if (Constants.currentMode == Mode.REAL) {
+      if (SmartDashboard.getBoolean(getName() + "Disabled", false) == true) {
+        if (lastDisabled == false) {
+          lastDisabled = true;
+          changeIO(simArm);
+        }
+      } else {
+        if (lastDisabled == true) {
+          lastDisabled = false;
+          changeIO(realArm);
+        }
+      }
+    }
     io.updateInputs(inputs);
     Logger.processInputs("Arm", inputs);
     armPosition = io.getArmPosition(inputs);
 
     armDisconnectedAlert.set(!inputs.armConnected && Constants.currentMode != Mode.SIM);
-
-    if (SmartDashboard.getBoolean(getName() + " Disabled", false) == true) {
-      if (lastDisabled == false) {
-        lastDisabled = true;
-        changeIO(simArm);
-      }
-    } else {
-      if (lastDisabled == true) {
-        lastDisabled = false;
-        changeIO(realArm);
-      }
-    }
   }
 
   /**

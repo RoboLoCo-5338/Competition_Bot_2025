@@ -43,9 +43,9 @@ public class EndEffector extends SubsystemBase implements SysIDSubsystem {
                 Second.of(30),
                 (state) -> Logger.recordOutput("EndEffector/SysIdState", state.toString())),
             new Mechanism(io::endEffectorOpenLoop, null, this));
-    SmartDashboard.putBoolean(getName() + " Disabled", false);
-    lastDisabled = false;
     if (Constants.currentMode == Mode.REAL) {
+      SmartDashboard.putBoolean(getName() + "Disabled", false);
+      lastDisabled = false;
       realEndEffector = (EndEffectorIOTalonFX) io;
       simEndEffector = new EndEffectorIOSim();
     }
@@ -53,23 +53,24 @@ public class EndEffector extends SubsystemBase implements SysIDSubsystem {
 
   @Override
   public void periodic() {
+    if (Constants.currentMode == Mode.REAL) {
+      if (SmartDashboard.getBoolean(getName() + "Disabled", false) == true) {
+        if (lastDisabled == false) {
+          lastDisabled = true;
+          changeIO(simEndEffector);
+        }
+      } else {
+        if (lastDisabled == true) {
+          lastDisabled = false;
+          changeIO(realEndEffector);
+        }
+      }
+    }
     io.updateInputs(inputs);
     Logger.processInputs("End Effector", inputs);
 
     endEffectorDisconnectedAlert.set(
         !inputs.endEffectorConnected && Constants.currentMode != Mode.SIM);
-
-    if (SmartDashboard.getBoolean(getName() + " Disabled", false) == true) {
-      if (lastDisabled == false) {
-        lastDisabled = true;
-        changeIO(simEndEffector);
-      }
-    } else {
-      if (lastDisabled == true) {
-        lastDisabled = false;
-        changeIO(realEndEffector);
-      }
-    }
   }
 
   public Command setEndEffectorVelocity(double velocity) {

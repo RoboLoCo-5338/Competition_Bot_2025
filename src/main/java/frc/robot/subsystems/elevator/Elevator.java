@@ -43,9 +43,9 @@ public class Elevator extends SubsystemBase implements SysIDSubsystem {
                 null,
                 (state) -> Logger.recordOutput("Elevator/SysIdState", state.toString())),
             new Mechanism(io::elevatorOpenLoop, null, this));
-    SmartDashboard.putBoolean(getName() + " Disabled", false);
-    lastDisabled = false;
     if (Constants.currentMode == Mode.REAL) {
+      SmartDashboard.putBoolean(getName() + "Disabled", false);
+      lastDisabled = false;
       realElevator = (ElevatorIOTalonFX) io;
       simElevator = new ElevatorIOSim();
     }
@@ -57,23 +57,24 @@ public class Elevator extends SubsystemBase implements SysIDSubsystem {
    */
   @Override
   public void periodic() {
+    if (Constants.currentMode == Mode.REAL) {
+      if (SmartDashboard.getBoolean(getName() + "Disabled", false) == true) {
+        if (lastDisabled == false) {
+          lastDisabled = true;
+          changeIO(simElevator);
+        }
+      } else {
+        if (lastDisabled == true) {
+          lastDisabled = false;
+          changeIO(realElevator);
+        }
+      }
+    }
     io.updateInputs(inputs);
     Logger.processInputs("Elevator", inputs);
 
     elevator1DisconnectedAlert.set(!inputs.elevator1Connected && Constants.currentMode != Mode.SIM);
     elevator2DisconnectedAlert.set(!inputs.elevator1Connected && Constants.currentMode != Mode.SIM);
-
-    if (SmartDashboard.getBoolean(getName() + " Disabled", false) == true) {
-      if (lastDisabled == false) {
-        lastDisabled = true;
-        changeIO(simElevator);
-      }
-    } else {
-      if (lastDisabled == true) {
-        lastDisabled = false;
-        changeIO(realElevator);
-      }
-    }
   }
 
   /**
