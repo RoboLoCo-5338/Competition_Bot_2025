@@ -2,6 +2,7 @@ package frc.robot.subsystems.elevator;
 
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
@@ -15,7 +16,7 @@ import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.Logger;
 
 public class Elevator extends SubsystemBase implements SysIDSubsystem {
-  public final ElevatorIO io;
+  public ElevatorIO io;
   private final ElevatorIOInputsAutoLogged inputs = new ElevatorIOInputsAutoLogged();
   private double prevError = 0;
   private double integral = 0;
@@ -25,7 +26,12 @@ public class Elevator extends SubsystemBase implements SysIDSubsystem {
   private final Alert elevator2DisconnectedAlert =
       new Alert("Elevator motor 1 disconnected", AlertType.kError);
 
-  private final SysIdRoutine sysIdRoutine;
+  private SysIdRoutine sysIdRoutine;
+
+  private boolean lastDisabled;
+
+  private ElevatorIOTalonFX realElevator;
+  public static ElevatorIOSim simElevator;
 
   public Elevator(ElevatorIO io) {
     this.io = io;
@@ -37,6 +43,12 @@ public class Elevator extends SubsystemBase implements SysIDSubsystem {
                 null,
                 (state) -> Logger.recordOutput("Elevator/SysIdState", state.toString())),
             new Mechanism(io::elevatorOpenLoop, null, this));
+    SmartDashboard.putBoolean(getName() + " Disabled", false);
+    lastDisabled = false;
+    if (Constants.currentMode == Mode.REAL) {
+      realElevator = (ElevatorIOTalonFX) io;
+      simElevator = new ElevatorIOSim();
+    }
   }
 
   /**
@@ -50,6 +62,18 @@ public class Elevator extends SubsystemBase implements SysIDSubsystem {
 
     elevator1DisconnectedAlert.set(!inputs.elevator1Connected && Constants.currentMode != Mode.SIM);
     elevator2DisconnectedAlert.set(!inputs.elevator1Connected && Constants.currentMode != Mode.SIM);
+
+    if (SmartDashboard.getBoolean(getName() + " Disabled", false) == true) {
+      if (lastDisabled == false) {
+        lastDisabled = true;
+        changeIO(simElevator);
+      }
+    } else {
+      if (lastDisabled == true) {
+        lastDisabled = false;
+        changeIO(realElevator);
+      }
+    }
   }
 
   /**
@@ -95,5 +119,17 @@ public class Elevator extends SubsystemBase implements SysIDSubsystem {
   @Override
   public String getName() {
     return "Elevator ";
+  }
+
+  public void changeIO(ElevatorIO io) {
+    this.io = io;
+    this.sysIdRoutine =
+        new SysIdRoutine(
+            new SysIdRoutine.Config(
+                null,
+                null,
+                null,
+                (state) -> Logger.recordOutput("Elevator/SysIdState", state.toString())),
+            new Mechanism(this.io::elevatorOpenLoop, null, this));
   }
 }

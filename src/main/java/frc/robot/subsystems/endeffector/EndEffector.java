@@ -7,6 +7,7 @@ import edu.wpi.first.units.measure.Velocity;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -19,13 +20,18 @@ import org.littletonrobotics.junction.Logger;
 
 public class EndEffector extends SubsystemBase implements SysIDSubsystem {
 
-  public final EndEffectorIO io;
+  public EndEffectorIO io;
   private final EndEffectorIOInputsAutoLogged inputs = new EndEffectorIOInputsAutoLogged();
 
   private final Alert endEffectorDisconnectedAlert =
       new Alert(" End Effector motor disconnected!!", AlertType.kError);
 
-  private final SysIdRoutine sysIdRoutine;
+  private SysIdRoutine sysIdRoutine;
+
+  private boolean lastDisabled;
+
+  private EndEffectorIOTalonFX realEndEffector;
+  private EndEffectorIOSim simEndEffector;
 
   public EndEffector(EndEffectorIO io) {
     this.io = io;
@@ -37,6 +43,12 @@ public class EndEffector extends SubsystemBase implements SysIDSubsystem {
                 Second.of(30),
                 (state) -> Logger.recordOutput("EndEffector/SysIdState", state.toString())),
             new Mechanism(io::endEffectorOpenLoop, null, this));
+    SmartDashboard.putBoolean(getName() + " Disabled", false);
+    lastDisabled = false;
+    if (Constants.currentMode == Mode.REAL) {
+      realEndEffector = (EndEffectorIOTalonFX) io;
+      simEndEffector = new EndEffectorIOSim();
+    }
   }
 
   @Override
@@ -46,6 +58,18 @@ public class EndEffector extends SubsystemBase implements SysIDSubsystem {
 
     endEffectorDisconnectedAlert.set(
         !inputs.endEffectorConnected && Constants.currentMode != Mode.SIM);
+
+    if (SmartDashboard.getBoolean(getName() + " Disabled", false) == true) {
+      if (lastDisabled == false) {
+        lastDisabled = true;
+        changeIO(simEndEffector);
+      }
+    } else {
+      if (lastDisabled == true) {
+        lastDisabled = false;
+        changeIO(realEndEffector);
+      }
+    }
   }
 
   public Command setEndEffectorVelocity(double velocity) {
@@ -80,5 +104,17 @@ public class EndEffector extends SubsystemBase implements SysIDSubsystem {
   @Override
   public String getName() {
     return "End Effector ";
+  }
+
+  public void changeIO(EndEffectorIO io) {
+    this.io = io;
+    this.sysIdRoutine =
+        new SysIdRoutine(
+            new SysIdRoutine.Config(
+                null,
+                null,
+                null,
+                (state) -> Logger.recordOutput("EndEffector/SysIdState", state.toString())),
+            new Mechanism(this.io::endEffectorOpenLoop, null, this));
   }
 }
