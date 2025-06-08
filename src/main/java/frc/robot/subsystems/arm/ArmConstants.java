@@ -11,12 +11,12 @@ public final class ArmConstants {
   public static final double ARM_MOTOR_VELOCITY_KP = 0.001;
   public static final double ARM_MOTOR_VELOCITY_KI = 0.00;
   public static final double ARM_MOTOR_VELOCITY_KD = 0.0;
-  public static final double ARM_MOTOR_KG = 0.25;
+  public static final double ARM_MOTOR_KG = 0.27;
   public static final double ARM_MOTOR_KV = 0.00;
   public static final double ARM_MOTOR_KS = 0.0;
   public static final int ARM_MOTOR_CURRENT_LIMIT = 60;
   public static final double POSITION_TOLERANCE = 0.005; // native units
-  public static final double SOFT_LIMIT = -0.26; // TODO: update based on new end effector arm
+  public static final double SOFT_LIMIT = -0.283; // TODO: update based on new end effector arm
 
   public static final class ArmSimConstants {
     public static final double GEARING = 1.0 / 1.125;
@@ -30,7 +30,7 @@ public final class ArmConstants {
 
   public static final class ArmPresetConstants {
     public static final double ARM_L2_L3 =
-        -0.203; // TODO: update these values for new end effector arm
+        -0.183; // TODO: update these values for new end effector arm
     public static final double ARM_L4 = 0.075;
     public static final double ARM_NET = 0.25;
     public static final double ARM_L3_ALGAE = 0.0;
