@@ -5,38 +5,28 @@ import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Mechanism;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
 import frc.robot.subsystems.SysIDSubsystem;
 import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.Logger;
 
-public class Elevator extends SysIDSubsystem {
-  public final ElevatorIO io;
-  private final ElevatorIOInputsAutoLogged inputs = new ElevatorIOInputsAutoLogged();
-  private double prevError = 0;
-  private double integral = 0;
-  private double error;
+public class Elevator extends SysIDSubsystem<ElevatorIO, ElevatorIOInputsAutoLogged> {
   private final Alert elevator1DisconnectedAlert =
       new Alert("Elevator motor 1 disconnected", AlertType.kError);
   private final Alert elevator2DisconnectedAlert =
       new Alert("Elevator motor 1 disconnected", AlertType.kError);
 
-  private final SysIdRoutine sysIdRoutine;
-
   public Elevator(ElevatorIO io) {
-    this.io = io;
-    this.sysIdRoutine =
-        new SysIdRoutine(
-            new SysIdRoutine.Config(
-                null,
-                null,
-                null,
-                (state) -> Logger.recordOutput("Elevator/SysIdState", state.toString())),
-            new Mechanism(io::elevatorOpenLoop, null, this));
+    super(
+        io,
+        new ElevatorIOInputsAutoLogged(),
+        new SysIdRoutine.Config(
+            null,
+            null,
+            null,
+            (state) -> Logger.recordOutput("Elevator/SysIdState", state.toString())));
   }
 
   /**
@@ -72,7 +62,7 @@ public class Elevator extends SysIDSubsystem {
   }
 
   public double getElevatorPosition() {
-    return inputs.elevator1Position;
+    return inputs.position;
   }
 
   @Override

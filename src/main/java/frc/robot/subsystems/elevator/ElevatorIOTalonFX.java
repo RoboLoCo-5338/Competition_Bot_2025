@@ -171,6 +171,11 @@ public class ElevatorIOTalonFX extends ElevatorIO {
         BaseStatusSignal.refreshAll(
             elevator2Position, elevator2Velocity, elevator2Current, elevator2AppliedVolts);
 
+    inputs.position =
+        (elevator1Position.getValueAsDouble() + elevator2Position.getValueAsDouble()) / 2;
+    inputs.velocity =
+        (elevator1Velocity.getValueAsDouble() + elevator2Velocity.getValueAsDouble()) / 2;
+
     inputs.elevator1Connected = elevator1ConnectedDebounce.calculate(motor1Status.isOK());
     inputs.elevator1Position = elevator1Position.getValueAsDouble();
     inputs.elevator1Velocity = Units.rotationsToRadians(elevator1Velocity.getValueAsDouble());

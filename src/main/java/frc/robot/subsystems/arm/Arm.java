@@ -6,9 +6,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Mechanism;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
 import frc.robot.subsystems.SysIDSubsystem;
@@ -22,18 +20,11 @@ public class Arm extends SysIDSubsystem<ArmIO, ArmIOInputsAutoLogged> {
       new Alert("Arm motor disconnected", AlertType.kWarning);
 
   public Arm(ArmIO io) {
-    super(io, new ArmIOInputsAutoLogged());
-  }
-
-  @Override
-  public SysIdRoutine getSysIdRoutine() {
-    return new SysIdRoutine(
-      new SysIdRoutine.Config(
-          null,
-          null,
-          null,
-          (state) -> Logger.recordOutput("Arm/SysIdState", state.toString())),
-      new Mechanism(io::armOpenLoop, null, this));
+    super(
+        io,
+        new ArmIOInputsAutoLogged(),
+        new SysIdRoutine.Config(
+            null, null, null, (state) -> Logger.recordOutput("Arm/SysIdState", state.toString())));
   }
 
   @Override
@@ -55,7 +46,7 @@ public class Arm extends SysIDSubsystem<ArmIO, ArmIOInputsAutoLogged> {
    */
   public Command setArmPosition(double position) {
     return new StartEndCommand(() -> io.setArmPosition(position), () -> io.setArmVelocity(0), this)
-        .until(() -> Math.abs((inputs.armPosition - position)) < ArmConstants.POSITION_TOLERANCE);
+        .until(() -> Math.abs((inputs.position - position)) < ArmConstants.POSITION_TOLERANCE);
   }
 
   /**

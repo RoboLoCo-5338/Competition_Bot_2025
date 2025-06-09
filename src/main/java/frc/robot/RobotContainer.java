@@ -356,7 +356,7 @@ public class RobotContainer {
   public void periodic() {}
 
   public void teleopInit() {
-    SmartDashboard.putNumber("Laser Can", endEffector.io.getLaserCanMeasurement1());
+    SmartDashboard.putNumber("Laser Can", endEffector.getIO().getLaserCanMeasurement1());
     endEffector.setEndEffectorVelocity(0);
     elevator.setElevatorVelocity(() -> 0);
   }

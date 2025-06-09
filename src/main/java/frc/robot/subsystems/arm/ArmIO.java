@@ -1,15 +1,14 @@
 package frc.robot.subsystems.arm;
 
 import edu.wpi.first.units.measure.Voltage;
+import frc.robot.subsystems.SysIDIO;
+import frc.robot.subsystems.SysIDIO.SysIDIOInputs;
 import org.littletonrobotics.junction.AutoLog;
-import frc.robot.subsystems.IO; // Ensure this matches the actual package of IO
 
-public class ArmIO extends IO{
+public class ArmIO extends SysIDIO<ArmIOInputsAutoLogged> {
 
   @AutoLog
-  public static class ArmIOInputs extends IO.IOInputs {
-    public double armPosition = 0.0;
-    public double armVelocity = 0.0;
+  public static class ArmIOInputs extends SysIDIOInputs {
     public double armAppliedVolts = 0.0;
     public double armCurrent = 0.0;
     public boolean armConnected = false;
@@ -55,5 +54,5 @@ public class ArmIO extends IO{
     return 0.0;
   }
 
-  public void armOpenLoop(Voltage voltage) {}
+  public void openLoop(Voltage voltage) {}
 }

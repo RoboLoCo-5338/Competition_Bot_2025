@@ -1,19 +1,19 @@
 package frc.robot.subsystems.endeffector;
 
 import edu.wpi.first.units.measure.Voltage;
+import frc.robot.subsystems.SysIDIO;
+import frc.robot.subsystems.SysIDIO.SysIDIOInputs;
 import org.littletonrobotics.junction.AutoLog;
 
-public class EndEffectorIO {
+public class EndEffectorIO extends SysIDIO<EndEffectorIOInputsAutoLogged> {
   @AutoLog
-  public static class EndEffectorIOInputs {
-    public double endEffectorVelocity = 0.0;
+  public static class EndEffectorIOInputs extends SysIDIOInputs {
     public double endEffectorAppliedVolts = 0.0;
     public double endEffectorCurrentAmps = 0.0;
     public boolean endEffectorConnected = false;
     public double endEffectorDistance1 = -1;
     public double endEffectorDistance2 = -1;
     public double endEffectorTemperature = 0.0;
-    public double endEffectorPosition = 0.0;
   }
 
   public void updateInputs(EndEffectorIOInputs inputs) {}
@@ -30,5 +30,5 @@ public class EndEffectorIO {
     return -1;
   }
 
-  public void endEffectorOpenLoop(Voltage voltage) {}
+  public void openLoop(Voltage voltage) {}
 }

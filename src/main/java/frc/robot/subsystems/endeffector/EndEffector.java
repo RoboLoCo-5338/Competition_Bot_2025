@@ -9,34 +9,26 @@ import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Mechanism;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
 import frc.robot.subsystems.SysIDSubsystem;
 import org.littletonrobotics.junction.Logger;
 
-public class EndEffector extends SysIDSubsystem {
-
-  public final EndEffectorIO io;
-  private final EndEffectorIOInputsAutoLogged inputs = new EndEffectorIOInputsAutoLogged();
+public class EndEffector extends SysIDSubsystem<EndEffectorIO, EndEffectorIOInputsAutoLogged> {
 
   private final Alert endEffectorDisconnectedAlert =
       new Alert(" End Effector motor disconnected!!", AlertType.kError);
 
-  private final SysIdRoutine sysIdRoutine;
-
   public EndEffector(EndEffectorIO io) {
-    this.io = io;
-    this.sysIdRoutine =
-        new SysIdRoutine(
-            new SysIdRoutine.Config(
-                Velocity.ofBaseUnits(0.2, Volts.per(Second)),
-                Voltage.ofBaseUnits(2, Volts),
-                Second.of(30),
-                (state) -> Logger.recordOutput("EndEffector/SysIdState", state.toString())),
-            new Mechanism(io::endEffectorOpenLoop, null, this));
+    super(
+        io,
+        new EndEffectorIOInputsAutoLogged(),
+        new SysIdRoutine.Config(
+            Velocity.ofBaseUnits(0.2, Volts.per(Second)),
+            Voltage.ofBaseUnits(2, Volts),
+            Second.of(30),
+            (state) -> Logger.recordOutput("EndEffector/SysIdState", state.toString())));
   }
 
   @Override

@@ -1,12 +1,12 @@
 package frc.robot.subsystems;
 
-import org.littletonrobotics.junction.AutoLog;
+public abstract class IO<I extends IO.IOInputs> implements AutoCloseable {
+  public static class IOInputs {
+    public boolean connected = false;
+  }
 
-public abstract class IO implements AutoCloseable{
-    public static class IOInputs {
-        public boolean connected = false;
-    }
-    public void updateInputs(IOInputs inputs) {}
-    @Override
-    public void close() {}
+  public void updateInputs(I inputs) {}
+
+  @Override
+  public void close() {}
 }
