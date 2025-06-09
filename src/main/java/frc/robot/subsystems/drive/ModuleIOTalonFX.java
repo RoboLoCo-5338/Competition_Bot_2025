@@ -26,7 +26,7 @@ import edu.wpi.first.units.measure.Voltage;
 import frc.robot.Constants;
 import frc.robot.generated.TunerConstants;
 
-public abstract class ModuleIOTalonFX implements ModuleIO {
+public abstract class ModuleIOTalonFX extends ModuleIO {
   protected final SwerveModuleConstants<
           TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration>
       constants;

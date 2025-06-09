@@ -12,7 +12,6 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
@@ -31,7 +30,7 @@ import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeAlgaeOnFly
 import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoralOnFly;
 import org.littletonrobotics.junction.Logger;
 
-public class EndEffectorIOSim implements SimMechanism, EndEffectorIO {
+public class EndEffectorIOSim extends EndEffectorIO implements SimMechanism {
   TalonFXSimState simMotor = endEffectorMotor.getSimState();
   FlywheelSim physicsSim =
       new FlywheelSim(
@@ -50,7 +49,6 @@ public class EndEffectorIOSim implements SimMechanism, EndEffectorIO {
       BooleanSupplier stowed,
       BooleanSupplier canIntakeAlgae) {
     initSimVoltage();
-    endEffectorMotor.getConfigurator().apply(getEndEffectorConfiguration());
     // this.intakeSim =
     //     IntakeSimulation.InTheFrameIntake("Coral", driveSim, Inches.of(34), IntakeSide.BACK, 1);
     this.intakeSim =
@@ -73,11 +71,9 @@ public class EndEffectorIOSim implements SimMechanism, EndEffectorIO {
     simMotor.setSupplyVoltage(RobotController.getBatteryVoltage());
     physicsSim.setInputVoltage(simMotor.getMotorVoltage());
 
-    inputs.endEffectorConnected = true;
-    inputs.endEffectorVelocity = Units.radiansToRotations(physicsSim.getAngularVelocityRadPerSec());
-    inputs.endEffectorPosition = endEffectorMotor.getPosition().getValueAsDouble();
-    inputs.endEffectorAppliedVolts = physicsSim.getInputVoltage();
-    inputs.endEffectorCurrentAmps = physicsSim.getCurrentDrawAmps();
+    Logger.recordOutput("endEffectorVelocity", physicsSim.getAngularVelocityRPM());
+    Logger.recordOutput("endEffectorAppliedVolts", physicsSim.getInputVoltage());
+    Logger.recordOutput("endEffectorCurrentAmps", physicsSim.getCurrentDrawAmps());
 
     physicsSim.update(0.02);
 
@@ -86,42 +82,10 @@ public class EndEffectorIOSim implements SimMechanism, EndEffectorIO {
             * 0.02
             * EndEffectorConstants.GEARING);
     simMotor.setRotorVelocity(
-        Units.radiansToRotations(physicsSim.getAngularVelocityRadPerSec())
-            * EndEffectorConstants.GEARING);
-    // May move this out and into EndEffector when we have lasercan working
+        physicsSim.getAngularVelocityRadPerSec() * EndEffectorSimConstants.GEARING);
+  
 
-    Logger.recordOutput(
-        "Odometry/IntakedCoral",
-        (coralState == CoralState.EFFECTOR)
-            ? new Pose3d[] {
-              new Pose3d(robotPoseSupplier.get())
-                  .plus(new Transform3d(new Pose3d(), coralPoseSupplier.get()))
-            }
-            : new Pose3d[0]);
-    Logger.recordOutput(
-        "Odometry/IntakedAlgae",
-        (hasAlgae)
-            ? new Pose3d[] {
-              new Pose3d(robotPoseSupplier.get())
-                  .plus(
-                      new Transform3d(
-                          new Pose3d(),
-                          coralPoseSupplier
-                              .get()
-                              .plus(new Transform3d(0, 0, -0.18, new Rotation3d()))))
-            }
-            : new Pose3d[0]);
-  }
-
-  @Override
-  public void setEndEffectorVelocity(double velocity) {
-    endEffectorMotor.setControl(
-        endEffectorVelocityRequest.withVelocity(velocity * EndEffectorConstants.GEARING));
-  }
-
-  @Override
-  public void setEndEffectorSpeed(double speed) {
-    endEffectorMotor.set(speed * EndEffectorConstants.GEARING);
+    super.updateInputs(inputs);
   }
 
   @Override
@@ -129,15 +93,6 @@ public class EndEffectorIOSim implements SimMechanism, EndEffectorIO {
     return new double[] {physicsSim.getCurrentDrawAmps()};
   }
 
-  @Override
-  public void endEffectorOpenLoop(Voltage voltage) {
-    endEffectorMotor.setVoltage(voltage.magnitude());
-  }
-
-  @Override
-  public double getEndEffectorVelocity() {
-    return physicsSim.getAngularVelocityRadPerSec();
-  }
 
   @Override
   public int getLaserCanMeasurement1() {
