@@ -40,7 +40,7 @@ public class VisionIOPhotonVisionSim extends VisionIOPhotonVision {
   }
 
   @Override
-  public void updateInputs(VisionIOInputs inputs) {
+  public void updateInputs(VisionIOInputsAutoLogged inputs) {
     visionSim.update(poseSupplier.get());
     super.updateInputs(inputs);
   }

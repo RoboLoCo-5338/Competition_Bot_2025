@@ -2,11 +2,13 @@ package frc.robot.subsystems.vision;
 
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.subsystems.IO;
+
 import org.littletonrobotics.junction.AutoLog;
 
-public class VisionIO {
+public class VisionIO extends IO<VisionIOInputsAutoLogged> {
   @AutoLog
-  public static class VisionIOInputs {
+  public static class VisionIOInputs extends IO.IOInputs {
     public boolean connected = false;
     public TargetObservation latestTargetObservation =
         new TargetObservation(new Rotation2d(), new Rotation2d());
@@ -31,6 +33,4 @@ public class VisionIO {
     MEGATAG_2,
     PHOTONVISION
   }
-
-  public void updateInputs(VisionIOInputs inputs) {}
 }
