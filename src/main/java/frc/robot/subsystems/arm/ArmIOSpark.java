@@ -116,8 +116,10 @@ public class ArmIOSpark extends ArmIO {
   @Override
   public void updateInputs(ArmIOInputs inputs) {
     sparkStickyFault = false;
-    ifOk(armMotor, armEncoder::getPosition, (value) -> inputs.armPosition = value);
-    ifOk(armMotor, armEncoder::getVelocity, (value) -> inputs.armVelocity = value);
+    // SmartDashboard.putNumber("ArmPosition Before", inputs.armPosition);
+    ifOk(armMotor, armEncoder::getPosition, (value) -> inputs.position = value);
+    // SmartDashboard.putNumber("ArmPosition After", inputs.armPosition);
+    ifOk(armMotor, armEncoder::getVelocity, (value) -> inputs.velocity = value);
     ifOk(
         armMotor,
         new DoubleSupplier[] {armMotor::getAppliedOutput, armMotor::getBusVoltage},
@@ -149,7 +151,17 @@ public class ArmIOSpark extends ArmIO {
   }
 
   @Override
-  public void armOpenLoop(Voltage voltage) {
+  public double getArmPosition(ArmIOInputs inputs) {
+    return inputs.position;
+  }
+
+  @Override
+  public void openLoop(Voltage voltage) {
     armMotor.setVoltage(voltage);
+  }
+
+  @Override
+  public void close(){
+    armMotor.close();
   }
 }

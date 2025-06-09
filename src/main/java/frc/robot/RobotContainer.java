@@ -84,7 +84,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
  * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and button mappings) should be declared here.
  */
-public class RobotContainer {
+public class RobotContainer implements AutoCloseable{
   // Subsystems
   public final Drive drive;
   private SwerveDriveSimulation driveSimulation = null;
@@ -667,6 +667,14 @@ public class RobotContainer {
   public Command stopMotors() {
     return PresetCommands.stopAll(elevator, endEffector, arm);
   }
+
+@Override
+public void close() throws Exception {
+    arm.close();
+    elevator.close();
+    endEffector.close();
+    vision.close();
+}
 
   public void resetSimulationField() {
     if (Constants.currentMode != Constants.Mode.SIM) return;

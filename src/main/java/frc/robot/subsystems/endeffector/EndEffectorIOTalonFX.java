@@ -108,11 +108,11 @@ public class EndEffectorIOTalonFX extends EndEffectorIO {
     inputs.endEffectorConnected = effectorDebouncer.calculate(motor1Status.isOK());
     inputs.endEffectorDistance1 = getLaserCanMeasurement1();
     inputs.endEffectorDistance2 = getLaserCanMeasurement2();
-    inputs.endEffectorVelocity = endEffectorVelocity.getValueAsDouble();
+    inputs.position = endEffectorVelocity.getValueAsDouble();
     inputs.endEffectorAppliedVolts = endEffectorAppliedVolts.getValueAsDouble();
     inputs.endEffectorCurrentAmps = endEffectorCurrent.getValueAsDouble();
     inputs.endEffectorTemperature = endEffectorTemperature.getValueAsDouble();
-    inputs.endEffectorPosition = endEffectorPosition.getValueAsDouble();
+    inputs.position = endEffectorPosition.getValueAsDouble();
   }
 
   @Override
@@ -159,7 +159,18 @@ public class EndEffectorIOTalonFX extends EndEffectorIO {
   }
 
   @Override
-  public void endEffectorOpenLoop(Voltage voltage) {
+  public void openLoop(Voltage voltage) {
     endEffectorMotor.setControl(endEffectorOpenLoop.withOutput(voltage));
+  }
+  
+  @Override
+  public void close(){
+    endEffectorMotor.close();
+    try {
+      LcEffector1.close();
+      LcEffector2.close();
+    } catch (Exception e) {
+      System.out.println("Error closing LaserCan: " + e);
+    }
   }
 }

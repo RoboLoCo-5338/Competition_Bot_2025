@@ -1,50 +1,25 @@
 package frc.robot.subsystems.arm;
 
-import edu.wpi.first.wpilibj.Alert;
-import edu.wpi.first.wpilibj.Alert.AlertType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Mechanism;
-import frc.robot.Constants;
-import frc.robot.Constants.Mode;
 import frc.robot.subsystems.SysIDSubsystem;
 import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.Logger;
 
-public class Arm extends SubsystemBase implements SysIDSubsystem {
-
-  public final ArmIO io;
-  public final ArmIOInputsAutoLogged inputs = new ArmIOInputsAutoLogged();
+public class Arm extends SysIDSubsystem<ArmIO, ArmIOInputsAutoLogged> {
   public double armPosition;
-  private final SysIdRoutine sysIdRoutine;
   private boolean armPositionRunning = false;
-
-  private final Alert armDisconnectedAlert =
-      new Alert("Arm motor disconnected", AlertType.kWarning);
-
   public Arm(ArmIO io) {
-    this.io = io;
-    this.sysIdRoutine =
-        new SysIdRoutine(
-            new SysIdRoutine.Config(
-                null,
-                null,
-                null,
-                (state) -> Logger.recordOutput("Arm/SysIdState", state.toString())),
-            new Mechanism(io::armOpenLoop, null, this));
-  }
-
-  @Override
-  public void periodic() {
-    io.updateInputs(inputs);
-    Logger.processInputs("Arm", inputs);
-    armPosition = inputs.armPosition;
-
-    armDisconnectedAlert.set(!inputs.armConnected && Constants.currentMode != Mode.SIM);
+    super(
+        io,
+        new ArmIOInputsAutoLogged(),
+        new SysIdRoutine.Config(
+            null, null, null, (state) -> Logger.recordOutput("Arm/SysIdState", state.toString())));
   }
 
   /**
@@ -67,7 +42,7 @@ public class Arm extends SubsystemBase implements SysIDSubsystem {
             },
             this)
         .until(
-            new Trigger(() -> Math.abs(inputs.armVelocity) < 0.001)
+            new Trigger(() -> Math.abs(inputs.velocity) < 0.001)
                 .and(() -> armPositionRunning)
                 .debounce(0.5)
                 .onTrue(
@@ -75,7 +50,7 @@ public class Arm extends SubsystemBase implements SysIDSubsystem {
                 // if it's not there.
                 .or(
                     () ->
-                        Math.abs((inputs.armPosition - position))
+                        Math.abs((inputs.position - position))
                             < ArmConstants.POSITION_TOLERANCE));
   }
 
@@ -91,25 +66,14 @@ public class Arm extends SubsystemBase implements SysIDSubsystem {
     return new InstantCommand(() -> io.setArmVelocity(velocity.getAsDouble()), this);
   }
 
-  public double getArmPosition() {
-    return inputs.armPosition;
-  }
-
-  public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
-    return sysIdRoutine.quasistatic(direction);
-  }
-
-  public Command sysIdDynamic(SysIdRoutine.Direction direction) {
-    return sysIdRoutine.dynamic(direction);
-  }
-
-  @Override
-  public SysIdRoutine getSysIdRoutine() {
-    return sysIdRoutine;
+  public DoubleSupplier getArmPosition() {
+    SmartDashboard.putNumber("Getting arm position in Arm.java", armPosition);
+    SmartDashboard.putNumber("Getting in arm.java 2", io.getArmPosition(inputs));
+    return () -> io.getArmPosition(inputs);
   }
 
   @Override
   public String getName() {
-    return "Arm ";
+    return "Arm";
   }
 }

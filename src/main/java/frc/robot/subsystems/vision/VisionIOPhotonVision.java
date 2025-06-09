@@ -8,7 +8,6 @@ import edu.wpi.first.math.geometry.Transform3d;
 import frc.robot.subsystems.vision.VisionIO.PoseObservation;
 import frc.robot.subsystems.vision.VisionIO.PoseObservationType;
 import frc.robot.subsystems.vision.VisionIO.TargetObservation;
-import frc.robot.subsystems.vision.VisionIO.VisionIOInputs;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -31,7 +30,7 @@ public class VisionIOPhotonVision extends VisionIO {
   }
 
   @Override
-  public void updateInputs(VisionIOInputs inputs) {
+  public void updateInputs(VisionIOInputsAutoLogged inputs) {
     inputs.connected = camera.isConnected();
 
     // Read new camera observations
@@ -117,5 +116,10 @@ public class VisionIOPhotonVision extends VisionIO {
     for (int id : tagIds) {
       inputs.tagIds[i++] = id;
     }
+  }
+
+  @Override
+  public void close() {
+    camera.close();
   }
 }

@@ -1,39 +1,40 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import frc.robot.subsystems.SysIDIO.SysIDIOInputs;
+import org.littletonrobotics.junction.inputs.LoggableInputs;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
-public interface SysIDSubsystem {
-  public SysIdRoutine getSysIdRoutine();
+public abstract class SysIDSubsystem<T extends SysIDIO<I>, I extends SysIDIOInputs & LoggableInputs>
+    extends SingleIOSubsystem<T, I> {
+  private final SysIdRoutine sysIdRoutine;
 
-  public String getName();
+  public SysIDSubsystem(T io, I inputs, SysIdRoutine.Config config) {
+    super(io, inputs);
+    sysIdRoutine = new SysIdRoutine(config, new SysIdRoutine.Mechanism(io::openLoop, null, this));
+  }
 
-  public default void addRoutinesToChooser(LoggedDashboardChooser<Command> autoChooser) {
-    SysIdRoutine sysIdRoutine = getSysIdRoutine();
+  public void addRoutinesToChooser(LoggedDashboardChooser<Command> autoChooser) {
     autoChooser.addOption(
-        getName() + "SysId Quasistatic Forward",
+        getName() + " SysId Quasistatic Forward",
         sysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward));
     autoChooser.addOption(
-        getName() + "SysId Quasistatic Backward",
+        getName() + " SysId Quasistatic Backward",
         sysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse));
     autoChooser.addOption(
-        getName() + "SysId Dynamic Forward", sysIdRoutine.dynamic(SysIdRoutine.Direction.kForward));
+        getName() + " SysId Dynamic Forward",
+        sysIdRoutine.dynamic(SysIdRoutine.Direction.kForward));
     autoChooser.addOption(
-        getName() + "SysId Dynamic Backward",
+        getName() + " SysId Dynamic Backward",
         sysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse));
-    autoChooser.addOption(
-        getName() + "All Sysid Routines(Recommended)",
-        new SequentialCommandGroup(
-            sysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward),
-            new WaitCommand(5),
-            sysIdRoutine.quasistatic(Direction.kReverse),
-            new WaitCommand(5),
-            sysIdRoutine.dynamic(SysIdRoutine.Direction.kForward),
-            new WaitCommand(5),
-            sysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse)));
+  }
+
+  public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+    return sysIdRoutine.quasistatic(direction);
+  }
+
+  public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+    return sysIdRoutine.dynamic(direction);
   }
 }

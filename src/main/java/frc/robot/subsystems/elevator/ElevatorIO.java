@@ -1,11 +1,13 @@
 package frc.robot.subsystems.elevator;
 
 import edu.wpi.first.units.measure.Voltage;
+import frc.robot.subsystems.SysIDIO;
+import frc.robot.subsystems.SysIDIO.SysIDIOInputs;
 import org.littletonrobotics.junction.AutoLog;
 
-public class ElevatorIO {
+public class ElevatorIO extends SysIDIO<ElevatorIOInputsAutoLogged> {
   @AutoLog
-  public static class ElevatorIOInputs {
+  public static class ElevatorIOInputs extends SysIDIOInputs {
     public double elevator1Position = 0.0;
     public double elevator1Velocity = 0.0;
     public double elevator1AppliedVolts = 0.0;
@@ -75,4 +77,7 @@ public class ElevatorIO {
   }
 
   public void elevatorOpenLoop(Voltage voltage) {}
+
+  @Override
+  public void openLoop(Voltage voltage) {}
 }
