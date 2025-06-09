@@ -1,14 +1,10 @@
 package frc.robot.subsystems.arm;
 
-import edu.wpi.first.wpilibj.Alert;
-import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.Constants;
-import frc.robot.Constants.Mode;
 import frc.robot.subsystems.SysIDSubsystem;
 import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.Logger;
@@ -16,24 +12,12 @@ import org.littletonrobotics.junction.Logger;
 public class Arm extends SysIDSubsystem<ArmIO, ArmIOInputsAutoLogged> {
   public double armPosition;
 
-  private final Alert armDisconnectedAlert =
-      new Alert("Arm motor disconnected", AlertType.kWarning);
-
   public Arm(ArmIO io) {
     super(
         io,
         new ArmIOInputsAutoLogged(),
         new SysIdRoutine.Config(
             null, null, null, (state) -> Logger.recordOutput("Arm/SysIdState", state.toString())));
-  }
-
-  @Override
-  public void periodic() {
-    io.updateInputs(inputs);
-    Logger.processInputs("Arm", inputs);
-    armPosition = io.getArmPosition(inputs);
-
-    armDisconnectedAlert.set(!inputs.armConnected && Constants.currentMode != Mode.SIM);
   }
 
   /**

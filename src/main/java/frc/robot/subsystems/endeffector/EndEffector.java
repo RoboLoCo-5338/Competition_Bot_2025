@@ -5,20 +5,13 @@ import static edu.wpi.first.units.Units.Volts;
 
 import edu.wpi.first.units.measure.Velocity;
 import edu.wpi.first.units.measure.Voltage;
-import edu.wpi.first.wpilibj.Alert;
-import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.Constants;
-import frc.robot.Constants.Mode;
 import frc.robot.subsystems.SysIDSubsystem;
 import org.littletonrobotics.junction.Logger;
 
 public class EndEffector extends SysIDSubsystem<EndEffectorIO, EndEffectorIOInputsAutoLogged> {
-
-  private final Alert endEffectorDisconnectedAlert =
-      new Alert(" End Effector motor disconnected!!", AlertType.kError);
 
   public EndEffector(EndEffectorIO io) {
     super(
@@ -29,15 +22,6 @@ public class EndEffector extends SysIDSubsystem<EndEffectorIO, EndEffectorIOInpu
             Voltage.ofBaseUnits(2, Volts),
             Second.of(30),
             (state) -> Logger.recordOutput("EndEffector/SysIdState", state.toString())));
-  }
-
-  @Override
-  public void periodic() {
-    io.updateInputs(inputs);
-    Logger.processInputs("End Effector", inputs);
-
-    endEffectorDisconnectedAlert.set(
-        !inputs.endEffectorConnected && Constants.currentMode != Mode.SIM);
   }
 
   public Command setEndEffectorVelocity(double velocity) {

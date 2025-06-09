@@ -55,10 +55,7 @@ public class Vision extends AdvantageScopeSubsystem<VisionIO, VisionIOInputsAuto
 
   @Override
   public void periodic() {
-    for (int i = 0; i < ios.size(); i++) {
-      ios.get(i).updateInputs(inputs.get(i));
-      Logger.processInputs("Vision/Camera" + Integer.toString(i), inputs.get(i));
-    }
+    super.periodic();
 
     // Initialize logging values
     List<Pose3d> allTagPoses = new LinkedList<>();
@@ -68,8 +65,6 @@ public class Vision extends AdvantageScopeSubsystem<VisionIO, VisionIOInputsAuto
 
     // Loop over cameras
     for (int cameraIndex = 0; cameraIndex < ios.size(); cameraIndex++) {
-      // Update disconnected alert
-      disconnectedAlerts.get(cameraIndex).set(!inputs.get(cameraIndex).connected);
 
       // Initialize logging values
       List<Pose3d> tagPoses = new LinkedList<>();

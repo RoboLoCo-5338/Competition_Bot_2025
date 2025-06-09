@@ -13,8 +13,6 @@ import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.Logger;
 
 public class Elevator extends SysIDSubsystem<ElevatorIO, ElevatorIOInputsAutoLogged> {
-  private final Alert elevator1DisconnectedAlert =
-      new Alert("Elevator motor 1 disconnected", AlertType.kError);
   private final Alert elevator2DisconnectedAlert =
       new Alert("Elevator motor 1 disconnected", AlertType.kError);
 
@@ -35,10 +33,7 @@ public class Elevator extends SysIDSubsystem<ElevatorIO, ElevatorIOInputsAutoLog
    */
   @Override
   public void periodic() {
-    io.updateInputs(inputs);
-    Logger.processInputs("Elevator", inputs);
-
-    elevator1DisconnectedAlert.set(!inputs.elevator1Connected && Constants.currentMode != Mode.SIM);
+    super.periodic();
     elevator2DisconnectedAlert.set(!inputs.elevator1Connected && Constants.currentMode != Mode.SIM);
   }
 
