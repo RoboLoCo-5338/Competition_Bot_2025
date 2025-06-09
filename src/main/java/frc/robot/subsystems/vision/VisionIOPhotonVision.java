@@ -8,14 +8,13 @@ import edu.wpi.first.math.geometry.Transform3d;
 import frc.robot.subsystems.vision.VisionIO.PoseObservation;
 import frc.robot.subsystems.vision.VisionIO.PoseObservationType;
 import frc.robot.subsystems.vision.VisionIO.TargetObservation;
-import frc.robot.subsystems.vision.VisionIO.VisionIOInputs;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import org.photonvision.PhotonCamera;
 
-public class VisionIOPhotonVision implements VisionIO {
+public class VisionIOPhotonVision extends VisionIO {
   protected final PhotonCamera camera;
   protected final Transform3d robotToCamera;
 
@@ -31,7 +30,7 @@ public class VisionIOPhotonVision implements VisionIO {
   }
 
   @Override
-  public void updateInputs(VisionIOInputs inputs) {
+  public void updateInputs(VisionIOInputsAutoLogged inputs) {
     inputs.connected = camera.isConnected();
 
     // Read new camera observations
