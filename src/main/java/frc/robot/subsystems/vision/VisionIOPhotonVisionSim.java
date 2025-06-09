@@ -46,7 +46,7 @@ public class VisionIOPhotonVisionSim extends VisionIOPhotonVision {
   }
 
   @Override
-  public void close(){
+  public void close() {
     cameraSim.close();
   }
 }

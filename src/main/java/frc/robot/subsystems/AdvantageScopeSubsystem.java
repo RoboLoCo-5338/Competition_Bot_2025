@@ -18,6 +18,7 @@ public abstract class AdvantageScopeSubsystem<T extends IO<I>, I extends IOInput
     this.ios = ios;
     this.inputs = inputs;
     this.disconnectedAlerts = new ArrayList<>(ios.size());
+    addDisconnectedAlerts();
   }
 
   @Override

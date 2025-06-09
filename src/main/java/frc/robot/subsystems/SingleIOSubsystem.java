@@ -9,19 +9,19 @@ import org.littletonrobotics.junction.inputs.LoggableInputs;
 public abstract class SingleIOSubsystem<T extends IO<I>, I extends IOInputs & LoggableInputs>
     extends AdvantageScopeSubsystem<T, I> {
   protected T io;
-  protected I inputs;
+  protected I input;
 
   public SingleIOSubsystem(T io, I inputs) {
     super(List.of(io), List.of(inputs));
     this.io = io;
-    this.inputs = inputs;
+    this.input = inputs;
   }
 
   @Override
   public void periodic() {
-    io.updateInputs(inputs);
-    Logger.processInputs("End Effector", inputs);
-    disconnectedAlerts.get(0).set(!inputs.connected);
+    io.updateInputs(input);
+    Logger.processInputs(getName(), input);
+    disconnectedAlerts.get(0).set(!input.connected);
   }
 
   @Override

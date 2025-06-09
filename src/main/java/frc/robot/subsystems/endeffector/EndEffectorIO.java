@@ -10,13 +10,10 @@ public class EndEffectorIO extends SysIDIO<EndEffectorIOInputsAutoLogged> {
   public static class EndEffectorIOInputs extends SysIDIOInputs {
     public double endEffectorAppliedVolts = 0.0;
     public double endEffectorCurrentAmps = 0.0;
-    public boolean endEffectorConnected = false;
     public double endEffectorDistance1 = -1;
     public double endEffectorDistance2 = -1;
     public double endEffectorTemperature = 0.0;
   }
-
-  public void updateInputs(EndEffectorIOInputs inputs) {}
 
   public void setEndEffectorVelocity(double velocity) {}
 

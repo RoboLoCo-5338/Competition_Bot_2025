@@ -52,7 +52,7 @@ public class ArmIOSim extends ArmIOSpark implements SimMechanism {
   }
 
   @Override
-  public void updateInputs(ArmIOInputs inputs) {
+  public void updateInputs(ArmIOInputsAutoLogged inputs) {
     armPhysicsSim.setInputVoltage(armSim.getAppliedOutput() * RobotController.getBatteryVoltage());
     armPhysicsSim.update(0.02);
     armSim.iterate(
@@ -85,7 +85,7 @@ public class ArmIOSim extends ArmIOSpark implements SimMechanism {
   }
 
   @Override
-  public void close(){
+  public void close() {
     super.close();
     armDrawn.close();
   }

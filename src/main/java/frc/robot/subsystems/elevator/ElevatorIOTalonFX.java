@@ -161,7 +161,7 @@ public class ElevatorIOTalonFX extends ElevatorIO {
   }
 
   @Override
-  public void updateInputs(ElevatorIOInputs inputs) {
+  public void updateInputs(ElevatorIOInputsAutoLogged inputs) {
     var motor1Status =
         BaseStatusSignal.refreshAll(
             elevator1Position, elevator1Velocity, elevator1Current, elevator1AppliedVolts);
@@ -171,9 +171,13 @@ public class ElevatorIOTalonFX extends ElevatorIO {
             elevator2Position, elevator2Velocity, elevator2Current, elevator2AppliedVolts);
 
     inputs.position =
-        (elevator1Position.getValueAsDouble() + elevator2Position.getValueAsDouble()) / 2;
+        (elevator1Position.getValueAsDouble() + elevator2Position.getValueAsDouble())
+            * ElevatorConstants.METERS_PER_ROTATION
+            / 2;
     inputs.velocity =
-        (elevator1Velocity.getValueAsDouble() + elevator2Velocity.getValueAsDouble()) / 2;
+        (elevator1Velocity.getValueAsDouble() + elevator2Velocity.getValueAsDouble())
+            * ElevatorConstants.METERS_PER_ROTATION
+            / 2;
 
     inputs.elevator1Connected = elevator1ConnectedDebounce.calculate(motor1Status.isOK());
     inputs.elevator1Position =
@@ -192,6 +196,8 @@ public class ElevatorIOTalonFX extends ElevatorIO {
     inputs.elevator2AppliedVolts = elevator2AppliedVolts.getValueAsDouble();
     inputs.elevator2CurrentAmps = elevator2Current.getValueAsDouble();
     inputs.elevator2Temperature = elevator2Temperature.getValueAsDouble();
+
+    inputs.connected = inputs.elevator1Connected && inputs.elevator2Connected;
   }
 
   @Override

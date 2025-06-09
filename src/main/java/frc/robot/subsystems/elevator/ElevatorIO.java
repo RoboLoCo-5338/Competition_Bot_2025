@@ -24,26 +24,6 @@ public class ElevatorIO extends SysIDIO<ElevatorIOInputsAutoLogged> {
   }
 
   /**
-   * Updates the set of loggable inputs for the elevator subsystem. This method updates the
-   * following inputs:
-   *
-   * <ul>
-   *   <li>{@code elevator1Connected}: Whether the first elevator motor is connected
-   *   <li>{@code elevator1Position}: The position of the first elevator motor in radians
-   *   <li>{@code elevator1Velocity}: The velocity of the first elevator motor in radians per second
-   *   <li>{@code elevator1AppliedVolts}: The voltage applied to the first elevator motor in volts
-   *   <li>{@code elevator1CurrentAmps}: The current drawn by the first elevator motor in amps
-   *   <li>{@code elevator2Connected}: Whether the second elevator motor is connected
-   *   <li>{@code elevator2Position}: The position of the second elevator motor in radians
-   *   <li>{@code elevator2Velocity}: The velocity of the second elevator motor in radians per
-   *       second
-   *   <li>{@code elevator2AppliedVolts}: The voltage applied to the second elevator motor in volts
-   *   <li>{@code elevator2CurrentAmps}: The current drawn by the second elevator motor in amps
-   * </ul>
-   */
-  public void updateInputs(ElevatorIOInputs inputs) {}
-
-  /**
    * Sets the target velocity for both elevator motors.
    *
    * <p>This method sends a velocity control request to both elevator motors to move them at the

@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
@@ -38,7 +37,7 @@ public class Elevator extends SysIDSubsystem<ElevatorIO, ElevatorIOInputsAutoLog
   @Override
   public void periodic() {
     super.periodic();
-    elevator2DisconnectedAlert.set(!inputs.elevator1Connected && Constants.currentMode != Mode.SIM);
+    elevator2DisconnectedAlert.set(!input.elevator1Connected && Constants.currentMode != Mode.SIM);
   }
 
   /**
@@ -59,7 +58,7 @@ public class Elevator extends SysIDSubsystem<ElevatorIO, ElevatorIOInputsAutoLog
             },
             this)
         .until(
-            new Trigger(() -> Math.abs(inputs.elevator1Velocity) < 0.001)
+            new Trigger(() -> Math.abs(input.elevator1Velocity) < 0.001)
                 .and(() -> elevatorPositionRunning)
                 .debounce(0.5)
                 .onTrue(
@@ -67,7 +66,7 @@ public class Elevator extends SysIDSubsystem<ElevatorIO, ElevatorIOInputsAutoLog
                 // if it's not there.
                 .or(
                     () ->
-                        Math.abs(position - inputs.elevator1Position)
+                        Math.abs(position - input.elevator1Position)
                             < ElevatorConstants.POSITION_TOLERANCE));
   }
 
@@ -76,7 +75,7 @@ public class Elevator extends SysIDSubsystem<ElevatorIO, ElevatorIOInputsAutoLog
   }
 
   public double getElevatorPosition() {
-    return inputs.position;
+    return input.position;
   }
 
   @Override

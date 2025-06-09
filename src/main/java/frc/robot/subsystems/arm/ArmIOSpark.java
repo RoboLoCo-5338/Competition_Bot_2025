@@ -114,7 +114,7 @@ public class ArmIOSpark extends ArmIO {
   }
 
   @Override
-  public void updateInputs(ArmIOInputs inputs) {
+  public void updateInputs(ArmIOInputsAutoLogged inputs) {
     sparkStickyFault = false;
     // SmartDashboard.putNumber("ArmPosition Before", inputs.armPosition);
     ifOk(armMotor, armEncoder::getPosition, (value) -> inputs.position = value);
@@ -161,7 +161,7 @@ public class ArmIOSpark extends ArmIO {
   }
 
   @Override
-  public void close(){
+  public void close() {
     armMotor.close();
   }
 }

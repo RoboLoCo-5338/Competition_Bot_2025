@@ -44,7 +44,7 @@ public class ElevatorIOSim extends ElevatorIOTalonFX implements SimMechanism {
   }
 
   @Override
-  public void updateInputs(ElevatorIOInputs inputs) {
+  public void updateInputs(ElevatorIOInputsAutoLogged inputs) {
     motor1Sim.setSupplyVoltage(RobotController.getBatteryVoltage());
     motor2Sim.setSupplyVoltage(RobotController.getBatteryVoltage());
 

@@ -96,7 +96,7 @@ public class EndEffectorIOTalonFX extends EndEffectorIO {
   }
 
   @Override
-  public void updateInputs(EndEffectorIOInputs inputs) {
+  public void updateInputs(EndEffectorIOInputsAutoLogged inputs) {
     var motor1Status =
         BaseStatusSignal.refreshAll(
             endEffectorVelocity,
@@ -105,7 +105,7 @@ public class EndEffectorIOTalonFX extends EndEffectorIO {
             endEffectorPosition,
             endEffectorTemperature);
 
-    inputs.endEffectorConnected = effectorDebouncer.calculate(motor1Status.isOK());
+    inputs.connected = effectorDebouncer.calculate(motor1Status.isOK());
     inputs.endEffectorDistance1 = getLaserCanMeasurement1();
     inputs.endEffectorDistance2 = getLaserCanMeasurement2();
     inputs.position = endEffectorVelocity.getValueAsDouble();
@@ -162,9 +162,9 @@ public class EndEffectorIOTalonFX extends EndEffectorIO {
   public void openLoop(Voltage voltage) {
     endEffectorMotor.setControl(endEffectorOpenLoop.withOutput(voltage));
   }
-  
+
   @Override
-  public void close(){
+  public void close() {
     endEffectorMotor.close();
     try {
       LcEffector1.close();

@@ -67,7 +67,7 @@ public class EndEffectorIOSim extends EndEffectorIOTalonFX implements SimMechani
   }
 
   @Override
-  public void updateInputs(EndEffectorIOInputs inputs) {
+  public void updateInputs(EndEffectorIOInputsAutoLogged inputs) {
     simMotor.setSupplyVoltage(RobotController.getBatteryVoltage());
     physicsSim.setInputVoltage(simMotor.getMotorVoltage());
 

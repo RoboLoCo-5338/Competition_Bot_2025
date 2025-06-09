@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Mechanism;
 import frc.robot.subsystems.SysIDSubsystem;
 import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.Logger;
@@ -14,6 +13,7 @@ import org.littletonrobotics.junction.Logger;
 public class Arm extends SysIDSubsystem<ArmIO, ArmIOInputsAutoLogged> {
   public double armPosition;
   private boolean armPositionRunning = false;
+
   public Arm(ArmIO io) {
     super(
         io,
@@ -42,16 +42,13 @@ public class Arm extends SysIDSubsystem<ArmIO, ArmIOInputsAutoLogged> {
             },
             this)
         .until(
-            new Trigger(() -> Math.abs(inputs.velocity) < 0.001)
+            new Trigger(() -> Math.abs(input.velocity) < 0.001)
                 .and(() -> armPositionRunning)
                 .debounce(0.5)
                 .onTrue(
                     new InstantCommand()) // Why the heck does this need to be here? The code breaks
                 // if it's not there.
-                .or(
-                    () ->
-                        Math.abs((inputs.position - position))
-                            < ArmConstants.POSITION_TOLERANCE));
+                .or(() -> Math.abs((input.position - position)) < ArmConstants.POSITION_TOLERANCE));
   }
 
   /**
@@ -68,8 +65,8 @@ public class Arm extends SysIDSubsystem<ArmIO, ArmIOInputsAutoLogged> {
 
   public double getArmPosition() {
     SmartDashboard.putNumber("Getting arm position in Arm.java", armPosition);
-    SmartDashboard.putNumber("Getting in arm.java 2", io.getArmPosition(inputs));
-    return io.getArmPosition(inputs);
+    SmartDashboard.putNumber("Getting in arm.java 2", io.getArmPosition(input));
+    return io.getArmPosition(input);
   }
 
   @Override
