@@ -1,13 +1,13 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.sim;
 
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import java.util.ArrayList;
 
-public abstract class SimMechanism {
+public interface SimMechanism {
   static final ArrayList<SimMechanism> MECHANISMS = new ArrayList<SimMechanism>();
 
-  public SimMechanism() {
+  public default void initSimVoltage() {
     MECHANISMS.add(this);
   }
 

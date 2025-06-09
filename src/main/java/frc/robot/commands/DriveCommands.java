@@ -15,7 +15,6 @@ package frc.robot.commands;
 
 import static edu.wpi.first.units.Units.Degrees;
 
-import com.pathplanner.lib.util.FlippingUtil;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -29,7 +28,6 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
@@ -42,7 +40,8 @@ import frc.robot.subsystems.drive.DriveConstants;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.endeffector.EndEffector;
 import frc.robot.subsystems.led.LED;
-import frc.robot.subsystems.vision.VisionConstants;
+import frc.robot.util.Level;
+import frc.robot.util.PoseUtils;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -353,18 +352,29 @@ public class DriveCommands {
               drive.autoTurnController.setTolerance(0.025);
               drive.autoXDriveController.setSetpoint(targetPose.getX());
               drive.autoYDriveController.setSetpoint(targetPose.getY());
-              drive.autoTurnController.setSetpoint(targetPose.getRotation().getRadians());
+              drive.autoTurnController.setSetpoint(0); // this makes sense i promise
             }
 
             @Override
             public void execute() {
+              double rotTarget = targetPose.getRotation().getRadians();
+              double rotCurrent = drive.getPose().getRotation().getRadians();
+
+              // dont want to deal with wrap around so its all linear kind of
+              if (rotTarget < 0) rotTarget += 2 * Math.PI;
+              if (rotCurrent < 0) rotCurrent += 2 * Math.PI;
+
+              double dif = rotTarget - rotCurrent;
+
+              if (dif > Math.PI) dif -= 2 * Math.PI;
+              if (dif < -Math.PI) dif += 2 * Math.PI;
+
               drive.runVelocity(
                   ChassisSpeeds.fromFieldRelativeSpeeds(
                       new ChassisSpeeds(
                           drive.autoXDriveController.calculate(drive.getPose().getX()),
                           drive.autoYDriveController.calculate(drive.getPose().getY()),
-                          drive.autoTurnController.calculate(
-                              drive.getPose().getRotation().getRadians())),
+                          drive.autoTurnController.calculate(-dif)),
                       drive.getPose().getRotation()));
             }
 
@@ -378,36 +388,19 @@ public class DriveCommands {
             @Override
             public void end(boolean interrupted) {
               drive.runVelocity(new ChassisSpeeds(0, 0, 0));
-              led.alignEndFlash(
-                      !(drive.autoXDriveController.atSetpoint()
-                          && drive.autoYDriveController.atSetpoint()
-                          && drive.autoTurnController.atSetpoint()))
-                  .schedule();
+              /*led.alignEndFlash(
+                  !(drive.autoXDriveController.atSetpoint()
+                      && drive.autoYDriveController.atSetpoint()
+                      && drive.autoTurnController.atSetpoint()))
+              .schedule();*/
             }
-          }.onlyIf(
-              () ->
-                  Math.sqrt(
-                          targetPose.minus(drive.getPose()).getX()
-                                  * targetPose.minus(drive.getPose()).getX()
-                              + targetPose.minus(drive.getPose()).getY()
-                                  * targetPose.minus(drive.getPose()).getY())
-                      < 3);
+          }.onlyIf(() -> PoseUtils.distanceBetweenPoses(targetPose, targetPose) < 3);
         },
         new HashSet<Subsystem>() {
           {
             add(drive);
           }
         });
-  }
-
-  /**
-   * Util function to flip the pose of the alliance based on the alliance
-   *
-   * @param pose Pose to flip
-   * @return Flipped Pose
-   */
-  public static Pose2d allianceFlip(Pose2d pose) {
-    return (isFlipped) ? FlippingUtil.flipFieldPose(pose) : pose;
   }
 
   private static class WheelRadiusCharacterizationState {
@@ -432,7 +425,7 @@ public class DriveCommands {
 
     @Override
     public Pose2d getTargetPosition() {
-      return allianceFlip(new Pose2d(5.980, 0.532, new Rotation2d()));
+      return PoseUtils.allianceFlip(new Pose2d(5.980, 0.532, new Rotation2d()));
     }
   }
 
@@ -464,16 +457,18 @@ public class DriveCommands {
     public Pose2d getTargetPosition() {
       switch (station) {
         case Left:
-          return allianceFlip(new Pose2d(1.56, 7.36, new Rotation2d(Degrees.of(-54))));
+          return PoseUtils.allianceFlip(new Pose2d(1.56, 7.36, new Rotation2d(Degrees.of(-54))));
         case Right:
-          return allianceFlip(new Pose2d(1.623, 0.682, new Rotation2d(Degrees.of(54))));
+          return PoseUtils.allianceFlip(new Pose2d(1.623, 0.682, new Rotation2d(Degrees.of(54))));
         default:
           return drive
               .getPose()
               .nearest(
                   List.of(
-                      allianceFlip(new Pose2d(1.56, 7.36, new Rotation2d(Degrees.of(-54)))),
-                      allianceFlip(new Pose2d(1.623, 0.682, new Rotation2d(Degrees.of(54))))));
+                      PoseUtils.allianceFlip(
+                          new Pose2d(1.56, 7.36, new Rotation2d(Degrees.of(-54)))),
+                      PoseUtils.allianceFlip(
+                          new Pose2d(1.623, 0.682, new Rotation2d(Degrees.of(54))))));
       }
     }
   }
@@ -505,10 +500,7 @@ public class DriveCommands {
             case Right -> DriveConstants.reefRight;
             case None -> DriveConstants.reefCenter;
           };
-      Rotation2d rot =
-          VisionConstants.aprilTagLayout.getTagPose(targetTagId).get().getRotation().toRotation2d();
-      if (!isFlipped) rot = rot.plus(new Rotation2d(Math.PI));
-      return allianceFlip(o.rotateAround(new Translation2d(4.5, 4.03), rot));
+      return PoseUtils.tagRotate(o, targetTagId, DriverStation.getAlliance().orElse(Alliance.Blue));
     }
 
     public static ArrayList<Pose2d> getReefPoses(Direction direction) {
@@ -525,7 +517,7 @@ public class DriveCommands {
   public static Command reefAlign(
       Drive drive, Direction direction, CommandXboxController controller, LED led) {
     return new ParallelCommandGroup(
-        led.turnColor(Color.kOrange),
+        // led.turnColor(Color.kOrange),
         pathToDestination(
             drive,
             () ->
@@ -571,11 +563,5 @@ public class DriveCommands {
     Left,
     Right,
     None
-  }
-
-  public enum Level {
-    L2,
-    L3,
-    L4
   }
 }

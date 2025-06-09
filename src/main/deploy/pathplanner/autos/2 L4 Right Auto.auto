@@ -32,7 +32,7 @@
         {
           "type": "named",
           "data": {
-            "name": "OuttakeLaserCAN"
+            "name": "OuttakeLaserCan"
           }
         },
         {
@@ -76,6 +76,12 @@
         {
           "type": "named",
           "data": {
+            "name": "AddRightCoral"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "IntakeLaserCAN"
           }
         },
@@ -98,10 +104,16 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Align Left"
+                  "name": "Align Right"
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "OuttakeLaserCan"
           }
         },
         {
@@ -134,12 +146,6 @@
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "OuttakeLaserCAN"
           }
         },
         {

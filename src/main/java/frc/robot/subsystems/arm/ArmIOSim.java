@@ -4,22 +4,19 @@ import static frc.robot.util.SparkUtil.ifOk;
 
 import com.revrobotics.sim.SparkAbsoluteEncoderSim;
 import com.revrobotics.sim.SparkFlexSim;
-import com.revrobotics.spark.ClosedLoopSlot;
-import com.revrobotics.spark.SparkBase.ControlType;
-import com.revrobotics.spark.SparkBase.PersistMode;
-import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.SparkClosedLoopController.ArbFFUnits;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
-import frc.robot.subsystems.SimMechanism;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import frc.robot.subsystems.arm.ArmConstants.ArmSimConstants;
+import frc.robot.subsystems.sim.SimMechanism;
 import java.util.function.DoubleSupplier;
+import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d;
 
-public class ArmIOSim extends SimMechanism implements ArmIO {
+public class ArmIOSim extends ArmIOSpark implements SimMechanism {
 
   DCMotor armGearBox = DCMotor.getNeoVortex(1);
   SingleJointedArmSim armPhysicsSim =
@@ -30,7 +27,7 @@ public class ArmIOSim extends SimMechanism implements ArmIO {
           ArmSimConstants.LENGTH,
           ArmSimConstants.MIN_ANGLE,
           ArmSimConstants.MAX_ANGLE,
-          false,
+          true,
           ArmSimConstants.STARTING_ANGLE);
   SparkFlexSim armSim;
   SparkAbsoluteEncoderSim armEncoderSim;
@@ -38,18 +35,20 @@ public class ArmIOSim extends SimMechanism implements ArmIO {
 
   public ArmIOSim(LoggedMechanismLigament2d endEffector) {
     super();
-    armMotor.configure(
-        getArmConfig(), ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     armSim = new SparkFlexSim(armMotor, armGearBox);
-    armEncoderSim = new SparkAbsoluteEncoderSim(armMotor);
+    armEncoderSim = armSim.getAbsoluteEncoderSim();
     armDrawn =
         endEffector
+            .append(new LoggedMechanismLigament2d(null, ArmSimConstants.LENGTH, 0))
             .append(new LoggedMechanismLigament2d("rotator", 0, -90))
             .append(
                 new LoggedMechanismLigament2d(
                     "endEffectorArm",
                     ArmSimConstants.LENGTH,
-                    Units.radiansToDegrees(ArmSimConstants.STARTING_ANGLE)));
+                    Units.radiansToDegrees(ArmSimConstants.STARTING_ANGLE),
+                    10,
+                    new Color8Bit(Color.kRed)));
+    initSimVoltage();
   }
 
   @Override
@@ -61,43 +60,27 @@ public class ArmIOSim extends SimMechanism implements ArmIO {
             armPhysicsSim.getVelocityRadPerSec()),
         RobotController.getBatteryVoltage(),
         0.02);
-    inputs.armConnected = true;
-    inputs.armPosition = Units.radiansToRotations(armPhysicsSim.getAngleRads());
-    inputs.armVelocity = Units.radiansToRotations(armPhysicsSim.getVelocityRadPerSec());
+
+    armEncoderSim.setPosition(
+        Units.radiansToRotations(
+            armPhysicsSim.getAngleRads())); // TODO: Figure out why this needs to be done
+    armSim.setPosition(Units.radiansToRotations(armPhysicsSim.getAngleRads()));
+    Logger.recordOutput("Arm Position", Units.radiansToRotations(armPhysicsSim.getAngleRads()));
+    Logger.recordOutput(
+        "Arm Velocity",
+        Units.radiansPerSecondToRotationsPerMinute(armPhysicsSim.getVelocityRadPerSec()));
     ifOk(
         armMotor,
         new DoubleSupplier[] {armMotor::getAppliedOutput, armMotor::getBusVoltage},
-        (values) -> inputs.armAppliedVolts = values[0] * values[1]);
-    inputs.armCurrent = armPhysicsSim.getCurrentDrawAmps();
-
+        (values) -> Logger.recordOutput("armAppliedVolts", values[0] * values[1]));
+    Logger.recordOutput("Arm Current", armPhysicsSim.getCurrentDrawAmps());
     armDrawn.setAngle(Units.radiansToDegrees(armPhysicsSim.getAngleRads()));
+
+    super.updateInputs(inputs);
   }
 
   @Override
   public double[] getCurrents() {
     return new double[] {armPhysicsSim.getCurrentDrawAmps()};
-  }
-
-  @Override
-  public void setArmPosition(double position) {
-    armClosedLoopController.setReference(Units.radiansToRotations(position), ControlType.kPosition);
-  }
-
-  @Override
-  public void armOpenLoop(Voltage voltage) {
-    armClosedLoopController.setReference(voltage.magnitude(), ControlType.kVoltage);
-  }
-
-  @Override
-  public void setArmVelocity(double velocityRadPerSec) {
-    double ffvolts =
-        ArmConstants.ARM_MOTOR_KS * Math.signum(velocityRadPerSec)
-            + ArmConstants.ARM_MOTOR_KV * velocityRadPerSec;
-    armClosedLoopController.setReference(
-        Units.radiansToRotations(velocityRadPerSec),
-        ControlType.kVelocity,
-        ClosedLoopSlot.kSlot0,
-        ffvolts,
-        ArbFFUnits.kVoltage);
   }
 }

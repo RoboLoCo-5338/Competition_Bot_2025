@@ -66,5 +66,33 @@ public class DriveConstants {
     public static double TURN_KD = 0.0;
     public static final DCMotor DRIVE_GEARBOX = DCMotor.getKrakenX60Foc(1);
     public static final DCMotor TURN_GEARBOX = DCMotor.getKrakenX60Foc(1);
+
+    public static final double BACK_LEFT_SWERVE_MODULE_ORIGIN_X = -0.3048;
+    public static final double BACK_LEFT_SWERVE_MODULE_ORIGIN_Y = 0.3048;
+    public static final double BACK_LEFT_SWERVE_MODULE_ORIGIN_Z = 0.0508;
+    public static final double BACK_LEFT_WHEEL_ORIGIN_X = -0.3048;
+    public static final double BACK_LEFT_WHEEL_ORIGIN_Y = 0.3048;
+    public static final double BACK_LEFT_WHEEL_ORIGIN_Z = 0.0508;
+
+    public static final double BACK_RIGHT_SWERVE_MODULE_ORIGIN_X = -0.3048;
+    public static final double BACK_RIGHT_SWERVE_MODULE_ORIGIN_Y = -0.3048;
+    public static final double BACK_RIGHT_SWERVE_MODULE_ORIGIN_Z = 0.0508;
+    public static final double BACK_RIGHT_WHEEL_ORIGIN_X = -0.3048;
+    public static final double BACK_RIGHT_WHEEL_ORIGIN_Y = -0.3048;
+    public static final double BACK_RIGHT_WHEEL_ORIGIN_Z = 0.0508;
+
+    public static final double FRONT_LEFT_SWERVE_MODULE_ORIGIN_X = 0.3048;
+    public static final double FRONT_LEFT_SWERVE_MODULE_ORIGIN_Y = 0.3048;
+    public static final double FRONT_LEFT_SWERVE_MODULE_ORIGIN_Z = 0.0508;
+    public static final double FRONT_LEFT_WHEEL_ORIGIN_X = 0.3048;
+    public static final double FRONT_LEFT_WHEEL_ORIGIN_Y = 0.3048;
+    public static final double FRONT_LEFT_WHEEL_ORIGIN_Z = 0.0508;
+
+    public static final double FRONT_RIGHT_SWERVE_MODULE_ORIGIN_X = 0.3048;
+    public static final double FRONT_RIGHT_SWERVE_MODULE_ORIGIN_Y = -0.3048;
+    public static final double FRONT_RIGHT_SWERVE_MODULE_ORIGIN_Z = 0.0508;
+    public static final double FRONT_RIGHT_WHEEL_ORIGIN_X = 0.3048;
+    public static final double FRONT_RIGHT_WHEEL_ORIGIN_Y = -0.3048;
+    public static final double FRONT_RIGHT_WHEEL_ORIGIN_Z = 0.0508;
   }
 }
