@@ -17,7 +17,7 @@ import frc.robot.Constants.Mode;
 import frc.robot.subsystems.SysIDSubsystem;
 import org.littletonrobotics.junction.Logger;
 
-public class EndEffector extends SubsystemBase implements SysIDSubsystem {
+public class EndEffector extends SysIDSubsystem {
 
   public final EndEffectorIO io;
   private final EndEffectorIOInputsAutoLogged inputs = new EndEffectorIOInputsAutoLogged();
@@ -60,25 +60,8 @@ public class EndEffector extends SubsystemBase implements SysIDSubsystem {
     return new InstantCommand(() -> io.setEndEffectorSpeed(speed));
   }
 
-  public EndEffectorIO getIO() {
-    return io;
-  }
-
-  public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
-    return sysIdRoutine.quasistatic(direction);
-  }
-
-  public Command sysIdDynamic(SysIdRoutine.Direction direction) {
-    return sysIdRoutine.dynamic(direction);
-  }
-
-  @Override
-  public SysIdRoutine getSysIdRoutine() {
-    return sysIdRoutine;
-  }
-
   @Override
   public String getName() {
-    return "End Effector ";
+    return "End Effector";
   }
 }

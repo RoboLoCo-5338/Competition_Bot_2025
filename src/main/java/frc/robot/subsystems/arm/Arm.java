@@ -15,26 +15,25 @@ import frc.robot.subsystems.SysIDSubsystem;
 import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.Logger;
 
-public class Arm extends SubsystemBase implements SysIDSubsystem {
-
-  public final ArmIO io;
-  public final ArmIOInputsAutoLogged inputs = new ArmIOInputsAutoLogged();
+public class Arm extends SysIDSubsystem<ArmIO, ArmIOInputsAutoLogged> {
   public double armPosition;
-  private final SysIdRoutine sysIdRoutine;
 
   private final Alert armDisconnectedAlert =
       new Alert("Arm motor disconnected", AlertType.kWarning);
 
   public Arm(ArmIO io) {
-    this.io = io;
-    this.sysIdRoutine =
-        new SysIdRoutine(
-            new SysIdRoutine.Config(
-                null,
-                null,
-                null,
-                (state) -> Logger.recordOutput("Arm/SysIdState", state.toString())),
-            new Mechanism(io::armOpenLoop, null, this));
+    super(io, new ArmIOInputsAutoLogged());
+  }
+
+  @Override
+  public SysIdRoutine getSysIdRoutine() {
+    return new SysIdRoutine(
+      new SysIdRoutine.Config(
+          null,
+          null,
+          null,
+          (state) -> Logger.recordOutput("Arm/SysIdState", state.toString())),
+      new Mechanism(io::armOpenLoop, null, this));
   }
 
   @Override
@@ -77,21 +76,8 @@ public class Arm extends SubsystemBase implements SysIDSubsystem {
     return () -> io.getArmPosition(inputs);
   }
 
-  public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
-    return sysIdRoutine.quasistatic(direction);
-  }
-
-  public Command sysIdDynamic(SysIdRoutine.Direction direction) {
-    return sysIdRoutine.dynamic(direction);
-  }
-
-  @Override
-  public SysIdRoutine getSysIdRoutine() {
-    return sysIdRoutine;
-  }
-
   @Override
   public String getName() {
-    return "Arm ";
+    return "Arm";
   }
 }

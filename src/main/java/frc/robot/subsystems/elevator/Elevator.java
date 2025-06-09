@@ -14,7 +14,7 @@ import frc.robot.subsystems.SysIDSubsystem;
 import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.Logger;
 
-public class Elevator extends SubsystemBase implements SysIDSubsystem {
+public class Elevator extends SysIDSubsystem {
   public final ElevatorIO io;
   private final ElevatorIOInputsAutoLogged inputs = new ElevatorIOInputsAutoLogged();
   private double prevError = 0;
@@ -71,29 +71,12 @@ public class Elevator extends SubsystemBase implements SysIDSubsystem {
     return new InstantCommand(() -> io.setElevatorVelocity(velocity.getAsDouble()), this);
   }
 
-  public ElevatorIO getIO() {
-    return io;
-  }
-
   public double getElevatorPosition() {
     return inputs.elevator1Position;
   }
 
-  public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
-    return sysIdRoutine.quasistatic(direction);
-  }
-
-  public Command sysIdDynamic(SysIdRoutine.Direction direction) {
-    return sysIdRoutine.dynamic(direction);
-  }
-
-  @Override
-  public SysIdRoutine getSysIdRoutine() {
-    return sysIdRoutine;
-  }
-
   @Override
   public String getName() {
-    return "Elevator ";
+    return "Elevator";
   }
 }

@@ -2,11 +2,12 @@ package frc.robot.subsystems.arm;
 
 import edu.wpi.first.units.measure.Voltage;
 import org.littletonrobotics.junction.AutoLog;
+import frc.robot.subsystems.IO; // Ensure this matches the actual package of IO
 
-public class ArmIO {
+public class ArmIO extends IO{
 
   @AutoLog
-  public static class ArmIOInputs {
+  public static class ArmIOInputs extends IO.IOInputs {
     public double armPosition = 0.0;
     public double armVelocity = 0.0;
     public double armAppliedVolts = 0.0;

@@ -2,25 +2,39 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.subsystems.IO.IOInputs;
+
+import org.littletonrobotics.junction.inputs.LoggableInputs;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
-public interface SysIDSubsystem {
-  public SysIdRoutine getSysIdRoutine();
+public abstract class SysIDSubsystem<T extends IO, I extends IOInputs & LoggableInputs> extends SingleIOSubsystem<T, I>{
+    private final SysIdRoutine sysIdRoutine;
+    public SysIDSubsystem(T io, I inputs) {
+        super(io, inputs);
+        sysIdRoutine=getSysIdRoutine();
+    }
 
-  public String getName();
+    public abstract SysIdRoutine getSysIdRoutine();
 
-  public default void addRoutinesToChooser(LoggedDashboardChooser<Command> autoChooser) {
-    SysIdRoutine sysIdRoutine = getSysIdRoutine();
-    autoChooser.addOption(
-        getName() + "SysId Quasistatic Forward",
-        sysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward));
-    autoChooser.addOption(
-        getName() + "SysId Quasistatic Backward",
-        sysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse));
-    autoChooser.addOption(
-        getName() + "SysId Dynamic Forward", sysIdRoutine.dynamic(SysIdRoutine.Direction.kForward));
-    autoChooser.addOption(
-        getName() + "SysId Dynamic Backward",
-        sysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse));
-  }
+    public void addRoutinesToChooser(LoggedDashboardChooser<Command> autoChooser) {
+        autoChooser.addOption(
+            getName() + " SysId Quasistatic Forward",
+            sysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward));
+        autoChooser.addOption(
+            getName() + " SysId Quasistatic Backward",
+            sysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse));
+        autoChooser.addOption(
+            getName() + " SysId Dynamic Forward", sysIdRoutine.dynamic(SysIdRoutine.Direction.kForward));
+        autoChooser.addOption(
+            getName() + " SysId Dynamic Backward",
+            sysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse));
+    }
+
+    public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+        return sysIdRoutine.quasistatic(direction);
+      }
+    
+      public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+        return sysIdRoutine.dynamic(direction);
+      }
 }
