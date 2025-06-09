@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Set;
 import org.photonvision.PhotonCamera;
 
-public class VisionIOPhotonVision implements VisionIO {
+public class VisionIOPhotonVision extends VisionIO {
   protected final PhotonCamera camera;
   protected final Transform3d robotToCamera;
 
