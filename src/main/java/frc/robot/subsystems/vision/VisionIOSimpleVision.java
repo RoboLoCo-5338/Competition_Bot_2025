@@ -12,7 +12,7 @@ public class VisionIOSimpleVision extends VisionIO {
   }
 
   @Override
-  public void updateInputs(VisionIOInputs inputs) {
+  public void updateInputs(VisionIOInputsAutoLogged inputs) {
     inputs.connected = true; // Always connected in this case
     inputs.tagIds = new int[1]; // To trick Vision.java into thinking we have a tag
     inputs.poseObservations =
