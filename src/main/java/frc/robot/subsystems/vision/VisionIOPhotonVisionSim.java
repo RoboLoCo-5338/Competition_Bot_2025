@@ -43,4 +43,9 @@ public class VisionIOPhotonVisionSim extends VisionIOPhotonVision {
     visionSim.update(poseSupplier.get());
     super.updateInputs(inputs);
   }
+
+  @Override
+  public void close(){
+    cameraSim.close();
+  }
 }

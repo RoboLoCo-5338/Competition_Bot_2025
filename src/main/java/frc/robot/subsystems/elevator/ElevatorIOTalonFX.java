@@ -213,4 +213,10 @@ public class ElevatorIOTalonFX extends ElevatorIO {
   public void elevatorOpenLoop(Voltage voltage) {
     elevatorMotor1.setControl(elevatorOpenLoop.withOutput(voltage));
   }
+
+  @Override
+  public void close() {
+    elevatorMotor1.close();
+    elevatorMotor2.close();
+  }
 }

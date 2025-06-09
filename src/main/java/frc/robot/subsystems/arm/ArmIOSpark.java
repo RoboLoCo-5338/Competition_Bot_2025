@@ -161,4 +161,9 @@ public class ArmIOSpark extends ArmIO {
   public void openLoop(Voltage voltage) {
     armMotor.setVoltage(voltage);
   }
+
+  @Override
+  public void close(){
+    armMotor.close();
+  }
 }

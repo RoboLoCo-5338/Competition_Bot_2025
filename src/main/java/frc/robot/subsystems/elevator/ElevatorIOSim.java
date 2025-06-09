@@ -83,4 +83,10 @@ public class ElevatorIOSim extends ElevatorIOTalonFX implements SimMechanism {
   public LoggedMechanismLigament2d getLigamentEnd() {
     return elevator;
   }
+
+  @Override
+  public void close() {
+    super.close();
+    elevatorDrawn.close();
+  }
 }

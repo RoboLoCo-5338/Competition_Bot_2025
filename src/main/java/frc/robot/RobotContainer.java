@@ -20,6 +20,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -64,7 +65,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
  * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and button mappings) should be declared here.
  */
-public class RobotContainer {
+public class RobotContainer implements AutoCloseable{
   // Subsystems
   public final Drive drive;
   public final Vision vision;
@@ -373,4 +374,12 @@ public class RobotContainer {
   public Command stopMotors() {
     return PresetCommands.stopAll(elevator, endEffector, arm);
   }
+
+@Override
+public void close() throws Exception {
+    arm.close();
+    elevator.close();
+    endEffector.close();
+    vision.close();
+}
 }

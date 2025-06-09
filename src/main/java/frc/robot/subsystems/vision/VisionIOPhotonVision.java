@@ -117,4 +117,9 @@ public class VisionIOPhotonVision extends VisionIO {
       inputs.tagIds[i++] = id;
     }
   }
+
+  @Override
+  public void close() {
+    camera.close();
+  }
 }

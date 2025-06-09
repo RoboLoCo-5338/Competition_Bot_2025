@@ -74,4 +74,10 @@ public class ArmIOSim extends ArmIOSpark implements SimMechanism {
   public double[] getCurrents() {
     return new double[] {armPhysicsSim.getCurrentDrawAmps()};
   }
+
+  @Override
+  public void close(){
+    super.close();
+    armDrawn.close();
+  }
 }

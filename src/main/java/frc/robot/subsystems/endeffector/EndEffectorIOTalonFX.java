@@ -163,4 +163,15 @@ public class EndEffectorIOTalonFX extends EndEffectorIO {
   public void openLoop(Voltage voltage) {
     endEffectorMotor.setControl(endEffectorOpenLoop.withOutput(voltage));
   }
+  
+  @Override
+  public void close(){
+    endEffectorMotor.close();
+    try {
+      LcEffector1.close();
+      LcEffector2.close();
+    } catch (Exception e) {
+      System.out.println("Error closing LaserCan: " + e);
+    }
+  }
 }
