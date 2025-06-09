@@ -197,7 +197,7 @@ public class RobotContainer implements AutoCloseable {
     NamedCommands.registerCommand("L2 Preset", PresetCommands.presetL2(elevator, endEffector, arm));
 
     NamedCommands.registerCommand("Endeffector Out", endEffector.setEndEffectorVelocity(100));
-    NamedCommands.registerCommand("Endeffector Out L4", endEffector.setEndEffectorVelocity(-100));
+    NamedCommands.registerCommand("Endeffector Out L4", endEffector.setEndEffectorSpeed(-1));
     NamedCommands.registerCommand("Endeffector Stop", endEffector.setEndEffectorVelocity(0));
     NamedCommands.registerCommand("OuttakeLaserCan", PresetCommands.outtakeLaserCan(endEffector));
     NamedCommands.registerCommand(
@@ -290,6 +290,7 @@ public class RobotContainer implements AutoCloseable {
                     * Math.pow(Math.abs(driverController.getLeftX()), 1.2 - 1),
             () ->
                 -driverController.getRightX()
+                    * 0.8 // slower turn speed!
                     * Math.pow(Math.abs(driverController.getRightX()), 2.2 - 1)));
 
     elevator.setDefaultCommand(
@@ -326,15 +327,15 @@ public class RobotContainer implements AutoCloseable {
     operatorController.leftBumper().onTrue(PresetCommands.intakeLaserCan(endEffector));
 
     driverController
-        .rightBumper()
-        .whileTrue(endEffector.setEndEffectorVelocity(60))
+        .leftBumper()
+        .whileTrue(endEffector.setEndEffectorVelocity(200))
         .onFalse(endEffector.setEndEffectorVelocity(0));
     driverController
         .leftTrigger()
-        .whileTrue(endEffector.setEndEffectorVelocity(-60))
+        .whileTrue(endEffector.setEndEffectorSpeed(-1))
         .onFalse(endEffector.setEndEffectorVelocity(0));
     driverController
-        .b()
+        .a()
         .onTrue(
             Commands.runOnce(
                     () -> {
@@ -359,8 +360,19 @@ public class RobotContainer implements AutoCloseable {
             drive, Direction.Left, Level.L3, driverController, led, elevator, arm, endEffector);
     Command reefAlignLeft = DriveCommands.reefAlign(drive, Direction.Left, driverController, led);
     Command reefAlignRight = DriveCommands.reefAlign(drive, Direction.Right, driverController, led);
+    // driverController
+    //     .rightBumper()
+    //     .and(() -> drive.useVision)
+    //     .and(
+    //         new Trigger(
+    //                 () ->
+    //                     !(reefScoreLeftL3.isScheduled()
+    //                         || reefAlignLeft.isScheduled()
+    //                         || reefAlignRight.isScheduled()))
+    //             .debounce(0.5))
+    //     .onTrue(reefScoreLeftL3.until(driverController.rightBumper().negate()));
     driverController
-        .leftBumper()
+        .x()
         .and(drive::usingVision)
         .and(
             new Trigger(
@@ -369,9 +381,9 @@ public class RobotContainer implements AutoCloseable {
                             || reefAlignLeft.isScheduled()
                             || reefAlignRight.isScheduled()))
                 .debounce(0.5))
-        .onTrue(reefScoreLeftL3.until(driverController.leftBumper().negate()));
+        .onTrue(reefAlignLeft.until(driverController.x().negate()));
     driverController
-        .povLeft()
+        .b()
         .and(drive::usingVision)
         .and(
             new Trigger(
@@ -380,18 +392,7 @@ public class RobotContainer implements AutoCloseable {
                             || reefAlignLeft.isScheduled()
                             || reefAlignRight.isScheduled()))
                 .debounce(0.5))
-        .onTrue(reefAlignLeft.until(driverController.povLeft().negate()));
-    driverController
-        .povRight()
-        .and(drive::usingVision)
-        .and(
-            new Trigger(
-                    () ->
-                        !(reefScoreLeftL3.isScheduled()
-                            || reefAlignLeft.isScheduled()
-                            || reefAlignRight.isScheduled()))
-                .debounce(0.5))
-        .onTrue(reefAlignRight.until(driverController.povRight().negate()));
+        .onTrue(reefAlignRight.until(driverController.b().negate()));
 
     driverController
         .rightTrigger()
@@ -662,6 +663,7 @@ public class RobotContainer implements AutoCloseable {
    */
   public Command getAutonomousCommand() {
     return autoChooser.get();
+    // return endEffector.setEndEffectorSpeed(-1);
   }
 
   public Command stopMotors() {
