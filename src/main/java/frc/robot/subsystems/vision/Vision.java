@@ -22,24 +22,21 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.wpilibj.Alert;
-import edu.wpi.first.wpilibj.Alert.AlertType;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.AdvantageScopeSubsystem;
 import frc.robot.subsystems.vision.VisionIO.PoseObservationType;
-
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Stream;
-
 import org.littletonrobotics.junction.Logger;
 
 public class Vision extends AdvantageScopeSubsystem<VisionIO, VisionIOInputsAutoLogged> {
   private final VisionConsumer consumer;
 
   public Vision(VisionConsumer consumer, VisionIO... io) {
-    super(Arrays.asList(io), Stream.generate(() -> new VisionIOInputsAutoLogged()).limit(io.length).toList());
+    super(
+        Arrays.asList(io),
+        Stream.generate(() -> new VisionIOInputsAutoLogged()).limit(io.length).toList());
     this.consumer = consumer;
   }
 
