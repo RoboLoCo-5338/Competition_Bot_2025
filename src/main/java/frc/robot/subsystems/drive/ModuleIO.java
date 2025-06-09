@@ -18,7 +18,7 @@ import org.littletonrobotics.junction.AutoLog;
 
 public class ModuleIO {
   @AutoLog
-  class ModuleIOInputs {
+  static class ModuleIOInputs {
     public boolean driveConnected = false;
     public double drivePositionRad = 0.0;
     public double driveVelocityRadPerSec = 0.0;

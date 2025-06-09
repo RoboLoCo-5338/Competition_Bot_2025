@@ -30,7 +30,7 @@ import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeAlgaeOnFly
 import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoralOnFly;
 import org.littletonrobotics.junction.Logger;
 
-public class EndEffectorIOSim extends EndEffectorIO implements SimMechanism {
+public class EndEffectorIOSim extends EndEffectorIOTalonFX implements SimMechanism {
   TalonFXSimState simMotor = endEffectorMotor.getSimState();
   FlywheelSim physicsSim =
       new FlywheelSim(
@@ -82,9 +82,30 @@ public class EndEffectorIOSim extends EndEffectorIO implements SimMechanism {
             * 0.02
             * EndEffectorConstants.GEARING);
     simMotor.setRotorVelocity(
-        physicsSim.getAngularVelocityRadPerSec() * EndEffectorSimConstants.GEARING);
-  
+        Units.radiansToRotations(
+            physicsSim.getAngularVelocityRadPerSec() * EndEffectorConstants.GEARING));
 
+    Logger.recordOutput(
+        "Odometry/IntakedCoral",
+        (coralState == CoralState.EFFECTOR)
+            ? new Pose3d[] {
+              new Pose3d(robotPoseSupplier.get())
+                  .plus(new Transform3d(new Pose3d(), coralPoseSupplier.get()))
+            }
+            : new Pose3d[0]);
+    Logger.recordOutput(
+        "Odometry/IntakedAlgae",
+        (hasAlgae)
+            ? new Pose3d[] {
+              new Pose3d(robotPoseSupplier.get())
+                  .plus(
+                      new Transform3d(
+                          new Pose3d(),
+                          coralPoseSupplier
+                              .get()
+                              .plus(new Transform3d(0, 0, -0.18, new Rotation3d()))))
+            }
+            : new Pose3d[0]);
     super.updateInputs(inputs);
   }
 
@@ -92,7 +113,6 @@ public class EndEffectorIOSim extends EndEffectorIO implements SimMechanism {
   public double[] getCurrents() {
     return new double[] {physicsSim.getCurrentDrawAmps()};
   }
-
 
   @Override
   public int getLaserCanMeasurement1() {
@@ -125,8 +145,8 @@ public class EndEffectorIOSim extends EndEffectorIO implements SimMechanism {
                 }));
     new Trigger(
             () -> Math.abs(Units.radiansToRotations(physicsSim.getAngularVelocityRadPerSec())) > 25)
-        .debounce(0.2)
         .and(() -> coralState == CoralState.EFFECTOR)
+        .debounce(0.2)
         .onTrue(
             new InstantCommand(
                 () -> {
@@ -150,6 +170,7 @@ public class EndEffectorIOSim extends EndEffectorIO implements SimMechanism {
                     () -> {
                       intakeSim.startIntake();
                       intakeSim.setGamePiecesCount(1);
+                      coralState = CoralState.EFFECTOR;
                     })
                 .ignoringDisable(true));
     new Trigger(

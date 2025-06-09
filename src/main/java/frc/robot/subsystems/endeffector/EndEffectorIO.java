@@ -30,7 +30,7 @@ public class EndEffectorIO {
     return -1;
   }
 
-  public default double getEndEffectorVelocity() {
+  public double getEndEffectorVelocity() {
     return 0.0;
   }
 

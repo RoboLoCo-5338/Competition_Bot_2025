@@ -16,7 +16,6 @@ import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.filter.Debouncer;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
@@ -172,15 +171,19 @@ public class ElevatorIOTalonFX extends ElevatorIO {
             elevator2Position, elevator2Velocity, elevator2Current, elevator2AppliedVolts);
 
     inputs.elevator1Connected = elevator1ConnectedDebounce.calculate(motor1Status.isOK());
-    inputs.elevator1Position = elevator1Position.getValueAsDouble();
-    inputs.elevator1Velocity = Units.rotationsToRadians(elevator1Velocity.getValueAsDouble());
+    inputs.elevator1Position =
+        elevator1Position.getValueAsDouble() * ElevatorConstants.METERS_PER_ROTATION;
+    inputs.elevator1Velocity =
+        elevator1Velocity.getValueAsDouble() * ElevatorConstants.METERS_PER_ROTATION;
     inputs.elevator1AppliedVolts = elevator1AppliedVolts.getValueAsDouble();
     inputs.elevator1CurrentAmps = elevator1Current.getValueAsDouble();
     inputs.elevator1Temperature = elevator1Temperature.getValueAsDouble();
 
     inputs.elevator2Connected = elevator2ConnectedDebounce.calculate(motor2Status.isOK());
-    inputs.elevator2Position = elevator2Position.getValueAsDouble();
-    inputs.elevator2Velocity = Units.rotationsToRadians(elevator2Velocity.getValueAsDouble());
+    inputs.elevator2Position =
+        elevator2Position.getValueAsDouble() * ElevatorConstants.METERS_PER_ROTATION;
+    inputs.elevator2Velocity =
+        elevator2Velocity.getValueAsDouble() * ElevatorConstants.METERS_PER_ROTATION;
     inputs.elevator2AppliedVolts = elevator2AppliedVolts.getValueAsDouble();
     inputs.elevator2CurrentAmps = elevator2Current.getValueAsDouble();
     inputs.elevator2Temperature = elevator2Temperature.getValueAsDouble();

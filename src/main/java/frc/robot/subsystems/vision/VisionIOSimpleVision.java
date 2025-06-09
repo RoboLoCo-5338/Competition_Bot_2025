@@ -4,7 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import java.util.function.Supplier;
 
-public class VisionIOSimpleVision implements VisionIO {
+public class VisionIOSimpleVision extends VisionIO {
   private final Supplier<Pose2d> poseSupplier;
 
   public VisionIOSimpleVision(Supplier<Pose2d> poseSupplier) {
