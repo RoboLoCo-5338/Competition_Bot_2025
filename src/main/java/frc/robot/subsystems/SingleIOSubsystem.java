@@ -9,7 +9,7 @@ import org.littletonrobotics.junction.inputs.LoggableInputs;
 public abstract class SingleIOSubsystem<T extends IO<I>, I extends IOInputs & LoggableInputs>
     extends AdvantageScopeSubsystem<T, I> {
   protected T io;
-  protected I input;
+  public I input;
 
   public SingleIOSubsystem(T io, I inputs) {
     super(List.of(io), List.of(inputs));

@@ -138,7 +138,6 @@ public class ArmIOSpark extends ArmIO {
 
   @Override
   public void setArmVelocity(double velocityRadPerSec) {
-
     double ffvolts =
         feedforward.calculate((armEncoder.getPosition()) * 2 * Math.PI, velocityRadPerSec);
 
