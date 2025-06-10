@@ -49,15 +49,15 @@ public class ElevatorIOSim extends ElevatorIOTalonFX implements SimMechanism {
 
     physicsSim.setInputVoltage((motor1Sim.getMotorVoltage() + motor2Sim.getMotorVoltage()) / 2);
 
-    Logger.recordOutput("elevator1Position", physicsSim.getPositionMeters());
-    Logger.recordOutput("elevator1Velocity", physicsSim.getVelocityMetersPerSecond());
-    Logger.recordOutput("elevator1AppliedVolts", motor1Sim.getMotorVoltage());
-    Logger.recordOutput("elevator1CurrentAmps", motor2Sim.getSupplyCurrent());
+    Logger.recordOutput("Elevator/elevator1Position", physicsSim.getPositionMeters());
+    Logger.recordOutput("Elevator/elevator1Velocity", physicsSim.getVelocityMetersPerSecond());
+    Logger.recordOutput("Elevator/elevator1AppliedVolts", motor1Sim.getMotorVoltage());
+    Logger.recordOutput("Elevator/elevator1CurrentAmps", motor2Sim.getSupplyCurrent());
 
-    Logger.recordOutput("elevator2Position", physicsSim.getPositionMeters());
-    Logger.recordOutput("elevator2Velocity", physicsSim.getVelocityMetersPerSecond());
-    Logger.recordOutput("elevator2AppliedVolts", motor2Sim.getMotorVoltage());
-    Logger.recordOutput("elevator2CurrentAmps", motor2Sim.getSupplyCurrent());
+    Logger.recordOutput("Elevator/elevator2Position", physicsSim.getPositionMeters());
+    Logger.recordOutput("Elevator/elevator2Velocity", physicsSim.getVelocityMetersPerSecond());
+    Logger.recordOutput("Elevator/elevator2AppliedVolts", motor2Sim.getMotorVoltage());
+    Logger.recordOutput("Elevator/elevator2CurrentAmps", motor2Sim.getSupplyCurrent());
 
     physicsSim.update(0.02);
 

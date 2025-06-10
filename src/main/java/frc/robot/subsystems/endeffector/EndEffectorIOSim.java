@@ -29,9 +29,9 @@ public class EndEffectorIOSim extends EndEffectorIOTalonFX implements SimMechani
     simMotor.setSupplyVoltage(RobotController.getBatteryVoltage());
     physicsSim.setInputVoltage(simMotor.getMotorVoltage());
 
-    Logger.recordOutput("endEffectorVelocity", physicsSim.getAngularVelocityRPM());
-    Logger.recordOutput("endEffectorAppliedVolts", physicsSim.getInputVoltage());
-    Logger.recordOutput("endEffectorCurrentAmps", physicsSim.getCurrentDrawAmps());
+    Logger.recordOutput("EndEffector/endEffectorVelocity", physicsSim.getAngularVelocityRPM());
+    Logger.recordOutput("EndEffector/endEffectorAppliedVolts", physicsSim.getInputVoltage());
+    Logger.recordOutput("EndEffector/endEffectorCurrentAmps", physicsSim.getCurrentDrawAmps());
 
     physicsSim.update(0.02);
 
