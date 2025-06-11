@@ -64,11 +64,13 @@ public class Elevator extends SubsystemBase implements SysIDSubsystem {
         .until(
             () ->
                 Math.abs(position - inputs.elevator1Position)
-                    < ElevatorConstants.POSITION_TOLERANCE);
+                    < ElevatorConstants.POSITION_TOLERANCE)
+        .withName("Set Elevator Position Command");
   }
 
   public Command setElevatorVelocity(DoubleSupplier velocity) {
-    return new InstantCommand(() -> io.setElevatorVelocity(velocity.getAsDouble()), this);
+    return new InstantCommand(() -> io.setElevatorVelocity(velocity.getAsDouble()), this)
+        .withName("Set Elevator Velocity Command");
   }
 
   public ElevatorIO getIO() {
