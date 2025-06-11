@@ -50,6 +50,11 @@ public class ElevatorIOSim extends ElevatorIOTalonFX implements SimMechanism {
 
     physicsSim.setInputVoltage((motor1Sim.getMotorVoltage() + motor2Sim.getMotorVoltage()) / 2);
 
+    System.out.println(
+        physicsSim.getPositionMeters() / ElevatorConstants.METERS_PER_ROTATION
+            + " "
+            + inputs.position);
+
     Logger.recordOutput("elevator1Position", physicsSim.getPositionMeters());
     Logger.recordOutput("elevator1Velocity", physicsSim.getVelocityMetersPerSecond());
     Logger.recordOutput("elevator1AppliedVolts", motor1Sim.getMotorVoltage());

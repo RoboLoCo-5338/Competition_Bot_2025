@@ -85,7 +85,7 @@ public class ArmIOSpark extends ArmIO {
         .inverted(true)
         .positionConversionFactor(1 / ArmSimConstants.GEARING)
         .velocityConversionFactor(
-            2.0 / ArmSimConstants.GEARING); // TODO: figure out why we need this to be 2.0
+            1.0 / ArmSimConstants.GEARING); // TODO: figure out why we need this to be 2.0
     armConfig
         .closedLoop
         .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
@@ -137,16 +137,13 @@ public class ArmIOSpark extends ArmIO {
   }
 
   @Override
-  public void setArmVelocity(double velocityRadPerSec) {
+  public void setArmVelocity(double velocity) {
     double ffvolts =
-        feedforward.calculate((armEncoder.getPosition()) * 2 * Math.PI, velocityRadPerSec);
-
+        feedforward.calculate(
+            Units.rotationsToRadians(armEncoder.getPosition()),
+            Units.rotationsPerMinuteToRadiansPerSecond(velocity));
     armClosedLoopController.setReference(
-        Units.radiansPerSecondToRotationsPerMinute(velocityRadPerSec),
-        ControlType.kVelocity,
-        ClosedLoopSlot.kSlot1,
-        ffvolts,
-        ArbFFUnits.kVoltage);
+        velocity, ControlType.kVelocity, ClosedLoopSlot.kSlot1, ffvolts, ArbFFUnits.kVoltage);
   }
 
   @Override

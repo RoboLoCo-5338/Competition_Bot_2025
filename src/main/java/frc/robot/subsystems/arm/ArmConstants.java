@@ -21,7 +21,7 @@ public final class ArmConstants {
   public static final class ArmSimConstants {
     public static final double LENGTH = Units.inchesToMeters(21.8);
     public static final double MOI =
-        SingleJointedArmSim.estimateMOI(ArmSimConstants.LENGTH, Units.lbsToKilograms(4.4));
+        SingleJointedArmSim.estimateMOI(ArmSimConstants.LENGTH, Units.lbsToKilograms(3.9));
     public static final double GEARING = 50;
     public static final double MIN_ANGLE = Units.degreesToRadians(-103);
     public static final double MAX_ANGLE = Units.degreesToRadians(90);

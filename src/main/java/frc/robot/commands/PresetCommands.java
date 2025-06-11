@@ -2,7 +2,6 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.arm.Arm;
@@ -67,33 +66,5 @@ public class PresetCommands {
     return new ParallelCommandGroup(
         arm.setArmPosition(ArmPresetConstants.ARM_NET),
         new SequentialCommandGroup(new WaitCommand(0.8), endEffector.setEndEffectorSpeed(-1)));
-  }
-
-  public static Command intakeLaserCan(EndEffector endEffector) {
-    return new SequentialCommandGroup(
-            new RepeatCommand(endEffector.setEndEffectorVelocity(100))
-                .until(
-                    () ->
-                        (endEffector.getIO().getLaserCanMeasurement1() < 100
-                            && endEffector.getIO().getLaserCanMeasurement2() < 100)),
-            endEffector.setEndEffectorVelocity(0.0))
-        .onlyIf(
-            () ->
-                !(endEffector.getIO().getLaserCanMeasurement1() == -1
-                    || endEffector.getIO().getLaserCanMeasurement2() == -1));
-  }
-
-  public static Command outtakeLaserCan(EndEffector endEffector) {
-    return new SequentialCommandGroup(
-            new RepeatCommand(endEffector.setEndEffectorVelocity(-100))
-                .until(
-                    () ->
-                        (endEffector.getIO().getLaserCanMeasurement1() > 100
-                            && endEffector.getIO().getLaserCanMeasurement2() > 100)),
-            endEffector.setEndEffectorVelocity(0.0))
-        .onlyIf(
-            () ->
-                endEffector.getIO().getLaserCanMeasurement1() != -1
-                    || endEffector.getIO().getLaserCanMeasurement2() != -1);
   }
 }

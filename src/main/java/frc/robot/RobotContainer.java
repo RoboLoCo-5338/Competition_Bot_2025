@@ -199,14 +199,14 @@ public class RobotContainer implements AutoCloseable {
     NamedCommands.registerCommand("Endeffector Out", endEffector.setEndEffectorVelocity(100));
     NamedCommands.registerCommand("Endeffector Out L4", endEffector.setEndEffectorSpeed(-1));
     NamedCommands.registerCommand("Endeffector Stop", endEffector.setEndEffectorVelocity(0));
-    NamedCommands.registerCommand("OuttakeLaserCan", PresetCommands.outtakeLaserCan(endEffector));
+    NamedCommands.registerCommand("OuttakeLaserCan", endEffector.outtakeLaserCan());
     NamedCommands.registerCommand(
         "Align Left", DriveCommands.reefAlign(drive, Direction.Left, driverController, led));
     NamedCommands.registerCommand(
         "Align Center", DriveCommands.reefAlign(drive, Direction.None, driverController, led));
     NamedCommands.registerCommand(
         "Align Right", DriveCommands.reefAlign(drive, Direction.Right, driverController, led));
-    NamedCommands.registerCommand("IntakeLaserCAN", PresetCommands.intakeLaserCan(endEffector));
+    NamedCommands.registerCommand("IntakeLaserCAN", endEffector.intakeLaserCan());
     NamedCommands.registerCommand(
         "Stop Preset", PresetCommands.stopAll(elevator, endEffector, arm));
     NamedCommands.registerCommand(
@@ -299,7 +299,12 @@ public class RobotContainer implements AutoCloseable {
 
     arm.setDefaultCommand(
         arm.setArmVelocity(
-            () -> processedJoystickInput(-operatorController.getRightY(), 0.2, 1.0, 7 * Math.PI)));
+            () ->
+                processedJoystickInput(
+                    -operatorController.getRightY(),
+                    0.2,
+                    1.0,
+                    Units.radiansPerSecondToRotationsPerMinute(7 * Math.PI))));
 
     operatorController
         .leftTrigger()
@@ -322,9 +327,9 @@ public class RobotContainer implements AutoCloseable {
         .onFalse(endEffector.setEndEffectorVelocity(0));
 
     // operatorController.leftBumper().whileTrue(PresetCommands.netShoot(arm, endEffector));
-    operatorController.povUp().onTrue(PresetCommands.outtakeLaserCan(endEffector));
+    operatorController.povUp().onTrue(endEffector.outtakeLaserCan());
 
-    operatorController.leftBumper().onTrue(PresetCommands.intakeLaserCan(endEffector));
+    operatorController.leftBumper().onTrue(endEffector.intakeLaserCan());
 
     driverController
         .leftBumper()

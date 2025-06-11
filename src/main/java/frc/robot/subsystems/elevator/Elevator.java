@@ -60,7 +60,7 @@ public class Elevator extends SysIDSubsystem<ElevatorIO, ElevatorIOInputsAutoLog
         .until(
             new Trigger(() -> Math.abs(input.elevator1Velocity) < 0.001)
                 .and(() -> elevatorPositionRunning)
-                .debounce(0.5)
+                .debounce(1)
                 .onTrue(
                     new InstantCommand()) // Why the heck does this need to be here? The code breaks
                 // if it's not there.

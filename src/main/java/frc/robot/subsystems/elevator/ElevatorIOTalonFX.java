@@ -206,7 +206,6 @@ public class ElevatorIOTalonFX extends ElevatorIO {
     //     ElevatorConstants.ElevatorPositionConstants.ELEVATOR_FEEDFORWARD;
     // elevator2PositionRequest.FeedForward =
     //     ElevatorConstants.ElevatorPositionConstants.ELEVATOR_FEEDFORWARD;
-
     elevatorMotor1.setControl(
         elevator1PositionRequest
             .withPosition(position / ElevatorConstants.METERS_PER_ROTATION)

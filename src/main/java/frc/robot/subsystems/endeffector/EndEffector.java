@@ -7,6 +7,8 @@ import edu.wpi.first.units.measure.Velocity;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.subsystems.SysIDSubsystem;
 import org.littletonrobotics.junction.Logger;
@@ -43,5 +45,32 @@ public class EndEffector extends SysIDSubsystem<EndEffectorIO, EndEffectorIOInpu
 
   public double getEndEffectorVelocity() {
     return io.getEndEffectorVelocity();
+  }
+
+  public Command intakeLaserCan() {
+    return new SequentialCommandGroup(
+            new RepeatCommand(setEndEffectorVelocity(100))
+                .until(
+                    () ->
+                        (getIO().getLaserCanMeasurement1() < 100
+                            && getIO().getLaserCanMeasurement2() < 100)),
+            setEndEffectorVelocity(0.0))
+        .onlyIf(
+            () ->
+                !(getIO().getLaserCanMeasurement1() == -1
+                    || getIO().getLaserCanMeasurement2() == -1));
+  }
+
+  public Command outtakeLaserCan() {
+    return new SequentialCommandGroup(
+            new RepeatCommand(setEndEffectorVelocity(-100))
+                .until(
+                    () ->
+                        (getIO().getLaserCanMeasurement1() > 100
+                            && getIO().getLaserCanMeasurement2() > 100)),
+            setEndEffectorVelocity(0.0))
+        .onlyIf(
+            () ->
+                getIO().getLaserCanMeasurement1() != -1 || getIO().getLaserCanMeasurement2() != -1);
   }
 }

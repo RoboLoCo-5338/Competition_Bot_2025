@@ -108,7 +108,7 @@ public class EndEffectorIOTalonFX extends EndEffectorIO {
     inputs.connected = effectorDebouncer.calculate(motor1Status.isOK());
     inputs.endEffectorDistance1 = getLaserCanMeasurement1();
     inputs.endEffectorDistance2 = getLaserCanMeasurement2();
-    inputs.position = endEffectorVelocity.getValueAsDouble();
+    inputs.velocity = endEffectorVelocity.getValueAsDouble();
     inputs.endEffectorAppliedVolts = endEffectorAppliedVolts.getValueAsDouble();
     inputs.endEffectorCurrentAmps = endEffectorCurrent.getValueAsDouble();
     inputs.endEffectorTemperature = endEffectorTemperature.getValueAsDouble();
