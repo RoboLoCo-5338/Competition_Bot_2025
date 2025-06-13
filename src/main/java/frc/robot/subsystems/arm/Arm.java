@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Mechanism;
 import frc.robot.Constants;
@@ -21,6 +22,7 @@ public class Arm extends SubsystemBase implements SysIDSubsystem {
   public final ArmIOInputsAutoLogged inputs = new ArmIOInputsAutoLogged();
   public double armPosition;
   private final SysIdRoutine sysIdRoutine;
+  private boolean armPositionRunning = false;
 
   private final Alert armDisconnectedAlert =
       new Alert("Arm motor disconnected", AlertType.kWarning);
@@ -55,8 +57,27 @@ public class Arm extends SubsystemBase implements SysIDSubsystem {
    * @return A command that sets the arm to the given position.
    */
   public Command setArmPosition(double position) {
-    return new StartEndCommand(() -> io.setArmPosition(position), () -> io.setArmVelocity(0), this)
-        .until(() -> Math.abs((inputs.armPosition - position)) < ArmConstants.POSITION_TOLERANCE);
+    return new StartEndCommand(
+            () -> {
+              io.setArmPosition(position);
+              armPositionRunning = true;
+            },
+            () -> {
+              io.setArmVelocity(0);
+              armPositionRunning = false;
+            },
+            this)
+        .until(
+            new Trigger(() -> Math.abs(inputs.armVelocity) < 0.001)
+                .and(() -> armPositionRunning)
+                .debounce(0.5)
+                .onTrue(
+                    new InstantCommand()) // Why the heck does this need to be here? The code breaks
+                // if it's not there.
+                .or(
+                    () ->
+                        Math.abs((inputs.armPosition - position))
+                            < ArmConstants.POSITION_TOLERANCE));
   }
 
   /**
