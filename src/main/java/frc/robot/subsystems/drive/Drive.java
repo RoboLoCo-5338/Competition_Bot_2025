@@ -49,13 +49,14 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.SysIDSubsystem;
 import frc.robot.util.LocalADStarAK;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
-public class Drive extends SubsystemBase {
+public class Drive extends SubsystemBase implements SysIDSubsystem {
   private static final RobotConfig PP_CONFIG =
       new RobotConfig(
           DriveConstants.ROBOT_MASS_KG,
@@ -273,12 +274,16 @@ public class Drive extends SubsystemBase {
   public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
     return run(() -> runCharacterization(0.0))
         .withTimeout(1.0)
-        .andThen(sysId.quasistatic(direction));
+        .andThen(sysId.quasistatic(direction))
+        .withName("SysId Quasistatic Command");
   }
 
   /** Returns a command to run a dynamic test in the specified direction. */
   public Command sysIdDynamic(SysIdRoutine.Direction direction) {
-    return run(() -> runCharacterization(0.0)).withTimeout(1.0).andThen(sysId.dynamic(direction));
+    return run(() -> runCharacterization(0.0))
+        .withTimeout(1.0)
+        .andThen(sysId.dynamic(direction))
+        .withName("SysId Dynamic Command");
   }
 
   /** Returns the module states (turn angles and drive velocities) for all of the modules. */
@@ -377,5 +382,15 @@ public class Drive extends SubsystemBase {
       new Translation2d(TunerConstants.BackLeft.LocationX, TunerConstants.BackLeft.LocationY),
       new Translation2d(TunerConstants.BackRight.LocationX, TunerConstants.BackRight.LocationY)
     };
+  }
+
+  @Override
+  public SysIdRoutine getSysIdRoutine() {
+    return sysId;
+  }
+
+  @Override
+  public String getName() {
+    return "Drive";
   }
 }
