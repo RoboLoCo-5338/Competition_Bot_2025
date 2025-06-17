@@ -11,7 +11,7 @@ public final class ArmConstants {
   public static final double ARM_MOTOR_VELOCITY_KP = 0.001;
   public static final double ARM_MOTOR_VELOCITY_KI = 0.00;
   public static final double ARM_MOTOR_VELOCITY_KD = 0.0;
-  public static final double ARM_MOTOR_KG = 0.27;
+  public static final double ARM_MOTOR_KG = 0.23;
   public static final double ARM_MOTOR_KV = 0.00;
   public static final double ARM_MOTOR_KS = 0.0;
   public static final int ARM_MOTOR_CURRENT_LIMIT = 60;

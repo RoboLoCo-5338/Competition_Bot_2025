@@ -154,7 +154,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("L2 Preset", PresetCommands.presetL2(elevator, endEffector, arm));
 
     NamedCommands.registerCommand("Endeffector Out", endEffector.setEndEffectorVelocity(100));
-    NamedCommands.registerCommand("Endeffector Out L4", endEffector.setEndEffectorSpeed(-1));
+    NamedCommands.registerCommand("Endeffector Out L4", endEffector.setEndEffectorVelocity(-100));
     NamedCommands.registerCommand("Endeffector Stop", endEffector.setEndEffectorVelocity(0));
     NamedCommands.registerCommand("OutakeLaserCan", PresetCommands.outtakeLaserCan(endEffector));
     NamedCommands.registerCommand(
