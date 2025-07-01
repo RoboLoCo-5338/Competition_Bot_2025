@@ -246,12 +246,13 @@ public class RobotContainer {
                     * Math.pow(Math.abs(driverController.getLeftX()), 1.2 - 1),
             () ->
                 -driverController.getRightX()
+                    * 0.8 // slower turn speed!
                     * Math.pow(Math.abs(driverController.getRightX()), 2.2 - 1)));
 
     elevator.setDefaultCommand(
         elevator.setElevatorVelocity(() -> deadband(-operatorController.getLeftY()) * 25));
 
-    arm.setDefaultCommand(arm.setArmVelocity(() -> 2 * Math.PI * -operatorController.getRightY()));
+    arm.setDefaultCommand(arm.setArmVelocity(() -> 7 * Math.PI * -operatorController.getRightY()));
 
     operatorController
         .leftTrigger()
@@ -279,15 +280,15 @@ public class RobotContainer {
     operatorController.leftBumper().onTrue(PresetCommands.intakeLaserCan(endEffector));
 
     driverController
-        .rightBumper()
-        .whileTrue(endEffector.setEndEffectorVelocity(60))
+        .leftBumper()
+        .whileTrue(endEffector.setEndEffectorVelocity(200))
         .onFalse(endEffector.setEndEffectorVelocity(0));
     driverController
         .leftTrigger()
-        .whileTrue(endEffector.setEndEffectorVelocity(-60))
+        .whileTrue(endEffector.setEndEffectorSpeed(-1))
         .onFalse(endEffector.setEndEffectorVelocity(0));
     driverController
-        .b()
+        .a()
         .onTrue(
             Commands.runOnce(
                     () -> {
@@ -324,8 +325,19 @@ public class RobotContainer {
     Command reefAlignRight =
         DriveCommands.reefAlign(drive, Direction.Right, driverController, led)
             .withName("Align Right");
+    // driverController
+    //     .rightBumper()
+    //     .and(() -> drive.useVision)
+    //     .and(
+    //         new Trigger(
+    //                 () ->
+    //                     !(reefScoreLeftL3.isScheduled()
+    //                         || reefAlignLeft.isScheduled()
+    //                         || reefAlignRight.isScheduled()))
+    //             .debounce(0.5))
+    //     .onTrue(reefScoreLeftL3.until(driverController.rightBumper().negate()));
     driverController
-        .leftBumper()
+        .x()
         .and(() -> drive.useVision)
         .and(
             new Trigger(
@@ -334,9 +346,9 @@ public class RobotContainer {
                             || reefAlignLeft.isScheduled()
                             || reefAlignRight.isScheduled()))
                 .debounce(0.5))
-        .whileTrue(reefScoreLeftL3);
+        .onTrue(reefAlignLeft.until(driverController.x().negate()));
     driverController
-        .povLeft()
+        .b()
         .and(() -> drive.useVision)
         .and(
             new Trigger(
@@ -345,18 +357,7 @@ public class RobotContainer {
                             || reefAlignLeft.isScheduled()
                             || reefAlignRight.isScheduled()))
                 .debounce(0.5))
-        .whileTrue(reefAlignLeft);
-    driverController
-        .povRight()
-        .and(() -> drive.useVision)
-        .and(
-            new Trigger(
-                    () ->
-                        !(reefScoreLeftL3.isScheduled()
-                            || reefAlignLeft.isScheduled()
-                            || reefAlignRight.isScheduled()))
-                .debounce(0.5))
-        .whileTrue(reefAlignRight);
+        .onTrue(reefAlignRight.until(driverController.b().negate()));
 
     driverController
         .rightTrigger()
@@ -387,6 +388,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return autoChooser.get();
+    // return endEffector.setEndEffectorSpeed(-1);
   }
 
   public Command stopMotors() {
