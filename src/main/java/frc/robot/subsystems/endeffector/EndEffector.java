@@ -51,16 +51,18 @@ public class EndEffector extends SubsystemBase implements SysIDSubsystem {
 
   public Command setEndEffectorVelocity(double velocity) {
     return new InstantCommand(
-        () -> {
-          SmartDashboard.putNumber("OuttakingTime", System.currentTimeMillis());
-          io.setEndEffectorVelocity(velocity);
-        },
-        this).withName("Set End Effector Velocity");
+            () -> {
+              SmartDashboard.putNumber("OuttakingTime", System.currentTimeMillis());
+              io.setEndEffectorVelocity(velocity);
+            },
+            this)
+        .withName("Set End Effector Velocity");
   }
 
   public Command setEndEffectorSpeed(double speed) {
     SmartDashboard.putNumber("IsOuttaking", System.currentTimeMillis());
-    return new InstantCommand(() -> io.setEndEffectorSpeed(speed)).withName("Set End Effector Speed");
+    return new InstantCommand(() -> io.setEndEffectorSpeed(speed))
+        .withName("Set End Effector Speed");
   }
 
   public EndEffectorIO getIO() {

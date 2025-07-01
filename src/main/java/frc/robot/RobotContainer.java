@@ -310,16 +310,21 @@ public class RobotContainer {
     //             drive, () -> driverController.getLeftY(), () -> driverController.getLeftX()));
     Command reefScoreLeftL3 =
         DriveCommands.reefScore(
-            drive,
-            Direction.Left,
-            DriveCommands.Level.L3,
-            driverController,
-            led,
-            elevator,
-            arm,
-            endEffector).withName("Score Left L3");
-    Command reefAlignLeft = DriveCommands.reefAlign(drive, Direction.Left, driverController, led).withName("Align Left");
-    Command reefAlignRight = DriveCommands.reefAlign(drive, Direction.Right, driverController, led).withName("Align Right");
+                drive,
+                Direction.Left,
+                DriveCommands.Level.L3,
+                driverController,
+                led,
+                elevator,
+                arm,
+                endEffector)
+            .withName("Score Left L3");
+    Command reefAlignLeft =
+        DriveCommands.reefAlign(drive, Direction.Left, driverController, led)
+            .withName("Align Left");
+    Command reefAlignRight =
+        DriveCommands.reefAlign(drive, Direction.Right, driverController, led)
+            .withName("Align Right");
     // driverController
     //     .rightBumper()
     //     .and(() -> drive.useVision)
