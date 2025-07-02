@@ -43,6 +43,7 @@ import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -71,9 +72,9 @@ public class Drive extends SubsystemBase {
           getModuleTranslations());
 
   static final Lock odometryLock = new ReentrantLock();
-  private final GyroIO gyroIO;
+  private GyroIO gyroIO;
   private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
-  private final Module[] modules = new Module[4]; // FL, FR, BL, BR
+  private Module[] modules = new Module[4]; // FL, FR, BL, BR
   private final SysIdRoutine sysId;
   private final Alert gyroDisconnectedAlert =
       new Alert("Disconnected gyro, using kinematics as fallback.", AlertType.kError);
@@ -107,6 +108,14 @@ public class Drive extends SubsystemBase {
           DriveConstants.AUTO_ALIGN_DRIVE_KD);
 
   public boolean useVision = true;
+
+  private boolean lastDisabled;
+
+  private Module[] realModules;
+  private Module[] simModules;
+
+  private GyroIO realGyro;
+  private GyroIO simGyro;
 
   public Drive(
       GyroIO gyroIO,
@@ -159,10 +168,40 @@ public class Drive extends SubsystemBase {
             new SysIdRoutine.Mechanism(
                 (voltage) -> runCharacterization(voltage.in(Volts)), null, this));
     autoTurnController.enableContinuousInput(-Math.PI, Math.PI);
+
+    if (Constants.currentMode == Mode.REAL) {
+      SmartDashboard.putBoolean("Drive Disabled", false);
+      lastDisabled = false;
+      for (int i = 0; i < 4; i++) {
+        realModules[i] = modules[i];
+      }
+      simModules =
+          new Module[] {
+            new Module(new ModuleIOSim(TunerConstants.FrontLeft), 0, TunerConstants.FrontLeft),
+            new Module(new ModuleIOSim(TunerConstants.FrontRight), 1, TunerConstants.FrontRight),
+            new Module(new ModuleIOSim(TunerConstants.BackLeft), 2, TunerConstants.BackLeft),
+            new Module(new ModuleIOSim(TunerConstants.BackRight), 3, TunerConstants.BackRight)
+          };
+      realGyro = gyroIO;
+      simGyro = new GyroIO();
+    }
   }
 
   @Override
   public void periodic() {
+    if (Constants.currentMode == Mode.REAL) {
+      if (SmartDashboard.getBoolean("Drive Disabled", false) == true) {
+        if (lastDisabled == false) {
+          lastDisabled = true;
+          changeIO(simModules, simGyro);
+        }
+      } else {
+        if (lastDisabled == true) {
+          lastDisabled = false;
+          changeIO(realModules, realGyro);
+        }
+      }
+    }
     odometryLock.lock(); // Prevents odometry updates while reading data
     gyroIO.updateInputs(gyroInputs);
     Logger.processInputs("Drive/Gyro", gyroInputs);
@@ -381,5 +420,12 @@ public class Drive extends SubsystemBase {
       new Translation2d(TunerConstants.BackLeft.LocationX, TunerConstants.BackLeft.LocationY),
       new Translation2d(TunerConstants.BackRight.LocationX, TunerConstants.BackRight.LocationY)
     };
+  }
+
+  public void changeIO(Module[] modules, GyroIO gyro) {
+    for (int i = 0; i < 4; i++) {
+      this.modules[i] = modules[i];
+    }
+    this.gyroIO = gyro;
   }
 }
