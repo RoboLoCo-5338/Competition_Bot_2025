@@ -77,7 +77,8 @@ public class Arm extends SubsystemBase implements SysIDSubsystem {
                 .or(
                     () ->
                         Math.abs((inputs.armPosition - position))
-                            < ArmConstants.POSITION_TOLERANCE)).withName("Set Arm Position");
+                            < ArmConstants.POSITION_TOLERANCE))
+        .withName("Set Arm Position");
   }
 
   /**
