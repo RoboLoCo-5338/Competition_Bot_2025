@@ -4,6 +4,7 @@ import static edu.wpi.first.units.Units.Seconds;
 
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.units.measure.Time;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.simulation.DriverStationSim;
 import edu.wpi.first.wpilibj.simulation.SimHooks;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -42,6 +43,7 @@ public class UnitTestingUtil {
     for (int i = 0; i < ticks; i++) {
       CommandScheduler.getInstance().run();
       SimHooks.stepTiming(TICK_RATE.in(Seconds));
+      Timer.delay(0.02); // TODO: Figure out how to remove this without upsetting ctre
     }
   }
 
