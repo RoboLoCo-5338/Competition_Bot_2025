@@ -22,6 +22,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Voltage;
 import frc.robot.subsystems.arm.ArmConstants.ArmSimConstants;
 import java.util.function.DoubleSupplier;
+import org.littletonrobotics.junction.Logger;
 
 public class ArmIOSpark extends ArmIO {
 
@@ -128,6 +129,7 @@ public class ArmIOSpark extends ArmIO {
     ifOk(armMotor, armMotor::getMotorTemperature, (value) -> inputs.armTemperature = value);
 
     inputs.armConnected = armConnectedDebouncer.calculate(!sparkStickyFault);
+    System.out.println(inputs.velocity);
   }
 
   @Override
@@ -142,6 +144,7 @@ public class ArmIOSpark extends ArmIO {
         feedforward.calculate(
             Units.rotationsToRadians(armEncoder.getPosition()),
             Units.rotationsPerMinuteToRadiansPerSecond(velocity));
+    Logger.recordOutput("ffvolts", ffvolts);
     armClosedLoopController.setReference(
         velocity, ControlType.kVelocity, ClosedLoopSlot.kSlot1, ffvolts, ArbFFUnits.kVoltage);
   }

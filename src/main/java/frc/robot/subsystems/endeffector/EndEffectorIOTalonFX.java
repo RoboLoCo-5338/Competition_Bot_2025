@@ -92,6 +92,7 @@ public class EndEffectorIOTalonFX extends EndEffectorIO {
     var currentConfig = new CurrentLimitsConfigs();
     currentConfig.StatorCurrentLimit = EndEffectorConstants.EFFECTOR_CURRENT_LIMIT;
     config.CurrentLimits = currentConfig;
+    config.Feedback.SensorToMechanismRatio = EndEffectorConstants.GEARING;
     return config;
   }
 
@@ -117,8 +118,7 @@ public class EndEffectorIOTalonFX extends EndEffectorIO {
 
   @Override
   public void setEndEffectorVelocity(double velocity) {
-    endEffectorMotor.setControl(
-        endEffectorVelocityRequest.withVelocity(velocity * EndEffectorConstants.GEARING));
+    endEffectorMotor.setControl(endEffectorVelocityRequest.withVelocity(velocity));
   }
 
   @Override

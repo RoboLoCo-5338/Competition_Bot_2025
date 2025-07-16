@@ -107,6 +107,12 @@ public class EndEffectorIOSim extends EndEffectorIOTalonFX implements SimMechani
             }
             : new Pose3d[0]);
     super.updateInputs(inputs);
+    // System.out.println(
+    //     "End Effector Velocity: "
+    //         + physicsSim.getAngularVelocityRPM() / 60
+    //         + " "
+    //         + inputs.velocity
+    //         + " rps");
   }
 
   @Override

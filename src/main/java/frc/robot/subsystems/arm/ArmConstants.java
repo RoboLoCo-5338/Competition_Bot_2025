@@ -1,7 +1,6 @@
 package frc.robot.subsystems.arm;
 
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 
 public final class ArmConstants {
   public static final int ARM_MOTOR_ID = 44;
@@ -20,8 +19,9 @@ public final class ArmConstants {
 
   public static final class ArmSimConstants {
     public static final double LENGTH = Units.inchesToMeters(21.8);
-    public static final double MOI =
-        SingleJointedArmSim.estimateMOI(ArmSimConstants.LENGTH, Units.lbsToKilograms(3.9));
+    public static final double MOI = 0.1357; //TODO: this value makes the arm work, need to verify that it is close to the real value
+    // SingleJointedArmSim.estimateMOI(ArmSimConstants.LENGTH, Units.lbsToKilograms(4.4));
+
     public static final double GEARING = 50;
     public static final double MIN_ANGLE = Units.degreesToRadians(-103);
     public static final double MAX_ANGLE = Units.degreesToRadians(90);

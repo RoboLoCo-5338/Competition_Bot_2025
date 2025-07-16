@@ -6,7 +6,7 @@ import com.revrobotics.sim.SparkAbsoluteEncoderSim;
 import com.revrobotics.sim.SparkFlexSim;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
@@ -35,6 +35,7 @@ public class ArmIOSim extends ArmIOSpark implements SimMechanism {
 
   public ArmIOSim(LoggedMechanismLigament2d endEffector) {
     super();
+    System.out.println(ArmSimConstants.MOI);
     armSim = new SparkFlexSim(armMotor, armGearBox);
     armEncoderSim = armSim.getAbsoluteEncoderSim();
     armDrawn =
@@ -53,12 +54,16 @@ public class ArmIOSim extends ArmIOSpark implements SimMechanism {
 
   @Override
   public void updateInputs(ArmIOInputsAutoLogged inputs) {
-    armPhysicsSim.setInputVoltage(armSim.getAppliedOutput() * RobotController.getBatteryVoltage());
+    armPhysicsSim.setInputVoltage(armSim.getAppliedOutput() * RoboRioSim.getVInVoltage());
     armPhysicsSim.update(0.02);
+    armEncoderSim.iterate(
+        Units.radiansPerSecondToRotationsPerMinute( // motor velocity, in RPM
+            armPhysicsSim.getVelocityRadPerSec()),
+        0.02);
     armSim.iterate(
         Units.radiansPerSecondToRotationsPerMinute( // motor velocity, in RPM
             armPhysicsSim.getVelocityRadPerSec()),
-        RobotController.getBatteryVoltage(),
+        RoboRioSim.getVInVoltage(),
         0.02);
 
     armEncoderSim.setPosition(

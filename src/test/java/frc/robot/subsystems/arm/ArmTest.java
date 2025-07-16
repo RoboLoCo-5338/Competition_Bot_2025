@@ -1,5 +1,8 @@
 // package frc.robot.subsystems.arm;
 
+// import static edu.wpi.first.units.Units.Seconds;
+
+// import edu.wpi.first.math.util.Units;
 // import frc.robot.UnitTestingUtil;
 // import frc.robot.subsystems.arm.ArmConstants.ArmPresetConstants;
 // import org.junit.jupiter.api.AfterEach;
@@ -23,7 +26,22 @@
 
 //   @Test
 //   // TODO: Implement velocity test after fixing velocity overshoot
-//   void velocityTest() {}
+//   void velocityTest() {
+//     System.out.println("Starting Velocity Test");
+//     System.out.println("Checking Intake");
+//     arm.setArmVelocity(() -> Units.radiansPerSecondToRotationsPerMinute(7 * Math.PI)).schedule();
+//     UnitTestingUtil.fastForward(Seconds.of(0.5));
+//     assert Math.abs(arm.input.velocity - Units.radiansPerSecondToRotationsPerMinute(7 * Math.PI))
+//             < 0.01
+//         : "Arm did not reach intake velocity";
+//     System.out.println("Checking Outtake");
+//     arm.setArmVelocity(() -> -Units.radiansPerSecondToRotationsPerMinute(7 * Math.PI)).schedule();
+//     UnitTestingUtil.fastForward(Seconds.of(2));
+//     assert Math.abs(arm.input.velocity + Units.radiansPerSecondToRotationsPerMinute(7 * Math.PI))
+//             < 0.01
+//         : "Arm did not reach outtake velocity";
+//     System.out.println("Velocity test completed successfully");
+//   }
 
 //   @Test
 //   void positionTest() {

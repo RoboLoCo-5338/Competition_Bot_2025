@@ -216,6 +216,7 @@ public class ElevatorIOTalonFX extends ElevatorIO {
   public void setElevatorVelocity(double velocity) {
     elevator1VelocityRequest.FeedForward =
         ElevatorConstants.ElevatorVelocityConstants.ELEVATOR_FEEDFORWARD;
+    // System.out.println(velocity + " " + velocity / ElevatorConstants.METERS_PER_ROTATION);
     elevatorMotor1.setControl(
         elevator1VelocityRequest
             .withVelocity(velocity / ElevatorConstants.METERS_PER_ROTATION)
