@@ -10,7 +10,6 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
@@ -28,7 +27,7 @@ import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoralOnFly;
 import org.littletonrobotics.junction.Logger;
 
-public class EndEffectorIOSim implements SimMechanism, EndEffectorIO {
+public class EndEffectorIOSim extends EndEffectorIOTalonFX implements SimMechanism {
   TalonFXSimState simMotor = endEffectorMotor.getSimState();
   FlywheelSim physicsSim =
       new FlywheelSim(
@@ -43,7 +42,6 @@ public class EndEffectorIOSim implements SimMechanism, EndEffectorIO {
   public EndEffectorIOSim(
       SwerveDriveSimulation driveSim, Supplier<Pose3d> coralPoseSupplier, BooleanSupplier stowed) {
     initSimVoltage();
-    endEffectorMotor.getConfigurator().apply(getEndEffectorConfiguration());
     // this.intakeSim =
     //     IntakeSimulation.InTheFrameIntake("Coral", driveSim, Inches.of(34), IntakeSide.BACK, 1);
     this.intakeSim =
@@ -84,7 +82,7 @@ public class EndEffectorIOSim implements SimMechanism, EndEffectorIO {
                               driveSim.getDriveTrainSimulatedChassisSpeedsFieldRelative(),
                               driveSim.getGyroSimulation().getGyroReading(),
                               Meters.of(coralPoseSupplier.get().getZ()),
-                              MetersPerSecond.of(5 * Math.signum(getEndEffectorVelocity())),
+                              MetersPerSecond.of(5 * Math.signum(physicsSim.getAngularVelocityRadPerSec())),
                               coralPoseSupplier.get().getRotation().getMeasureY()));
                 }));
     intakeSim.addGamePieceToIntake();
@@ -104,11 +102,9 @@ public class EndEffectorIOSim implements SimMechanism, EndEffectorIO {
     simMotor.setSupplyVoltage(RobotController.getBatteryVoltage());
     physicsSim.setInputVoltage(simMotor.getMotorVoltage());
 
-    inputs.endEffectorConnected = true;
-    inputs.endEffectorVelocity = Units.radiansToRotations(physicsSim.getAngularVelocityRadPerSec());
-    inputs.endEffectorPosition = endEffectorMotor.getPosition().getValueAsDouble();
-    inputs.endEffectorAppliedVolts = physicsSim.getInputVoltage();
-    inputs.endEffectorCurrentAmps = physicsSim.getCurrentDrawAmps();
+    Logger.recordOutput("EndEffector/endEffectorVelocity", physicsSim.getAngularVelocityRPM());
+    Logger.recordOutput("EndEffector/endEffectorAppliedVolts", physicsSim.getInputVoltage());
+    Logger.recordOutput("EndEffector/endEffectorCurrentAmps", physicsSim.getCurrentDrawAmps());
 
     physicsSim.update(0.02);
 
@@ -129,44 +125,14 @@ public class EndEffectorIOSim implements SimMechanism, EndEffectorIO {
                   .plus(new Transform3d(new Pose3d(), coralPoseSupplier.get()))
             }
             : new Pose3d[0]);
-  }
 
-  @Override
-  public void setEndEffectorVelocity(double velocity) {
-    endEffectorMotor.setControl(
-        endEffectorVelocityRequest.withVelocity(velocity * EndEffectorConstants.GEARING));
-  }
-
-  @Override
-  public void setEndEffectorSpeed(double speed) {
-    endEffectorMotor.set(speed * EndEffectorConstants.GEARING);
+    super.updateInputs(inputs);
   }
 
   @Override
   public double[] getCurrents() {
     return new double[] {physicsSim.getCurrentDrawAmps()};
   }
-
-  @Override
-  public void endEffectorOpenLoop(Voltage voltage) {
-    endEffectorMotor.setVoltage(voltage.magnitude());
-  }
-
-  @Override
-  public double getEndEffectorVelocity() {
-    return physicsSim.getAngularVelocityRadPerSec();
-  }
-
-  @Override
-  public int getLaserCanMeasurement1() {
-    return (coralState == CoralState.EFFECTOR) ? 0 : 230;
-  }
-
-  @Override
-  public int getLaserCanMeasurement2() {
-    return (coralState == CoralState.EFFECTOR) ? 0 : 230;
-  }
-
   enum CoralState {
     FUNNEL,
     EFFECTOR,

@@ -25,9 +25,16 @@ import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 import frc.robot.Constants;
 import frc.robot.generated.TunerConstants;
+import java.util.Queue;
 
-public abstract class ModuleIOTalonFX implements ModuleIO {
-  protected final SwerveModuleConstants<
+/**
+ * Module IO implementation for Talon FX drive motor controller, Talon FX turn motor controller, and
+ * CANcoder. Configured using a set of module constants from Phoenix.
+ *
+ * <p>Device configuration and other behaviors not exposed by TunerConstants can be customized here.
+ */
+public class ModuleIOTalonFX extends ModuleIO {
+  private final SwerveModuleConstants<
           TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration>
       constants;
 
