@@ -3,10 +3,9 @@ package frc.robot.opponentsimulation;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-
 import java.util.function.BooleanSupplier;
-
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SelfControlledSwerveDriveSimulation;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
@@ -24,21 +23,21 @@ public abstract class OpponentRobot {
       };
 
   private final SelfControlledSwerveDriveSimulation driveSimulation;
-  private final Pose2d queeningPose;
   private final int id;
-  private final Mode mode;
+  private Mode mode;
   public final Alliance alliance;
 
   public OpponentRobot(int id, DriveTrainSimulationConfig config, Alliance alliance) {
     this.id = id;
-    this.queeningPose = ROBOT_QUEENING_POSITIONS[id];
     this.driveSimulation =
-        new SelfControlledSwerveDriveSimulation(new SwerveDriveSimulation(config, queeningPose));
+        new SelfControlledSwerveDriveSimulation(
+            new SwerveDriveSimulation(config, ROBOT_QUEENING_POSITIONS[id]));
 
     SimulatedArena.getInstance().addDriveTrainSimulation(driveSimulation.getDriveTrainSimulation());
 
     this.alliance = alliance;
     this.mode = Mode.Queening;
+    configureButtonBindings();
   }
 
   public enum Mode {
@@ -49,7 +48,24 @@ public abstract class OpponentRobot {
   }
 
   public abstract void configureButtonBindings();
+
   public Trigger manualTrigger(BooleanSupplier condition) {
-    return new Trigger(condition).and(() -> mode==Mode.Manual);
+    return new Trigger(() -> mode == Mode.Manual).and(condition);
+  }
+
+  public void changeMode(Mode mode){
+    this.mode=mode;
+    switch (mode) {
+      case Queening:
+        resetRobot();
+        break;
+    
+      default:
+        break;
+    }
+  }
+
+  public void resetRobot() {
+    driveSimulation.setSimulationWorldPose(ROBOT_QUEENING_POSITIONS[id]);
   }
 }

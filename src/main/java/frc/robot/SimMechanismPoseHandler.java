@@ -1,7 +1,5 @@
 package frc.robot;
 
-import org.littletonrobotics.junction.AutoLogOutput;
-
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
@@ -16,22 +14,23 @@ import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.elevator.ElevatorConstants.ElevatorPresetConstants;
 import frc.robot.subsystems.endeffector.EndEffector;
 import frc.robot.subsystems.endeffector.EndEffectorConstants;
+import org.littletonrobotics.junction.AutoLogOutput;
 
 public class SimMechanismPoseHandler {
-    Drive drive;
-    Elevator elevator;
-    Arm arm;
-    EndEffector endEffector;
-    private static double last_roller_position = 0.0;
-    private static double time_elapsed = 0.0;
-    public SimMechanismPoseHandler(Drive drive, Elevator elevator, Arm arm, EndEffector endEffector) {
-        this.drive = drive;
-        this.elevator = elevator;
-        this.arm = arm;
-        this.endEffector = endEffector;
-    }
-    
-  
+  Drive drive;
+  Elevator elevator;
+  Arm arm;
+  EndEffector endEffector;
+  private static double last_roller_position = 0.0;
+  private static double time_elapsed = 0.0;
+
+  public SimMechanismPoseHandler(Drive drive, Elevator elevator, Arm arm, EndEffector endEffector) {
+    this.drive = drive;
+    this.elevator = elevator;
+    this.arm = arm;
+    this.endEffector = endEffector;
+  }
+
   @AutoLogOutput(key = "Odometry/ElevatorStage1")
   public Pose3d getElevatorStage1SimPose() {
     return new Pose3d(
@@ -256,7 +255,7 @@ public class SimMechanismPoseHandler {
             drive.getModulePositions()[1].angle.getRadians()));
   }
 
-    public boolean stowed() {
+  public boolean stowed() {
     return Math.abs(arm.getArmPosition() - ArmPresetConstants.ARM_STOW_FINAL)
             < ArmConstants.POSITION_TOLERANCE
         && Math.abs(elevator.getElevatorPosition() - ElevatorPresetConstants.ELEVATOR_STOW)
