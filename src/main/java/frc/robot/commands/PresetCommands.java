@@ -14,7 +14,8 @@ import frc.robot.subsystems.endeffector.EndEffector;
 public class PresetCommands {
 
   public static Command endEffectorSet(EndEffector endEffector, Arm arm, double position) {
-    return arm.setArmPosition(position).onlyIf(() -> !(arm.getArmPosition() > position))
+    return arm.setArmPosition(position)
+        .onlyIf(() -> !(arm.getArmPosition() > position))
         .withName("endEffectorSet");
   }
 

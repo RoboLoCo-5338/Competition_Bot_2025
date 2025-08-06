@@ -85,6 +85,6 @@ public class EndEffector extends SubsystemBase implements SysIDSubsystem {
   }
 
   public double getEndEffectorVelocity() {
-    return io.getEndEffectorVelocity();
+    return inputs.endEffectorVelocity;
   }
 }

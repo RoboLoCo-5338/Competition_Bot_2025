@@ -13,10 +13,16 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.KilogramSquareMeters;
+import static edu.wpi.first.units.Units.Kilograms;
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.Volts;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.XboxController;
@@ -63,7 +69,10 @@ import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOPhotonVision;
 import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
 import org.ironmaple.simulation.SimulatedArena;
+import org.ironmaple.simulation.drivesims.COTS;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
+import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
+import org.ironmaple.simulation.drivesims.configs.SwerveModuleSimulationConfig;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -127,7 +136,23 @@ public class RobotContainer {
       case SIM:
         // Sim robot, instantiate physics sim IO implementations
         driveSimulation =
-            new SwerveDriveSimulation(Drive.mapleSimConfig, new Pose2d(3, 3, new Rotation2d()));
+            new SwerveDriveSimulation(
+                DriveTrainSimulationConfig.Default() // TODO: update with real values
+                    .withRobotMass(Kilograms.of(Drive.ROBOT_MASS_KG))
+                    .withCustomModuleTranslations(Drive.getModuleTranslations())
+                    .withGyro(COTS.ofPigeon2())
+                    .withSwerveModule(
+                        new SwerveModuleSimulationConfig(
+                            DCMotor.getKrakenX60(1),
+                            DCMotor.getFalcon500(1),
+                            TunerConstants.FrontLeft.DriveMotorGearRatio,
+                            TunerConstants.FrontLeft.SteerMotorGearRatio,
+                            Volts.of(TunerConstants.FrontLeft.DriveFrictionVoltage),
+                            Volts.of(TunerConstants.FrontLeft.SteerFrictionVoltage),
+                            Meters.of(TunerConstants.FrontLeft.WheelRadius),
+                            KilogramSquareMeters.of(TunerConstants.FrontLeft.SteerInertia),
+                            Drive.WHEEL_COF)),
+                new Pose2d(3, 3, new Rotation2d()));
         SimulatedArena.getInstance().addDriveTrainSimulation(driveSimulation);
         drive =
             new Drive(
@@ -158,16 +183,22 @@ public class RobotContainer {
       default:
         // Replayed robot, disable IO implementations
         drive =
-            new Drive(new GyroIO(), new ModuleIO(), new ModuleIO(), new ModuleIO(), new ModuleIO(),
+            new Drive(
+                new GyroIO(),
+                new ModuleIO(),
+                new ModuleIO(),
+                new ModuleIO(),
+                new ModuleIO(),
                 (pose) -> {});
 
         led = new LED();
         endEffector = new EndEffector(new EndEffectorIO());
         elevator = new Elevator(new ElevatorIO());
         arm = new Arm(new ArmIO());
-        vision = new Vision(drive::addVisionMeasurement, new VisionIO(), new VisionIO());
+        vision = new Vision(drive::accept, new VisionIO(), new VisionIO());
         break;
     }
+    poseHandler = new SimMechanismPoseHandler(drive, elevator, arm, endEffector);
 
     // Set up commands for auto
     NamedCommands.registerCommand("L4 Preset", PresetCommands.presetL4(elevator, endEffector, arm));

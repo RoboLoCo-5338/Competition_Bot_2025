@@ -3,7 +3,6 @@ package frc.robot.opponentsimulation;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import java.util.function.BooleanSupplier;
 import org.ironmaple.simulation.SimulatedArena;
@@ -53,13 +52,13 @@ public abstract class OpponentRobot {
     return new Trigger(() -> mode == Mode.Manual).and(condition);
   }
 
-  public void changeMode(Mode mode){
-    this.mode=mode;
+  public void changeMode(Mode mode) {
+    this.mode = mode;
     switch (mode) {
       case Queening:
         resetRobot();
         break;
-    
+
       default:
         break;
     }

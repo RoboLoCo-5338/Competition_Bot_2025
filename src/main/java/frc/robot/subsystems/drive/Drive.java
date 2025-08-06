@@ -75,9 +75,9 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
               Math.hypot(TunerConstants.BackRight.LocationX, TunerConstants.BackRight.LocationY)));
 
   // PathPlanner config constants
-  private static final double ROBOT_MASS_KG = 74.088; // TODO: changing these breaks the sim
-  private static final double ROBOT_MOI = 6.883;
-  private static final double WHEEL_COF = 1.2;
+  public static final double ROBOT_MASS_KG = 74.088; // TODO: changing these breaks the sim
+  public static final double ROBOT_MOI = 6.883;
+  public static final double WHEEL_COF = 1.2;
   private static final RobotConfig PP_CONFIG =
       new RobotConfig(
           ROBOT_MASS_KG,
@@ -93,7 +93,7 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
           getModuleTranslations());
 
   public static final DriveTrainSimulationConfig mapleSimConfig =
-      DriveTrainSimulationConfig.Default()
+      DriveTrainSimulationConfig.Default() // TODO: update with real values
           .withRobotMass(Kilograms.of(ROBOT_MASS_KG))
           .withCustomModuleTranslations(getModuleTranslations())
           .withGyro(COTS.ofPigeon2())

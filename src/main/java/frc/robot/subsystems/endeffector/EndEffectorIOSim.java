@@ -82,7 +82,8 @@ public class EndEffectorIOSim extends EndEffectorIOTalonFX implements SimMechani
                               driveSim.getDriveTrainSimulatedChassisSpeedsFieldRelative(),
                               driveSim.getGyroSimulation().getGyroReading(),
                               Meters.of(coralPoseSupplier.get().getZ()),
-                              MetersPerSecond.of(5 * Math.signum(physicsSim.getAngularVelocityRadPerSec())),
+                              MetersPerSecond.of(
+                                  5 * Math.signum(physicsSim.getAngularVelocityRadPerSec())),
                               coralPoseSupplier.get().getRotation().getMeasureY()));
                 }));
     intakeSim.addGamePieceToIntake();
@@ -133,6 +134,7 @@ public class EndEffectorIOSim extends EndEffectorIOTalonFX implements SimMechani
   public double[] getCurrents() {
     return new double[] {physicsSim.getCurrentDrawAmps()};
   }
+
   enum CoralState {
     FUNNEL,
     EFFECTOR,

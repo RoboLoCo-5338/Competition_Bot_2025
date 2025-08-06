@@ -340,17 +340,17 @@ public class DriveCommands {
       Direction direction,
       LED led) {
     return new DeferredCommand(
-            () -> {
-              Pose2d targetPose = destination.get().getTargetPosition();
-              Logger.recordOutput("Path to Destination", drive.getPose().log(targetPose));
+        () -> {
+          Pose2d targetPose = destination.get().getTargetPosition();
+          Logger.recordOutput("Path to Destination", drive.getPose().log(targetPose));
 
-              return new Command() {
+          return new Command() {
 
-                @Override
-                public void initialize() {
-                  drive.autoXDriveController.reset();
-                  drive.autoYDriveController.reset();
-                  drive.autoTurnController.reset();
+            @Override
+            public void initialize() {
+              drive.autoXDriveController.reset();
+              drive.autoYDriveController.reset();
+              drive.autoTurnController.reset();
 
               drive.autoXDriveController.setTolerance(0.01);
               drive.autoYDriveController.setTolerance(0.01);
@@ -383,12 +383,12 @@ public class DriveCommands {
                       drive.getPose().getRotation()));
             }
 
-                @Override
-                public boolean isFinished() {
-                  return (drive.autoXDriveController.atSetpoint()
-                      && drive.autoYDriveController.atSetpoint()
-                      && drive.autoTurnController.atSetpoint());
-                }
+            @Override
+            public boolean isFinished() {
+              return (drive.autoXDriveController.atSetpoint()
+                  && drive.autoYDriveController.atSetpoint()
+                  && drive.autoTurnController.atSetpoint());
+            }
 
             @Override
             public void end(boolean interrupted) {

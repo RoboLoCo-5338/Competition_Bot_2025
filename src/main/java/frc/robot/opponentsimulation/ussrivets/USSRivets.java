@@ -1,7 +1,13 @@
 package frc.robot.opponentsimulation.ussrivets;
 
+import static edu.wpi.first.units.Units.KilogramSquareMeters;
+import static edu.wpi.first.units.Units.Kilograms;
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.Volts;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -32,7 +38,10 @@ import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionConstants;
 import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
 import org.ironmaple.simulation.SimulatedArena;
+import org.ironmaple.simulation.drivesims.COTS;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
+import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
+import org.ironmaple.simulation.drivesims.configs.SwerveModuleSimulationConfig;
 
 public class USSRivets extends OpponentRobot {
   private final Drive drive;
@@ -49,11 +58,44 @@ public class USSRivets extends OpponentRobot {
 
   public USSRivets(
       int id, Alliance alliance, int driverControllerPort, int operatorControllerPort) {
-    super(id, Drive.mapleSimConfig, alliance);
+    super(
+        id,
+        DriveTrainSimulationConfig.Default() // TODO: update with real values
+            .withRobotMass(Kilograms.of(Drive.ROBOT_MASS_KG))
+            .withCustomModuleTranslations(Drive.getModuleTranslations())
+            .withGyro(COTS.ofPigeon2())
+            .withSwerveModule(
+                new SwerveModuleSimulationConfig(
+                    DCMotor.getKrakenX60(1),
+                    DCMotor.getFalcon500(1),
+                    TunerConstants.FrontLeft.DriveMotorGearRatio,
+                    TunerConstants.FrontLeft.SteerMotorGearRatio,
+                    Volts.of(TunerConstants.FrontLeft.DriveFrictionVoltage),
+                    Volts.of(TunerConstants.FrontLeft.SteerFrictionVoltage),
+                    Meters.of(TunerConstants.FrontLeft.WheelRadius),
+                    KilogramSquareMeters.of(TunerConstants.FrontLeft.SteerInertia),
+                    Drive.WHEEL_COF)),
+        alliance);
 
     // Sim robot, instantiate physics sim IO implementations
     driveSimulation =
-        new SwerveDriveSimulation(Drive.mapleSimConfig, new Pose2d(3, 3, new Rotation2d()));
+        new SwerveDriveSimulation(
+            DriveTrainSimulationConfig.Default() // TODO: update with real values
+                .withRobotMass(Kilograms.of(Drive.ROBOT_MASS_KG))
+                .withCustomModuleTranslations(Drive.getModuleTranslations())
+                .withGyro(COTS.ofPigeon2())
+                .withSwerveModule(
+                    new SwerveModuleSimulationConfig(
+                        DCMotor.getKrakenX60(1),
+                        DCMotor.getFalcon500(1),
+                        TunerConstants.FrontLeft.DriveMotorGearRatio,
+                        TunerConstants.FrontLeft.SteerMotorGearRatio,
+                        Volts.of(TunerConstants.FrontLeft.DriveFrictionVoltage),
+                        Volts.of(TunerConstants.FrontLeft.SteerFrictionVoltage),
+                        Meters.of(TunerConstants.FrontLeft.WheelRadius),
+                        KilogramSquareMeters.of(TunerConstants.FrontLeft.SteerInertia),
+                        Drive.WHEEL_COF)),
+            new Pose2d(3, 3, new Rotation2d()));
     SimulatedArena.getInstance().addDriveTrainSimulation(driveSimulation);
     drive =
         new Drive(
