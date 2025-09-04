@@ -3,18 +3,18 @@ package frc.robot.subsystems.elevator;
 import com.ctre.phoenix6.sim.ChassisReference;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import frc.robot.Constants;
 import frc.robot.subsystems.SimMechanism;
 import frc.robot.subsystems.elevator.ElevatorConstants.ElevatorSimConstants;
 import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.mechanism.LoggedMechanism2d;
 import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d;
 import org.littletonrobotics.junction.mechanism.LoggedMechanismRoot2d;
 
-public class ElevatorIOSim extends SimMechanism implements ElevatorIO {
+public class ElevatorIOSim extends ElevatorIOTalonFX implements SimMechanism {
   TalonFXSimState motor1Sim = elevatorMotor1.getSimState();
   TalonFXSimState motor2Sim = elevatorMotor2.getSimState();
   ElevatorSim physicsSim =
@@ -38,9 +38,8 @@ public class ElevatorIOSim extends SimMechanism implements ElevatorIO {
 
   public ElevatorIOSim() {
     super();
-    elevatorMotor1.getConfigurator().apply(getConfiguration(1));
-    elevatorMotor2.getConfigurator().apply(getConfiguration(2));
     motor2Sim.Orientation = ChassisReference.Clockwise_Positive;
+    initSimVoltage();
   }
 
   @Override
@@ -50,17 +49,15 @@ public class ElevatorIOSim extends SimMechanism implements ElevatorIO {
 
     physicsSim.setInputVoltage((motor1Sim.getMotorVoltage() + motor2Sim.getMotorVoltage()) / 2);
 
-    inputs.elevator1Connected = true;
-    inputs.elevator1Position = physicsSim.getPositionMeters();
-    inputs.elevator1Velocity = physicsSim.getVelocityMetersPerSecond();
-    inputs.elevator1AppliedVolts = motor1Sim.getMotorVoltage();
-    inputs.elevator1CurrentAmps = motor2Sim.getSupplyCurrent();
+    Logger.recordOutput("Elevator/elevator1Position", physicsSim.getPositionMeters());
+    Logger.recordOutput("Elevator/elevator1Velocity", physicsSim.getVelocityMetersPerSecond());
+    Logger.recordOutput("Elevator/elevator1AppliedVolts", motor1Sim.getMotorVoltage());
+    Logger.recordOutput("Elevator/elevator1CurrentAmps", motor2Sim.getSupplyCurrent());
 
-    inputs.elevator2Connected = true;
-    inputs.elevator2Position = physicsSim.getPositionMeters();
-    inputs.elevator2Velocity = physicsSim.getVelocityMetersPerSecond();
-    inputs.elevator2AppliedVolts = motor2Sim.getMotorVoltage();
-    inputs.elevator2CurrentAmps = motor2Sim.getSupplyCurrent();
+    Logger.recordOutput("Elevator/elevator2Position", physicsSim.getPositionMeters());
+    Logger.recordOutput("Elevator/elevator2Velocity", physicsSim.getVelocityMetersPerSecond());
+    Logger.recordOutput("Elevator/elevator2AppliedVolts", motor2Sim.getMotorVoltage());
+    Logger.recordOutput("Elevator/elevator2CurrentAmps", motor2Sim.getSupplyCurrent());
 
     physicsSim.update(0.02);
 
@@ -74,22 +71,8 @@ public class ElevatorIOSim extends SimMechanism implements ElevatorIO {
         physicsSim.getVelocityMetersPerSecond() / ElevatorSimConstants.METERS_PER_ROTATION);
 
     elevator.setLength(physicsSim.getPositionMeters());
-  }
 
-  @Override
-  public void setElevatorVelocity(double velocity) {
-    elevatorMotor1.setControl(
-        elevator1VelocityRequest.withVelocity(velocity / ElevatorSimConstants.METERS_PER_ROTATION));
-    elevatorMotor2.setControl(
-        elevator2VelocityRequest.withVelocity(velocity / ElevatorSimConstants.METERS_PER_ROTATION));
-  }
-
-  @Override
-  public void setElevatorPosition(double position, int slot) {
-    elevatorMotor1.setControl(
-        elevator1PositionRequest.withPosition(position / ElevatorSimConstants.METERS_PER_ROTATION));
-    elevatorMotor2.setControl(
-        elevator2PositionRequest.withPosition(position / ElevatorSimConstants.METERS_PER_ROTATION));
+    super.updateInputs(inputs);
   }
 
   @Override
@@ -99,10 +82,5 @@ public class ElevatorIOSim extends SimMechanism implements ElevatorIO {
 
   public LoggedMechanismLigament2d getLigamentEnd() {
     return elevator;
-  }
-
-  @Override
-  public void elevatorOpenLoop(Voltage voltage) {
-    elevatorMotor1.setVoltage(voltage.magnitude());
   }
 }

@@ -7,6 +7,7 @@ import edu.wpi.first.units.measure.Velocity;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -50,14 +51,18 @@ public class EndEffector extends SubsystemBase implements SysIDSubsystem {
 
   public Command setEndEffectorVelocity(double velocity) {
     return new InstantCommand(
-        () -> {
-          io.setEndEffectorVelocity(velocity);
-        },
-        this);
+            () -> {
+              SmartDashboard.putNumber("OuttakingTime", System.currentTimeMillis());
+              io.setEndEffectorVelocity(velocity);
+            },
+            this)
+        .withName("Set End Effector Velocity");
   }
 
   public Command setEndEffectorSpeed(double speed) {
-    return new InstantCommand(() -> io.setEndEffectorSpeed(speed));
+    SmartDashboard.putNumber("IsOuttaking", System.currentTimeMillis());
+    return new InstantCommand(() -> io.setEndEffectorSpeed(speed))
+        .withName("Set End Effector Speed");
   }
 
   public EndEffectorIO getIO() {
@@ -65,11 +70,11 @@ public class EndEffector extends SubsystemBase implements SysIDSubsystem {
   }
 
   public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
-    return sysIdRoutine.quasistatic(direction);
+    return sysIdRoutine.quasistatic(direction).withName("SysId Quasistatic");
   }
 
   public Command sysIdDynamic(SysIdRoutine.Direction direction) {
-    return sysIdRoutine.dynamic(direction);
+    return sysIdRoutine.dynamic(direction).withName("SysId Dynamic");
   }
 
   @Override
