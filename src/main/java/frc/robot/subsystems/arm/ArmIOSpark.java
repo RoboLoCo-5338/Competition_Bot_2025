@@ -16,6 +16,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.function.DoubleSupplier;
+import org.littletonrobotics.junction.Logger;
 
 public class ArmIOSpark implements ArmIO {
 
@@ -68,7 +69,8 @@ public class ArmIOSpark implements ArmIO {
 
     double ffvolts =
         feedforward.calculate((armEncoder.getPosition()) * 2 * Math.PI, velocityRadPerSec);
-
+    Logger.recordOutput(
+        "ArmVelocitySetpoint", Units.radiansPerSecondToRotationsPerMinute(velocityRadPerSec));
     armClosedLoopController.setReference(
         Units.radiansPerSecondToRotationsPerMinute(velocityRadPerSec),
         ControlType.kVelocity,

@@ -2,6 +2,8 @@ package frc.robot.subsystems.endeffector;
 
 import static frc.robot.util.PhoenixUtil.tryUntilOk;
 
+import org.littletonrobotics.junction.Logger;
+
 import au.grapplerobotics.LaserCan;
 import au.grapplerobotics.interfaces.LaserCanInterface.Measurement;
 import com.ctre.phoenix6.BaseStatusSignal;
@@ -91,6 +93,7 @@ public class EndEffectorIOTalonFX implements EndEffectorIO {
 
   @Override
   public void setEndEffectorVelocity(double velocity) {
+    Logger.recordOutput("EndEffectorVelocitySetpoint", velocity);
     endEffectorMotor.setControl(
         endEffectorVelocityRequest.withVelocity(velocity * EndEffectorSimConstants.GEARING));
   }
