@@ -275,7 +275,7 @@ public class Drive extends SubsystemBase implements SysIDSubsystem {
     return run(() -> runCharacterization(0.0))
         .withTimeout(1.0)
         .andThen(sysId.quasistatic(direction))
-        .withName("SysId Quasistatic Command");
+        .withName("SysId Quasistatic");
   }
 
   /** Returns a command to run a dynamic test in the specified direction. */
@@ -283,7 +283,7 @@ public class Drive extends SubsystemBase implements SysIDSubsystem {
     return run(() -> runCharacterization(0.0))
         .withTimeout(1.0)
         .andThen(sysId.dynamic(direction))
-        .withName("SysId Dynamic Command");
+        .withName("SysId Dynamic");
   }
 
   /** Returns the module states (turn angles and drive velocities) for all of the modules. */
