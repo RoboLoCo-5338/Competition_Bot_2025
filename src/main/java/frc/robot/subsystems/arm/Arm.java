@@ -69,7 +69,8 @@ public class Arm extends SubsystemBase implements SysIDSubsystem {
    * @return A command that sets the arm to the given velocity.
    */
   public Command setArmVelocity(DoubleSupplier velocity) {
-    return new InstantCommand(() -> io.setArmVelocity(velocity.getAsDouble()), this);
+    return new InstantCommand(() -> io.setArmVelocity(velocity.getAsDouble()), this)
+        .withName("Set Arm Velocity");
   }
 
   public DoubleSupplier getArmPosition() {
