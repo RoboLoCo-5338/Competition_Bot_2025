@@ -65,7 +65,7 @@ public class Elevator extends SubsystemBase implements SysIDSubsystem {
             () ->
                 Math.abs(position - inputs.elevator1Position)
                     < ElevatorConstants.POSITION_TOLERANCE)
-        .withName("Set Elevator Position");
+        .withName("Set Elevator Position=" + position);
   }
 
   public Command setElevatorVelocity(DoubleSupplier velocity) {
