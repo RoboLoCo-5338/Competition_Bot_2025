@@ -2,6 +2,7 @@ name: Format PR
 on: issue_comment
 permissions:
   contents: write
+  issues: write
 jobs:
   pr_commented:
     # This job only runs for pull request comments
@@ -33,3 +34,11 @@ jobs:
           git config --global user.email "$(git log -1 --pretty=format:'%ae')"
           git commit -am "Automated Spotless Apply"
           git push
+      - name: Add comment
+        run: gh issue comment "$NUMBER" --body "$BODY"
+        env:
+          GH_TOKEN: ${{ secrets.COMMENT_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          NUMBER: ${{ github.event.issue.number }}
+          BODY: >
+            PR Formatted!
