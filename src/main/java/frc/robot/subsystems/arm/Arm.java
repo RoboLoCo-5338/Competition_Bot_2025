@@ -80,7 +80,7 @@ public class Arm extends SubsystemBase implements SysIDSubsystem {
   }
 
   public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
-    return sysIdRoutine.quasistatic(direction).withName(" Arm SysId Quasistatic");
+    return sysIdRoutine.quasistatic(direction).withName("Arm SysId Quasistatic");
   }
 
   public Command sysIdDynamic(SysIdRoutine.Direction direction) {
