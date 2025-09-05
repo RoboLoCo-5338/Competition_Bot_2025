@@ -2,8 +2,6 @@ package frc.robot.subsystems.endeffector;
 
 import static frc.robot.util.PhoenixUtil.tryUntilOk;
 
-import org.littletonrobotics.junction.Logger;
-
 import au.grapplerobotics.LaserCan;
 import au.grapplerobotics.interfaces.LaserCanInterface.Measurement;
 import com.ctre.phoenix6.BaseStatusSignal;
@@ -23,6 +21,7 @@ import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.endeffector.EndEffectorConstants.EndEffectorSimConstants;
+import org.littletonrobotics.junction.Logger;
 
 public class EndEffectorIOTalonFX extends EndEffectorIO {
 
