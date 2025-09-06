@@ -7,22 +7,34 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Mechanism;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
+import frc.robot.subsystems.SysIDSubsystem;
 import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.Logger;
 
-public class Arm extends SubsystemBase {
+public class Arm extends SubsystemBase implements SysIDSubsystem {
 
   public final ArmIO io;
   public final ArmIOInputsAutoLogged inputs = new ArmIOInputsAutoLogged();
   public double armPosition;
+  private final SysIdRoutine sysIdRoutine;
 
   private final Alert armDisconnectedAlert =
       new Alert("Arm motor disconnected", AlertType.kWarning);
 
   public Arm(ArmIO io) {
     this.io = io;
+    this.sysIdRoutine =
+        new SysIdRoutine(
+            new SysIdRoutine.Config(
+                null,
+                null,
+                null,
+                (state) -> Logger.recordOutput("Arm/SysIdState", state.toString())),
+            new Mechanism(io::armOpenLoop, null, this));
   }
 
   @Override
@@ -47,7 +59,8 @@ public class Arm extends SubsystemBase {
   public Command setArmPosition(double position) {
     //runs setArmPosition and the .until() checks if the current armPosition is within the tolerance in order to end the command
     return new StartEndCommand(() -> io.setArmPosition(position), () -> io.setArmVelocity(0), this)
-        .until(() -> Math.abs((inputs.armPosition - position)) < ArmConstants.POSITION_TOLERANCE);
+        .until(() -> Math.abs((inputs.armPosition - position)) < ArmConstants.POSITION_TOLERANCE)
+        .withName("Set Arm Position");
   }
 
   /**
@@ -59,7 +72,8 @@ public class Arm extends SubsystemBase {
    * @return A command that sets the arm to the given velocity.
    */
   public Command setArmVelocity(DoubleSupplier velocity) {
-    return new InstantCommand(() -> io.setArmVelocity(velocity.getAsDouble()), this);
+    return new InstantCommand(() -> io.setArmVelocity(velocity.getAsDouble()), this)
+        .withName("Set Arm Velocity");
   }
 
   /**
@@ -71,5 +85,23 @@ public class Arm extends SubsystemBase {
     SmartDashboard.putNumber("Getting arm position in Arm.java", armPosition);
     SmartDashboard.putNumber("Getting in arm.java 2", io.getArmPosition(inputs));
     return () -> io.getArmPosition(inputs);
+  }
+
+  public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+    return sysIdRoutine.quasistatic(direction).withName("SysId Quasistatic");
+  }
+
+  public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+    return sysIdRoutine.dynamic(direction).withName("SysId Dynamic");
+  }
+
+  @Override
+  public SysIdRoutine getSysIdRoutine() {
+    return sysIdRoutine;
+  }
+
+  @Override
+  public String getName() {
+    return "Arm ";
   }
 }

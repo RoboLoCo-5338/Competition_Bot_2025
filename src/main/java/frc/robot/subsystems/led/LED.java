@@ -44,15 +44,16 @@ public class LED extends SubsystemBase {
    */
   public Command alignEndFlash(boolean canceled) {
     return new ScheduleCommand(
-        new SequentialCommandGroup(
-                turnColor(canceled ? Color.kRed : Color.kGreen).withTimeout(0.3),
-                turnOff(),
-                new WaitCommand(0.3),
-                turnColor(canceled ? Color.kRed : Color.kGreen).withTimeout(0.3),
-                turnOff(),
-                new WaitCommand(0.3),
-                turnColor(canceled ? Color.kRed : Color.kGreen))
-            .withTimeout(0.3));
+            new SequentialCommandGroup(
+                    turnColor(canceled ? Color.kRed : Color.kGreen).withTimeout(0.3),
+                    turnOff(),
+                    new WaitCommand(0.3),
+                    turnColor(canceled ? Color.kRed : Color.kGreen).withTimeout(0.3),
+                    turnOff(),
+                    new WaitCommand(0.3),
+                    turnColor(canceled ? Color.kRed : Color.kGreen))
+                .withTimeout(0.3))
+        .withName("Align End Flash");
   }
 
   /**
@@ -63,12 +64,13 @@ public class LED extends SubsystemBase {
     LEDPattern blue = LEDPattern.solid(Color.kBlue);
     LEDPattern pulsingBlue = blue.breathe(Seconds.of(5));
     return new RunCommand(
-      //continuously applies the pattern to the buffer
+          //continuously applies the pattern to the buffer
         () -> {
-          pulsingBlue.applyTo(buffer);
-          m_led.setData(buffer);
-        },
-        this);
+              pulsingBlue.applyTo(buffer);
+              m_led.setData(buffer);
+            },
+            this)
+        .withName("Pulse Blue");
   }
 
   /**
@@ -77,13 +79,14 @@ public class LED extends SubsystemBase {
    */
   public Command turnOff() {
     return new InstantCommand(
-      //makes the LED no color
+          //makes the LED no color
         () -> {
-          LEDPattern off = LEDPattern.kOff;
-          off.applyTo(buffer);
-          m_led.setData(buffer);
-        },
-        this);
+              LEDPattern off = LEDPattern.kOff;
+              off.applyTo(buffer);
+              m_led.setData(buffer);
+            },
+            this)
+        .withName("Turn Off");
   }
 
   /**
@@ -96,11 +99,12 @@ public class LED extends SubsystemBase {
     //makes the rainbow move along the strip 0.3 m/s
         rainbow.scrollAtAbsoluteSpeed(MetersPerSecond.of(0.3), LEDConstants.LED_SPACING);
     return new InstantCommand(
-        () -> {
-          scrollingRainbow.applyTo(buffer);
-          m_led.setData(buffer);
-        },
-        this);
+            () -> {
+              scrollingRainbow.applyTo(buffer);
+              m_led.setData(buffer);
+            },
+            this)
+        .withName("Go Rainbow");
   }
 
   /** Changes color
@@ -109,12 +113,13 @@ public class LED extends SubsystemBase {
   public Command turnColor(Color color) {
     //turns the color by continuously applying the color to the buffer
     return new RunCommand(
-        () -> {
-          LEDPattern colorPattern = LEDPattern.solid(color);
-          colorPattern.applyTo(buffer);
-          m_led.setData(buffer);
-        },
-        this);
+            () -> {
+              LEDPattern colorPattern = LEDPattern.solid(color);
+              colorPattern.applyTo(buffer);
+              m_led.setData(buffer);
+            },
+            this)
+        .withName("Turn Color");
   }
 
   /**

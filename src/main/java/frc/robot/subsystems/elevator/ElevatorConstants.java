@@ -15,7 +15,7 @@ public final class ElevatorConstants {
 
   public static final class ElevatorPositionConstants {
     public static final double ELEVATOR_FEEDFORWARD = 0.0;
-    public static final double ELEVATOR_MOTOR_kP = 1.2; // 0.3
+    public static final double ELEVATOR_MOTOR_kP = 3.7457; // 0.3
     public static final double ELEVATOR_MOTOR_kI = 0.03;
     public static final double ELEVATOR_MOTOR_kD = 0.013;
     public static final double ELEVATOR_MOTOR_kG = 0.5; // 0.5
@@ -52,8 +52,8 @@ public final class ElevatorConstants {
   }
 
   public static final class ElevatorPresetConstants {
-    public static final double ELEVATOR_L2 = 7.9;
-    public static final double ELEVATOR_L3 = 14.708;
+    public static final double ELEVATOR_L2 = 9.486;
+    public static final double ELEVATOR_L3 = 16.6;
     public static final double ELEVATOR_L4 = 19.40;
     public static final double ELEVATOR_NET = 16.486; // TODO: update
     public static final double ELEVATOR_L3_ALGAE = 0.0;

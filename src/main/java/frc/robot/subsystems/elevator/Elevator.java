@@ -3,16 +3,18 @@ package frc.robot.subsystems.elevator;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Mechanism;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
+import frc.robot.subsystems.SysIDSubsystem;
 import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.Logger;
 
-public class Elevator extends SubsystemBase {
+public class Elevator extends SubsystemBase implements SysIDSubsystem {
   public final ElevatorIO io;
   private final ElevatorIOInputsAutoLogged inputs = new ElevatorIOInputsAutoLogged();
   private double prevError = 0;
@@ -24,8 +26,18 @@ public class Elevator extends SubsystemBase {
   private final Alert elevator2DisconnectedAlert =
       new Alert("Elevator motor 1 disconnected", AlertType.kError);
 
+  private final SysIdRoutine sysIdRoutine;
+
   public Elevator(ElevatorIO io) {
     this.io = io;
+    this.sysIdRoutine =
+        new SysIdRoutine(
+            new SysIdRoutine.Config(
+                null,
+                null,
+                null,
+                (state) -> Logger.recordOutput("Elevator/SysIdState", state.toString())),
+            new Mechanism(io::elevatorOpenLoop, null, this));
   }
 
   /**
@@ -54,58 +66,8 @@ public class Elevator extends SubsystemBase {
         .until(
             () ->
                 Math.abs(position - inputs.elevator1Position)
-                    < ElevatorConstants.POSITION_TOLERANCE);
-  }
-
-  /**
-   * PID controller for the elevator. This function uses the laser can to measure the elevator's
-   * position and calculates the error, integral, and derivative of the error. It then applies the
-   * gains to the error, integral, and derivative to calculate the output velocity. The output
-   * velocity is then set on the elevator.
-   *
-   * @param position The desired position of the elevator.
-   */
-  private void elevatorPID(double position) {
-    double curPosition = io.getLaserCanMeasurement();
-    if (curPosition == -1) {
-      io.setElevatorVelocity(0);
-      return;
-    }
-    error = position - curPosition;
-    integral += error;
-    double derivative = error - prevError;
-    double output =
-        ElevatorConstants.ELEVATOR_kP_LASERCAN * error
-            + ElevatorConstants.ELEVATOR_kI_LASERCAN * integral
-            + ElevatorConstants.ELEVATOR_kD_LASERCAN * derivative;
-    //sets velocity based on calculations
-    io.setElevatorVelocity(output);
-  }
-  /**
-   * <p>I don't think this works</p>
-   * 
-   * Moves the elevator to the specified position using "PID control" 
-   * @param position desired position
-   * @return FunctionalCommand
-   */
-  public Command moveElevatorLaserCan(double position) {
-    return new FunctionalCommand(
-      //onInit
-        () -> {
-          integral = 0;
-          prevError = 0;
-          error = 0;
-          io.setElevatorVelocity(0.0);
-        },
-        //onExecute
-        () -> elevatorPID(position),
-        //onEnd
-        (interrupted) -> io.setElevatorVelocity(0.0),
-        //isFinished
-        //This should probably also include if inputs.elevator1Position is within tolerance of position...
-        () -> Math.abs(error) < ElevatorConstants.ELEVATOR_EPSILON,
-        //req
-        this);
+                    < ElevatorConstants.POSITION_TOLERANCE)
+        .withName("Set Elevator Position");
   }
 
   /**
@@ -115,7 +77,8 @@ public class Elevator extends SubsystemBase {
    */
   public Command setElevatorVelocity(DoubleSupplier velocity) {
     // Sets the elevator velocity to the specified value
-    return new InstantCommand(() -> io.setElevatorVelocity(velocity.getAsDouble()), this);
+    return new InstantCommand(() -> io.setElevatorVelocity(velocity.getAsDouble()), this)
+        .withName("Set Elevator Velocity");
   }
 
   /**
@@ -132,5 +95,23 @@ public class Elevator extends SubsystemBase {
    */
   public double getElevatorPosition() {
     return inputs.elevator1Position;
+  }
+
+  public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+    return sysIdRoutine.quasistatic(direction);
+  }
+
+  public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+    return sysIdRoutine.dynamic(direction);
+  }
+
+  @Override
+  public SysIdRoutine getSysIdRoutine() {
+    return sysIdRoutine;
+  }
+
+  @Override
+  public String getName() {
+    return "Elevator ";
   }
 }

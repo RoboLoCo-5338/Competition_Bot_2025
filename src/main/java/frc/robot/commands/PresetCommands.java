@@ -24,7 +24,8 @@ public class PresetCommands {
   public static Command endEffectorSet(EndEffector endEffector, Arm arm, double position) {
     //moves arm to a certain position only if it is currently lower than that position
     return arm.setArmPosition(position)
-        .onlyIf(() -> !(arm.getArmPosition().getAsDouble() > position));
+        .onlyIf(() -> !(arm.getArmPosition().getAsDouble() > position))
+        .withName("endEffectorSet");
   }
 
   /**
@@ -37,10 +38,11 @@ public class PresetCommands {
   public static Command stowElevator(Elevator elevator, EndEffector endEffector, Arm arm) {
     //moves arm to 0.51, then uses the slot 2 pid/feedforward to move the elevator to 0.05, then moves arm more down
     return new SequentialCommandGroup(
-        arm.setArmPosition(0.51),
-        new WaitCommand(0.1),
-        elevator.setElevatorPosition(0.05, 2),
-        arm.setArmPosition(0.42));
+            arm.setArmPosition(ArmPresetConstants.ARM_STOW_INITIAL),
+            new WaitCommand(0.1),
+            elevator.setElevatorPosition(ElevatorPresetConstants.ELEVATOR_STOW, 2),
+            arm.setArmPosition(ArmPresetConstants.ARM_STOW_FINAL))
+        .withName("stowElevator");
   }
 
   /**
@@ -54,8 +56,9 @@ public class PresetCommands {
     //L2 preset
     SmartDashboard.putString("preset2", "inside preset functoin");
     return new SequentialCommandGroup(
-        arm.setArmPosition(ArmPresetConstants.ARM_L2_L3),
-        elevator.setElevatorPosition(ElevatorPresetConstants.ELEVATOR_L2, 0));
+            arm.setArmPosition(ArmPresetConstants.ARM_L2_L3),
+            elevator.setElevatorPosition(ElevatorPresetConstants.ELEVATOR_L2, 0))
+        .withName("presetL2");
   }
 
   /**
@@ -68,8 +71,9 @@ public class PresetCommands {
   public static Command presetL3(Elevator elevator, EndEffector endEffector, Arm arm) {
     //L3 preset
     return new SequentialCommandGroup(
-        arm.setArmPosition(ArmPresetConstants.ARM_L2_L3),
-        elevator.setElevatorPosition(ElevatorPresetConstants.ELEVATOR_L3, 0));
+            arm.setArmPosition(ArmPresetConstants.ARM_L2_L3),
+            elevator.setElevatorPosition(ElevatorPresetConstants.ELEVATOR_L3, 0))
+        .withName("presetL3");
   }
 
   /**
@@ -82,10 +86,11 @@ public class PresetCommands {
   public static Command presetL4(Elevator elevator, EndEffector endEffector, Arm arm) {
     //sequential group not needed I think
     return new SequentialCommandGroup(
-        //simultaneously sets arm position and elevator position
+            //simultaneously sets arm position and elevator position
         new ParallelCommandGroup(
-            arm.setArmPosition(ArmPresetConstants.ARM_L4),
-            elevator.setElevatorPosition(ElevatorPresetConstants.ELEVATOR_L4, 0)));
+                arm.setArmPosition(ArmPresetConstants.ARM_L4),
+                elevator.setElevatorPosition(ElevatorPresetConstants.ELEVATOR_L4, 0)))
+        .withName("presetL4");
   }
 
   /**
@@ -97,10 +102,11 @@ public class PresetCommands {
    */
   public static Command stopAll(Elevator elevator, EndEffector endEffector, Arm arm) {
     //stops all
-    return new SequentialCommandGroup(
-        elevator.setElevatorVelocity(() -> 0.0),
-        endEffector.setEndEffectorVelocity(0),
-        arm.setArmVelocity(() -> 0));
+    return new ParallelCommandGroup(
+            elevator.setElevatorVelocity(() -> 0.0),
+            endEffector.setEndEffectorVelocity(0),
+            arm.setArmVelocity(() -> 0))
+        .withName("stopAll");
   }
 
   /**
@@ -111,8 +117,9 @@ public class PresetCommands {
    */
   public static Command netShoot(Arm arm, EndEffector endEffector) {
     return new ParallelCommandGroup(
-        arm.setArmPosition(ArmPresetConstants.ARM_NET),
-        new SequentialCommandGroup(new WaitCommand(0.8), endEffector.setEndEffectorSpeed(-1)));
+            arm.setArmPosition(ArmPresetConstants.ARM_NET),
+            new SequentialCommandGroup(new WaitCommand(0.8), endEffector.setEndEffectorSpeed(-1)))
+        .withName("netShoot");
   }
 
   /**
@@ -132,7 +139,8 @@ public class PresetCommands {
             () ->
             //only stops end effector if at least one lasercan is present (I don't see the need though)
                 !(endEffector.getIO().getLaserCanMeasurement1() == -1
-                    || endEffector.getIO().getLaserCanMeasurement2() == -1));
+                    || endEffector.getIO().getLaserCanMeasurement2() == -1))
+        .withName("intakeLaserCan");
   }
   //same thing as above but for L4 it seems (terrible naming for these two) (note that this does not work for L2, L3 b/c end effector velocity is opposite)
   /**
@@ -153,6 +161,7 @@ public class PresetCommands {
 
             () ->
                 endEffector.getIO().getLaserCanMeasurement1() == -1
-                    || endEffector.getIO().getLaserCanMeasurement2() == -1);
+                    || endEffector.getIO().getLaserCanMeasurement2() == -1)
+        .withName("outtakeLaserCan");
   }
 }

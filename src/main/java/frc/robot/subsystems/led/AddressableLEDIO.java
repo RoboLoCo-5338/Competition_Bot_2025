@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.LEDPattern;
 import frc.robot.subsystems.led.LEDIO.LedIOInputs;
 
-public class AddressableLEDIO implements LEDIO {
+public class AddressableLEDIO extends LEDIO {
   //creates new LED connected to physical
   private AddressableLED m_led = new AddressableLED(LEDConstants.LED_PWM_PORT);
   //I think sets the number of leds in the strip

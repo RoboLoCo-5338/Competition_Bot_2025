@@ -17,7 +17,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import org.littletonrobotics.junction.AutoLog;
 
-public interface GyroIO {
+public class GyroIO {
   //autolog these things
   @AutoLog
   public static class GyroIOInputs {
@@ -30,5 +30,5 @@ public interface GyroIO {
     public Rotation2d[] odometryPitchPositions = new Rotation2d[] {};
   }
 
-  public default void updateInputs(GyroIOInputs inputs) {}
+  public void updateInputs(GyroIOInputs inputs) {}
 }

@@ -25,7 +25,6 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -114,7 +113,7 @@ public class RobotContainer {
         // Sim robot, instantiate physics sim IO implementations
         drive =
             new Drive(
-                new GyroIO() {},
+                new GyroIO(),
                 new ModuleIOSim(TunerConstants.FrontLeft),
                 new ModuleIOSim(TunerConstants.FrontRight),
                 new ModuleIOSim(TunerConstants.BackLeft),
@@ -135,18 +134,13 @@ public class RobotContainer {
       default:
         // Replayed robot, disable IO implementations
         drive =
-            new Drive(
-                new GyroIO() {},
-                new ModuleIO() {},
-                new ModuleIO() {},
-                new ModuleIO() {},
-                new ModuleIO() {});
+            new Drive(new GyroIO(), new ModuleIO(), new ModuleIO(), new ModuleIO(), new ModuleIO());
 
         led = new LED();
-        endEffector = new EndEffector(new EndEffectorIO() {});
-        elevator = new Elevator(new ElevatorIO() {});
-        arm = new Arm(new ArmIO() {});
-        vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
+        endEffector = new EndEffector(new EndEffectorIO());
+        elevator = new Elevator(new ElevatorIO());
+        arm = new Arm(new ArmIO());
+        vision = new Vision(drive::addVisionMeasurement, new VisionIO(), new VisionIO());
         break;
     }
 
@@ -175,19 +169,37 @@ public class RobotContainer {
 
     // Set up SysId routines
     autoChooser.addOption(
-        "Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization(drive));
+        "Drive Wheel Radius Characterization",
+        DriveCommands.wheelRadiusCharacterization(drive)
+            .withName("Drive Wheel Radius Characterization"));
     autoChooser.addOption(
-        "Drive Simple FF Characterization", DriveCommands.feedforwardCharacterization(drive));
+        "Drive Simple FF Characterization",
+        DriveCommands.feedforwardCharacterization(drive)
+            .withName("Drive Simple FF Characterization"));
     autoChooser.addOption(
         "Drive SysId (Quasistatic Forward)",
-        drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+        drive
+            .sysIdQuasistatic(SysIdRoutine.Direction.kForward)
+            .withName("Drive SysId Quasistatic Forward"));
     autoChooser.addOption(
         "Drive SysId (Quasistatic Reverse)",
-        drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+        drive
+            .sysIdQuasistatic(SysIdRoutine.Direction.kReverse)
+            .withName("Drive SysId Quasistatic Reverse"));
     autoChooser.addOption(
-        "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
+        "Drive SysId (Dynamic Forward)",
+        drive
+            .sysIdDynamic(SysIdRoutine.Direction.kForward)
+            .withName("Drive SysId Dynamic Forward"));
     autoChooser.addOption(
-        "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+        "Drive SysId (Dynamic Reverse)",
+        drive
+            .sysIdDynamic(SysIdRoutine.Direction.kReverse)
+            .withName("Drive SysId Dynamic Reverse"));
+
+    arm.addRoutinesToChooser(autoChooser);
+    elevator.addRoutinesToChooser(autoChooser);
+    endEffector.addRoutinesToChooser(autoChooser);
 
     // Configure the button bindings
     configureButtonBindings();
@@ -308,16 +320,21 @@ public class RobotContainer {
     //             drive, () -> driverController.getLeftY(), () -> driverController.getLeftX()));
     Command reefScoreLeftL3 =
         DriveCommands.reefScore(
-            drive,
-            Direction.Left,
-            DriveCommands.Level.L3,
-            driverController,
-            led,
-            elevator,
-            arm,
-            endEffector);
-    Command reefAlignLeft = DriveCommands.reefAlign(drive, Direction.Left, driverController, led);
-    Command reefAlignRight = DriveCommands.reefAlign(drive, Direction.Right, driverController, led);
+                drive,
+                Direction.Left,
+                DriveCommands.Level.L3,
+                driverController,
+                led,
+                elevator,
+                arm,
+                endEffector)
+            .withName("Score Left L3");
+    Command reefAlignLeft =
+        DriveCommands.reefAlign(drive, Direction.Left, driverController, led)
+            .withName("Align Left");
+    Command reefAlignRight =
+        DriveCommands.reefAlign(drive, Direction.Right, driverController, led)
+            .withName("Align Right");
     driverController
         .leftBumper()
         .and(() -> drive.useVision)
@@ -328,7 +345,7 @@ public class RobotContainer {
                             || reefAlignLeft.isScheduled()
                             || reefAlignRight.isScheduled()))
                 .debounce(0.5))
-        .whileTrue(reefScoreLeftL3);
+        .onTrue(reefScoreLeftL3.until(driverController.leftBumper().negate()));
     driverController
         .povLeft()
         .and(() -> drive.useVision)
@@ -339,7 +356,7 @@ public class RobotContainer {
                             || reefAlignLeft.isScheduled()
                             || reefAlignRight.isScheduled()))
                 .debounce(0.5))
-        .whileTrue(reefAlignLeft);
+        .onTrue(reefAlignLeft.until(driverController.povLeft().negate()));
     driverController
         .povRight()
         .and(() -> drive.useVision)
@@ -350,7 +367,7 @@ public class RobotContainer {
                             || reefAlignLeft.isScheduled()
                             || reefAlignRight.isScheduled()))
                 .debounce(0.5))
-        .whileTrue(reefAlignRight);
+        .onTrue(reefAlignRight.until(driverController.povRight().negate()));
 
     driverController
         .rightTrigger()
@@ -381,7 +398,10 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return new SequentialCommandGroup(
-        PresetCommands.stopAll(elevator, endEffector, arm), autoChooser.get());
+    return autoChooser.get();
+  }
+
+  public Command stopMotors() {
+    return PresetCommands.stopAll(elevator, endEffector, arm).withName("Stop Motors");
   }
 }
