@@ -18,10 +18,10 @@ import frc.robot.subsystems.SysIDSubsystem;
 import org.littletonrobotics.junction.Logger;
 
 public class EndEffector extends SubsystemBase implements SysIDSubsystem {
-  //new input/output w/ motor
+  // new input/output w/ motor
   public final EndEffectorIO io;
   private final EndEffectorIOInputsAutoLogged inputs = new EndEffectorIOInputsAutoLogged();
-  //alert for when the end effector is disconnected
+  // alert for when the end effector is disconnected
   private final Alert endEffectorDisconnectedAlert =
       new Alert(" End Effector motor disconnected!!", AlertType.kError);
 
@@ -29,6 +29,7 @@ public class EndEffector extends SubsystemBase implements SysIDSubsystem {
 
   /**
    * Constructor for the End Effector subsystem.
+   *
    * @param io EndEffectorIO implementation to use (e.g., EndEffectorIOTalonFX)
    */
   public EndEffector(EndEffectorIO io) {
@@ -45,10 +46,10 @@ public class EndEffector extends SubsystemBase implements SysIDSubsystem {
 
   @Override
   public void periodic() {
-    //periodically updates inputs (autologger)
+    // periodically updates inputs (autologger)
     io.updateInputs(inputs);
     Logger.processInputs("End Effector", inputs);
-    //sets alert if needed
+    // sets alert if needed
     endEffectorDisconnectedAlert.set(
         !inputs.endEffectorConnected && Constants.currentMode != Mode.SIM);
   }
@@ -61,7 +62,7 @@ public class EndEffector extends SubsystemBase implements SysIDSubsystem {
             this)
         .withName("Set End Effector Velocity");
   }
-  /**instant command to set end effector speed */
+  /** instant command to set end effector speed */
   public Command setEndEffectorSpeed(double speed) {
     return new InstantCommand(() -> io.setEndEffectorSpeed(speed))
         .withName("Set End Effector Speed");
@@ -69,6 +70,7 @@ public class EndEffector extends SubsystemBase implements SysIDSubsystem {
 
   /**
    * Returns the IO implementation used by this subsystem.
+   *
    * @return hardware IO class
    */
   public EndEffectorIO getIO() {
@@ -77,6 +79,7 @@ public class EndEffector extends SubsystemBase implements SysIDSubsystem {
 
   /**
    * Runs the sysid quasistatic routine for end effector
+   *
    * @param direction
    * @return
    */
@@ -86,6 +89,7 @@ public class EndEffector extends SubsystemBase implements SysIDSubsystem {
 
   /**
    * Runs the sysid dynamic routine for end effector
+   *
    * @param direction
    * @return
    */
@@ -93,9 +97,7 @@ public class EndEffector extends SubsystemBase implements SysIDSubsystem {
     return sysIdRoutine.dynamic(direction).withName("SysId Dynamic");
   }
 
-  /**
-   * Returns the sysid routine for the end effector
-   */
+  /** Returns the sysid routine for the end effector */
   @Override
   public SysIdRoutine getSysIdRoutine() {
     return sysIdRoutine;

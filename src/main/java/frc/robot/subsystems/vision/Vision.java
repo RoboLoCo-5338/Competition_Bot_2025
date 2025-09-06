@@ -65,13 +65,13 @@ public class Vision extends SubsystemBase {
   }
 
   public int[] getTagIds(int cameraIndex) {
-    //returns tag ids of one camera
+    // returns tag ids of one camera
     return inputs[cameraIndex].tagIds;
   }
 
   @Override
   public void periodic() {
-    //update inputs for all cameras
+    // update inputs for all cameras
     for (int i = 0; i < io.length; i++) {
       io[i].updateInputs(inputs[i]);
       Logger.processInputs("Vision/Camera" + Integer.toString(i), inputs[i]);

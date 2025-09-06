@@ -20,7 +20,7 @@ public class Elevator extends SubsystemBase implements SysIDSubsystem {
   private double prevError = 0;
   private double integral = 0;
   private double error;
-  //sets up new alerts
+  // sets up new alerts
   private final Alert elevator1DisconnectedAlert =
       new Alert("Elevator motor 1 disconnected", AlertType.kError);
   private final Alert elevator2DisconnectedAlert =
@@ -60,7 +60,7 @@ public class Elevator extends SubsystemBase implements SysIDSubsystem {
    * @return A command that sets the elevator's position.
    */
   public Command setElevatorPosition(double position, int slot) {
-    //Goes to specified position until the elevator is within the tolerance
+    // Goes to specified position until the elevator is within the tolerance
     return new StartEndCommand(
             () -> io.setElevatorPosition(position, slot), () -> io.setElevatorVelocity(0), this)
         .until(
@@ -72,6 +72,7 @@ public class Elevator extends SubsystemBase implements SysIDSubsystem {
 
   /**
    * Sets elevator velocity to specified value
+   *
    * @param velocity Desired velocity
    * @return InstantCommand
    */
@@ -83,6 +84,7 @@ public class Elevator extends SubsystemBase implements SysIDSubsystem {
 
   /**
    * returns the ElevatorIO object for the elevator
+   *
    * @return
    */
   public ElevatorIO getIO() {
@@ -91,6 +93,7 @@ public class Elevator extends SubsystemBase implements SysIDSubsystem {
 
   /**
    * returns autologged elevator position
+   *
    * @return
    */
   public double getElevatorPosition() {
@@ -99,6 +102,7 @@ public class Elevator extends SubsystemBase implements SysIDSubsystem {
 
   /**
    * Runs the sysid quasistatic routine for elevator
+   *
    * @param direction
    * @return
    */
@@ -108,6 +112,7 @@ public class Elevator extends SubsystemBase implements SysIDSubsystem {
 
   /**
    * Runs the sysid dynamic routine for elevator
+   *
    * @param direction
    * @return
    */
@@ -117,6 +122,7 @@ public class Elevator extends SubsystemBase implements SysIDSubsystem {
 
   /**
    * Returns the sysid routine for the elevator
+   *
    * @return
    */
   @Override

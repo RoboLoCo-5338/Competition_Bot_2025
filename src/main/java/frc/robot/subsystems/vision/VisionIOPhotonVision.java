@@ -26,7 +26,7 @@ public class VisionIOPhotonVision extends VisionIO {
    * @param robotToCamera The 3D position of the camera relative to the robot.
    */
   public VisionIOPhotonVision(String name, Transform3d robotToCamera) {
-    //creates new camera
+    // creates new camera
     camera = new PhotonCamera(name);
     this.robotToCamera = robotToCamera;
   }

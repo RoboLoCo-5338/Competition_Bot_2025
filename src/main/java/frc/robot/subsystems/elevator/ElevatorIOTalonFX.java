@@ -39,7 +39,7 @@ public class ElevatorIOTalonFX extends ElevatorIO {
   private final StatusSignal<Integer> elevator1Version;
   private final StatusSignal<Integer> elevator2Version;
 
-  //debouncer to ensure elevator (dis)connected
+  // debouncer to ensure elevator (dis)connected
   private final Debouncer elevator1ConnectedDebounce = new Debouncer(0.5);
   private final Debouncer elevator2ConnectedDebounce = new Debouncer(0.5);
 
@@ -57,10 +57,10 @@ public class ElevatorIOTalonFX extends ElevatorIO {
           ElevatorConstants.ELEVATOR_MOTOR_ID2, TunerConstants.DrivetrainConstants.CANBusName);
 
   public ElevatorIOTalonFX() {
-    //applies the configurations
+    // applies the configurations
     elevatorMotor1.getConfigurator().apply(getConfiguration(1));
     elevatorMotor2.getConfigurator().apply(getConfiguration(2));
-    //says that the current position is equal to 0
+    // says that the current position is equal to 0
     elevatorMotor1.setPosition(0);
     elevatorMotor2.setPosition(0);
 
@@ -165,7 +165,7 @@ public class ElevatorIOTalonFX extends ElevatorIO {
 
   @Override
   public void updateInputs(ElevatorIOInputs inputs) {
-    //refreshes info about elevator motors
+    // refreshes info about elevator motors
     var motor1Status =
         BaseStatusSignal.refreshAll(
             elevator1Position, elevator1Velocity, elevator1Current, elevator1AppliedVolts);
@@ -201,10 +201,10 @@ public class ElevatorIOTalonFX extends ElevatorIO {
 
   @Override
   public void setElevatorVelocity(double velocity) {
-    //ensures no feedforward voltage is applied (should already be fine even without this I think)
+    // ensures no feedforward voltage is applied (should already be fine even without this I think)
     elevator1VelocityRequest.FeedForward =
         ElevatorConstants.ElevatorVelocityConstants.ELEVATOR_FEEDFORWARD;
-    elevatorMotor1.setControl(elevator1VelocityRequest.withVelocity(velocity).withSlot(1));     
+    elevatorMotor1.setControl(elevator1VelocityRequest.withVelocity(velocity).withSlot(1));
   }
 
   @Override

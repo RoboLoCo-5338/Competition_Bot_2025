@@ -22,23 +22,24 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.drive.Drive;
 
 public class LED extends SubsystemBase {
-  //Wow, we don't even use AddressableLEDIO, surprising
+  // Wow, we don't even use AddressableLEDIO, surprising
   private final AddressableLED m_led;
   private final AddressableLEDBuffer buffer;
 
   public LED() {
-    //creates new LED connected to physical with buffer 300 (number of LEDS in the strip)
+    // creates new LED connected to physical with buffer 300 (number of LEDS in the strip)
     m_led = new AddressableLED(0);
     buffer = new AddressableLEDBuffer(300);
     m_led.setLength(buffer.getLength());
-    //no led color
+    // no led color
     m_led.setData(buffer);
-    //starts the LED strip
+    // starts the LED strip
     m_led.start();
   }
 
   /**
    * flashes the LED at the end of the align command (red or green depending on if canceled)
+   *
    * @param canceled
    * @return ScheduleCommand
    */
@@ -58,14 +59,15 @@ public class LED extends SubsystemBase {
 
   /**
    * pulses blue continuously
+   *
    * @return RunCommand
    */
   public Command pulseBlue() {
     LEDPattern blue = LEDPattern.solid(Color.kBlue);
     LEDPattern pulsingBlue = blue.breathe(Seconds.of(5));
     return new RunCommand(
-          //continuously applies the pattern to the buffer
-        () -> {
+            // continuously applies the pattern to the buffer
+            () -> {
               pulsingBlue.applyTo(buffer);
               m_led.setData(buffer);
             },
@@ -75,12 +77,13 @@ public class LED extends SubsystemBase {
 
   /**
    * Turns the leds off
+   *
    * @return InstantCommand
    */
   public Command turnOff() {
     return new InstantCommand(
-          //makes the LED no color
-        () -> {
+            // makes the LED no color
+            () -> {
               LEDPattern off = LEDPattern.kOff;
               off.applyTo(buffer);
               m_led.setData(buffer);
@@ -91,12 +94,13 @@ public class LED extends SubsystemBase {
 
   /**
    * Turns leds into scrolling rainbow
+   *
    * @return InstantCommand
    */
   public Command goRainbow() {
     LEDPattern rainbow = LEDPattern.rainbow(255, 128);
     LEDPattern scrollingRainbow =
-    //makes the rainbow move along the strip 0.3 m/s
+        // makes the rainbow move along the strip 0.3 m/s
         rainbow.scrollAtAbsoluteSpeed(MetersPerSecond.of(0.3), LEDConstants.LED_SPACING);
     return new InstantCommand(
             () -> {
@@ -107,11 +111,13 @@ public class LED extends SubsystemBase {
         .withName("Go Rainbow");
   }
 
-  /** Changes color
+  /**
+   * Changes color
+   *
    * @return RunCommand
    */
   public Command turnColor(Color color) {
-    //turns the color by continuously applying the color to the buffer
+    // turns the color by continuously applying the color to the buffer
     return new RunCommand(
             () -> {
               LEDPattern colorPattern = LEDPattern.solid(color);
@@ -130,33 +136,35 @@ public class LED extends SubsystemBase {
    * @return An InstantCommand that applies the progress mask pattern to the LED.
    */
   public static double getDistanceFromBarge(Drive drive) {
-    //gets distance from barge
+    // gets distance from barge
     if (DriverStation.getAlliance().orElse(Alliance.Blue).equals(Alliance.Blue)) {
       return (-drive.getPose().getX() + 8.272272);
     } else {
       return (drive.getPose().getX() - 9.27);
     }
   }
-  //Trigger b/c it makes it so that we don't have to check it in periodic(), it is similar to button triggers
+  // Trigger b/c it makes it so that we don't have to check it in periodic(), it is similar to
+  // button triggers
   /**
    * Checks if robot is within 0.6 to 1.45 meters of barge
+   *
    * @param drive
    * @return
    */
   public Trigger isCloseToBarge(Drive drive) {
-    //checks if the robot distance is between 1.45 and 0.6 meters from barge
+    // checks if the robot distance is between 1.45 and 0.6 meters from barge
     return new Trigger(
         () -> getDistanceFromBarge(drive) < 1.45 && getDistanceFromBarge(drive) > 0.60);
   }
   /** Checks if robot is less than 0.6 meters of barge */
   public Trigger isCriticalToBarge(Drive drive) {
-    //checks if the robot distance is less than 0.6 meters from barge
+    // checks if the robot distance is less than 0.6 meters from barge
     return new Trigger(() -> getDistanceFromBarge(drive) < 0.60);
   }
-  
+
   /** Rumbles the controllers */
   public SequentialCommandGroup sendBargeIndicator(CommandXboxController controller) {
-    //rumbles controllers
+    // rumbles controllers
     return new SequentialCommandGroup(
         new InstantCommand(
             () -> {

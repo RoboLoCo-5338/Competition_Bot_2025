@@ -52,6 +52,7 @@ public class ArmIO {
 
   /**
    * Gets the current position of the arm
+   *
    * @param inputs
    * @return Radians
    */
@@ -61,6 +62,7 @@ public class ArmIO {
 
   /**
    * Sets specific voltage for arm (open loop)
+   *
    * @param voltage
    */
   public void armOpenLoop(Voltage voltage) {}

@@ -14,9 +14,7 @@ public interface SimMechanism {
     MECHANISMS.add(this);
   }
 
-  /**
-   * Updates the battery voltage based on the current draw of all registered SimMechanisms.
-   */
+  /** Updates the battery voltage based on the current draw of all registered SimMechanisms. */
   public static void updateBatteryVoltages() {
     ArrayList<Double> currents = new ArrayList<Double>();
     for (SimMechanism m : MECHANISMS) {
@@ -31,6 +29,7 @@ public interface SimMechanism {
 
   /**
    * Gets the current draw of the motor
+   *
    * @return
    */
   public abstract double[] getCurrents();

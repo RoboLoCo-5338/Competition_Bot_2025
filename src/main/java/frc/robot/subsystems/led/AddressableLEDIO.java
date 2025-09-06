@@ -6,17 +6,17 @@ import edu.wpi.first.wpilibj.LEDPattern;
 import frc.robot.subsystems.led.LEDIO.LedIOInputs;
 
 public class AddressableLEDIO extends LEDIO {
-  //creates new LED connected to physical
+  // creates new LED connected to physical
   private AddressableLED m_led = new AddressableLED(LEDConstants.LED_PWM_PORT);
-  //I think sets the number of leds in the strip
+  // I think sets the number of leds in the strip
   private AddressableLEDBuffer m_ledBuffer = new AddressableLEDBuffer(LEDConstants.LED_LENGTH);
 
   public AddressableLEDIO() {
-    //sets number of leds in the strip
+    // sets number of leds in the strip
     m_led.setLength(m_ledBuffer.getLength());
-    //empty buffer (no color yet)
+    // empty buffer (no color yet)
     m_led.setData(m_ledBuffer);
-    //starts the LED strip
+    // starts the LED strip
     m_led.start();
   }
 
@@ -39,13 +39,15 @@ public class AddressableLEDIO extends LEDIO {
    */
   @Override
   public void setLEDPattern(LEDPattern pattern) {
-    //changes the buffer
+    // changes the buffer
     pattern.applyTo(m_ledBuffer);
-    //applies the buffer to the led
+    // applies the buffer to the led
     m_led.setData(m_ledBuffer);
   }
 
-  /** changes led port number (might not work b/c didn't setLength or setData or start this new LED)*/
+  /**
+   * changes led port number (might not work b/c didn't setLength or setData or start this new LED)
+   */
   public void changeLEDPort(int port) {
     m_led.close();
     m_led = new AddressableLED(port);

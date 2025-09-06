@@ -39,12 +39,12 @@ public class Arm extends SubsystemBase implements SysIDSubsystem {
 
   @Override
   public void periodic() {
-    //updates inputs
+    // updates inputs
     io.updateInputs(inputs);
     Logger.processInputs("Arm", inputs);
-    //updates arm position
+    // updates arm position
     armPosition = io.getArmPosition(inputs);
-    //decides whether or not to set armDisconnectedAlert
+    // decides whether or not to set armDisconnectedAlert
     armDisconnectedAlert.set(!inputs.armConnected && Constants.currentMode != Mode.SIM);
   }
 
@@ -57,7 +57,8 @@ public class Arm extends SubsystemBase implements SysIDSubsystem {
    * @return A command that sets the arm to the given position.
    */
   public Command setArmPosition(double position) {
-    //runs setArmPosition and the .until() checks if the current armPosition is within the tolerance in order to end the command
+    // runs setArmPosition and the .until() checks if the current armPosition is within the
+    // tolerance in order to end the command
     return new StartEndCommand(() -> io.setArmPosition(position), () -> io.setArmVelocity(0), this)
         .until(() -> Math.abs((inputs.armPosition - position)) < ArmConstants.POSITION_TOLERANCE)
         .withName("Set Arm Position");
@@ -78,10 +79,11 @@ public class Arm extends SubsystemBase implements SysIDSubsystem {
 
   /**
    * Supplier for arm position
+   *
    * @return DoubleSupplier
    */
   public DoubleSupplier getArmPosition() {
-    //gets arm position from the autologger
+    // gets arm position from the autologger
     SmartDashboard.putNumber("Getting arm position in Arm.java", armPosition);
     SmartDashboard.putNumber("Getting in arm.java 2", io.getArmPosition(inputs));
     return () -> io.getArmPosition(inputs);
@@ -89,8 +91,8 @@ public class Arm extends SubsystemBase implements SysIDSubsystem {
 
   /**
    * Runs the SysId Quasistatic routine for the arm.
+   *
    * @param direction
-   * 
    */
   public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
     return sysIdRoutine.quasistatic(direction).withName("SysId Quasistatic");
@@ -98,24 +100,20 @@ public class Arm extends SubsystemBase implements SysIDSubsystem {
 
   /**
    * Runs the SysId Dynamic routine for the arm.
+   *
    * @param direction
-   * 
    */
   public Command sysIdDynamic(SysIdRoutine.Direction direction) {
     return sysIdRoutine.dynamic(direction).withName("SysId Dynamic");
   }
 
-  /**
-   * Returns the SysIdRoutine for the arm.
-   */
+  /** Returns the SysIdRoutine for the arm. */
   @Override
   public SysIdRoutine getSysIdRoutine() {
     return sysIdRoutine;
   }
 
-  /**
-   * Returns the name of the subsystem.
-   */
+  /** Returns the name of the subsystem. */
   @Override
   public String getName() {
     return "Arm ";

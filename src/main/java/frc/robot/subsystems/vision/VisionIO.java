@@ -34,6 +34,7 @@ public class VisionIO {
 
   /**
    * Updates inputs for the vision subsystem.
+   *
    * @param inputs
    */
   public void updateInputs(VisionIOInputs inputs) {}

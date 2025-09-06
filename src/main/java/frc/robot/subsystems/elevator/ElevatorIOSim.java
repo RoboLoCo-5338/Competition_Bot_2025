@@ -81,7 +81,8 @@ public class ElevatorIOSim extends ElevatorIOTalonFX implements SimMechanism {
   }
 
   /**
-   * Gets the ligament representing the elevator 
+   * Gets the ligament representing the elevator
+   *
    * @return
    */
   public LoggedMechanismLigament2d getLigamentEnd() {

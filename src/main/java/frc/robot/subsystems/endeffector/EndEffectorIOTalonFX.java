@@ -49,9 +49,9 @@ public class EndEffectorIOTalonFX extends EndEffectorIO {
     endEffectorTemperature = endEffectorMotor.getDeviceTemp();
     endEffectorVersion = endEffectorMotor.getVersion();
     endEffectorPosition = endEffectorMotor.getPosition();
-    //applies config from EndEffectorIO
+    // applies config from EndEffectorIO
     endEffectorMotor.getConfigurator().apply(getEndEffectorConfiguration());
-    //tries to set update frequency
+    // tries to set update frequency
     tryUntilOk(
         5,
         () ->
@@ -61,26 +61,27 @@ public class EndEffectorIOTalonFX extends EndEffectorIO {
                 endEffectorAppliedVolts,
                 endEffectorCurrent,
                 endEffectorTemperature));
-    //all other signals are stopped other than the ones above
+    // all other signals are stopped other than the ones above
     ParentDevice.optimizeBusUtilizationForAll(endEffectorMotor);
-    //laser cans for detection
+    // laser cans for detection
     LcEffector1 = new LaserCan(EndEffectorConstants.LASERCAN_1ID);
     LcEffector2 = new LaserCan(EndEffectorConstants.LASERCAN_2ID);
     try {
-      //sets range mode to short
+      // sets range mode to short
       LcEffector1.setRangingMode(LaserCan.RangingMode.SHORT);
       LcEffector2.setRangingMode(LaserCan.RangingMode.SHORT);
-      //sets region to bottom left corner I think because region of interest encompasses 16x16 SPADs (small sensor elements) I think
+      // sets region to bottom left corner I think because region of interest encompasses 16x16
+      // SPADs (small sensor elements) I think
       LcEffector1.setRegionOfInterest(
           new LaserCan.RegionOfInterest(2, 2, 2, 2)); // needs to be changed
       LcEffector2.setRegionOfInterest(
           new LaserCan.RegionOfInterest(2, 2, 2, 2)); // also needs to be changed
-      //I think this is the frequency that it updates
+      // I think this is the frequency that it updates
       LcEffector1.setTimingBudget(LaserCan.TimingBudget.TIMING_BUDGET_33MS);
       LcEffector2.setTimingBudget(LaserCan.TimingBudget.TIMING_BUDGET_33MS);
 
     } catch (Exception e) {
-      //prints error if there is one
+      // prints error if there is one
       System.out.println("Error: " + e);
     }
   }
@@ -102,7 +103,7 @@ public class EndEffectorIOTalonFX extends EndEffectorIO {
 
   @Override
   public void updateInputs(EndEffectorIOInputs inputs) {
-    //updates the autologger
+    // updates the autologger
     var motor1Status =
         BaseStatusSignal.refreshAll(
             endEffectorVelocity,
@@ -124,13 +125,13 @@ public class EndEffectorIOTalonFX extends EndEffectorIO {
   @Override
   public void setEndEffectorVelocity(double velocity) {
     endEffectorMotor.setControl(
-      //velocity request of the velocity times the gearing because gearing changes it
+        // velocity request of the velocity times the gearing because gearing changes it
         endEffectorVelocityRequest.withVelocity(velocity * EndEffectorSimConstants.GEARING));
   }
 
   @Override
   public void setEndEffectorSpeed(double speed) {
-    //sets speed
+    // sets speed
     endEffectorMotor.set(speed);
   }
 
@@ -141,7 +142,7 @@ public class EndEffectorIOTalonFX extends EndEffectorIO {
       return -1;
     }
     if (m1.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
-      //returns the distance in mm
+      // returns the distance in mm
       return m1.distance_mm;
     } else {
       if (m1.status == LaserCan.LASERCAN_STATUS_WEAK_SIGNAL) {

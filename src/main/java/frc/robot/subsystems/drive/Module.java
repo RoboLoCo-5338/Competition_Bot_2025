@@ -69,10 +69,11 @@ public class Module {
     int sampleCount = inputs.odometryTimestamps.length; // All signals are sampled together
     odometryPositions = new SwerveModulePosition[sampleCount];
     for (int i = 0; i < sampleCount; i++) {
-      //calculates how far the module has traveled
+      // calculates how far the module has traveled
       double positionMeters = inputs.odometryDrivePositionsRad[i] * constants.WheelRadius;
       Rotation2d angle = inputs.odometryTurnPositions[i];
-      //updates the odometryPositions of the module, so when getOdometryPositions is called later, it's accurate for each timestamp
+      // updates the odometryPositions of the module, so when getOdometryPositions is called later,
+      // it's accurate for each timestamp
       odometryPositions[i] = new SwerveModulePosition(positionMeters, angle);
     }
 

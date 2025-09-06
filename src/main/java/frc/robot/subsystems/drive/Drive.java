@@ -120,6 +120,7 @@ public class Drive extends SubsystemBase {
   // does all of this when a Drive object is created
   /**
    * Creates a new Drive subsystem.
+   *
    * @param gyroIO The gyro
    * @param flModuleIO The front left module
    * @param frModuleIO The front right module
@@ -234,8 +235,7 @@ public class Drive extends SubsystemBase {
 
     // Update odometry
     double[] sampleTimestamps =
-        modules[0]
-            .getOdometryTimestamps(); // All signals are sampled together
+        modules[0].getOdometryTimestamps(); // All signals are sampled together
     int sampleCount = sampleTimestamps.length;
     for (int i = 0; i < sampleCount; i++) {
       SwerveModulePosition[] modulePositions = new SwerveModulePosition[4];
@@ -405,9 +405,7 @@ public class Drive extends SubsystemBase {
   public void disableVision() {
     useVision = false;
   }
-  /**
-   * Enables Vision
-   */
+  /** Enables Vision */
   public void enableVision() {
     useVision = true;
   }

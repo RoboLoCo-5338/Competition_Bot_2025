@@ -76,6 +76,7 @@ public class ElevatorIO {
 
   /**
    * Sets the elevator motors to open loop control mode with the specified voltage.
+   *
    * @param voltage
    */
   public void elevatorOpenLoop(Voltage voltage) {}

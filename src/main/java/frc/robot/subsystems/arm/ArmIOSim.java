@@ -33,6 +33,7 @@ public class ArmIOSim extends ArmIOSpark implements SimMechanism {
 
   /**
    * Creates a new ArmIOSim
+   *
    * @param endEffector
    */
   public ArmIOSim(LoggedMechanismLigament2d endEffector) {

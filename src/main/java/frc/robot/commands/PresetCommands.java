@@ -14,15 +14,16 @@ import frc.robot.subsystems.endeffector.EndEffector;
 
 public class PresetCommands {
 
-    /**
-     * Sets arm to a certain position only if it is currently lower than that position
-     * @param endEffector
-     * @param arm
-     * @param position
-     * @return StartEndCommand (ends when arm is within tolerance)
-     */
+  /**
+   * Sets arm to a certain position only if it is currently lower than that position
+   *
+   * @param endEffector
+   * @param arm
+   * @param position
+   * @return StartEndCommand (ends when arm is within tolerance)
+   */
   public static Command endEffectorSet(EndEffector endEffector, Arm arm, double position) {
-    //moves arm to a certain position only if it is currently lower than that position
+    // moves arm to a certain position only if it is currently lower than that position
     return arm.setArmPosition(position)
         .onlyIf(() -> !(arm.getArmPosition().getAsDouble() > position))
         .withName("endEffectorSet");
@@ -30,13 +31,15 @@ public class PresetCommands {
 
   /**
    * Drops arm and elevator down
+   *
    * @param elevator
    * @param endEffector
    * @param arm
    * @return SequentialCommandGroup
    */
   public static Command stowElevator(Elevator elevator, EndEffector endEffector, Arm arm) {
-    //moves arm to 0.51, then uses the slot 2 pid/feedforward to move the elevator to 0.05, then moves arm more down
+    // moves arm to 0.51, then uses the slot 2 pid/feedforward to move the elevator to 0.05, then
+    // moves arm more down
     return new SequentialCommandGroup(
             arm.setArmPosition(ArmPresetConstants.ARM_STOW_INITIAL),
             new WaitCommand(0.1),
@@ -47,13 +50,14 @@ public class PresetCommands {
 
   /**
    * Sets arm position then elevator position to L2
+   *
    * @param elevator
    * @param endEffector
    * @param arm
    * @return SequentialCommandGroup
    */
   public static Command presetL2(Elevator elevator, EndEffector endEffector, Arm arm) {
-    //L2 preset
+    // L2 preset
     SmartDashboard.putString("preset2", "inside preset functoin");
     return new SequentialCommandGroup(
             arm.setArmPosition(ArmPresetConstants.ARM_L2_L3),
@@ -63,13 +67,14 @@ public class PresetCommands {
 
   /**
    * Sets arm position then elevator position to L3
+   *
    * @param elevator
    * @param endEffector
    * @param arm
    * @return SequentialCommandGroup
    */
   public static Command presetL3(Elevator elevator, EndEffector endEffector, Arm arm) {
-    //L3 preset
+    // L3 preset
     return new SequentialCommandGroup(
             arm.setArmPosition(ArmPresetConstants.ARM_L2_L3),
             elevator.setElevatorPosition(ElevatorPresetConstants.ELEVATOR_L3, 0))
@@ -78,16 +83,17 @@ public class PresetCommands {
 
   /**
    * Simultaneously sets arm position and elevator position to L4
+   *
    * @param elevator
    * @param endEffector
    * @param arm
    * @return ParallelCommandGroup wrapped in a SequentialCommandGroup
    */
   public static Command presetL4(Elevator elevator, EndEffector endEffector, Arm arm) {
-    //sequential group not needed I think
+    // sequential group not needed I think
     return new SequentialCommandGroup(
-            //simultaneously sets arm position and elevator position
-        new ParallelCommandGroup(
+            // simultaneously sets arm position and elevator position
+            new ParallelCommandGroup(
                 arm.setArmPosition(ArmPresetConstants.ARM_L4),
                 elevator.setElevatorPosition(ElevatorPresetConstants.ELEVATOR_L4, 0)))
         .withName("presetL4");
@@ -95,13 +101,14 @@ public class PresetCommands {
 
   /**
    * Sets elevator, endEffector, and arm velocities to 0
+   *
    * @param elevator
    * @param endEffector
    * @param arm
    * @return SequentialCommandGroup
    */
   public static Command stopAll(Elevator elevator, EndEffector endEffector, Arm arm) {
-    //stops all
+    // stops all
     return new ParallelCommandGroup(
             elevator.setElevatorVelocity(() -> 0.0),
             endEffector.setEndEffectorVelocity(0),
@@ -111,6 +118,7 @@ public class PresetCommands {
 
   /**
    * Moves the arm up while endEffector shoots (mech tech net shoot)
+   *
    * @param arm
    * @param endEffector
    * @return ParallelCommandGroup
@@ -124,6 +132,7 @@ public class PresetCommands {
 
   /**
    * Intakes until lasercans detect coral, then stops intake
+   *
    * @param endEffector
    * @return SequentialCommandGroup
    */
@@ -137,14 +146,17 @@ public class PresetCommands {
             endEffector.setEndEffectorVelocity(0.0))
         .onlyIf(
             () ->
-            //only stops end effector if at least one lasercan is present (I don't see the need though)
+                // only stops end effector if at least one lasercan is present (I don't see the need
+                // though)
                 !(endEffector.getIO().getLaserCanMeasurement1() == -1
                     || endEffector.getIO().getLaserCanMeasurement2() == -1))
         .withName("intakeLaserCan");
   }
-  //same thing as above but for L4 it seems (terrible naming for these two) (note that this does not work for L2, L3 b/c end effector velocity is opposite)
+  // same thing as above but for L4 it seems (terrible naming for these two) (note that this does
+  // not work for L2, L3 b/c end effector velocity is opposite)
   /**
    * L4 outake until lasercans no longer detect coral
+   *
    * @param endEffector
    * @return SequentialCommandGroup
    */
@@ -157,7 +169,8 @@ public class PresetCommands {
                             && endEffector.getIO().getLaserCanMeasurement2() > 100)),
             endEffector.setEndEffectorVelocity(0.0))
         .onlyIf(
-             //only stops end effector if at least one lasercan is present (I don't see the need though)
+            // only stops end effector if at least one lasercan is present (I don't see the need
+            // though)
 
             () ->
                 endEffector.getIO().getLaserCanMeasurement1() == -1
