@@ -31,6 +31,10 @@ public class ArmIOSim extends ArmIOSpark implements SimMechanism {
   SparkAbsoluteEncoderSim armEncoderSim;
   LoggedMechanismLigament2d armDrawn;
 
+  /**
+   * Creates a new ArmIOSim
+   * @param endEffector
+   */
   public ArmIOSim(LoggedMechanismLigament2d endEffector) {
     super();
     armSim = new SparkFlexSim(armMotor, armGearBox);
