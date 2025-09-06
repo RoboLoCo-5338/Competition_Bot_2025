@@ -160,7 +160,7 @@ public class RobotContainer {
         "Align Right", DriveCommands.reefAlign(drive, Direction.Right, driverController, led));
     NamedCommands.registerCommand("IntakeLaserCAN", PresetCommands.intakeLaserCan(endEffector));
     NamedCommands.registerCommand(
-        "Stop Preset", PresetCommands.stopAll(elevator, endEffector, arm));
+        "Stop Preset", PresetCommands.stopAll(elevator, arm));
     NamedCommands.registerCommand(
         "StowPreset", PresetCommands.stowElevator(elevator, arm));
 
@@ -390,6 +390,6 @@ public class RobotContainer {
   }
 
   public Command stopMotors() {
-    return PresetCommands.stopAll(elevator, endEffector, arm).withName("Stop Motors");
+    return PresetCommands.stopAll(elevator, arm).withName("Stop Motors");
   }
 }
