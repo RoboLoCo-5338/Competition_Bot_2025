@@ -23,12 +23,12 @@ import frc.robot.subsystems.drive.Drive;
 
 public class LED extends SubsystemBase {
 
-  private final AddressableLED m_led;
+  private final LEDIOAddressable m_led;
   private final AddressableLEDBuffer buffer;
 
   public LED() {
 
-    m_led = new AddressableLED(0);
+    m_led = new LEDIOAddressable();
     buffer = new AddressableLEDBuffer(300);
     m_led.setLength(buffer.getLength());
     m_led.setData(buffer);
