@@ -159,10 +159,8 @@ public class RobotContainer {
     NamedCommands.registerCommand(
         "Align Right", DriveCommands.reefAlign(drive, Direction.Right, driverController, led));
     NamedCommands.registerCommand("IntakeLaserCAN", PresetCommands.intakeLaserCan(endEffector));
-    NamedCommands.registerCommand(
-        "Stop Preset", PresetCommands.stopAll(elevator, arm));
-    NamedCommands.registerCommand(
-        "StowPreset", PresetCommands.stowElevator(elevator, arm));
+    NamedCommands.registerCommand("Stop Preset", PresetCommands.stopAll(elevator, arm));
+    NamedCommands.registerCommand("StowPreset", PresetCommands.stowElevator(elevator, arm));
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());

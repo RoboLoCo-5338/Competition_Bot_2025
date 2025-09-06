@@ -54,15 +54,14 @@ public class PresetCommands {
 
   public static Command stopAll(Elevator elevator, Arm arm) {
     return new ParallelCommandGroup(
-            elevator.setElevatorVelocity(() -> 0.0),
-            arm.setArmVelocity(() -> 0))
+            elevator.setElevatorVelocity(() -> 0.0), arm.setArmVelocity(() -> 0))
         .withName("stopAll");
   }
 
   public static Command netShoot(Arm arm) {
     return new ParallelCommandGroup(
-            arm.setArmPosition(ArmPresetConstants.ARM_NET),
-            new SequentialCommandGroup(new WaitCommand(0.8)));
+        arm.setArmPosition(ArmPresetConstants.ARM_NET),
+        new SequentialCommandGroup(new WaitCommand(0.8)));
   }
 
   public static Command intakeLaserCan(EndEffector endEffector) {
