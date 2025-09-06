@@ -97,14 +97,28 @@ public class Elevator extends SubsystemBase implements SysIDSubsystem {
     return inputs.elevator1Position;
   }
 
+  /**
+   * Runs the sysid quasistatic routine for elevator
+   * @param direction
+   * @return
+   */
   public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
     return sysIdRoutine.quasistatic(direction);
   }
 
+  /**
+   * Runs the sysid dynamic routine for elevator
+   * @param direction
+   * @return
+   */
   public Command sysIdDynamic(SysIdRoutine.Direction direction) {
     return sysIdRoutine.dynamic(direction);
   }
 
+  /**
+   * Returns the sysid routine for the elevator
+   * @return
+   */
   @Override
   public SysIdRoutine getSysIdRoutine() {
     return sysIdRoutine;

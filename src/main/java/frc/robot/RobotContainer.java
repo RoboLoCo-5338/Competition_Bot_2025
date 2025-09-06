@@ -214,7 +214,11 @@ public class RobotContainer {
         .whileTrue(led.turnColor(Color.kDarkBlue));
     new Trigger(() -> RobotState.isDisabled()).whileTrue(led.pulseBlue());
   }
-  //deadband on controllers (anything less than 0.2 is not counted)
+  /**
+   * deadband on controllers (anything less than 0.2 is not counted)
+   * @param controllerAxis axis value
+   * @return value after deadband
+   */
   public static double deadband(double controllerAxis) {
     if (Math.abs(controllerAxis) < 0.2) {
       return 0;
@@ -383,8 +387,14 @@ public class RobotContainer {
                 }));
   }
 
+  /**
+   * Periodic call
+   */
   public void periodic() {}
 
+  /**
+   * Will be called at the start of teleop mode
+   */
   public void teleopInit() {
     //on teleop init, put laser can measurement to smartdashboard and set velocities to 0
     SmartDashboard.putNumber("Laser Can", endEffector.io.getLaserCanMeasurement1());
@@ -401,6 +411,10 @@ public class RobotContainer {
     return autoChooser.get();
   }
 
+  /**
+   * Stops all motors
+   * @return
+   */
   public Command stopMotors() {
     return PresetCommands.stopAll(elevator, endEffector, arm).withName("Stop Motors");
   }

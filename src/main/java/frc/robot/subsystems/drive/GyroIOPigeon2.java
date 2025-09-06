@@ -68,7 +68,9 @@ public class GyroIOPigeon2 extends GyroIO {
     pitchPositionQueue = PhoenixOdometryThread.getInstance().registerSignal(pigeon.getPitch());
   }
 
-  //updates inputs
+  /**
+   * Updates the inputs.
+   */
   @Override
   public void updateInputs(GyroIOInputs inputs) {
     inputs.connected = BaseStatusSignal.refreshAll(yaw, yawVelocity).equals(StatusCode.OK);

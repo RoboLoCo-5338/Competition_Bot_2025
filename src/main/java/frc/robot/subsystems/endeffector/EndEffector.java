@@ -27,6 +27,10 @@ public class EndEffector extends SubsystemBase implements SysIDSubsystem {
 
   private final SysIdRoutine sysIdRoutine;
 
+  /**
+   * Constructor for the End Effector subsystem.
+   * @param io EndEffectorIO implementation to use (e.g., EndEffectorIOTalonFX)
+   */
   public EndEffector(EndEffectorIO io) {
     this.io = io;
     this.sysIdRoutine =
@@ -63,18 +67,35 @@ public class EndEffector extends SubsystemBase implements SysIDSubsystem {
         .withName("Set End Effector Speed");
   }
 
+  /**
+   * Returns the IO implementation used by this subsystem.
+   * @return hardware IO class
+   */
   public EndEffectorIO getIO() {
     return io;
   }
 
+  /**
+   * Runs the sysid quasistatic routine for end effector
+   * @param direction
+   * @return
+   */
   public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
     return sysIdRoutine.quasistatic(direction).withName("SysId Quasistatic");
   }
 
+  /**
+   * Runs the sysid dynamic routine for end effector
+   * @param direction
+   * @return
+   */
   public Command sysIdDynamic(SysIdRoutine.Direction direction) {
     return sysIdRoutine.dynamic(direction).withName("SysId Dynamic");
   }
 
+  /**
+   * Returns the sysid routine for the end effector
+   */
   @Override
   public SysIdRoutine getSysIdRoutine() {
     return sysIdRoutine;

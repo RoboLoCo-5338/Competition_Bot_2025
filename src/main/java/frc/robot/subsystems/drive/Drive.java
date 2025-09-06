@@ -118,6 +118,15 @@ public class Drive extends SubsystemBase {
   public boolean useVision = true;
 
   // does all of this when a Drive object is created
+  /**
+   * Creates a new Drive subsystem.
+   * @param gyroIO The gyro
+   * @param flModuleIO The front left module
+   * @param frModuleIO The front right module
+   * @param blModuleIO The back left module
+   * @param brModuleIO The back right module
+   * @return Drive subsystem
+   */
   public Drive(
       GyroIO gyroIO,
       ModuleIO flModuleIO,

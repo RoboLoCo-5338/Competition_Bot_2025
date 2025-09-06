@@ -255,6 +255,11 @@ public class ModuleIOTalonFX extends ModuleIO {
         });
   }
 
+    /**
+     * Sets the drive velocity of the module
+     * 
+     * @param velocityRadPerSec The velocity in radians per second
+     */
   @Override
   public void setDriveVelocity(double velocityRadPerSec) {
     //converts rad/sec to rot/sec
@@ -267,7 +272,10 @@ public class ModuleIOTalonFX extends ModuleIO {
         });
   }
 
-  //sets rotation
+  /**
+   * Sets the turn position of the module 
+   * @param rotation 
+   */
   @Override
   public void setTurnPosition(Rotation2d rotation) {
     turnTalon.setControl(

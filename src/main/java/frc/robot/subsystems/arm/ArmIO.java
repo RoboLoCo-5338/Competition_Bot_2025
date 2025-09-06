@@ -50,9 +50,18 @@ public class ArmIO {
    */
   public void setArmVelocity(double velocity) {}
 
+  /**
+   * Gets the current position of the arm
+   * @param inputs
+   * @return Radians
+   */
   public double getArmPosition(ArmIOInputs inputs) {
     return 0.0;
   }
 
+  /**
+   * Sets specific voltage for arm (open loop)
+   * @param voltage
+   */
   public void armOpenLoop(Voltage voltage) {}
 }

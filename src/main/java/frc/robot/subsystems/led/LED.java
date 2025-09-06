@@ -40,7 +40,7 @@ public class LED extends SubsystemBase {
   /**
    * flashes the LED at the end of the align command (red or green depending on if canceled)
    * @param canceled
-   * @return 
+   * @return ScheduleCommand
    */
   public Command alignEndFlash(boolean canceled) {
     return new ScheduleCommand(
