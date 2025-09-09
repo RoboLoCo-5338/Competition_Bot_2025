@@ -92,8 +92,8 @@ public class PresetCommands {
             endEffector.setEndEffectorVelocity(0.0))
         .onlyIf(
             () ->
-                endEffector.getIO().getLaserCanMeasurement1() == -1
-                    || endEffector.getIO().getLaserCanMeasurement2() == -1)
+                !(endEffector.getIO().getLaserCanMeasurement1() == -1
+                    || endEffector.getIO().getLaserCanMeasurement2() == -1))
         .withName("outtakeLaserCan");
   }
 }
