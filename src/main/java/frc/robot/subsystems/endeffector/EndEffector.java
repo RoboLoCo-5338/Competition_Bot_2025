@@ -59,7 +59,6 @@ public class EndEffector extends SubsystemBase implements SysIDSubsystem {
 
   public Command setEndEffectorSpeed(double speed) {
     return new InstantCommand(() -> io.setEndEffectorSpeed(speed))
-
         .withName("Set End Effector Speed");
   }
 
