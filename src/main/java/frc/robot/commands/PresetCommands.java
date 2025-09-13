@@ -3,10 +3,12 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.ArmConstants;
 import frc.robot.subsystems.arm.ArmConstants.ArmPresetConstants;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorConstants.ElevatorPresetConstants;
@@ -46,18 +48,17 @@ public class PresetCommands {
 
   public static Command presetL4(Elevator elevator, EndEffector endEffector, Arm arm) {
     return new SequentialCommandGroup(
-            new ParallelCommandGroup(
-                arm.setArmPosition(ArmPresetConstants.ARM_L4),
-                elevator.setElevatorPosition(ElevatorPresetConstants.ELEVATOR_L4, 0)))
-        .withName("presetL4");
+        new ParallelDeadlineGroup(
+            new WaitCommand(5),
+            elevator.setElevatorPosition(ElevatorPresetConstants.ELEVATOR_L4, 0)),
+        arm.setArmPosition(ArmPresetConstants.ARM_L4));
   }
 
   public static Command stopAll(Elevator elevator, EndEffector endEffector, Arm arm) {
     return new ParallelCommandGroup(
-            elevator.setElevatorVelocity(() -> 0.0),
-            endEffector.setEndEffectorVelocity(0),
-            arm.setArmVelocity(() -> 0))
-        .withName("stopAll");
+        elevator.setElevatorVelocity(() -> 0.0),
+        endEffector.setEndEffectorVelocity(0),
+        arm.setArmVelocity(() -> 0));
   }
 
   public static Command netShoot(Arm arm, EndEffector endEffector) {

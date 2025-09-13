@@ -29,6 +29,7 @@ public final class ArmConstants {
   }
 
   public static final class ArmPresetConstants {
+    public static final double ARM_up = 0.191;
     public static final double ARM_L2_L3 =
         -0.183; // TODO: update these values for new end effector arm
     public static final double ARM_L4 = 0.075;

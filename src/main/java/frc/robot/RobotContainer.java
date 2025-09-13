@@ -266,6 +266,7 @@ public class RobotContainer {
 
     operatorController.a().onTrue(PresetCommands.stowElevator(elevator, endEffector, arm));
     operatorController.b().whileTrue(PresetCommands.presetL2(elevator, endEffector, arm));
+    operatorController.povLeft().whileTrue(PresetCommands.armUp(arm));
     operatorController.x().whileTrue(PresetCommands.presetL3(elevator, endEffector, arm));
     operatorController.y().whileTrue(PresetCommands.presetL4(elevator, endEffector, arm));
 
