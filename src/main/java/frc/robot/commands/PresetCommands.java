@@ -31,6 +31,11 @@ public class PresetCommands {
         .withName("stowElevator");
   }
 
+  public static Command armUp(Arm arm) {
+    return new SequentialCommandGroup(
+        arm.setArmPosition(ArmPresetConstants.ARM_up)
+    );
+  }
   public static Command presetL2(Elevator elevator, EndEffector endEffector, Arm arm) {
     SmartDashboard.putString("preset2", "inside preset functoin");
     return new SequentialCommandGroup(
