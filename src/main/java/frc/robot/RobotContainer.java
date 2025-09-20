@@ -176,26 +176,6 @@ public class RobotContainer {
         "Drive Simple FF Characterization",
         DriveCommands.feedforwardCharacterization(drive)
             .withName("Drive Simple FF Characterization"));
-    autoChooser.addOption(
-        "Drive SysId (Quasistatic Forward)",
-        drive
-            .sysIdQuasistatic(SysIdRoutine.Direction.kForward)
-            .withName("Drive SysId Quasistatic Forward"));
-    autoChooser.addOption(
-        "Drive SysId (Quasistatic Reverse)",
-        drive
-            .sysIdQuasistatic(SysIdRoutine.Direction.kReverse)
-            .withName("Drive SysId Quasistatic Reverse"));
-    autoChooser.addOption(
-        "Drive SysId (Dynamic Forward)",
-        drive
-            .sysIdDynamic(SysIdRoutine.Direction.kForward)
-            .withName("Drive SysId Dynamic Forward"));
-    autoChooser.addOption(
-        "Drive SysId (Dynamic Reverse)",
-        drive
-            .sysIdDynamic(SysIdRoutine.Direction.kReverse)
-            .withName("Drive SysId Dynamic Reverse"));
 
     arm.addRoutinesToChooser(autoChooser);
     drive.addRoutinesToChooser(autoChooser);
