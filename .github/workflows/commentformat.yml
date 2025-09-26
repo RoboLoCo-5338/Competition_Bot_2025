@@ -26,7 +26,7 @@ jobs:
         id: spotlessCheck
         continue-on-error: true
         run: ./gradlew spotlessCheck
-      - name: Apply and Commit Linted File
+      - name: Apply and commit linted file
         if: ${{ steps.spotlessCheck.outcome == 'failure' }}
         run: |
           ./gradlew spotlessApply
