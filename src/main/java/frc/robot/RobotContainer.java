@@ -27,7 +27,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveCommands.Direction;
 import frc.robot.commands.PresetCommands;
@@ -176,28 +175,9 @@ public class RobotContainer {
         "Drive Simple FF Characterization",
         DriveCommands.feedforwardCharacterization(drive)
             .withName("Drive Simple FF Characterization"));
-    autoChooser.addOption(
-        "Drive SysId (Quasistatic Forward)",
-        drive
-            .sysIdQuasistatic(SysIdRoutine.Direction.kForward)
-            .withName("Drive SysId Quasistatic Forward"));
-    autoChooser.addOption(
-        "Drive SysId (Quasistatic Reverse)",
-        drive
-            .sysIdQuasistatic(SysIdRoutine.Direction.kReverse)
-            .withName("Drive SysId Quasistatic Reverse"));
-    autoChooser.addOption(
-        "Drive SysId (Dynamic Forward)",
-        drive
-            .sysIdDynamic(SysIdRoutine.Direction.kForward)
-            .withName("Drive SysId Dynamic Forward"));
-    autoChooser.addOption(
-        "Drive SysId (Dynamic Reverse)",
-        drive
-            .sysIdDynamic(SysIdRoutine.Direction.kReverse)
-            .withName("Drive SysId Dynamic Reverse"));
 
     arm.addRoutinesToChooser(autoChooser);
+    drive.addRoutinesToChooser(autoChooser);
     elevator.addRoutinesToChooser(autoChooser);
     endEffector.addRoutinesToChooser(autoChooser);
 

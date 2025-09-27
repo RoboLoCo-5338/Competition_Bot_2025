@@ -49,13 +49,14 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.SysIDSubsystem;
 import frc.robot.util.LocalADStarAK;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
-public class Drive extends SubsystemBase {
+public class Drive extends SubsystemBase implements SysIDSubsystem {
   private static final RobotConfig PP_CONFIG =
       new RobotConfig(
           DriveConstants.ROBOT_MASS_KG,
@@ -381,5 +382,15 @@ public class Drive extends SubsystemBase {
       new Translation2d(TunerConstants.BackLeft.LocationX, TunerConstants.BackLeft.LocationY),
       new Translation2d(TunerConstants.BackRight.LocationX, TunerConstants.BackRight.LocationY)
     };
+  }
+
+  @Override
+  public SysIdRoutine getSysIdRoutine() {
+    return sysId;
+  }
+
+  @Override
+  public String getName() {
+    return "Drive";
   }
 }
