@@ -14,13 +14,13 @@ import frc.robot.subsystems.endeffector.EndEffector;
 
 public class PresetCommands {
 
-  public static Command endEffectorSet(EndEffector endEffector, Arm arm, double position) {
+  public static Command endEffectorSet(Arm arm, double position) {
     return arm.setArmPosition(position)
         .onlyIf(() -> !(arm.getArmPosition().getAsDouble() > position))
         .withName("endEffectorSet");
   }
 
-  public static Command stowElevator(Elevator elevator, EndEffector endEffector, Arm arm) {
+  public static Command stowElevator(Elevator elevator, Arm arm) {
     return new SequentialCommandGroup(
             arm.setArmPosition(ArmPresetConstants.ARM_STOW_INITIAL),
             new WaitCommand(0.1),
@@ -29,7 +29,7 @@ public class PresetCommands {
         .withName("stowElevator");
   }
 
-  public static Command presetL2(Elevator elevator, EndEffector endEffector, Arm arm) {
+  public static Command presetL2(Elevator elevator, Arm arm) {
     SmartDashboard.putString("preset2", "inside preset functoin");
     return new SequentialCommandGroup(
             arm.setArmPosition(ArmPresetConstants.ARM_L2_L3),
@@ -37,14 +37,14 @@ public class PresetCommands {
         .withName("presetL2");
   }
 
-  public static Command presetL3(Elevator elevator, EndEffector endEffector, Arm arm) {
+  public static Command presetL3(Elevator elevator, Arm arm) {
     return new SequentialCommandGroup(
             arm.setArmPosition(ArmPresetConstants.ARM_L2_L3),
             elevator.setElevatorPosition(ElevatorPresetConstants.ELEVATOR_L3, 0))
         .withName("presetL3");
   }
 
-  public static Command presetL4(Elevator elevator, EndEffector endEffector, Arm arm) {
+  public static Command presetL4(Elevator elevator, Arm arm) {
     return new SequentialCommandGroup(
             new ParallelCommandGroup(
                 arm.setArmPosition(ArmPresetConstants.ARM_L4),
@@ -52,19 +52,17 @@ public class PresetCommands {
         .withName("presetL4");
   }
 
-  public static Command stopAll(Elevator elevator, EndEffector endEffector, Arm arm) {
+  public static Command stopAll(Elevator elevator, Arm arm) {
     return new ParallelCommandGroup(
             elevator.setElevatorVelocity(() -> 0.0),
-            endEffector.setEndEffectorVelocity(0),
             arm.setArmVelocity(() -> 0))
         .withName("stopAll");
   }
 
-  public static Command netShoot(Arm arm, EndEffector endEffector) {
+  public static Command netShoot(Arm arm) {
     return new ParallelCommandGroup(
             arm.setArmPosition(ArmPresetConstants.ARM_NET),
-            new SequentialCommandGroup(new WaitCommand(0.8), endEffector.setEndEffectorSpeed(-1)))
-        .withName("netShoot");
+            new SequentialCommandGroup(new WaitCommand(0.8)));
   }
 
   public static Command intakeLaserCan(EndEffector endEffector) {

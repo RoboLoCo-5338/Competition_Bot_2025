@@ -5,11 +5,11 @@ import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.LEDPattern;
 import frc.robot.subsystems.led.LEDIO.LedIOInputs;
 
-public class AddressableLEDIO extends LEDIO {
+public class LEDIOAddressable extends LEDIO {
   private AddressableLED m_led = new AddressableLED(LEDConstants.LED_PWM_PORT);
   private AddressableLEDBuffer m_ledBuffer = new AddressableLEDBuffer(LEDConstants.LED_LENGTH);
 
-  public AddressableLEDIO() {
+  public LEDIOAddressable() {
     m_led.setLength(m_ledBuffer.getLength());
     m_led.setData(m_ledBuffer);
     m_led.start();
@@ -21,6 +21,7 @@ public class AddressableLEDIO extends LEDIO {
    */
   @Override
   public void updateInputs(LedIOInputs inputs) {
+
     // I don't think there are any inputs so this should just stay blank?
   }
 
@@ -42,4 +43,10 @@ public class AddressableLEDIO extends LEDIO {
     m_led.close();
     m_led = new AddressableLED(port);
   }
+
+  public int setLength(int length) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'setLength'");
+  }
+
 }
