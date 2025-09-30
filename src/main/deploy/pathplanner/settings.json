@@ -5,11 +5,13 @@
   "pathFolders": [
     "Center",
     "Left",
+    "Noobies",
     "Right"
   ],
   "autoFolders": [
     "L2",
-    "L4"
+    "L4",
+    "Noobs"
   ],
   "defaultMaxVel": 3.5,
   "defaultMaxAccel": 2.5,

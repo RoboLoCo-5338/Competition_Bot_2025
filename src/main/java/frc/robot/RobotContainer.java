@@ -144,7 +144,7 @@ public class RobotContainer {
         break;
     }
 
-    // Set up commands for auto
+    // Set up commands for auto so it can be used in pathplanner
     NamedCommands.registerCommand("L4 Preset", PresetCommands.presetL4(elevator, endEffector, arm));
     NamedCommands.registerCommand("L2 Preset", PresetCommands.presetL2(elevator, endEffector, arm));
 
@@ -204,8 +204,7 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
-    // LED Stuff
-
+    // LED check if it is close/critical to barge
     led.isCloseToBarge(drive)
         .and(() -> RobotState.isTeleop())
         .whileTrue(led.turnColor(Color.kWhite));
@@ -215,7 +214,12 @@ public class RobotContainer {
         .whileTrue(led.turnColor(Color.kDarkBlue));
     new Trigger(() -> RobotState.isDisabled()).whileTrue(led.pulseBlue());
   }
-
+  /**
+   * deadband on controllers (anything less than 0.2 is not counted)
+   *
+   * @param controllerAxis axis value
+   * @return value after deadband
+   */
   public static double deadband(double controllerAxis) {
     if (Math.abs(controllerAxis) < 0.2) {
       return 0;
@@ -233,9 +237,12 @@ public class RobotContainer {
   private void configureButtonBindings() {
     // Default command, normal field-relative drive
 
+    // led default is to be rainbow
     led.setDefaultCommand(led.goRainbow());
 
     drive.setDefaultCommand(
+        // default command is the joystick drive, with the suppliers being the left and right
+        // joysticks
         DriveCommands.joystickDrive(
             drive,
             () ->
@@ -249,25 +256,31 @@ public class RobotContainer {
                     * Math.pow(Math.abs(driverController.getRightX()), 2.2 - 1)));
 
     elevator.setDefaultCommand(
+        // default command for elevator is to get left joystick input from operator
         elevator.setElevatorVelocity(() -> deadband(-operatorController.getLeftY()) * 25));
-
+    // default command for arm is to get right joystick input from operator
     arm.setDefaultCommand(arm.setArmVelocity(() -> 2 * Math.PI * -operatorController.getRightY()));
 
+    // while operator presses left trigger, end effector goes out
     operatorController
         .leftTrigger()
         .whileTrue(endEffector.setEndEffectorVelocity(100))
         .onFalse(endEffector.setEndEffectorVelocity(0));
 
+    // while operator presses right trigger, end effector goes in
     operatorController
         .rightTrigger()
         .whileTrue(endEffector.setEndEffectorVelocity(-100))
         .onFalse(endEffector.setEndEffectorVelocity(0));
 
     operatorController.a().onTrue(PresetCommands.stowElevator(elevator, endEffector, arm));
+    // presets (cancels if operator lets go)
     operatorController.b().whileTrue(PresetCommands.presetL2(elevator, endEffector, arm));
     operatorController.x().whileTrue(PresetCommands.presetL3(elevator, endEffector, arm));
     operatorController.y().whileTrue(PresetCommands.presetL4(elevator, endEffector, arm));
 
+    // weird I think does the same as the right trigger? setEndEffectorSpeed I think is like the
+    // same as velocity, but endEffectorSpeed caps at -1/1 (full speed)
     operatorController
         .rightBumper()
         .onTrue(endEffector.setEndEffectorSpeed(-1))
@@ -278,14 +291,19 @@ public class RobotContainer {
 
     operatorController.leftBumper().onTrue(PresetCommands.intakeLaserCan(endEffector));
 
+    // driver can also shoot out l2,l3,intake
     driverController
         .rightBumper()
         .whileTrue(endEffector.setEndEffectorVelocity(60))
         .onFalse(endEffector.setEndEffectorVelocity(0));
+
+    // driver can also shoot out l4
     driverController
         .leftTrigger()
         .whileTrue(endEffector.setEndEffectorVelocity(-60))
         .onFalse(endEffector.setEndEffectorVelocity(0));
+
+    // driver presses b to reset gyro
     driverController
         .b()
         .onTrue(
@@ -372,9 +390,12 @@ public class RobotContainer {
                 }));
   }
 
+  /** Periodic call */
   public void periodic() {}
 
+  /** Will be called at the start of teleop mode */
   public void teleopInit() {
+    // on teleop init, put laser can measurement to smartdashboard and set velocities to 0
     SmartDashboard.putNumber("Laser Can", endEffector.io.getLaserCanMeasurement1());
     endEffector.setEndEffectorVelocity(0);
     elevator.setElevatorVelocity(() -> 0);
@@ -389,6 +410,11 @@ public class RobotContainer {
     return autoChooser.get();
   }
 
+  /**
+   * Stops all motors
+   *
+   * @return
+   */
   public Command stopMotors() {
     return PresetCommands.stopAll(elevator, endEffector, arm).withName("Stop Motors");
   }

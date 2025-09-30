@@ -80,6 +80,11 @@ public class ElevatorIOSim extends ElevatorIOTalonFX implements SimMechanism {
     return new double[] {physicsSim.getCurrentDrawAmps()};
   }
 
+  /**
+   * Gets the ligament representing the elevator
+   *
+   * @return
+   */
   public LoggedMechanismLigament2d getLigamentEnd() {
     return elevator;
   }

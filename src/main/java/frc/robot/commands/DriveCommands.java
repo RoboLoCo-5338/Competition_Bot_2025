@@ -54,17 +54,24 @@ import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
 public class DriveCommands {
-
+  // checks if the alliance is blue or red (blue is false, red is true)
   public static boolean isFlipped =
       DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red;
 
   public static double slowMode = 1;
 
   private DriveCommands() {}
-
+  /**
+   * Calculates the new vector based on joystick input
+   *
+   * @param x from joystick
+   * @param y from joystick
+   * @return Translation 2d of the vector created (resulting vector magnitude is min 0, max 1)
+   */
   private static Translation2d getLinearVelocityFromJoysticks(double x, double y) {
-    // Apply deadband
+    // Apply deadband of 0.06 as well as get magnitude using hypotenuse (vectors)
     double linearMagnitude = MathUtil.applyDeadband(Math.hypot(x, y), DriveConstants.DEADBAND);
+    // uses tangent to find angle of vector
     Rotation2d linearDirection = new Rotation2d(Math.atan2(y, x));
 
     // Square magnitude for more precise control
@@ -78,6 +85,12 @@ public class DriveCommands {
 
   /**
    * Field relative drive command using two joysticks (controlling linear and angular velocities).
+   *
+   * @param drive The drivetrain
+   * @param xSupplier Supplier of x velocity
+   * @param ySupplier Supplier of y velocity
+   * @param omegaSupplier Supplier of angular velocity
+   * @return Command that runs every iteration
    */
   public static Command joystickDrive(
       Drive drive,
@@ -107,6 +120,7 @@ public class DriveCommands {
                       linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec(),
                       omega * drive.getMaxAngularSpeedRadPerSec());
               drive.runVelocity(
+                  // turns field relative to robot relative
                   ChassisSpeeds.fromFieldRelativeSpeeds(
                       speeds,
                       isFlipped
@@ -121,6 +135,12 @@ public class DriveCommands {
    * Field relative drive command using joystick for linear control and PID for angular control.
    * Possible use cases include snapping to an angle, aiming at a vision target, or controlling
    * absolute rotation with a joystick.
+   *
+   * @param drive The drivetrain
+   * @param xSupplier Supplier of x velocity
+   * @param ySupplier Supplier of y velocity
+   * @param rotationSupplier Supplier of target angle
+   * @return Command that runs every iteration
    */
   public static Command joystickDriveAtAngle(
       Drive drive,
@@ -145,7 +165,10 @@ public class DriveCommands {
               Translation2d linearVelocity =
                   getLinearVelocityFromJoysticks(xSupplier.getAsDouble(), ySupplier.getAsDouble());
 
-              // Calculate angular speed
+              // Calculate next angular speed output based on current angle, and I think since it's
+              // a profiledPIDController w/ trapezoid profile,
+              // it will start to decelerate once the current angle is close enough to the target
+              // angle
               double omega =
                   angleController.calculate(
                       drive.getRotation().getRadians(), rotationSupplier.get().getRadians());
@@ -157,6 +180,7 @@ public class DriveCommands {
                       linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec(),
                       omega);
               drive.runVelocity(
+                  // turns field relative to robot relative
                   ChassisSpeeds.fromFieldRelativeSpeeds(
                       speeds,
                       isFlipped
@@ -174,6 +198,9 @@ public class DriveCommands {
    * Measures the velocity feedforward constants for the drive motors.
    *
    * <p>This command should only be used in voltage control mode.
+   *
+   * @param drive The drivetrain
+   * @return Sequential command
    */
   public static Command feedforwardCharacterization(Drive drive) {
     List<Double> velocitySamples = new LinkedList<>();
@@ -233,7 +260,12 @@ public class DriveCommands {
                 }));
   }
 
-  /** Measures the robot's wheel radius by spinning in a circle. */
+  /**
+   * Measures the robot's wheel radius by spinning in a circle.
+   *
+   * @param drive The drivetrain
+   * @return Parallel command
+   */
   public static Command wheelRadiusCharacterization(Drive drive) {
     SlewRateLimiter limiter = new SlewRateLimiter(DriveConstants.WHEEL_RADIUS_RAMP_RATE);
     WheelRadiusCharacterizationState state = new WheelRadiusCharacterizationState();
@@ -317,10 +349,14 @@ public class DriveCommands {
             drive,
             xSupplier,
             ySupplier,
+            // rotationSupplier
             () -> {
+              // robot pose
               Translation2d robot = drive.getPose().getTranslation();
+              // reef pose
               Translation2d reef =
                   (isFlipped) ? new Translation2d(13.06185, 4.03) : new Translation2d(4.5, 4.03);
+              // angle to get to reef based on robot position
               return new Rotation2d(
                   Math.atan2(reef.getY() - robot.getY(), reef.getX() - robot.getX()));
             })
@@ -400,6 +436,7 @@ public class DriveCommands {
             },
             new HashSet<Subsystem>() {
               {
+                // required subsystem
                 add(drive);
               }
             })
@@ -438,6 +475,7 @@ public class DriveCommands {
 
     @Override
     public Pose2d getTargetPosition() {
+      // returns processor possession depending on the alliance
       return allianceFlip(new Pose2d(5.980, 0.532, new Rotation2d()));
     }
   }
@@ -469,11 +507,14 @@ public class DriveCommands {
     @Override
     public Pose2d getTargetPosition() {
       switch (station) {
+          // left coral station
         case Left:
           return allianceFlip(new Pose2d(1.56, 7.36, new Rotation2d(Degrees.of(-54))));
+          // right coral station
         case Right:
           return allianceFlip(new Pose2d(1.623, 0.682, new Rotation2d(Degrees.of(54))));
         default:
+          // closest coral station
           return drive
               .getPose()
               .nearest(
@@ -503,7 +544,13 @@ public class DriveCommands {
       // rotates the left or right pose around the reef based on the tag id
       return getReefPose(direction, tagId);
     }
-
+    /**
+     * Gets the pose of the left/right/center of the side of the reef with the tag id
+     *
+     * @param direction
+     * @param targetTagId
+     * @return Pose2d
+     */
     public static Pose2d getReefPose(Direction direction, int targetTagId) {
       Pose2d o =
           switch (direction) {
@@ -513,10 +560,17 @@ public class DriveCommands {
           };
       Rotation2d rot =
           VisionConstants.aprilTagLayout.getTagPose(targetTagId).get().getRotation().toRotation2d();
+      // 180 degree rotation if the robot is flipped
       if (!isFlipped) rot = rot.plus(new Rotation2d(Math.PI));
+      // rotates pose around reef center
       return allianceFlip(o.rotateAround(new Translation2d(4.5, 4.03), rot));
     }
-
+    /**
+     * Returns all the reef poses based on the side of each side of the reef
+     *
+     * @param direction left/right/none(center)
+     * @return ArrayList of poses
+     */
     public static ArrayList<Pose2d> getReefPoses(Direction direction) {
       ArrayList<Pose2d> poses = new ArrayList<>();
       for (int i = 0; i < 6; i++) {
@@ -528,6 +582,16 @@ public class DriveCommands {
     }
   }
 
+  /**
+   * Aligns the robot to the reef based on closest reef side, and then paths to the reef based on
+   * direction (left/right/none) Also turns led orange
+   *
+   * @param drive
+   * @param direction
+   * @param controller
+   * @param led
+   * @return ParallelCommandGroup
+   */
   public static Command reefAlign(
       Drive drive, Direction direction, CommandXboxController controller, LED led) {
     return new ParallelCommandGroup(
@@ -537,6 +601,7 @@ public class DriveCommands {
                 () ->
                     new Reef(
                         direction,
+                        // gets index of closest reef pose
                         Reef.getReefPoses(direction)
                                 .indexOf(drive.getPose().nearest(Reef.getReefPoses(direction)))
                             + ((isFlipped) ? 6 : 17)),
@@ -546,6 +611,12 @@ public class DriveCommands {
         .withName("Reef Align");
   }
 
+  /**
+   * Raises elevator/arm and reefAligns simultaneously, then automatically scores coral in reef
+   * until lasercan no longer detects coral
+   *
+   * @return ParallelCommandGroup w/ SequentialCommandGroup inside
+   */
   public static Command reefScore(
       Drive drive,
       Direction direction,
@@ -556,6 +627,7 @@ public class DriveCommands {
       Arm arm,
       EndEffector endEffector) {
     return new ParallelCommandGroup(
+            // raises elevator and moves end effector to preset position based on which preset
             (level == Level.L4)
                 ? PresetCommands.presetL4(elevator, endEffector, arm)
                 : (level == Level.L3)
@@ -563,14 +635,18 @@ public class DriveCommands {
                     : PresetCommands.presetL2(elevator, endEffector, arm),
             reefAlign(drive, direction, controller, led))
         .andThen(
+            // stops the preset command
             PresetCommands.stopAll(elevator, endEffector, arm),
             ((level == Level.L4)
+                // shoots out -100 if L4 preset and shoots 100 if L2 or L3 preset
                 ? endEffector.setEndEffectorVelocity(-100)
                 : endEffector.setEndEffectorVelocity(100)))
         .until(
+            // stops the shooting when both lasercans no longer detect the coral in the end effector
             () ->
                 endEffector.getIO().getLaserCanMeasurement1() > 100
                     && endEffector.getIO().getLaserCanMeasurement2() > 100)
+        // sets end effector back to 0
         .andThen(() -> endEffector.setEndEffectorVelocity(0))
         .withName("Reef Score");
   }

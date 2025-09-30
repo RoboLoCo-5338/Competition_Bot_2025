@@ -20,6 +20,7 @@ public class Elevator extends SubsystemBase implements SysIDSubsystem {
   private double prevError = 0;
   private double integral = 0;
   private double error;
+  // sets up new alerts
   private final Alert elevator1DisconnectedAlert =
       new Alert("Elevator motor 1 disconnected", AlertType.kError);
   private final Alert elevator2DisconnectedAlert =
@@ -59,6 +60,7 @@ public class Elevator extends SubsystemBase implements SysIDSubsystem {
    * @return A command that sets the elevator's position.
    */
   public Command setElevatorPosition(double position, int slot) {
+    // Goes to specified position until the elevator is within the tolerance
     return new StartEndCommand(
             () -> io.setElevatorPosition(position, slot), () -> io.setElevatorVelocity(0), this)
         .until(
@@ -68,27 +70,61 @@ public class Elevator extends SubsystemBase implements SysIDSubsystem {
         .withName("Set Elevator Position=" + position);
   }
 
+  /**
+   * Sets elevator velocity to specified value
+   *
+   * @param velocity Desired velocity
+   * @return InstantCommand
+   */
   public Command setElevatorVelocity(DoubleSupplier velocity) {
+    // Sets the elevator velocity to the specified value
     return new InstantCommand(() -> io.setElevatorVelocity(velocity.getAsDouble()), this)
         .withName("Set Elevator Velocity");
   }
 
+  /**
+   * returns the ElevatorIO object for the elevator
+   *
+   * @return
+   */
   public ElevatorIO getIO() {
     return io;
   }
 
+  /**
+   * returns autologged elevator position
+   *
+   * @return
+   */
   public double getElevatorPosition() {
     return inputs.elevator1Position;
   }
 
+  /**
+   * Runs the sysid quasistatic routine for elevator
+   *
+   * @param direction
+   * @return
+   */
   public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
     return sysIdRoutine.quasistatic(direction);
   }
 
+  /**
+   * Runs the sysid dynamic routine for elevator
+   *
+   * @param direction
+   * @return
+   */
   public Command sysIdDynamic(SysIdRoutine.Direction direction) {
     return sysIdRoutine.dynamic(direction);
   }
 
+  /**
+   * Returns the sysid routine for the elevator
+   *
+   * @return
+   */
   @Override
   public SysIdRoutine getSysIdRoutine() {
     return sysIdRoutine;
