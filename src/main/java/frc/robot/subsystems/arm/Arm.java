@@ -57,7 +57,7 @@ public class Arm extends SubsystemBase implements SysIDSubsystem {
   public Command setArmPosition(double position) {
     return new StartEndCommand(() -> io.setArmPosition(position), () -> io.setArmVelocity(0), this)
         .until(() -> Math.abs((inputs.armPosition - position)) < ArmConstants.POSITION_TOLERANCE)
-        .withName("Set Arm Position");
+        .withName("Set Arm Position=" + position);
   }
 
   /**
@@ -80,11 +80,11 @@ public class Arm extends SubsystemBase implements SysIDSubsystem {
   }
 
   public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
-    return sysIdRoutine.quasistatic(direction).withName("SysId Quasistatic");
+    return sysIdRoutine.quasistatic(direction).withName("Arm SysId Quasistatic");
   }
 
   public Command sysIdDynamic(SysIdRoutine.Direction direction) {
-    return sysIdRoutine.dynamic(direction).withName("SysId Dynamic");
+    return sysIdRoutine.dynamic(direction).withName("Arm SysId Dynamic");
   }
 
   @Override
