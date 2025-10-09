@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 6.341495901639344,
-        "y": 3.9890368852459024
+        "x": 6.01,
+        "y": 3.88
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.061640112499658,
-        "y": 3.9890368852459024
+        "x": 5.730144210860314,
+        "y": 3.88
       },
       "isLocked": false,
-      "linkedName": "Center Reef 1"
+      "linkedName": "CenterMoveBack1"
     },
     {
       "anchor": {
-        "x": 6.9,
-        "y": 3.989
+        "x": 6.750767045454545,
+        "y": 4.000071022727272
       },
       "prevControl": {
-        "x": 7.247643442622951,
-        "y": 3.989
+        "x": 7.098410488077495,
+        "y": 4.000071022727272
       },
       "nextControl": null,
       "isLocked": false,

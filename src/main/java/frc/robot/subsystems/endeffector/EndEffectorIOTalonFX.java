@@ -21,6 +21,7 @@ import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.endeffector.EndEffectorConstants.EndEffectorSimConstants;
+import org.littletonrobotics.junction.Logger;
 
 public class EndEffectorIOTalonFX extends EndEffectorIO {
 
@@ -118,6 +119,7 @@ public class EndEffectorIOTalonFX extends EndEffectorIO {
 
   @Override
   public void setEndEffectorVelocity(double velocity) {
+    Logger.recordOutput("EndEffectorVelocitySetpoint", velocity);
     endEffectorMotor.setControl(
         endEffectorVelocityRequest.withVelocity(velocity * EndEffectorSimConstants.GEARING));
   }

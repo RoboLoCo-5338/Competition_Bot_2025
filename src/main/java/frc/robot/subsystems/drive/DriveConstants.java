@@ -46,7 +46,7 @@ public class DriveConstants {
   public static double AUTO_ALIGN_DRIVE_KD = 0.0;
   public static double AUTO_ALIGN_TURN_KP = 2;
   public static double AUTO_ALIGN_TURN_KI = 0.2;
-  public static double AUTO_ALIGN_TURN_KD = 0.0;
+  public static double AUTO_ALIGN_TURN_KD = 0;
 
   public static Pose2d reefRight =
       new Pose2d(3.06 - Units.inchesToMeters(2.5), 3.77 + 0.05 + 0.0127, new Rotation2d());

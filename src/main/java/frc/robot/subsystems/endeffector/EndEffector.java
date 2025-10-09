@@ -7,6 +7,7 @@ import edu.wpi.first.units.measure.Velocity;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -51,6 +52,7 @@ public class EndEffector extends SubsystemBase implements SysIDSubsystem {
   public Command setEndEffectorVelocity(double velocity) {
     return new InstantCommand(
             () -> {
+              SmartDashboard.putNumber("OuttakingTime", System.currentTimeMillis());
               io.setEndEffectorVelocity(velocity);
             },
             this)
@@ -58,6 +60,7 @@ public class EndEffector extends SubsystemBase implements SysIDSubsystem {
   }
 
   public Command setEndEffectorSpeed(double speed) {
+    SmartDashboard.putNumber("IsOuttaking", System.currentTimeMillis());
     return new InstantCommand(() -> io.setEndEffectorSpeed(speed))
         .withName("Set End Effector Speed");
   }

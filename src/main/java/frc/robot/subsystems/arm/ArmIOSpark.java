@@ -23,6 +23,7 @@ import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.arm.ArmConstants.ArmSimConstants;
 import java.util.function.DoubleSupplier;
+import org.littletonrobotics.junction.Logger;
 
 public class ArmIOSpark extends ArmIO {
 
@@ -108,8 +109,8 @@ public class ArmIOSpark extends ArmIO {
         .outputCurrentPeriodMs(20);
 
     // // added 3/6
-    // armConfig.softLimit.reverseSoftLimitEnabled(true);
-    // armConfig.softLimit.reverseSoftLimit(ArmConstants.SOFT_LIMIT);
+    armConfig.softLimit.reverseSoftLimitEnabled(true);
+    armConfig.softLimit.reverseSoftLimit(ArmConstants.SOFT_LIMIT);
 
     return armConfig;
   }
@@ -142,7 +143,8 @@ public class ArmIOSpark extends ArmIO {
 
     double ffvolts =
         feedforward.calculate((armEncoder.getPosition()) * 2 * Math.PI, velocityRadPerSec);
-
+    Logger.recordOutput(
+        "ArmVelocitySetpoint", Units.radiansPerSecondToRotationsPerMinute(velocityRadPerSec));
     armClosedLoopController.setReference(
         Units.radiansPerSecondToRotationsPerMinute(velocityRadPerSec),
         ControlType.kVelocity,
