@@ -557,13 +557,13 @@ public class DriveCommands {
       EndEffector endEffector) {
     return new ParallelCommandGroup(
             (level == Level.L4)
-                ? PresetCommands.presetL4(elevator, endEffector, arm)
+                ? PresetCommands.presetL4(elevator, arm)
                 : (level == Level.L3)
-                    ? PresetCommands.presetL3(elevator, endEffector, arm)
-                    : PresetCommands.presetL2(elevator, endEffector, arm),
+                    ? PresetCommands.presetL3(elevator, arm)
+                    : PresetCommands.presetL2(elevator, arm),
             reefAlign(drive, direction, controller, led))
         .andThen(
-            PresetCommands.stopAll(elevator, endEffector, arm),
+            PresetCommands.stopAll(elevator, arm),
             ((level == Level.L4)
                 ? endEffector.setEndEffectorVelocity(-100)
                 : endEffector.setEndEffectorVelocity(100)))
