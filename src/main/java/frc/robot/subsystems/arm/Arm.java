@@ -12,18 +12,24 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Mechanism;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
 import frc.robot.subsystems.SysIDSubsystem;
+import frc.robot.subsystems.elevator.Elevator;
 import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.Logger;
 
 public class Arm extends SubsystemBase implements SysIDSubsystem {
 
-  public final ArmIO io;
+  public ArmIO io;
   public final ArmIOInputsAutoLogged inputs = new ArmIOInputsAutoLogged();
   public double armPosition;
-  private final SysIdRoutine sysIdRoutine;
+  private SysIdRoutine sysIdRoutine;
 
   private final Alert armDisconnectedAlert =
       new Alert("Arm motor disconnected", AlertType.kWarning);
+
+  private boolean lastDisabled;
+
+  private ArmIOSpark realArm;
+  private ArmIOSim simArm;
 
   public Arm(ArmIO io) {
     this.io = io;
@@ -35,10 +41,29 @@ public class Arm extends SubsystemBase implements SysIDSubsystem {
                 null,
                 (state) -> Logger.recordOutput("Arm/SysIdState", state.toString())),
             new Mechanism(io::armOpenLoop, null, this));
+    if (Constants.currentMode == Mode.REAL) {
+      SmartDashboard.putBoolean(getName() + "Disabled", false);
+      lastDisabled = false;
+      realArm = (ArmIOSpark) io;
+      simArm = new ArmIOSim(Elevator.simElevator.getLigamentEnd());
+    }
   }
 
   @Override
   public void periodic() {
+    if (Constants.currentMode == Mode.REAL) {
+      if (SmartDashboard.getBoolean(getName() + "Disabled", false) == true) {
+        if (lastDisabled == false) {
+          lastDisabled = true;
+          changeIO(simArm);
+        }
+      } else {
+        if (lastDisabled == true) {
+          lastDisabled = false;
+          changeIO(realArm);
+        }
+      }
+    }
     io.updateInputs(inputs);
     Logger.processInputs("Arm", inputs);
     armPosition = io.getArmPosition(inputs);
@@ -95,5 +120,17 @@ public class Arm extends SubsystemBase implements SysIDSubsystem {
   @Override
   public String getName() {
     return "Arm ";
+  }
+
+  public void changeIO(ArmIO io) {
+    this.io = io;
+    this.sysIdRoutine =
+        new SysIdRoutine(
+            new SysIdRoutine.Config(
+                null,
+                null,
+                null,
+                (state) -> Logger.recordOutput("Arm/SysIdState", state.toString())),
+            new Mechanism(this.io::armOpenLoop, null, this));
   }
 }
