@@ -20,3 +20,6 @@ jobs:
       - name: Check Spotless
         id: spotlessCheck
         run: ./gradlew spotlessCheck
+      - name: Checkstyle
+        id: checkstyle
+        run: ./gradlew checkstyleMain checkstyleTest
